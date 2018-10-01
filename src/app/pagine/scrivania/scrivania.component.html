@@ -1,0 +1,31 @@
+<div class="p-grid "> <!--p-nogutter-->
+    
+  <!-- Left side -->
+  <div class="p-col-8 content-left">
+      <div class="option-bar">
+            <p-dropdown placeholder="Apri:" [options]="finestreApribili" [(ngModel)]="finestraScelta" optionLabel="value"></p-dropdown>
+            <div>
+                <span class="pr-8">Filtro rapido:</span>
+                <p-dropdown [options]="filtriApribili" [(ngModel)]="filtroScelto" optionLabel="value"></p-dropdown>
+            </div>
+      </div>
+      <app-tabella-attivita></app-tabella-attivita>
+  </div>
+
+  <!-- Right side -->
+  <div class="p-col-4 content-right">
+    <div class="div-info-doc">
+        <span>{{documento.tipo}}{{documento.numero}} - {{documento.oggetto}}</span><span class="span-info-doc">{{documento.protocollatoIl}}</span>
+    </div>
+    <p-accordion>
+      <p-accordionTab [header]="mittente">
+          <ul class="ul-info-doc">
+              <li><span class="li-description">DA: </span><span class="li-content">{{mittente}}</span></li>
+              <li><span class="li-description">A:  </span><span class="li-content">{{destinatari}}</span></li>
+              <li><span class="li-description">CC: </span><span class="li-content">{{destinatariCC}}</span></li>
+          </ul>
+      </p-accordionTab>
+  </p-accordion>
+  <p-dropdown styleClass="width100x100 mt16" [options]="allegati" ></p-dropdown>
+  </div>
+</div>

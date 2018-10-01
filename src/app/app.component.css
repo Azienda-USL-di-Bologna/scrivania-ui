@@ -1,0 +1,22 @@
+.width100x100 .ui-dropdown{
+    width: 100% !important;
+}
+.mt16{
+    margin-top: 16px;
+}
+.custom-header{
+    background-color: #993366;
+    margin-bottom: 30px;
+}
+.margin0{
+    margin: 0;
+}
+.content-wrapper{
+    padding: 0 30px;
+}
+/*
+:host>>>.row-class{
+    height: 60px;
+    cursor: default !important;
+}
+*/
