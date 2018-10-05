@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-scrivania',
@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ScrivaniaComponent implements OnInit {
 
+   @ViewChild('anteprima') private anteprima:ElementRef;
   
   allegati:any[] = [
     {label: 'Allegato1', value:'Allegato 1'},
@@ -33,4 +34,9 @@ export class ScrivaniaComponent implements OnInit {
   ngOnInit() {
   }
 
+  fullscreen(event: any) {
+    let iframeElement:any = this.anteprima.nativeElement;
+    let fullScreenFunction = iframeElement.requestFullscreen || iframeElement.webkitRequestFullscreen || iframeElement.mozRequestFullScreen || iframeElement.msRequestFullscreen;
+    fullScreenFunction.call(iframeElement);
+  }
 }

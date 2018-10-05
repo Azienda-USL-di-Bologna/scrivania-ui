@@ -25,7 +25,22 @@
               <li><span class="li-description">CC: </span><span class="li-content">{{destinatariCC}}</span></li>
           </ul>
       </p-accordionTab>
-  </p-accordion>
-  <p-dropdown styleClass="width100x100 mt16" [options]="allegati" ></p-dropdown>
-  </div>
+    </p-accordion>
+    <p-dropdown styleClass="width100x100 mt16" [options]="allegati" ></p-dropdown>
+    <div>
+        <p-button label="Click" (onClick)="fullscreen($event)"></p-button>
+    <p-panel> 
+        <iframe #anteprima id="anteprima" width="100%" height="600px" src="https://gdml.internal.ausl.bologna.it/DELI0000260_2018_Stampa_unica.pdf" frameborder="0" allowfullscreen >
+        </iframe>
+    </p-panel>
+</div>
+  <!-- <div>
+    <p-lightbox type="content">
+            <a class="group" href="#">
+                Watch Video
+            </a>
+            <iframe width="560" height="315" src="https://gdml.internal.ausl.bologna.it/Babel/temp/pdfPreview/80E5BC2C-5E92-FF20-B4FB-7A6B3A59F13F_da_convertire_swf_.pdf" frameborder="0" allowfullscreen></iframe>
+        </p-lightbox>
+    </div> -->
+    </div>
 </div>

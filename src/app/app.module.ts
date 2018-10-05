@@ -16,6 +16,8 @@ import { HeaderComponent } from './header/header.component';
 
 /* PrimeNG component */
 import { AccordionModule } from 'primeng/accordion';
+import {LightboxModule} from 'primeng/lightbox';
+import { PanelModule } from 'primeng/panel';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
@@ -39,6 +41,8 @@ import { InputTextModule } from 'primeng/inputtext';
     BrowserAnimationsModule,
     HttpClientModule,
     AccordionModule,
+    LightboxModule,
+    PanelModule,
     DropdownModule,
     TableModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: false }),
