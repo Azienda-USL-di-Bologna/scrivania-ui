@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {Router} from "@angular/router";
+import {LOGOUT_URL} from "../../environments/app-constants";
+import { NtJwtLoginService } from '@bds/nt-jwt-login';
 
 @Component({
   selector: 'app-header',
@@ -7,9 +10,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(public router: Router, private loginService: NtJwtLoginService) {}
 
   ngOnInit() {
   }
 
+  onLogout() {
+
+    const loginMethod = sessionStorage.getItem("loginMethod");
+
+     this.loginService.clearSession();
+
+    if (loginMethod !== "sso") {
+      console.log(loginMethod);
+      this.router.navigate(["/login"]);
+    }
+    else {
+      // window.location.href = "https://gdml.internal.ausl.bologna.it/Shibboleth.sso/Logout";
+      window.location.href = LOGOUT_URL;
+    }
+  }
 }

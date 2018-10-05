@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import {RouterModule} from "@angular/router";
-import {rootRouterConfig} from "./app.routes";
+import {RouterModule} from '@angular/router';
+import {rootRouterConfig} from './app.routes';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -26,7 +26,9 @@ import { AttivitaService } from './tabella-attivita/attivita.service';
 import { DatePipe } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 
-
+/* Login */
+import { NtJwtLoginModule } from '@bds/nt-jwt-login';
+import { loginModuleConfig } from './config/module-config';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { InputTextModule } from 'primeng/inputtext';
     HeaderComponent
   ],
   imports: [
+    NtJwtLoginModule.forRoot(loginModuleConfig),
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
