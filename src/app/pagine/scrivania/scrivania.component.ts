@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Attivita } from '@bds/ng-internauta-model';
 import { Dropdown } from 'primeng/dropdown';
 import { ScrivaniaService } from './scrivania.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-scrivania',
@@ -16,8 +15,8 @@ export class ScrivaniaComponent implements OnInit {
    @ViewChild('allegatiDropDown') private allegatiDropDown:Dropdown;
 
   public attivitaSelezionata: Attivita;
-  public noAnteprima: string = "assets/images/no_anteprima.png";
-  //public anteprimaUrl: string = "https://gdml.internal.ausl.bologna.it/DELI0000260_2018_Stampa_unica.pdf";
+  public noAnteprimaImg: string = "assets/images/no_anteprima.png";
+  public noAnteprima: boolean = true;
 
   allegati:any[] = [];
   allegatoSelezionato:any;
@@ -37,7 +36,6 @@ export class ScrivaniaComponent implements OnInit {
   constructor(private domSanitizer: DomSanitizer, private scrivaniaSrvice: ScrivaniaService) { }
 
   ngOnInit() {
-    this.anteprima.nativeElement.src = this.noAnteprima;
   }
 
   public attivitaClicked(attivitaCliccata: Attivita) {
@@ -61,7 +59,6 @@ export class ScrivaniaComponent implements OnInit {
     }
     //this.allegatiDropDown.updateDimensions();
     this.allegatiDropDown.show();
-    console.log(attivitaCliccata);
   }
 
   public allegatoSelected(event: any) {
@@ -71,22 +68,18 @@ export class ScrivaniaComponent implements OnInit {
     } else {
       this.allegatoSelezionato = null;
     }
-    console.log(this.allegatoSelezionato);
-    // TODO: chiamata al backend
   }
 
   public setAnteprimaUrl() {
+    this.noAnteprima = false;
     this.scrivaniaSrvice.getAnteprima(this.attivitaSelezionata, this.allegatoSelezionato).subscribe(
           file => {
             console.log("ciao");
-            // dealloco il vecchio
-            if (this.anteprima.nativeElement.src) {
-              URL.revokeObjectURL(this.anteprima.nativeElement.src);
-            }
+
             this.anteprima.nativeElement.src = file;
           },
           err => {
-            this.anteprima.nativeElement.src = this.noAnteprima;
+            this.noAnteprima = true;
           });
     //return this.domSanitizer.bypassSecurityTrustResourceUrl(this.anteprimaUrl);
   }
