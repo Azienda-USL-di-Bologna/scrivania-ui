@@ -37,26 +37,6 @@ export class ScrivaniaService extends HttpAbstractService {
       "fileName=" + allegatoSelezionato.nome_file
       const url = this.restApiBaseUrl + "/" + this.getAnteprimaServlet + "?" + queryString;
 
-      // let options: RequestOptions = new RequestOptions();
-      let options: any = {};
-      // options.headers = new Headers();
-      // options.headers.append('Authorization', 'Bearer ' + this.loginService.token);
-      options.responseType = ResponseContentType.Blob;
-      // let objectUrl: string = null;
-      // this.http.get(url, { responseType: 'blob' }).subscribe(m => {
-      //   objectUrl = URL.createObjectURL(m)
-      //   this.blobEmitter.next(objectUrl);
-      // },
-      // err => {
-      //   console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-      //   this.blobEmitter.error(err);
-      //   this.blobEmitter = new BehaviorSubject(new URL("http://localhost:4200/assets/images/no_anteprima.png"));
-      //   //throwError(err);
-      //  }
-      // );
-      
-
-
   return new Observable((observer: Subscriber<any>) => {
           let objectUrl: string = null;
           this.http.get(url, { responseType: 'blob' }).subscribe(m => {
