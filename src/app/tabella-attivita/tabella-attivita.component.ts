@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { LazyLoadEvent } from 'primeng/api';
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, UtilityFunctions } from '@bds/nt-communicator';
@@ -6,7 +6,6 @@ import { buildLazyEventFiltersAndSorts } from '@bds/primeng-plugin';
 import { AttivitaService } from './attivita.service';
 import { PROJECTIONS } from '../../environments/app-constants';
 import { Attivita } from '@bds/ng-internauta-model';
-
 @Component({
   selector: 'app-tabella-attivita',
   templateUrl: './tabella-attivita.component.html',
@@ -30,6 +29,8 @@ export class TabellaAttivitaComponent implements OnInit {
   private previousEvent: LazyLoadEvent;
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
+  
+  @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita>= new EventEmitter();
   
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService) { }
 
@@ -87,6 +88,10 @@ export class TabellaAttivitaComponent implements OnInit {
     ];
   }
 
+  public attivitaEmitterHandler() {
+    this.attivitaEmitter.emit(null);
+  }
+
   ngAfterViewInit() {
     // aggiungo le label aria al campo input del calendario
     const colsDate = this.cols.filter(e => e.filterWidget === "Calendar");
@@ -110,21 +115,27 @@ export class TabellaAttivitaComponent implements OnInit {
     return tooltip;
   }
 
-  public handleEvent(nome: string, event) {
+  public handleEvent(nome: string, event: any) {
     const functionName = "handleEvent";
     //console.log(this.componentDescription, functionName, "nome:", nome, "event:", event);
     switch (nome) {
       case "onLazyLoad":
-        this.loadLazy(event);
+        this.lazyLoad(event);
+        break;
+      case "onRowSelect":
+        this.rowSelect(event);
         break;
     }
   }
 
-
-  private loadLazy(event: LazyLoadEvent) {
+  private lazyLoad(event: LazyLoadEvent) {
     const functionName = "lazyLoad"
     //console.log(this.componentDescription, functionName, "event: ", event);
     this.loadData(event);
+  }
+
+  private rowSelect(event: any) {
+    this.attivitaEmitter.emit(event.data);
   }
 
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
