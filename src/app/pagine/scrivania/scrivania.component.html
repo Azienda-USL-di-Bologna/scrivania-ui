@@ -9,13 +9,14 @@
                 <p-dropdown [options]="filtriApribili" [(ngModel)]="filtroScelto" optionLabel="value"></p-dropdown>
             </div>
       </div>
-      <app-tabella-attivita></app-tabella-attivita>
+      <app-tabella-attivita (attivitaEmitter)="attivitaClicked($event)"></app-tabella-attivita>
   </div>
 
   <!-- Right side -->
   <div class="p-col-4 content-right">
     <div class="div-info-doc">
-        <span>{{documento.tipo}}{{documento.numero}} - {{documento.oggetto}}</span><span class="span-info-doc">{{documento.protocollatoIl}}</span>
+        <!-- <span>{{documento.tipo}}{{documento.numero}} - {{documento.oggetto}}</span><span class="span-info-doc">{{documento.protocollatoIl}}</span> -->
+        {{oggetto}}
     </div>
     <p-accordion>
       <p-accordionTab [header]="mittente">
@@ -26,11 +27,11 @@
           </ul>
       </p-accordionTab>
     </p-accordion>
-    <p-dropdown styleClass="width100x100 mt16" [options]="allegati" ></p-dropdown>
+    <p-dropdown #allegatiDropDown styleClass="width100x100 mt16" [options]="allegati" (onChange)="allegatoSelected($event)"></p-dropdown>
     <div>
         <p-button label="Click" (onClick)="fullscreen($event)"></p-button>
     <p-panel> 
-        <iframe #anteprima id="anteprima" width="100%" height="600px" src="https://gdml.internal.ausl.bologna.it/DELI0000260_2018_Stampa_unica.pdf" frameborder="0" allowfullscreen >
+        <iframe #anteprima id="anteprima" width="100%" height="600px" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen >
         </iframe>
     </p-panel>
 </div>

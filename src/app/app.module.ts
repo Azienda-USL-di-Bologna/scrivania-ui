@@ -5,6 +5,7 @@ import {RouterModule} from '@angular/router';
 import {rootRouterConfig} from './app.routes';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
 
 /* Custom component */
 import { AppComponent } from './app.component';
@@ -43,6 +44,7 @@ import { loginModuleConfig } from './config/module-config';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    HttpModule,
     AccordionModule,
     LightboxModule,
     PanelModule,

@@ -27,8 +27,11 @@
     margin-left: 30px;
 }
 .width100x100{
-    width: 100%;
+    width: 100% !important;
 } 
 .mt16{
     margin-top: 16px;
+}
+.ui-fluid .ui-dropdown{
+    width: 600px !important;
 }
