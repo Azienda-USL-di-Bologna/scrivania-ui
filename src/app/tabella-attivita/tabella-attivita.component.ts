@@ -6,6 +6,7 @@ import { buildLazyEventFiltersAndSorts } from '@bds/primeng-plugin';
 import { AttivitaService } from './attivita.service';
 import { PROJECTIONS } from '../../environments/app-constants';
 import { Attivita } from '@bds/ng-internauta-model';
+import { NONE_TYPE } from '@angular/compiler/src/output/output_ast';
 @Component({
   selector: 'app-tabella-attivita',
   templateUrl: './tabella-attivita.component.html',
@@ -80,6 +81,9 @@ export class TabellaAttivitaComponent implements OnInit {
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
       },
       {
+        // colonna azione
+      },
+      {
         // colonna pencil
       },
       {
@@ -116,6 +120,7 @@ export class TabellaAttivitaComponent implements OnInit {
   }
 
   public handleEvent(nome: string, event: any) {
+    console.log("handleEvent", nome, event)
     const functionName = "handleEvent";
     //console.log(this.componentDescription, functionName, "nome:", nome, "event:", event);
     switch (nome) {
@@ -129,12 +134,14 @@ export class TabellaAttivitaComponent implements OnInit {
   }
 
   private lazyLoad(event: LazyLoadEvent) {
+    console.log("lazyLoad", event)
     const functionName = "lazyLoad"
     //console.log(this.componentDescription, functionName, "event: ", event);
     this.loadData(event);
   }
 
   private rowSelect(event: any) {
+    console.log("rowSelect", event)
     this.attivitaEmitter.emit(event.data);
   }
 
@@ -148,6 +155,7 @@ export class TabellaAttivitaComponent implements OnInit {
 
 
   private loadData(event: LazyLoadEvent) {
+    console.log("loadData", event)
     const functionName = "loadData"
     //console.log(this.componentDescription, functionName, "event: ", event);
 
@@ -175,6 +183,14 @@ export class TabellaAttivitaComponent implements OnInit {
       
   }
 
+  public apriAttivita(attivita: any){
+    let attivitaJsonArray = JSON.parse(attivita.urls);
+    console.log("apriAttivita()", attivitaJsonArray)
+    if(attivitaJsonArray && attivitaJsonArray[0]){
+      console.log("APRIAMO QUESTA", attivitaJsonArray[0])
+      window.open(attivitaJsonArray[0].url);
+    }
 
+  }
 
 }

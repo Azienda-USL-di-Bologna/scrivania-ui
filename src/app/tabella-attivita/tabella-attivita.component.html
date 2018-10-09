@@ -78,6 +78,9 @@
             <td class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
             <td class="column-class">{{attivita.descrizione}}</td>
             <td>
+                <a class="openTabLink" *ngIf="attivita.tipo==='attivita'" (click)="apriAttivita(attivita)">Apri</a>
+            </td>
+            <td>
                 <img *ngIf="attivita.aperta" src="assets/images/orange-circle-md.png" alt="prendi" class="img-table">
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->
             </td>
