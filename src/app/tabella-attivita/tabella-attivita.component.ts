@@ -1,12 +1,12 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { LazyLoadEvent } from 'primeng/api';
-import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, UtilityFunctions } from '@bds/nt-communicator';
+import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from '@bds/nt-communicator';
 import { buildLazyEventFiltersAndSorts } from '@bds/primeng-plugin';
 import { AttivitaService } from './attivita.service';
 import { PROJECTIONS } from '../../environments/app-constants';
-import { Attivita } from '@bds/ng-internauta-model';
-import { NONE_TYPE } from '@angular/compiler/src/output/output_ast';
+import { Attivita, Utente } from '@bds/ng-internauta-model';
+import { NtJwtLoginService } from '@bds/nt-jwt-login';
 @Component({
   selector: 'app-tabella-attivita',
   templateUrl: './tabella-attivita.component.html',
@@ -30,12 +30,18 @@ export class TabellaAttivitaComponent implements OnInit {
   private previousEvent: LazyLoadEvent;
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
+  public loggedUser: Utente;
   
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita>= new EventEmitter();
   
-  constructor(private datepipe: DatePipe, private attivitaService: AttivitaService) { }
+  constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
 
   ngOnInit() {
+    // imposto l'utente loggato nell'apposita variabile
+    this.loginService.loggedUser.subscribe((u: Utente) => { 
+      this.loggedUser = u;
+    });
+
     this.cols = [
       {
         field:"priorita",
@@ -146,6 +152,8 @@ export class TabellaAttivitaComponent implements OnInit {
     const functionName = "buildInitialFiltersAndSorts";
     let initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.asc));
+    const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.fk_idPersona.id);
+    initialFiltersAndSorts.addFilter(filter);
     //console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
     return initialFiltersAndSorts;
   }

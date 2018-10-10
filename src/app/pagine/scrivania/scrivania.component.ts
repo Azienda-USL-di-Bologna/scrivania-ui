@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import { Attivita } from '@bds/ng-internauta-model';
+import { Attivita, Utente } from '@bds/ng-internauta-model';
 import { Dropdown } from 'primeng/dropdown';
 import { ScrivaniaService } from './scrivania.service';
+import { NtJwtLoginService } from '@bds/nt-jwt-login';
 
 @Component({
   selector: 'app-scrivania',
@@ -32,10 +33,16 @@ export class ScrivaniaComponent implements OnInit {
 
   public filtriApribili: any[] = [{label:"label1",value:"105"},{label:"label2",value:"102"},{label:"label3",value:"909"}];
   public filtroScelto: any;
+  public loggedUser: Utente;
 
-  constructor(private domSanitizer: DomSanitizer, private scrivaniaSrvice: ScrivaniaService) { }
+  constructor(private domSanitizer: DomSanitizer, private scrivaniaSrvice: ScrivaniaService, private loginService: NtJwtLoginService) {
+   }
 
   ngOnInit() {
+    // imposto l'utente loggato nell'apposita variabile
+    this.loginService.loggedUser.subscribe((u: Utente) => { 
+      this.loggedUser = u;
+    })
   }
 
   public attivitaClicked(attivitaCliccata: Attivita) {
@@ -57,6 +64,9 @@ export class ScrivaniaComponent implements OnInit {
       });
       this.allegatoSelected({value: this.allegati[0].value})
     }
+    else {
+      this.noAnteprima = true;
+    }
     //this.allegatiDropDown.updateDimensions();
     this.allegatiDropDown.show();
   }
@@ -74,8 +84,6 @@ export class ScrivaniaComponent implements OnInit {
     this.noAnteprima = false;
     this.scrivaniaSrvice.getAnteprima(this.attivitaSelezionata, this.allegatoSelezionato).subscribe(
           file => {
-            console.log("ciao");
-
             this.anteprima.nativeElement.src = file;
           },
           err => {
