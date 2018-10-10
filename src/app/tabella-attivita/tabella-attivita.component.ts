@@ -189,12 +189,26 @@ export class TabellaAttivitaComponent implements OnInit {
 
   public apriAttivita(attivita: any){
     let attivitaJsonArray = JSON.parse(attivita.urls);
-    console.log("apriAttivita()", attivitaJsonArray)
     if(attivitaJsonArray && attivitaJsonArray[0]){
-      console.log("APRIAMO QUESTA", attivitaJsonArray[0])
-      window.open(attivitaJsonArray[0].url);
+      // abbiamo bisogno di un uuid diverso ad ogni entrata sull'ambiente, se no per un controllo anti-inde-sminchiamento onCommand ritorna e basta
+      window.open(attivitaJsonArray[0].url + encodeURI("&richiesta=" + this.myRandomUUID()));
     }
 
+  }
+
+
+  /**************************
+  ** SuperSaloRollsTheUUID **
+  **************************/
+  private myRandomUUID(){
+    // 8 - 4 - 4 - 4 - 16
+    return this.fourRandomChar() + this.fourRandomChar() +                      // 8
+       "-" + this.fourRandomChar() + "-" + this.fourRandomChar() + "-" +        // -4-4-4-
+       this.fourRandomChar() + this.fourRandomChar() + this.fourRandomChar() ;  // 16
+  }
+
+  private fourRandomChar(){
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   }
 
 }

@@ -78,7 +78,9 @@
             <td class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
             <td class="column-class">{{attivita.descrizione}}</td>
             <td>
-                <a class="openTabLink" *ngIf="attivita.tipo==='attivita'" (click)="apriAttivita(attivita)">Apri</a>
+                <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' && 
+                    (attivita.idApplicazione.nome==='Pico' || attivita.idApplicazione.nome==='Dete' || attivita.idApplicazione.nome==='Deli'))" 
+                (click)="apriAttivita(attivita)">Apri</a>
             </td>
             <td>
                 <img *ngIf="attivita.aperta" src="assets/images/orange-circle-md.png" alt="prendi" class="img-table">
