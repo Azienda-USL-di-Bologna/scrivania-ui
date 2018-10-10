@@ -40,3 +40,14 @@
 .btn, .toggle, .logout {
     cursor: pointer;
 }
+
+.boxNomeCognome{
+    font-weight: bold;
+    color: white;
+  }
+
+.boxAzienda{
+    color: white;
+}
+
+  
