@@ -120,7 +120,6 @@ export class TabellaAttivitaComponent implements OnInit {
   }
 
   public handleEvent(nome: string, event: any) {
-    console.log("handleEvent", nome, event)
     const functionName = "handleEvent";
     //console.log(this.componentDescription, functionName, "nome:", nome, "event:", event);
     switch (nome) {
@@ -134,14 +133,12 @@ export class TabellaAttivitaComponent implements OnInit {
   }
 
   private lazyLoad(event: LazyLoadEvent) {
-    console.log("lazyLoad", event)
     const functionName = "lazyLoad"
     //console.log(this.componentDescription, functionName, "event: ", event);
     this.loadData(event);
   }
 
   private rowSelect(event: any) {
-    console.log("rowSelect", event)
     this.attivitaEmitter.emit(event.data);
   }
 
@@ -155,7 +152,6 @@ export class TabellaAttivitaComponent implements OnInit {
 
 
   private loadData(event: LazyLoadEvent) {
-    console.log("loadData", event)
     const functionName = "loadData"
     //console.log(this.componentDescription, functionName, "event: ", event);
 
