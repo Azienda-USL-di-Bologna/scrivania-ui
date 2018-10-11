@@ -24,8 +24,8 @@ export class ScrivaniaComponent implements OnInit {
 
   public oggetto: any = "Nessuna Attivita Selezionata";
 
-  public mittente: string = "";
-  public destinatari: string = "";
+  public mittente: string = "Nessun mittente";
+  public destinatari: string = "Nessun destinatario";
   public destinatariCC: string = "Li dobbiamo mettere?? sulla scrivania non ci sono mai stati";
 
   public finestreApribili: any[] = [{label:"label1",value:"Elenco documenti"},{label:"label2",value:"Elenco determine"},{label:"label3",value:"Elenco delibere"}];
@@ -49,8 +49,8 @@ export class ScrivaniaComponent implements OnInit {
     this.attivitaSelezionata = attivitaCliccata;
     this.oggetto = this.attivitaSelezionata.oggetto;
     const datiAggiuntiviAttivita: any = JSON.parse(this.attivitaSelezionata.datiAggiuntivi);
-    this.mittente = datiAggiuntiviAttivita.custom_app_1;
-    this.destinatari = datiAggiuntiviAttivita.custom_app_2;
+    this.mittente = datiAggiuntiviAttivita.custom_app_1 ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
+    this.destinatari = datiAggiuntiviAttivita.custom_app_2 ? datiAggiuntiviAttivita.custom_app_2 : "Nessun destinatario";
     // TODO: mancano i destinatariCC
     // this.destinatariCC = datiAggiuntiviAttivita.destinatariCC;
 
