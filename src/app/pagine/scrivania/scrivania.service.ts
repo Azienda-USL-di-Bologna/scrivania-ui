@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ResponseContentType, Http, RequestOptions, Headers } from '@angular/http';
 import { DatePipe } from '@angular/common';
 import { Attivita } from '@bds/ng-internauta-model';
 import { HttpAbstractService } from '@bds/nt-communicator';
 import { ENTITIES_CONFIGURATION, ENTITIES, BASE_URL } from '../../../environments/app-constants';
-import { Observable, Subscriber, Subject, throwError, BehaviorSubject } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 import { NtJwtLoginService } from '@bds/nt-jwt-login';
 
 @Injectable({
