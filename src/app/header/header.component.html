@@ -16,7 +16,7 @@
                 <div class="p-col titolo-popup"><b>Aziende</b></div>
                 <div class="p-col">
                   <ul class="ul-user-information">
-                    <li *ngFor="let azienda of utenteConnesso.aziende">
+                    <li *ngFor="let azienda of utenteConnesso.aziende" class="li-user-information">
                       {{azienda? azienda.nome: ''}}
                     </li>
                   </ul>
@@ -24,7 +24,7 @@
                 <div class="p-col titolo-popup"><b>Ruoli</b></div>
                 <div class="p-col">
                     <ul class="ul-user-information">
-                        <li *ngFor="let ruolo of utenteConnesso.ruoli">
+                        <li *ngFor="let ruolo of utenteConnesso.ruoli" class="li-user-information">
                           {{ruolo? ruolo.nomeBreve: ''}}
                         </li>
                       </ul>
