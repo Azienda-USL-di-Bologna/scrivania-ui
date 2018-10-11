@@ -8,3 +8,7 @@
 .openTabLink{
     color: #993366;
 }
+
+.openTabLink:hover{
+    cursor: pointer;
+}
