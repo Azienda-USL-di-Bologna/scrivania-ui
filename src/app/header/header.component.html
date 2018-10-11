@@ -1,20 +1,39 @@
-<div class="height64 centerVertically">
+<div class="height64 center-vertically">
   <div class="p-col-12 p-grid"> <!--p-nogutter-->
       <div class="p-md-8 p-sm-12 header-left-style"><span>Babel Internauta</span></div>
       <div class="p-md-4 p-sm-12 icons-wrapper">
-            <div class="d-inline-block float-right pr-8">
-              <div class="boxNomeCognome text-center">
-                {{utenteConnesso? utenteConnesso.idPersona.nome: ''}} {{utenteConnesso? utenteConnesso.idPersona.cognome: ''}}
-              </div>
-              <div class="boxAzienda text-center">
-                <!-- {{utenteConnesso? utenteConnesso.idAzienda.nome: ''}} -->
-              </div>
-            </div>
+            
+        <div class="d-inline-block float-right pr-8">
+          <div class="box-nome-cognome text-center">
+            {{utenteConnesso? utenteConnesso.idPersona.nome: ''}} {{utenteConnesso? utenteConnesso.idPersona.cognome: ''}}
+          </div>
+        </div>
+        
+        <i class="pi pi-user pi-icon-style toggle pr-8" (click)="op1.toggle($event)"></i>
+        
+        <p-overlayPanel #op1 styleClass="overlaypanel-background">
+            <div class="p-grid p-dir-col" *ngIf="utenteConnesso">
+                <div class="p-col titolo-popup"><b>Aziende</b></div>
+                <div class="p-col">
+                  <ul class="ul-user-information">
+                    <li *ngFor="let azienda of utenteConnesso.aziende">
+                      {{azienda? azienda.nome: ''}}
+                    </li>
+                  </ul>
+                </div>
+                <div class="p-col titolo-popup"><b>Ruoli</b></div>
+                <div class="p-col">
+                    <ul class="ul-user-information">
+                        <li *ngFor="let ruolo of utenteConnesso.ruoli">
+                          {{ruolo? ruolo.nomeBreve: ''}}
+                        </li>
+                      </ul>
+                </div>
+            </div>    
+        </p-overlayPanel>
 
-            <img class="icons-style pr-8" src="assets/images/user.svg"/>
-            <img class="icons-style pr-8" src="assets/images/baseline_dashboard_white_48dp.png"/>
-      
-            <img class="dimBoxImageSignOut d-inline-block logout ml-1" src="assets/images/signout.svg" (click)="onLogout()" alt="logout"/>
+        <img class="icons-style pr-8" src="assets/images/baseline_dashboard_white_48dp.png"/>
+        <img class="dim-box-image-signout d-inline-block logout ml-1" src="assets/images/signout.svg" (click)="onLogout()" alt="logout"/>
       </div>
     </div>
 </div>

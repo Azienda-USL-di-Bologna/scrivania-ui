@@ -26,6 +26,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { AttivitaService } from './tabella-attivita/attivita.service';
 import { DatePipe } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
 
 /* Login */
 import { NtJwtLoginModule } from '@bds/nt-jwt-login';
@@ -54,7 +55,8 @@ import { loginModuleConfig } from './config/module-config';
     FormsModule,
     CalendarModule,
     TooltipModule,
-    InputTextModule
+    InputTextModule,
+    OverlayPanelModule
   ],
   providers: [AttivitaService, DatePipe],
   bootstrap: [AppComponent]
