@@ -2,12 +2,19 @@
   <div class="p-col-12 p-grid"> <!--p-nogutter-->
       <div class="p-md-8 p-sm-12 header-left-style"><span>Babel Internauta</span></div>
       <div class="p-md-4 p-sm-12 icons-wrapper">
-        <img class="icons-style pr-8" src="assets/images/baseline_dashboard_white_48dp.png"/>
-        <img class="icons-style pr-8" src="assets/images/user.svg"/>
-        <img class="dimBoxImageSignOut d-inline-block logout ml-1" src="assets/images/signout.svg" (click)="onLogout()" alt="logout"/>
-        <p style="color: aliceblue">
-          {{utenteConnesso? utenteConnesso.username: 'ggg'}}
-        </p>
+            <div class="d-inline-block float-right pr-8">
+              <div class="boxNomeCognome text-center">
+                {{utenteConnesso? utenteConnesso.idPersona.nome: ''}} {{utenteConnesso? utenteConnesso.idPersona.cognome: ''}}
+              </div>
+              <div class="boxAzienda text-center">
+                <!-- {{utenteConnesso? utenteConnesso.idAzienda.nome: ''}} -->
+              </div>
+            </div>
+
+            <img class="icons-style pr-8" src="assets/images/user.svg"/>
+            <img class="icons-style pr-8" src="assets/images/baseline_dashboard_white_48dp.png"/>
+      
+            <img class="dimBoxImageSignOut d-inline-block logout ml-1" src="assets/images/signout.svg" (click)="onLogout()" alt="logout"/>
       </div>
-  </div>
+    </div>
 </div>
