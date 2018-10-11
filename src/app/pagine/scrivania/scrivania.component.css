@@ -18,20 +18,30 @@
 .li-description{
     font-weight: bold;
 }
-.div-info-doc{
+
+.div-info-doc {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
 }
-.span-info-doc{
+
+.span-info-doc {
     margin-left: 30px;
 }
-.width100x100{
+
+.width100x100 {
     width: 100% !important;
 } 
-.mt16{
+
+.mt16 {
     margin-top: 16px;
 }
-.ui-fluid .ui-dropdown{
+
+.ui-fluid .ui-dropdown {
     width: 600px !important;
+}
+
+.no-anteprima {
+    font-weight: bold;
+    text-align: center;
 }

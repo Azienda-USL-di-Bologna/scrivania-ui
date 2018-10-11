@@ -30,13 +30,14 @@
     <div style="height: 31px; margin: 5px 0">
         <p-dropdown #allegatiDropDown styleClass="width100x100 mt16" [options]="allegati" (onChange)="allegatoSelected($event)"></p-dropdown>
         <!-- <p-button label="Click" (onClick)="fullscreen($event)" style="float: right;" ></p-button> -->
-        <img style="cursor: pointer; height: 100%; display: inline-block; float: right; " src="assets/images/fullscreen-symbol.svg" (click)="fullscreen($event)" alt="fullscreen"/>
+        <img *ngIf="!noAnteprima" style="cursor: pointer; height: 100%; display: inline-block; float: right; " src="assets/images/fullscreen-symbol.svg" (click)="fullscreen($event)" alt="fullscreen"/>
     </div>
     <div>
     <p-panel> 
         <iframe *ngIf="!noAnteprima" #anteprima id="anteprima" width="100%" height="600px" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen >
         </iframe>
-        <img *ngIf="noAnteprima" [src]="noAnteprimaImg" width="100%" height="600px" frameborder="0"/>
+        <!-- <img *ngIf="noAnteprima" [src]="noAnteprimaImg" width="100%" height="600px" frameborder="0"/> -->
+        <div *ngIf="noAnteprima" class="no-anteprima">Anteprima non disponibile.</div>
     </p-panel>
     </div>
   <!-- <div>
