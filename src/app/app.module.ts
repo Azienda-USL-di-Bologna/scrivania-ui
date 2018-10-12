@@ -5,6 +5,7 @@ import {RouterModule} from '@angular/router';
 import {rootRouterConfig} from './app.routes';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
 
 /* Custom component */
 import { AppComponent } from './app.component';
@@ -25,6 +26,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { AttivitaService } from './tabella-attivita/attivita.service';
 import { DatePipe } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
 
 /* Login */
 import { NtJwtLoginModule } from '@bds/nt-jwt-login';
@@ -43,6 +45,7 @@ import { loginModuleConfig } from './config/module-config';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    HttpModule,
     AccordionModule,
     LightboxModule,
     PanelModule,
@@ -52,7 +55,8 @@ import { loginModuleConfig } from './config/module-config';
     FormsModule,
     CalendarModule,
     TooltipModule,
-    InputTextModule
+    InputTextModule,
+    OverlayPanelModule
   ],
   providers: [AttivitaService, DatePipe],
   bootstrap: [AppComponent]

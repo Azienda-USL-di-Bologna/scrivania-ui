@@ -27,6 +27,7 @@
     (onLazyLoad)="handleEvent('onLazyLoad', $event)" 
     [totalRecords]="totalRecords"
     selectionMode="single"
+    (onRowSelect)="handleEvent('onRowSelect', $event)"
     >
 
 
@@ -76,6 +77,11 @@
             <td class="column-class">{{attivita.oggetto}}</td>
             <td class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
             <td class="column-class">{{attivita.descrizione}}</td>
+            <td>
+                <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' && 
+                    (attivita.idApplicazione.nome==='Pico' || attivita.idApplicazione.nome==='Dete' || attivita.idApplicazione.nome==='Deli'))" 
+                (click)="apriAttivita(attivita)">Apri</a>
+            </td>
             <td>
                 <img *ngIf="attivita.aperta" src="assets/images/orange-circle-md.png" alt="prendi" class="img-table">
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->

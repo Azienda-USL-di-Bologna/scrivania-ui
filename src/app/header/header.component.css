@@ -4,14 +4,14 @@
     justify-content: center;
     color: white;
     font-weight: bold;
-    font-family: sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
     text-align: center;
 }
 .height64{
     height: 64px;
 }
-.centerVertically{
+.center-vertically{
     display: flex;
     /* justify-content: left; */
     align-items: center;
@@ -23,6 +23,7 @@
     width: 25px;
     height: 25px;
 }
+
 .icons-wrapper{
     display: flex;
     align-items: center;
@@ -32,11 +33,48 @@
     margin-right: 16px;
 }
 
-.dimBoxImageSignOut{
+.dim-box-image-signout{
     width: 25px;
     height: 25px;
 }
 
 .btn, .toggle, .logout {
     cursor: pointer;
+}
+
+.box-nome-cognome {
+    padding-top: 12px;
+    font-weight: bold;
+    color: white;
+  }
+
+.pi-icon-style {
+    font-size: 2em; 
+    color: white;
+}
+
+
+ .titolo-popup{
+    background-color: #993366;
+    color: white;
+ } 
+
+ :host>>>.overlaypanel-background .ui-overlaypanel-content{
+     /* background-color: greenyellow; */
+     background-color: whitesmoke;
+     padding: 7px !important;
+ }
+
+.ul-user-information {
+    list-style: none;
+    padding-left: 2px;
+    margin: 1px;
+}
+
+.li-user-information{
+    margin-top: 10px;
+}
+
+div{
+    font-family: Arial, Helvetica, sans-serif;
 }

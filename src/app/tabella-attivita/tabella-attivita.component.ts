@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { LazyLoadEvent } from 'primeng/api';
-import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, UtilityFunctions } from '@bds/nt-communicator';
+import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from '@bds/nt-communicator';
 import { buildLazyEventFiltersAndSorts } from '@bds/primeng-plugin';
 import { AttivitaService } from './attivita.service';
 import { PROJECTIONS } from '../../environments/app-constants';
-import { Attivita } from '@bds/ng-internauta-model';
-
+import { Attivita, Utente } from '@bds/ng-internauta-model';
+import { NtJwtLoginService } from '@bds/nt-jwt-login';
 @Component({
   selector: 'app-tabella-attivita',
   templateUrl: './tabella-attivita.component.html',
@@ -30,10 +30,18 @@ export class TabellaAttivitaComponent implements OnInit {
   private previousEvent: LazyLoadEvent;
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
+  public loggedUser: Utente;
   
-  constructor(private datepipe: DatePipe, private attivitaService: AttivitaService) { }
+  @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita>= new EventEmitter();
+  
+  constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
 
   ngOnInit() {
+    // imposto l'utente loggato nell'apposita variabile
+    this.loginService.loggedUser.subscribe((u: Utente) => { 
+      this.loggedUser = u;
+    });
+
     this.cols = [
       {
         field:"priorita",
@@ -79,12 +87,19 @@ export class TabellaAttivitaComponent implements OnInit {
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
       },
       {
+        // colonna azione
+      },
+      {
         // colonna pencil
       },
       {
         // colonna thrash
       },
     ];
+  }
+
+  public attivitaEmitterHandler() {
+    this.attivitaEmitter.emit(null);
   }
 
   ngAfterViewInit() {
@@ -110,27 +125,35 @@ export class TabellaAttivitaComponent implements OnInit {
     return tooltip;
   }
 
-  public handleEvent(nome: string, event) {
+  public handleEvent(nome: string, event: any) {
     const functionName = "handleEvent";
     //console.log(this.componentDescription, functionName, "nome:", nome, "event:", event);
     switch (nome) {
       case "onLazyLoad":
-        this.loadLazy(event);
+        this.lazyLoad(event);
+        break;
+      case "onRowSelect":
+        this.rowSelect(event);
         break;
     }
   }
 
-
-  private loadLazy(event: LazyLoadEvent) {
+  private lazyLoad(event: LazyLoadEvent) {
     const functionName = "lazyLoad"
     //console.log(this.componentDescription, functionName, "event: ", event);
     this.loadData(event);
+  }
+
+  private rowSelect(event: any) {
+    this.attivitaEmitter.emit(event.data);
   }
 
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const functionName = "buildInitialFiltersAndSorts";
     let initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.asc));
+    const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.fk_idPersona.id);
+    initialFiltersAndSorts.addFilter(filter);
     //console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
     return initialFiltersAndSorts;
   }
@@ -164,6 +187,28 @@ export class TabellaAttivitaComponent implements OnInit {
       
   }
 
+  public apriAttivita(attivita: any){
+    let attivitaJsonArray = JSON.parse(attivita.urls);
+    if(attivitaJsonArray && attivitaJsonArray[0]){
+      // abbiamo bisogno di un uuid diverso ad ogni entrata sull'ambiente, se no per un controllo anti-inde-sminchiamento onCommand ritorna e basta
+      window.open(attivitaJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
+    }
 
+  }
+
+
+  /**************************
+  ** SuperSaloRollsTheUUID **
+  **************************/
+  private myRandomUUID(){
+    // 8 - 4 - 4 - 4 - 16
+    return this.fourRandomChar() + this.fourRandomChar() +                      // 8
+       "-" + this.fourRandomChar() + "-" + this.fourRandomChar() + "-" +        // -4-4-4-
+       this.fourRandomChar() + this.fourRandomChar() + this.fourRandomChar() ;  // 16
+  }
+
+  private fourRandomChar(){
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
 
 }

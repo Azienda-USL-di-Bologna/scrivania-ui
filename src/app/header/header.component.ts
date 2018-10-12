@@ -1,7 +1,9 @@
+import { Utente } from '@bds/ng-internauta-model';
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {LOGOUT_URL} from "../../environments/app-constants";
 import { NtJwtLoginService } from '@bds/nt-jwt-login';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -10,9 +12,17 @@ import { NtJwtLoginService } from '@bds/nt-jwt-login';
 })
 export class HeaderComponent implements OnInit {
 
+  public utenteConnesso: Utente;
+  public $utenteConnesso: Observable<Utente>;
+
   constructor(public router: Router, private loginService: NtJwtLoginService) {}
 
   ngOnInit() {
+    this.$utenteConnesso = this.loginService.loggedUser;
+    this.$utenteConnesso.subscribe((utente: Utente) => {
+      this.utenteConnesso = utente;
+    });
+    
   }
 
   onLogout() {

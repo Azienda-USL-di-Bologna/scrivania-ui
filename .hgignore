@@ -4,5 +4,6 @@ e2e
 .gitignore
 yarn-error.log
 yarn.lock
+builda.sh
 node_modules
 .idea
