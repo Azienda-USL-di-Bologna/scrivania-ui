@@ -18,15 +18,14 @@ export class ScrivaniaComponent implements OnInit {
   public attivitaSelezionata: Attivita;
   public noAnteprimaImg: string = "assets/images/no_anteprima.png";
   public noAnteprima: boolean = true;
-
   allegati: any[] = [];
   allegatoSelezionato: any;
 
-  public oggetto: any = "Nessuna Attivita Selezionata";
+  public oggetto: any = "Nessuna attivita selezionata.";
 
-  public mittente: string = "Nessun mittente";
-  public destinatari: string = "Nessun destinatario";
-  public destinatariCC: string = "Li dobbiamo mettere?? sulla scrivania non ci sono mai stati";
+  public mittente: string = null; // "Nessun mittente";
+  public destinatari: string = null; // "Nessun destinatario";
+  public destinatariCC: string = null; // "Li dobbiamo mettere?? sulla scrivania non ci sono mai stati";
 
   public finestreApribili: any[] = [
     {label: "label1", value: "Elenco documenti"},
@@ -53,20 +52,24 @@ export class ScrivaniaComponent implements OnInit {
     this.attivitaSelezionata = attivitaCliccata;
     this.oggetto = this.attivitaSelezionata.oggetto;
     const datiAggiuntiviAttivita: any = JSON.parse(this.attivitaSelezionata.datiAggiuntivi);
-    this.mittente = datiAggiuntiviAttivita.custom_app_1 ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
+    this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
     let destinatariA, destinatariCC: string;
     if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
       const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
       res.forEach(e => {
         if (e.startsWith("A: ")) {
-          destinatariA = e.replace("A: ", "");
+          destinatariA = e.replace("A: ", "<b>A: </b>");
         } else if (e.startsWith("CC: ")) {
-          destinatariCC = e.replace("CC: ", "");
+          destinatariCC = e.replace("CC: ", "<b>CC: </b>");
+        } else if (e.startsWith("Interni: ")) {
+          destinatariA = e.replace("Interni: ", "<b>Interni: </b>");
+        } else if (e.startsWith("Esterni: ")) {
+          destinatariCC = e.replace("Esterni: ", "<b>Esterni: </b>");
         }
       });
     }
-    this.destinatari = destinatariA ? destinatariA : "Nessun destinatario";
-    this.destinatariCC = destinatariCC ? destinatariCC : "Nessun destinatario";
+    this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
+    this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
 
     this.allegati = [];
     this.allegatiDropDown.clear(null);

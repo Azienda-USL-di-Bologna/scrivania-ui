@@ -1,3 +1,6 @@
+* {
+    font-family: "Open Sans", "Helvetica Neue", sans-serif !important;
+}
 .width100x100 .ui-dropdown{
     width: 100% !important;
 }
@@ -13,6 +16,7 @@
 }
 .content-wrapper{
     padding: 0 30px;
+    width: 100%;
 }
 
 /* :host>>>.ui-state-highlight{
@@ -26,3 +30,15 @@
     cursor: default !important;
 }
 */
+
+>>> body .ui-table .ui-table-tbody > tr.ui-state-highlight {
+    /* background-color: #f68b20; */
+    background-color: rgb(255, 192, 87);
+    color: black;
+}
+
+>>> body .ui-table .ui-table-tbody > tr:nth-child(even).ui-state-highlight {
+    /* background-color: #f68b20; */
+    background-color: rgb(255, 192, 87);
+    color: black;
+}

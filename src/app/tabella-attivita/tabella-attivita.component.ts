@@ -1,16 +1,16 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { LazyLoadEvent } from 'primeng/api';
-import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from '@bds/nt-communicator';
-import { buildLazyEventFiltersAndSorts } from '@bds/primeng-plugin';
-import { AttivitaService } from './attivita.service';
-import { PROJECTIONS } from '../../environments/app-constants';
-import { Attivita, Utente } from '@bds/ng-internauta-model';
-import { NtJwtLoginService } from '@bds/nt-jwt-login';
+import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { DatePipe } from "@angular/common";
+import { LazyLoadEvent } from "primeng/api";
+import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from "@bds/nt-communicator";
+import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
+import { AttivitaService } from "./attivita.service";
+import { PROJECTIONS } from "../../environments/app-constants";
+import { Attivita, Utente } from "@bds/ng-internauta-model";
+import { NtJwtLoginService } from "@bds/nt-jwt-login";
 @Component({
-  selector: 'app-tabella-attivita',
-  templateUrl: './tabella-attivita.component.html',
-  styleUrls: ['./tabella-attivita.component.css'],
+  selector: "app-tabella-attivita",
+  templateUrl: "./tabella-attivita.component.html",
+  styleUrls: ["./tabella-attivita.component.css"],
   providers: [DatePipe]
 })
 export class TabellaAttivitaComponent implements OnInit {
@@ -31,20 +31,20 @@ export class TabellaAttivitaComponent implements OnInit {
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   public loggedUser: Utente;
-  
-  @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita>= new EventEmitter();
-  
+
+  @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
+
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
 
   ngOnInit() {
     // imposto l'utente loggato nell'apposita variabile
-    this.loginService.loggedUser.subscribe((u: Utente) => { 
+    this.loginService.loggedUser.subscribe((u: Utente) => {
       this.loggedUser = u;
     });
 
     this.cols = [
-      {
-        field:"priorita",
+      /* {
+        field: "priorita",
         header: "Priorita",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
       },
@@ -52,6 +52,9 @@ export class TabellaAttivitaComponent implements OnInit {
         field: "tipo",
         header: "Tipo",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
+      }, */
+      {
+        // E' l'insieme di priorità e tipo attività
       },
       {
         field: "idAzienda.nome",
@@ -60,8 +63,9 @@ export class TabellaAttivitaComponent implements OnInit {
       },
       {
         field: "idApplicazione.nome",
-        header: "Applicazione",
-        filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
+        header: "App",
+        filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
+        width: "40px"
       },
       {
         field: "mittente",
@@ -127,7 +131,7 @@ export class TabellaAttivitaComponent implements OnInit {
 
   public handleEvent(nome: string, event: any) {
     const functionName = "handleEvent";
-    //console.log(this.componentDescription, functionName, "nome:", nome, "event:", event);
+    // console.log(this.componentDescription, functionName, "nome:", nome, "event:", event);
     switch (nome) {
       case "onLazyLoad":
         this.lazyLoad(event);
@@ -140,7 +144,7 @@ export class TabellaAttivitaComponent implements OnInit {
 
   private lazyLoad(event: LazyLoadEvent) {
     const functionName = "lazyLoad"
-    //console.log(this.componentDescription, functionName, "event: ", event);
+    // console.log(this.componentDescription, functionName, "event: ", event);
     this.loadData(event);
   }
 
@@ -150,18 +154,18 @@ export class TabellaAttivitaComponent implements OnInit {
 
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const functionName = "buildInitialFiltersAndSorts";
-    let initialFiltersAndSorts = new FiltersAndSorts();
+    const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.asc));
     const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.fk_idPersona.id);
     initialFiltersAndSorts.addFilter(filter);
-    //console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
+    // console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
     return initialFiltersAndSorts;
   }
 
 
   private loadData(event: LazyLoadEvent) {
-    const functionName = "loadData"
-    //console.log(this.componentDescription, functionName, "event: ", event);
+    const functionName = "loadData";
+    // console.log(this.componentDescription, functionName, "event: ", event);
 
     // mi salvo il filtro dell'evento così, se cambio struttura o azienda posso ricaricare i dati applicando quel filtro
     // in alternativa potrei svuotare i filtri al cambio di struttura e azienda
@@ -170,7 +174,7 @@ export class TabellaAttivitaComponent implements OnInit {
       this.lazyLoadFiltersAndSorts = buildLazyEventFiltersAndSorts(event, this.cols, this.datepipe);
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
-    
+
     this.attivitaService.getData(PROJECTIONS.attivita.standardProjections.AttivitaWithIdApplicazioneAndIdAzienda, this.initialFiltersAndSorts, this.lazyLoadFiltersAndSorts)
       .then(
         data => {
@@ -179,18 +183,30 @@ export class TabellaAttivitaComponent implements OnInit {
           if (data && data._embedded && data.page) {
             this.attivita = <Attivita[]>data._embedded.attivita;
             this.totalRecords = data.page.totalElements;
-            console.log('ATTIVITA: ', this.attivita)
-            //console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
+            console.log("ATTIVITA: ", this.attivita);
+            // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
+            this.attivita.forEach(a => {console.log(a.tipo, a.priorita);
+              if (a.tipo === "notifica") {
+                a["iconaAttivita"] = "assets/images/baseline-notification_important-24px.svg";
+              } else if (!a.priorita || a.priorita === 3) {
+                a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
+              } else if (a.priorita === 2) {
+                a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.2.svg";
+              } else if (a.priorita === 1) {
+                a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.1.svg";
+              }
+            });
           }
         }
       );
-      
+
   }
 
   public apriAttivita(attivita: any){
-    let attivitaJsonArray = JSON.parse(attivita.urls);
-    if(attivitaJsonArray && attivitaJsonArray[0]){
-      // abbiamo bisogno di un uuid diverso ad ogni entrata sull'ambiente, se no per un controllo anti-inde-sminchiamento onCommand ritorna e basta
+    const attivitaJsonArray = JSON.parse(attivita.urls);
+    if (attivitaJsonArray && attivitaJsonArray[0]){
+      /* abbiamo bisogno di un uuid diverso ad ogni entrata sull'ambiente,
+         se no per un controllo anti-inde-sminchiamento onCommand ritorna e basta */
       window.open(attivitaJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
     }
 
@@ -200,7 +216,7 @@ export class TabellaAttivitaComponent implements OnInit {
   /**************************
   ** SuperSaloRollsTheUUID **
   **************************/
-  private myRandomUUID(){
+  private myRandomUUID() {
     // 8 - 4 - 4 - 4 - 16
     return this.fourRandomChar() + this.fourRandomChar() +                      // 8
        "-" + this.fourRandomChar() + "-" + this.fourRandomChar() + "-" +        // -4-4-4-

@@ -1,22 +1,30 @@
 .header-left-style{
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     color: white;
     font-weight: bold;
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
     text-align: center;
+    line-height: 64px;
+    padding-left: 30px;
 }
-.height64{
+.height64 {
     height: 64px;
 }
-.center-vertically{
+.title-header {
+    padding-left: 20px;
+}
+.logo {
+    margin-top: 9px;
+    height: 54px;
+}
+.center-vertically {
     display: flex;
-    /* justify-content: left; */
+    
     align-items: center;
 }
-.width100x100{
+.width100x100 {
     width: 100%;
 }
 .icons-style{
@@ -43,10 +51,13 @@
 }
 
 .box-nome-cognome {
-    padding-top: 12px;
     font-weight: bold;
     color: white;
-  }
+}
+
+.padding-top-12 {
+    padding-top: 12px;
+}
 
 .pi-icon-style {
     font-size: 2em; 
@@ -73,8 +84,4 @@
 
 .li-user-information{
     margin-top: 10px;
-}
-
-div{
-    font-family: Arial, Helvetica, sans-serif;
 }

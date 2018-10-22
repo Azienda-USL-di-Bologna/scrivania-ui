@@ -19,12 +19,15 @@
         {{oggetto}}
     </div>
     <p-accordion>
-      <p-accordionTab [header]="mittente">
-          <ul class="ul-info-doc">
-              <li><span class="li-description">Da: </span><span class="li-content">{{mittente}}</span></li>
-              <li><span class="li-description">A:  </span><span class="li-content">{{destinatari}}</span></li>
-              <li><span class="li-description">CC: </span><span class="li-content">{{destinatariCC}}</span></li>
-          </ul>
+      <p-accordionTab header="Dettagli documento">
+            <ul *ngIf="mittente || destinatari || destinatariCC" class="ul-info-doc">
+                <li *ngIf="mittente"><span class="li-description">Da: </span><span class="li-content">{{mittente}}</span></li>
+                <li *ngIf="destinatari"><span class="li-content" [innerHTML]="destinatari"></span></li>
+                <li *ngIf="destinatariCC"><span class="li-content" [innerHTML]="destinatariCC"></span></li>
+            </ul>
+            <div *ngIf="!(mittente || destinatari || destinatariCC)" class="text-centered">
+                Non sono presenti dettagli da visualizzare.
+            </div>
       </p-accordionTab>
     </p-accordion>
     <div style="height: 31px; margin: 5px 0">
@@ -33,12 +36,12 @@
         <img *ngIf="!noAnteprima" style="cursor: pointer; height: 100%; display: inline-block; float: right; " src="assets/images/fullscreen-symbol.svg" (click)="fullscreen($event)" alt="fullscreen"/>
     </div>
     <div>
-    <p-panel> 
-        <iframe *ngIf="!noAnteprima" #anteprima id="anteprima" width="100%" height="600px" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen >
-        </iframe>
-        <!-- <img *ngIf="noAnteprima" [src]="noAnteprimaImg" width="100%" height="600px" frameborder="0"/> -->
-        <div *ngIf="noAnteprima" class="no-anteprima">Anteprima non disponibile.</div>
-    </p-panel>
+        <p-panel> 
+            <iframe *ngIf="!noAnteprima" #anteprima id="anteprima" width="100%" height="600px" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen >
+            </iframe>
+            <!-- <img *ngIf="noAnteprima" [src]="noAnteprimaImg" width="100%" height="600px" frameborder="0"/> -->
+            <div *ngIf="noAnteprima" class="no-anteprima">Anteprima non disponibile.</div>
+        </p-panel>
     </div>
   <!-- <div>
     <p-lightbox type="content">
