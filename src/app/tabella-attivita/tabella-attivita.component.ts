@@ -55,22 +55,25 @@ export class TabellaAttivitaComponent implements OnInit {
       }, */
       {
         // E' l'insieme di priorità e tipo attività
+        width: "30px"
       },
       {
         field: "idAzienda.nome",
         header: "Azienda",
-        filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
+        filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
+        width: "110px"
       },
       {
         field: "idApplicazione.nome",
         header: "App",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "40px"
+        width: "80px"
       },
       {
-        field: "mittente",
-        header: "Mittente",
-        filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
+        field: "provenienza",
+        header: "Da",
+        filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
+        width: "140px"
       },
       {
         field: "oggetto",
@@ -79,25 +82,30 @@ export class TabellaAttivitaComponent implements OnInit {
       },
       {
         field: "dataInserimentoRiga",
-        header: "Data inserimento",
+        header: "Data",
         filterMatchMode: FILTER_TYPES.not_string.equals,
         fieldType: "DateTime",
         filterWidget: "Calendar",
-        ariaLabelDescription: "Colonna Inserimento, Cella filtro"
+        ariaLabelDescription: "Colonna Inserimento, Cella filtro",
+        width: "100px"
       },
       {
         field: "descrizione",
         header: "Descrizione",
-        filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
+        filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
+        width: "140px"
       },
       {
         // colonna azione
+        width: "60px"
       },
       {
-        // colonna pencil
+        // colonna posso procedere
+        width: "30px"
       },
       {
-        // colonna thrash
+        // colonna trash
+        width: "30px"
       },
     ];
   }
@@ -187,7 +195,7 @@ export class TabellaAttivitaComponent implements OnInit {
             // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
             this.attivita.forEach(a => {console.log(a.tipo, a.priorita);
               if (a.tipo === "notifica") {
-                a["iconaAttivita"] = "assets/images/baseline-notification_important-24px.svg";
+                a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
               } else if (!a.priorita || a.priorita === 3) {
                 a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
               } else if (a.priorita === 2) {

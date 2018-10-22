@@ -73,14 +73,14 @@
             <!-- <td class="column-class">{{attivita.tipo}}</td> -->
             <td class="column-class">{{attivita.idAzienda.nome}}</td>
             <td class="column-class">{{attivita.idApplicazione.nome}}</td>
-            <td class="column-class">{{attivita.mittente}}</td>
+            <td class="column-class">{{attivita.provenienza}}</td>
             <td class="column-class">{{attivita.oggetto}}</td>
             <td class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
             <td class="column-class">{{attivita.descrizione}}</td>
             <td>
                 <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' && 
                     (attivita.idApplicazione.nome==='Pico' || attivita.idApplicazione.nome==='Dete' || attivita.idApplicazione.nome==='Deli'))" 
-                (click)="apriAttivita(attivita)">Apri</a>
+                (click)="apriAttivita(attivita)"><b>Apri</b></a>
             </td>
             <td>
                 <img *ngIf="attivita.aperta" src="assets/images/baseline-pause-24px.svg" alt="prendi" class="img-table">

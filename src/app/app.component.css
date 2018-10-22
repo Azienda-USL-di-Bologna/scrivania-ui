@@ -32,13 +32,38 @@
 */
 
 >>> body .ui-table .ui-table-tbody > tr.ui-state-highlight {
-    /* background-color: #f68b20; */
-    background-color: rgb(255, 192, 87);
+    /* background-color: #f68b20;
+    background-color: rgb(255, 192, 87);  */
+    background-color: #FCF9BF;
     color: black;
 }
 
 >>> body .ui-table .ui-table-tbody > tr:nth-child(even).ui-state-highlight {
-    /* background-color: #f68b20; */
-    background-color: rgb(255, 192, 87);
+    /* background-color: #f68b20;
+    background-color: rgb(255, 192, 87);  */
+    background-color: #FCF9BF;
     color: black;
+}
+
+>>> body .ui-table .ui-sortable-column.ui-state-highlight, >>> body .ui-table .ui-sortable-column.ui-state-highlight a {
+    background-color: #e0e0e0;
+    color: black;
+}
+
+/* >>> body .ui-table .ui-sortable-column.ui-state-highlight a {
+    color: black;
+} */
+
+>>> body .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a, 
+>>> body .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active:hover a,
+>>> body .ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-active,
+>>> body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item.ui-state-highlight, 
+>>> body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item-group.ui-state-highlight {
+    background-color: #848484;
+    border: 1px solid #848484;
+    color: #ffffff;
+}
+
+>>> * {
+    outline: none;
 }
