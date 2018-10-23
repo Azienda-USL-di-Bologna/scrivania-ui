@@ -59,7 +59,7 @@ export class TabellaAttivitaComponent implements OnInit {
       },
       {
         field: "idAzienda.nome",
-        header: "Azienda",
+        header: "Ente",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
         width: "110px"
       },
