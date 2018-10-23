@@ -16,7 +16,25 @@ export class ScrivaniaService extends HttpAbstractService {
   //private blobEmitter: BehaviorSubject<any> = new BehaviorSubject(new URL("http://localhost:4200/assets/images/no_anteprima.png"));
 
   constructor(protected http: HttpClient, protected datepipe: DatePipe, private loginService: NtJwtLoginService) {
-    super(http, datepipe, ENTITIES_CONFIGURATION[ENTITIES.attivita], BASE_URL);
+    super(http, datepipe, ENTITIES_CONFIGURATION[ENTITIES.menu], BASE_URL);
+  }
+
+  update(elementToUpdate: Attivita): Promise<any> {
+    const functioName = "update";
+    //console.log(this.classDescriptionLocal, functioName, "id", elementToUpdate.id, "elmToUpdate", elementToUpdate);
+    return this.patchHttpCall(elementToUpdate, elementToUpdate.id);
+  }
+
+  insert(elementToInsert: Attivita, datepipe: DatePipe): Promise<any>{
+    const functioName = "insert";
+   // console.log(this.classDescriptionLocal, functioName, "elementToInsert", elementToInsert);
+    return this.postHttpCall(elementToInsert);
+  }
+
+  delete(elementToDelete: Attivita): Promise<any>{
+    const functioName = "delete";
+    //console.log(this.classDescriptionLocal, functioName, "elementToDelete", elementToDelete);
+    return this.deleteHttpCall(elementToDelete.id);
   }
 
   // public getBlobEmitterObsevable(): Observable<any> {

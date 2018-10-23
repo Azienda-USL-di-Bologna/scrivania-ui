@@ -17,7 +17,7 @@ import { HeaderComponent } from './header/header.component';
 
 /* PrimeNG component */
 import { AccordionModule } from 'primeng/accordion';
-import {LightboxModule} from 'primeng/lightbox';
+import { LightboxModule } from 'primeng/lightbox';
 import { PanelModule } from 'primeng/panel';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
@@ -26,7 +26,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { AttivitaService } from './tabella-attivita/attivita.service';
 import { DatePipe } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
-import {OverlayPanelModule} from 'primeng/overlaypanel';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TieredMenuModule } from 'primeng/tieredmenu';
 
 /* Login */
 import { NtJwtLoginModule } from '@bds/nt-jwt-login';
@@ -56,7 +57,8 @@ import { loginModuleConfig } from './config/module-config';
     CalendarModule,
     TooltipModule,
     InputTextModule,
-    OverlayPanelModule
+    OverlayPanelModule,
+    TieredMenuModule
   ],
   providers: [AttivitaService, DatePipe],
   bootstrap: [AppComponent]

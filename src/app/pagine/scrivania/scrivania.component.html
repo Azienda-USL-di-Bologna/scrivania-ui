@@ -3,7 +3,11 @@
   <!-- Left side -->
   <div class="p-col-8 content-left">
       <div class="option-bar">
-            <p-dropdown placeholder="Apri:" [options]="finestreApribili" [(ngModel)]="finestraScelta" optionLabel="value"></p-dropdown>
+            <div>
+                <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" (itemClick)="handleItemClick($event)"></p-tieredMenu>
+                <button #btn type="button" pButton icon="pi pi-bars" (click)="menu.toggle($event)"></button> <!-- menu.toggle($event) -->
+            </div>
+            
             <div>
                 <span class="pr-8">Filtro rapido:</span>
                 <p-dropdown [options]="filtriApribili" [(ngModel)]="filtroScelto" optionLabel="value"></p-dropdown>

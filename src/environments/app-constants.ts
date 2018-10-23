@@ -20,7 +20,8 @@ export const LOGOUT_URL = window.location.protocol + "//" + hostname + port + LO
 export const ENTITIES = {
     azienda: "azienda",
     attivita: 'attivita',
-    applicazione: 'applicazione'
+    applicazione: 'applicazione',
+    menu: 'menu'
 }
 
 export const PROJECTIONS = {
@@ -36,18 +37,30 @@ export const PROJECTIONS = {
             AttivitaWithIdApplicazioneAndIdAzienda: "AttivitaWithIdApplicazioneAndIdAzienda"
         }, 
         customProjections: {}
-    }
+    },
+    menu: {
+        standardProjections: {
+            menuWithPlainFields: "menuWithPlainFields",
+            menuWithIdApplicazioneAndIdAzienda: "MenuWithIdApplicazioneAndIdAzienda"
+        }, 
+        customProjections: {}
+    },
 }
 
 export const ENTITIES_CONFIGURATION: EntitiesConfiguration = {
     azienda: {
         path: "azienda",
-        standardProjections: PROJECTIONS.azienda.standardProjections,
-        customProjections: PROJECTIONS.azienda.standardProjections,
+        // standardProjections: PROJECTIONS.azienda.standardProjections,
+        // customProjections: PROJECTIONS.azienda.standardProjections,
     },
     attivita: {
         path: "attivita",
-        standardProjections: PROJECTIONS.attivita.standardProjections,
-        customProjections: PROJECTIONS.attivita.standardProjections,
-    }
+        // standardProjections: PROJECTIONS.attivita.standardProjections,
+        // customProjections: PROJECTIONS.attivita.standardProjections,
+    },
+    menu: {
+        path: "menu",
+        // standardProjections: PROJECTIONS.menu.standardProjections,
+        // customProjections: PROJECTIONS.menu.standardProjections,
+    },
 }

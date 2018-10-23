@@ -151,9 +151,9 @@ export class TabellaAttivitaComponent implements OnInit {
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const functionName = "buildInitialFiltersAndSorts";
     let initialFiltersAndSorts = new FiltersAndSorts();
-    initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.asc));
-    const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.fk_idPersona.id);
-    initialFiltersAndSorts.addFilter(filter);
+    // initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.asc));
+    // const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.fk_idPersona.id);
+    // initialFiltersAndSorts.addFilter(filter);
     //console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
     return initialFiltersAndSorts;
   }
@@ -184,7 +184,6 @@ export class TabellaAttivitaComponent implements OnInit {
           }
         }
       );
-      
   }
 
   public apriAttivita(attivita: any){

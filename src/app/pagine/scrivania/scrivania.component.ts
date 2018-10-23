@@ -1,9 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Attivita, Utente } from '@bds/ng-internauta-model';
 import { Dropdown } from 'primeng/dropdown';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { MenuItem, LazyLoadEvent } from 'primeng/api';
 import { ScrivaniaService } from './scrivania.service';
 import { NtJwtLoginService } from '@bds/nt-jwt-login';
+import { FiltersAndSorts, NO_LIMIT } from '@bds/nt-communicator';
+import { PROJECTIONS } from '../../../environments/app-constants';
+import { forEach } from '@angular/router/src/utils/collection';
+import { bind } from '@angular/core/src/render3/instructions';
 
 @Component({
   selector: 'app-scrivania',
@@ -28,12 +34,13 @@ export class ScrivaniaComponent implements OnInit {
   public destinatari: string = "Nessun destinatario";
   public destinatariCC: string = "Li dobbiamo mettere?? sulla scrivania non ci sono mai stati";
 
-  public finestreApribili: any[] = [{label:"label1",value:"Elenco documenti"},{label:"label2",value:"Elenco determine"},{label:"label3",value:"Elenco delibere"}];
+  public finestreApribili: any[] = [{label:"Elenco documenti", items:[{label:"AOSPBO", command: (onclick)=> {this.handleItemClick("ciao")}},{label:"AUSLBO"}]},{label:"Elenco determine"},{label:"Elenco delibere"}];
   public finestraScelta: any;
 
   public filtriApribili: any[] = [{label:"label1",value:"105"},{label:"label2",value:"102"},{label:"label3",value:"909"}];
   public filtroScelto: any;
   public loggedUser: Utente;
+  public alberoMenu : any[];
 
   constructor(private domSanitizer: DomSanitizer, private scrivaniaSrvice: ScrivaniaService, private loginService: NtJwtLoginService) {
    }
@@ -43,6 +50,7 @@ export class ScrivaniaComponent implements OnInit {
     this.loginService.loggedUser.subscribe((u: Utente) => { 
       this.loggedUser = u;
     })
+    this.loadMenu();
   }
 
   public attivitaClicked(attivitaCliccata: Attivita) {
@@ -96,5 +104,89 @@ export class ScrivaniaComponent implements OnInit {
     let iframeElement:any = this.anteprima.nativeElement;
     let fullScreenFunction = iframeElement.requestFullscreen || iframeElement.webkitRequestFullscreen || iframeElement.mozRequestFullScreen || iframeElement.msRequestFullscreen;
     fullScreenFunction.call(iframeElement);
+  }
+
+  handleItemClick(event){
+    window.open(event);
+  }
+
+  private loadMenu() {
+    // console.log('Menu: ', menu);
+    
+    if(this.alberoMenu){
+      // menu.toggle(event);
+      return;
+    }
+    this.alberoMenu = [];
+    let initialFiltersAndSorts = new FiltersAndSorts();
+    initialFiltersAndSorts.rows = NO_LIMIT;
+    let lazyLoadFiltersAndSorts = new FiltersAndSorts();
+    this.scrivaniaSrvice.getData(PROJECTIONS.menu.standardProjections.menuWithIdApplicazioneAndIdAzienda, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
+      .then(
+        data => {
+          let arrayMenu = data._embedded.menu;
+          arrayMenu.forEach( elementArray => {
+            let found = false;
+            for (let elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'aplicazione
+              if(elementAlbero.label === elementArray.idApplicazione.nome){
+                if(elementAlbero.items){ // nell'applicazione è presente almeno un comando
+                  for (let item of elementAlbero.items) { 
+                    if(item.label === elementArray.descrizione){ // vedo se un comado simile è gia stato aggiunto
+                      // comando presente quindi aggiungo solo l'azienda TODO
+                      found = true;
+                      item.items ? true : item.items = [];
+                      item.items.push(new ThreeNode(
+                        elementArray.idAzienda.nome, 
+                        null,
+                        (onclick)=> {this.handleItemClick(elementArray.openCommand)}
+                      ));
+                      break;
+                    }
+                  }
+                }
+                if(!found){ // Il comando non è presente, lo aggiungo
+                  found = true;
+                  elementAlbero.items.push(new ThreeNode(
+                    elementArray.descrizione,
+                    [new ThreeNode(elementArray.idAzienda.nome, null, null)],
+                    null
+                  ));
+                  break
+                }
+              }
+            }
+            if(!found){ // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
+              this.alberoMenu.push(new ThreeNode(
+                elementArray.idApplicazione.nome,
+                [new ThreeNode(
+                  elementArray.descrizione,
+                  [new ThreeNode(
+                    elementArray.idAzienda.nome, 
+                    null, 
+                    (onclick)=> {this.handleItemClick(elementArray.openCommand)}
+                  )],
+                  null
+                )],
+                null
+              ));
+            }
+          });
+          // menu.toggle(event);
+        }
+      );
+      
+  }
+
+}
+class ThreeNode{
+  private label: string;
+  private items: ThreeNode[];
+  private command: any;
+
+  constructor(label: string, items: ThreeNode[], command: any){
+    //this.key = key;
+    this.label = label;
+    this.items = items;
+    this.command = command;
   }
 }
