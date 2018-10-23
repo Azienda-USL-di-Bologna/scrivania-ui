@@ -1,8 +1,8 @@
-import { EntitiesConfiguration } from '@bds/nt-communicator';
+import { EntitiesConfiguration } from "@bds/nt-communicator";
 
 // ========================= Url =====================================
 // export const ODATA_BASE_URL: string = environment.odataStoreRootUrl;
-let hostname: string = window.location.hostname;
+const hostname: string = window.location.hostname;
 const originalPort: string = window.location.port;
 export const LOCALHOST_PORT = "10005";
 
@@ -19,23 +19,23 @@ export const LOGOUT_URL = window.location.protocol + "//" + hostname + port + LO
 
 export const ENTITIES = {
     azienda: "azienda",
-    attivita: 'attivita',
-    applicazione: 'applicazione',
-    menu: 'menu'
+    attivita: "attivita",
+    applicazione: "applicazione",
+    menu: "menu"
 }
 
 export const PROJECTIONS = {
     azienda: {
         standardProjections: {
             aziendaWithPlainFields: "aziendaWithPlainFields",
-        }, 
+        },
         customProjections: {}
     },
     attivita: {
         standardProjections: {
             attivitaWithPlainFields: "attivitaWithPlainFields",
             AttivitaWithIdApplicazioneAndIdAzienda: "AttivitaWithIdApplicazioneAndIdAzienda"
-        }, 
+        },
         customProjections: {}
     },
     menu: {
@@ -49,18 +49,12 @@ export const PROJECTIONS = {
 
 export const ENTITIES_CONFIGURATION: EntitiesConfiguration = {
     azienda: {
-        path: "azienda",
-        // standardProjections: PROJECTIONS.azienda.standardProjections,
-        // customProjections: PROJECTIONS.azienda.standardProjections,
+        path: "azienda"
     },
     attivita: {
-        path: "attivita",
-        // standardProjections: PROJECTIONS.attivita.standardProjections,
-        // customProjections: PROJECTIONS.attivita.standardProjections,
+        path: "attivita"
     },
-    menu: {
-        path: "menu",
-        // standardProjections: PROJECTIONS.menu.standardProjections,
-        // customProjections: PROJECTIONS.menu.standardProjections,
-    },
-}
+	menu: {
+        path: "menu"
+    }
+};
