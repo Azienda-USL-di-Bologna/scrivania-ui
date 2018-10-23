@@ -4,8 +4,10 @@
   <div class="p-col-8 content-left">
       <div class="option-bar">
             <div>
+                <button #btn type="button" pButton (click)="menu.toggle($event)" class="clMenu" iconPos="left" label="Apri">
+                    <img src="assets/images/baseline_dashboard_white_48dp.png" width="24px" alt="Apri">
+                </button> <!-- menu.toggle($event) -->
                 <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" (itemClick)="handleItemClick($event)"></p-tieredMenu>
-                <button #btn type="button" pButton icon="pi pi-bars" (click)="menu.toggle($event)"></button> <!-- menu.toggle($event) -->
             </div>
             
             <div>

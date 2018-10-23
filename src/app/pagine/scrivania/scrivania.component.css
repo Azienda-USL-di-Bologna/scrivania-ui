@@ -49,3 +49,14 @@
 .text-centered {
     text-align: center;
 }
+.clMenu {
+    display: flex;
+    font-weight: bold;
+    padding: 6px;
+}
+:host>>>.clMenu * {
+    margin: auto;
+}
+:host>>>.clMenu > span {
+    padding: 0 0 0 8px !important;
+}
