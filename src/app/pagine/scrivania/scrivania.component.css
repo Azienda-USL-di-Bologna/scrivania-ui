@@ -52,11 +52,25 @@
 .clMenu {
     display: flex;
     font-weight: bold;
-    padding: 6px;
+    padding: 4px 8px;
+}
+.clMenu:enabled{
+    background-color: #909090 !important; /* #909090  #848484*/
+    border-color: #d4d4d4 !important;
+}
+.clMenu:hover{
+    background-color: #737272 !important; 
+    border-color: #d4d4d4 !important;
 }
 :host>>>.clMenu * {
     margin: auto;
 }
 :host>>>.clMenu > span {
     padding: 0 0 0 8px !important;
+}
+:host>>>.ui-tieredmenu {
+    background-color:#f5f5f5;
+}
+:host>>>.ui-tieredmenu .ui-submenu-list{
+    background-color:#f5f5f5;
 }
