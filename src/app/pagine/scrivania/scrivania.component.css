@@ -55,11 +55,11 @@
     padding: 4px 8px;
 }
 .clMenu:enabled{
-    background-color: #909090 !important; /* #909090  #848484*/
+    background-color: #993366 !important; /* #909090  #848484*/
     border-color: #d4d4d4 !important;
 }
 .clMenu:hover{
-    background-color: #737272 !important; 
+    background-color: #737272 !important; /* #737272 */
     border-color: #d4d4d4 !important;
 }
 :host>>>.clMenu * {
