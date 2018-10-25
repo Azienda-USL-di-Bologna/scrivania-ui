@@ -120,6 +120,8 @@ export class ScrivaniaComponent implements OnInit {
   }
 
   handleItemClick(event){
+    console.log("Link: ", event);
+    
     window.open(event);
   }
 
@@ -140,6 +142,10 @@ export class ScrivaniaComponent implements OnInit {
           let arrayMenu = data._embedded.menu;
           arrayMenu.forEach( elementArray => {
             let found = false;
+            if(elementArray.descrizione == 'Nuova Determina'){
+              console.log('Element Array: ', elementArray);
+              
+            }
             for (let elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'aplicazione
               if(elementAlbero.label === elementArray.idApplicazione.nome){
                 if(elementAlbero.items){ // nell'applicazione è presente almeno un comando
@@ -161,7 +167,11 @@ export class ScrivaniaComponent implements OnInit {
                   found = true;
                   elementAlbero.items.push(new ThreeNode(
                     elementArray.descrizione,
-                    [new ThreeNode(elementArray.idAzienda.nome, null, null)],
+                    [new ThreeNode(
+                      elementArray.idAzienda.nome, 
+                      null, 
+                      (onclick)=> {this.handleItemClick(elementArray.openCommand)}
+                      )],
                     null
                   ));
                   break
