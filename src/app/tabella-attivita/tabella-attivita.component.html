@@ -40,7 +40,7 @@
 
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngFor="let col of columns">
+            <th *ngFor="let col of columns" [style.width]="col.width">
                 <div *ngIf="col.field != undefined" [pSortableColumn]="col.field">
                     {{col.header}}
                     <p-sortIcon [field]="col.field" ariaLabelAsc="Colonnna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonnna {{col.header}}, Ordinamento discendente">
@@ -65,25 +65,25 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
         <tr class="row-class" [pSelectableRow]="rowData">
-            <td>
-                <img *ngIf="attivita.priorita===1" src="assets/images/outline_flag_black_48dp.png" alt="priorita" class="img-table">
-                <img *ngIf="attivita.priorita===2" src="assets/images/baseline_flag_black_48dp.png" alt="priorita" class="img-table">
+            <td class="column-class">
+                <img [src]="attivita.iconaAttivita" alt="priorita" class="img-table" />
+                <!-- <img *ngIf="attivita.priorita===2" src="assets/images/baseline_flag_black_48dp.png" alt="priorita" class="img-table"> -->
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->
             </td>
-            <td class="column-class">{{attivita.tipo}}</td>
+            <!-- <td class="column-class">{{attivita.tipo}}</td> -->
             <td class="column-class">{{attivita.idAzienda.nome}}</td>
             <td class="column-class">{{attivita.idApplicazione.nome}}</td>
-            <td class="column-class">{{attivita.mittente}}</td>
+            <td class="column-class">{{attivita.provenienza}}</td>
             <td class="column-class">{{attivita.oggetto}}</td>
             <td class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
             <td class="column-class">{{attivita.descrizione}}</td>
             <td>
                 <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' && 
                     (attivita.idApplicazione.nome==='Pico' || attivita.idApplicazione.nome==='Dete' || attivita.idApplicazione.nome==='Deli'))" 
-                (click)="apriAttivita(attivita)">Apri</a>
+                (click)="apriAttivita(attivita)"><b>Apri</b></a>
             </td>
             <td>
-                <img *ngIf="attivita.aperta" src="assets/images/orange-circle-md.png" alt="prendi" class="img-table">
+                <img *ngIf="attivita.aperta" src="assets/images/baseline-not_interested-24px.svg" alt="prendi" class="img-table">
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->
             </td>
             <td>
