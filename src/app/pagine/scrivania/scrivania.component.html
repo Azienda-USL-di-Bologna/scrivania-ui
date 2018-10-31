@@ -1,8 +1,9 @@
 <div class="p-grid "> <!--p-nogutter-->
     
   <!-- Left side -->
-  <div class="p-col-8 content-left">
-      <div class="option-bar">
+  <div class="p-col-8 content-left position-relative" #leftSide>
+      <div class="d-inline-block">
+        <div class="option-bar">
             <div>
                 <button #btn type="button" pButton (click)="menu.toggle($event)" class="clMenu" iconPos="left" label="Apri">
                     <img src="assets/images/baseline_dashboard_white_48dp.png" width="24px" alt="Apri">
@@ -14,12 +15,15 @@
                 <span class="pr-8">Filtro rapido:</span>
                 <p-dropdown [options]="filtriApribili" [(ngModel)]="filtroScelto" optionLabel="value"></p-dropdown>
             </div>
+        </div>
+        <app-tabella-attivita (attivitaEmitter)="attivitaClicked($event)"></app-tabella-attivita>
       </div>
-      <app-tabella-attivita (attivitaEmitter)="attivitaClicked($event)"></app-tabella-attivita>
+
+      <div class="d-inline-block slider" #slider><div></div></div>
   </div>
 
   <!-- Right side -->
-  <div class="p-col-4 content-right">
+  <div class="p-col content-right" #rightSide>
     <div class="div-info-doc">
         <!-- <span>{{documento.tipo}}{{documento.numero}} - {{documento.oggetto}}</span><span class="span-info-doc">{{documento.protocollatoIl}}</span> -->
         {{oggetto}}

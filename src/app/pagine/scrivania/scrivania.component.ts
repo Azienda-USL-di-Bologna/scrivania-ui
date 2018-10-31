@@ -21,6 +21,11 @@ export class ScrivaniaComponent implements OnInit {
    @ViewChild("anteprima") private anteprima: ElementRef;
    @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
 
+   @ViewChild("leftSide") private leftSide: ElementRef;
+   @ViewChild("rightSide") private rightSide: ElementRef;
+   @ViewChild("slider") private slider: ElementRef;
+   private posX: number;
+
   public attivitaSelezionata: Attivita;
   public noAnteprimaImg: string = "assets/images/no_anteprima.png";
   public noAnteprima: boolean = true;
@@ -50,6 +55,20 @@ export class ScrivaniaComponent implements OnInit {
       this.loggedUser = u;
     })
     this.loadMenu();
+    let that = this;
+    this.slider.nativeElement.onmousedown = function(e){
+      e.preventDefault();
+      that.posX = e.clientX;
+      document.onmouseup = function(){
+        document.onmouseup = null;
+      document.onmousemove = null;
+      }
+      document.onmousemove = function(e){
+        e.preventDefault();
+
+        that.leftSide.nativeElement.style.width = e.clientX + 'px';
+      }
+    }
   }
 
   public attivitaClicked(attivitaCliccata: Attivita) {
@@ -120,16 +139,11 @@ export class ScrivaniaComponent implements OnInit {
   }
 
   handleItemClick(event){
-    console.log("Link: ", event);
-    
     window.open(event);
   }
 
   private loadMenu() {
-    // console.log('Menu: ', menu);
-    
     if(this.alberoMenu){
-      // menu.toggle(event);
       return;
     }
     this.alberoMenu = [];
@@ -142,10 +156,6 @@ export class ScrivaniaComponent implements OnInit {
           let arrayMenu = data._embedded.menu;
           arrayMenu.forEach( elementArray => {
             let found = false;
-            if(elementArray.descrizione == 'Nuova Determina'){
-              console.log('Element Array: ', elementArray);
-              
-            }
             for (let elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'aplicazione
               if(elementAlbero.label === elementArray.idApplicazione.nome){
                 if(elementAlbero.items){ // nell'applicazione è presente almeno un comando
@@ -194,7 +204,6 @@ export class ScrivaniaComponent implements OnInit {
               ));
             }
           });
-          // menu.toggle(event);
         }
       );
       

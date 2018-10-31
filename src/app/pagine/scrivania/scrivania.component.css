@@ -1,5 +1,5 @@
 .content-left{
-    padding-right: 8px;
+    padding-right: 23px;
 }
 .content-right{
     padding-left: 8px;
@@ -75,4 +75,30 @@
 }
 :host>>>.ui-tieredmenu .ui-submenu-list{
     background-color:#f5f5f5;
+}
+.position-relative{
+    position: relative;
+}
+.slider{
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 15px;
+    cursor: w-resize;
+    text-align: center;
+}
+.slider > div{
+    border: dotted 1px grey;
+    width: 3px;
+    border-top: none;
+    border-bottom: none;
+    height: 100%;
+    display: inline-block;
+}
+.p-right-0{
+    padding-right: 0;
+}
+.p-left-0{
+    padding-left: 0;
 }
