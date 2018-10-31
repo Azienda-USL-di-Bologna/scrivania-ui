@@ -102,3 +102,6 @@
 .p-left-0{
     padding-left: 0;
 }
+:host>>>.clMenu{
+    top: auto !important;
+}
