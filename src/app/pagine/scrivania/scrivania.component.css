@@ -1,8 +1,12 @@
 .content-left{
-    padding-right: 23px;
+    overflow-y: auto;
 }
 .content-right{
-    padding-left: 8px;
+    padding-left: 23px;
+    /*overflow-y: scroll;*/
+}
+.attivita-wrapper{
+    height: 100%;
 }
 .option-bar{
     display: flex;
@@ -81,7 +85,7 @@
 }
 .slider{
     position: absolute;
-    right: 0;
+    /*right: 0;*/
     top: 0;
     bottom: 0;
     width: 15px;

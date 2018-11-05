@@ -67,6 +67,7 @@ export class ScrivaniaComponent implements OnInit {
         e.preventDefault();
 
         that.leftSide.nativeElement.style.width = e.clientX + 'px';
+        that.slider.nativeElement.style.marginLeft = e.clientX + 'px';
       }
     }
   }
