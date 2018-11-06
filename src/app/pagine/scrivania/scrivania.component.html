@@ -1,5 +1,5 @@
 <div class="p-grid attivita-wrapper position-relative"> <!--p-nogutter-->
-    
+
   <!-- Left side -->
   <div class="p-col-8 content-left " #leftSide>
       <div class="d-inline-block">
@@ -10,9 +10,9 @@
                 </button> <!-- menu.toggle($event) -->
                 <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" styleClass="clMenu" (itemClick)="handleItemClick($event)"></p-tieredMenu>
             </div>
-            
+
             <div>
-                <span class="pr-8">Filtro rapido:</span>
+                <span class="pr-8">Aziende:</span>
                 <p-dropdown [options]="filtriApribili" [(ngModel)]="filtroScelto" optionLabel="value"></p-dropdown>
             </div>
         </div>
@@ -42,13 +42,13 @@
             </div>
       </p-accordionTab>
     </p-accordion>
-    <div style="height: 31px; margin: 5px 0">
-        <p-dropdown #allegatiDropDown styleClass="width100x100 mt16" [options]="allegati" (onChange)="allegatoSelected($event)"></p-dropdown>
+    <div class="p-grid" style="height: 31px; margin: 5px 0; margin-bottom: 20px" >
+        <p-dropdown #allegatiDropDown styleClass="width100x100 mt16" class="p-col" [autoWidth]="false" [options]="allegati" (onChange)="allegatoSelected($event)"></p-dropdown>
         <!-- <p-button label="Click" (onClick)="fullscreen($event)" style="float: right;" ></p-button> -->
-        <img *ngIf="!noAnteprima" style="cursor: pointer; height: 100%; display: inline-block; float: right; " src="assets/images/fullscreen-symbol.svg" (click)="fullscreen($event)" alt="fullscreen"/>
+        <img *ngIf="!noAnteprima" class="p-col-1" style="cursor: pointer; display: inline-block; float: right; width: 50px; height: 50px; max-width: 100%; min-height: 100%" src="assets/images/fullscreen-symbol.svg" (click)="fullscreen($event)" alt="fullscreen"/>
     </div>
     <div>
-        <p-panel> 
+        <p-panel>
             <iframe *ngIf="!noAnteprima" #anteprima id="anteprima" width="100%" height="600px" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen >
             </iframe>
             <!-- <img *ngIf="noAnteprima" [src]="noAnteprimaImg" width="100%" height="600px" frameborder="0"/> -->
