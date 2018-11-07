@@ -46,6 +46,9 @@ export class ScrivaniaComponent implements OnInit {
   public loggedUser: Utente;
   public alberoMenu : any[];
 
+  public showNote: boolean = false;
+  public noteText: string = null;
+
   constructor(private domSanitizer: DomSanitizer, private scrivaniaSrvice: ScrivaniaService, private loginService: NtJwtLoginService) {
    }
 
@@ -237,6 +240,11 @@ export class ScrivaniaComponent implements OnInit {
         }
       );
 
+  }
+
+  private onNoteClick(attivita: any) {
+    console.log("note clicked", attivita);
+    this.showNote = ((this.noteText = attivita.note) !== null);
   }
 
 }

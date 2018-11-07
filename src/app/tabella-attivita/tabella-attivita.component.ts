@@ -33,6 +33,7 @@ export class TabellaAttivitaComponent implements OnInit {
   public loggedUser: Utente;
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
+  @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
 
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
 
@@ -105,6 +106,10 @@ export class TabellaAttivitaComponent implements OnInit {
       },
       {
         // colonna trash
+        width: "30px"
+      },
+      {
+      // colonna note
         width: "30px"
       },
     ];
@@ -218,6 +223,10 @@ export class TabellaAttivitaComponent implements OnInit {
       window.open(attivitaJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
     }
 
+  }
+
+  private onNoteClick(attivita: any) {
+    this.onAttivitaNoteEmitter.emit(attivita);
   }
 
 

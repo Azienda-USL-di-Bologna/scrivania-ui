@@ -16,7 +16,7 @@
                 <p-dropdown [options]="filtriApribili" [(ngModel)]="filtroScelto" optionLabel="value"></p-dropdown>
             </div>
         </div>
-        <app-tabella-attivita (attivitaEmitter)="attivitaClicked($event)"></app-tabella-attivita>
+        <app-tabella-attivita (attivitaEmitter)="attivitaClicked($event)" (onAttivitaNoteEmitter)="onNoteClick($event)"></app-tabella-attivita>
       </div>
 
       <!-- <div class="d-inline-block slider" #slider><div></div></div> -->
@@ -65,3 +65,9 @@
     </div> -->
     </div>
 </div>
+
+
+<p-dialog header="Note Attività" [(visible)]="this.showNote" [modal]="true" [responsive]="true" [width]="350" [minWidth]="200" [minY]="70"
+        [maximizable]="true" [baseZIndex]="10000">
+        {{ this.noteText }}
+</p-dialog>
