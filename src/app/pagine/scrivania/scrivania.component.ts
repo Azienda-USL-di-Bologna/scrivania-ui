@@ -242,7 +242,7 @@ export class ScrivaniaComponent implements OnInit {
 
   }
 
-  private onNoteClick(attivita: any) {
+  public onNoteClick(attivita: any) {
     console.log("note clicked", attivita);
     this.showNote = ((this.noteText = attivita.note) !== null);
   }
