@@ -31,6 +31,7 @@ export class TabellaAttivitaComponent implements OnInit {
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   public loggedUser: Utente;
+  public loading:boolean = false;
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
 
@@ -153,6 +154,7 @@ export class TabellaAttivitaComponent implements OnInit {
   private lazyLoad(event: LazyLoadEvent) {
     const functionName = "lazyLoad"
     // console.log(this.componentDescription, functionName, "event: ", event);
+
     this.loadData(event);
   }
 
@@ -172,6 +174,7 @@ export class TabellaAttivitaComponent implements OnInit {
 
 
   private loadData(event: LazyLoadEvent) {
+    this.loading = true;
     const functionName = "loadData";
     // console.log(this.componentDescription, functionName, "event: ", event);
 
@@ -205,6 +208,7 @@ export class TabellaAttivitaComponent implements OnInit {
               }
             });
           }
+          this.loading = false;
         }
       );
 

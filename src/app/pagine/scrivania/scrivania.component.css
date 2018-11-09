@@ -3,7 +3,7 @@
 }
 .content-right{
     padding-left: 23px;
-    /*overflow-y: scroll;*/
+    overflow-y: auto;
 }
 .attivita-wrapper{
     height: 100%;
