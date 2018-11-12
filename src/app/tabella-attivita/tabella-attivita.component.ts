@@ -63,7 +63,7 @@ export class TabellaAttivitaComponent implements OnInit {
         field: "idAzienda.nome",
         header: "Ente",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "110px"
+        width: "85px"
       },
       {
         field: "idApplicazione.nome",
@@ -93,9 +93,9 @@ export class TabellaAttivitaComponent implements OnInit {
       },
       {
         field: "descrizione",
-        header: "Descrizione",
+        header: "Tipo",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "140px"
+        width: "120px"
       },
       {
         // colonna azione

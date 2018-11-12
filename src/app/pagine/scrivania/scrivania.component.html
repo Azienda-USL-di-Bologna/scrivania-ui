@@ -1,28 +1,27 @@
 <div class="p-grid attivita-wrapper position-relative"> <!--p-nogutter-->
 
   <!-- Left side -->
-  <div class="p-col-8 content-left " #leftSide>
-      <div>
-        <div class="option-bar">
-            <div>
-                <button #btn type="button" pButton (click)="menu.toggle($event)" class="clMenu" iconPos="left" label="Apri">
-                    <img src="assets/images/baseline_dashboard_white_48dp.png" width="24px" alt="Apri">
-                </button> <!-- menu.toggle($event) -->
-                <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" styleClass="clMenu" (itemClick)="handleItemClick($event)"></p-tieredMenu>
-            </div>
-
-            <div>
-                <span class="pr-8">Aziende:</span>
-                <p-dropdown [options]="filtriApribili" [(ngModel)]="filtroScelto" optionLabel="value"></p-dropdown>
-            </div>
+  <div class="p-col-7 content-left" #leftSide>
+    <div class="option-bar">
+        <div>
+            <button #btn type="button" pButton (click)="menu.toggle($event)" class="clMenu" iconPos="left" label="Apri">
+                <img src="assets/images/baseline_dashboard_white_48dp.png" width="24px" alt="Apri">
+            </button> <!-- menu.toggle($event) -->
+            <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" styleClass="clMenu" (itemClick)="handleItemClick($event)"></p-tieredMenu>
         </div>
-        <app-tabella-attivita (attivitaEmitter)="attivitaClicked($event)" (onAttivitaNoteEmitter)="onNoteClick($event)"></app-tabella-attivita>
-      </div>
 
-      <!-- <div class="d-inline-block slider" #slider><div></div></div> -->
+        <div>
+            <span class="pr-8">Ente:</span>
+            <p-dropdown [options]="filtriApribili" [(ngModel)]="filtroScelto" optionLabel="value"></p-dropdown>
+        </div>
+    </div>
+    <div>
+        <app-tabella-attivita (attivitaEmitter)="attivitaClicked($event)" (onAttivitaNoteEmitter)="onNoteClick($event)"></app-tabella-attivita>
+    </div>
+    
   </div>
 
-  <div class="p-offset-8 d-inline-block slider" #slider><div></div></div>
+  <div class="p-offset-7 d-inline-block slider" #slider><div></div></div>
 
   <!-- Right side -->
   <div class="p-col content-right" #rightSide>

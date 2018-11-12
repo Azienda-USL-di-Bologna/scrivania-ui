@@ -21,7 +21,7 @@
 <p-table #dt 
     [value]="attivita" 
     [columns]="cols" [rows]="10" 
-    [paginator]="true" [autoLayout]="true" 
+    [paginator]="false" [autoLayout]="true" 
     [rowsPerPageOptions]="[5,10,15,20]"
     [lazy]="true" 
     (onLazyLoad)="handleEvent('onLazyLoad', $event)" 
