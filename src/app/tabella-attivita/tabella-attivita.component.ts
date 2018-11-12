@@ -31,8 +31,10 @@ export class TabellaAttivitaComponent implements OnInit {
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   public loggedUser: Utente;
+  public loading:boolean = false;
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
+  @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
 
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
 
@@ -61,7 +63,7 @@ export class TabellaAttivitaComponent implements OnInit {
         field: "idAzienda.nome",
         header: "Ente",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "110px"
+        width: "85px"
       },
       {
         field: "idApplicazione.nome",
@@ -91,9 +93,9 @@ export class TabellaAttivitaComponent implements OnInit {
       },
       {
         field: "descrizione",
-        header: "Descrizione",
+        header: "Tipo",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "140px"
+        width: "120px"
       },
       {
         // colonna azione
@@ -105,6 +107,10 @@ export class TabellaAttivitaComponent implements OnInit {
       },
       {
         // colonna trash
+        width: "30px"
+      },
+      {
+      // colonna note
         width: "30px"
       },
     ];
@@ -153,6 +159,7 @@ export class TabellaAttivitaComponent implements OnInit {
   private lazyLoad(event: LazyLoadEvent) {
     const functionName = "lazyLoad"
     // console.log(this.componentDescription, functionName, "event: ", event);
+
     this.loadData(event);
   }
 
@@ -172,6 +179,7 @@ export class TabellaAttivitaComponent implements OnInit {
 
 
   private loadData(event: LazyLoadEvent) {
+    this.loading = true;
     const functionName = "loadData";
     // console.log(this.componentDescription, functionName, "event: ", event);
 
@@ -205,6 +213,7 @@ export class TabellaAttivitaComponent implements OnInit {
               }
             });
           }
+          this.loading = false;
         }
       );
 
@@ -218,6 +227,10 @@ export class TabellaAttivitaComponent implements OnInit {
       window.open(attivitaJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
     }
 
+  }
+
+  private onNoteClick(attivita: any) {
+    this.onAttivitaNoteEmitter.emit(attivita);
   }
 
 

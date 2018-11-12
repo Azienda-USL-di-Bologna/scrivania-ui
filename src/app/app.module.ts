@@ -28,6 +28,7 @@ import { DatePipe } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TieredMenuModule } from 'primeng/tieredmenu';
+import {DialogModule} from 'primeng/dialog';
 
 /* Login */
 import { NtJwtLoginModule } from '@bds/nt-jwt-login';
@@ -58,7 +59,8 @@ import { loginModuleConfig } from './config/module-config';
     TooltipModule,
     InputTextModule,
     OverlayPanelModule,
-    TieredMenuModule
+    TieredMenuModule,
+    DialogModule,
   ],
   providers: [AttivitaService, DatePipe],
   bootstrap: [AppComponent]

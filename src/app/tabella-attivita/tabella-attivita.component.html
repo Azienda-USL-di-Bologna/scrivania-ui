@@ -21,15 +21,22 @@
 <p-table #dt 
     [value]="attivita" 
     [columns]="cols" [rows]="10" 
-    [paginator]="true" [autoLayout]="true" 
+    [paginator]="false" [autoLayout]="true" 
     [rowsPerPageOptions]="[5,10,15,20]"
     [lazy]="true" 
     (onLazyLoad)="handleEvent('onLazyLoad', $event)" 
     [totalRecords]="totalRecords"
     selectionMode="single"
     (onRowSelect)="handleEvent('onRowSelect', $event)"
+    [scrollable]="true"
+    [rows]="10"
+    [virtualScroll]="true"
+    scrollHeight="700px"
+    [loading]="loading"
+    [virtualRowHeight]="30"
     >
-
+     <!--[style]="'{height:200px}'" -->
+   <!--[rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,15,20]"  [style.width]="col.width"-->
 
     <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -40,7 +47,7 @@
 
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngFor="let col of columns" [style.width]="col.width">
+            <th *ngFor="let col of columns"  [style.width]="col.width">
                 <div *ngIf="col.field != undefined" [pSortableColumn]="col.field">
                     {{col.header}}
                     <p-sortIcon [field]="col.field" ariaLabelAsc="Colonnna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonnna {{col.header}}, Ordinamento discendente">
@@ -65,30 +72,35 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
         <tr class="row-class" [pSelectableRow]="rowData">
-            <td class="column-class">
+            <td [style.width]="cols[0].width" class="column-class p0">
                 <img [src]="attivita.iconaAttivita" alt="priorita" class="img-table" />
                 <!-- <img *ngIf="attivita.priorita===2" src="assets/images/baseline_flag_black_48dp.png" alt="priorita" class="img-table"> -->
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->
             </td>
             <!-- <td class="column-class">{{attivita.tipo}}</td> -->
-            <td class="column-class">{{attivita.idAzienda.nome}}</td>
-            <td class="column-class">{{attivita.idApplicazione.nome}}</td>
-            <td class="column-class">{{attivita.provenienza}}</td>
+            <td [style.width]="cols[1].width" class="column-class">{{attivita.idAzienda.nome}}</td>
+            <td [style.width]="cols[2].width" class="column-class">{{attivita.idApplicazione.nome}}</td>
+            <td [style.width]="cols[3].width" class="column-class">{{attivita.provenienza}}</td>
             <td class="column-class">{{attivita.oggetto}}</td>
-            <td class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
-            <td class="column-class">{{attivita.descrizione}}</td>
-            <td>
+            <td [style.width]="cols[5].width" class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
+            <td [style.width]="cols[6].width" class="column-class">{{attivita.descrizione}}</td>
+            <td [style.width]="cols[7].width">
                 <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' && 
                     (attivita.idApplicazione.nome==='Pico' || attivita.idApplicazione.nome==='Dete' || attivita.idApplicazione.nome==='Deli'))" 
                 (click)="apriAttivita(attivita)"><b>Apri</b></a>
             </td>
-            <td>
-                <img *ngIf="attivita.aperta" src="assets/images/baseline-not_interested-24px.svg" alt="prendi" class="img-table">
+
+            <td [style.width]="cols[8].width" class="p0">
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->
             </td>
-            <td>
-                <img *ngIf="attivita.note" src="assets/images/baseline_notes_black_48dp.png" alt="note" class="img-table">
+            <td [style.width]="cols[9].width" class="p0">
+                <!-- <img *ngIf="attivita.note" src="assets/images/baseline_notes_black_48dp.png" alt="note" class="img-table"> -->
+                <!-- placeholder -->
                 <!-- <button pButton icon="pi pi-trash" (click)="deleteWithButton(rowData)"></button> -->
+            </td>
+            <td [style.width]="cols[10].width" class="p0">
+                <img *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="onNoteClick(attivita)" alt="note" class="img-table">
+                <img *ngIf="!attivita.note" src="assets/images/baseline-note_add-24px.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table">
             </td>
         </tr>
 
