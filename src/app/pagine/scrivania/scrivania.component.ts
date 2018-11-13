@@ -49,7 +49,7 @@ export class ScrivaniaComponent implements OnInit {
   public showNote: boolean = false;
   public noteText: string = null;
 
-  constructor(private domSanitizer: DomSanitizer, private scrivaniaSrvice: ScrivaniaService, private loginService: NtJwtLoginService) {
+  constructor(private domSanitizer: DomSanitizer, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
    }
 
   ngOnInit() {
@@ -58,17 +58,24 @@ export class ScrivaniaComponent implements OnInit {
       this.loggedUser = u;
     })
     this.loadMenu();
+    this.setLook();
+  }
+
+  private setLook():void {
+    this.setResponsiveSlider();
+  }
+
+  private setResponsiveSlider(): void {
     let that = this;
-    this.slider.nativeElement.onmousedown = function(e){
+    this.slider.nativeElement.onmousedown = function(e) {
       e.preventDefault();
-      that.posX = e.clientX;
+      // that.posX = e.clientX;
       document.onmouseup = function(){
-        document.onmouseup = null;
-      document.onmousemove = null;
+        // document.onmouseup = null;
+        document.onmousemove = null;
       }
       document.onmousemove = function(e){
         e.preventDefault();
-
         that.leftSide.nativeElement.style.width = e.clientX + 'px';
         that.slider.nativeElement.style.marginLeft = e.clientX + 'px';
       }
@@ -155,7 +162,7 @@ export class ScrivaniaComponent implements OnInit {
 
   public setAnteprimaUrl() {
     this.noAnteprima = false;
-    this.scrivaniaSrvice.getAnteprima(this.attivitaSelezionata, this.allegatoSelezionato).subscribe(
+    this.scrivaniaService.getAnteprima(this.attivitaSelezionata, this.allegatoSelezionato).subscribe(
           file => {
             this.anteprima.nativeElement.src = file;
           },
@@ -183,13 +190,14 @@ export class ScrivaniaComponent implements OnInit {
     let initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.rows = NO_LIMIT;
     let lazyLoadFiltersAndSorts = new FiltersAndSorts();
-    this.scrivaniaSrvice.getData(PROJECTIONS.menu.standardProjections.menuWithIdApplicazioneAndIdAzienda, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
+    this.scrivaniaService.getData(PROJECTIONS.menu.standardProjections.menuWithIdApplicazioneAndIdAzienda, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
       .then(
         data => {
+          console.log("data codeBase", data);
           let arrayMenu = data._embedded.menu;
           arrayMenu.forEach( elementArray => {
             let found = false;
-            for (let elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'aplicazione
+            for (let elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
               if(elementAlbero.label === elementArray.idApplicazione.nome){
                 if(elementAlbero.items){ // nell'applicazione è presente almeno un comando
                   for (let item of elementAlbero.items) {
@@ -197,7 +205,7 @@ export class ScrivaniaComponent implements OnInit {
                       // comando presente quindi aggiungo solo l'azienda TODO
                       found = true;
                       item.items ? true : item.items = [];
-                      item.items.push(new ThreeNode(
+                      item.items.push(new TreeNode(
                         elementArray.idAzienda.nome,
                         null,
                         (onclick)=> {this.handleItemClick(elementArray.openCommand)}
@@ -208,9 +216,9 @@ export class ScrivaniaComponent implements OnInit {
                 }
                 if(!found){ // Il comando non è presente, lo aggiungo
                   found = true;
-                  elementAlbero.items.push(new ThreeNode(
+                  elementAlbero.items.push(new TreeNode(
                     elementArray.descrizione,
-                    [new ThreeNode(
+                    [new TreeNode(
                       elementArray.idAzienda.nome,
                       null,
                       (onclick)=> {this.handleItemClick(elementArray.openCommand)}
@@ -222,11 +230,11 @@ export class ScrivaniaComponent implements OnInit {
               }
             }
             if(!found){ // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
-              this.alberoMenu.push(new ThreeNode(
+              this.alberoMenu.push(new TreeNode(
                 elementArray.idApplicazione.nome,
-                [new ThreeNode(
+                [new TreeNode(
                   elementArray.descrizione,
-                  [new ThreeNode(
+                  [new TreeNode(
                     elementArray.idAzienda.nome,
                     null,
                     (onclick)=> {this.handleItemClick(elementArray.openCommand)}
@@ -247,12 +255,12 @@ export class ScrivaniaComponent implements OnInit {
   }
 
 }
-class ThreeNode{
+class TreeNode{
   private label: string;
-  private items: ThreeNode[];
+  private items: TreeNode[];
   private command: any;
 
-  constructor(label: string, items: ThreeNode[], command: any){
+  constructor(label: string, items: TreeNode[], command: any){
     //this.key = key;
     this.label = label;
     this.items = items;
