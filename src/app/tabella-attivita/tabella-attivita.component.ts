@@ -31,7 +31,7 @@ export class TabellaAttivitaComponent implements OnInit {
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   public loggedUser: Utente;
-  public loading:boolean = false;
+  public loading:boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
