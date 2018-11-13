@@ -38,6 +38,18 @@
     left: 0;
     right: 0;
 }
+:host>>> .ui-table, 
+:host>>> .ui-table-scrollable-wrapper,
+:host>>> .ui-table-scrollable-view{
+    height: 100%;
+}
+:host>>> .ui-table-scrollable-view{
+    display: flex;
+    flex-direction: column;
+}
+:host>>> .ui-table-scrollable-body{
+    flex: 1;
+}
 .preview-wrapper{
     flex: 1;
     position: relative;

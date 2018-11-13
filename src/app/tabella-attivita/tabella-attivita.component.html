@@ -20,7 +20,7 @@
 -->
 <p-table #dt 
     [value]="attivita" 
-    [columns]="cols" [rows]="10" 
+    [columns]="cols" [rows]="20" 
     [paginator]="false" [autoLayout]="true" 
     [rowsPerPageOptions]="[5,10,15,20]"
     [lazy]="true" 
@@ -29,13 +29,11 @@
     selectionMode="single"
     (onRowSelect)="handleEvent('onRowSelect', $event)"
     [scrollable]="true"
-    [rows]="10"
     [virtualScroll]="true"
-    scrollHeight="700px"
     [loading]="loading"
     [virtualRowHeight]="30"
     >
-     <!--[style]="'{height:200px}'" -->
+     <!--[style]="'{height:200px}'"  scrollHeight="700px"-->
    <!--[rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,15,20]"  [style.width]="col.width"-->
 
     <ng-template pTemplate="colgroup" let-columns>
@@ -100,7 +98,7 @@
             </td>
             <td [style.width]="cols[10].width" class="p0">
                 <img *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="onNoteClick(attivita)" alt="note" class="img-table">
-                <img *ngIf="!attivita.note" src="assets/images/baseline-note_add-24px.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table">
+                <img *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table">
             </td>
         </tr>
 
