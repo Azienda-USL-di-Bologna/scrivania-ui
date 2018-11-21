@@ -6,7 +6,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { MenuItem, LazyLoadEvent } from 'primeng/api';
 import { ScrivaniaService } from './scrivania.service';
 import { NtJwtLoginService } from '@bds/nt-jwt-login';
-import { FiltersAndSorts, NO_LIMIT } from '@bds/nt-communicator';
+import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from '@bds/nt-communicator';
 import { PROJECTIONS } from '../../../environments/app-constants';
 import { forEach } from '@angular/router/src/utils/collection';
 import { bind } from '@angular/core/src/render3/instructions';
@@ -189,6 +189,8 @@ export class ScrivaniaComponent implements OnInit {
     this.alberoMenu = [];
     let initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.rows = NO_LIMIT;
+    initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
+    initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
     let lazyLoadFiltersAndSorts = new FiltersAndSorts();
     this.scrivaniaService.getData(PROJECTIONS.menu.standardProjections.menuWithIdApplicazioneAndIdAzienda, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
       .then(
