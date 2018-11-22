@@ -31,7 +31,7 @@ export class TabellaAttivitaComponent implements OnInit {
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   public loggedUser: Utente;
-  public loading:boolean = false;
+  public loading:boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
@@ -170,7 +170,7 @@ export class TabellaAttivitaComponent implements OnInit {
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const functionName = "buildInitialFiltersAndSorts";
     let initialFiltersAndSorts = new FiltersAndSorts();
-    initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.asc));
+    initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.desc));
     const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.fk_idPersona.id);
     initialFiltersAndSorts.addFilter(filter);
     //console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);

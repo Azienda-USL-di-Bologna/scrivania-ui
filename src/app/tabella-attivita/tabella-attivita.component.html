@@ -20,9 +20,10 @@
 -->
 <p-table #dt 
     [value]="attivita" 
-    [columns]="cols" [rows]="20" 
-    [paginator]="false" [autoLayout]="true" 
-    [rowsPerPageOptions]="[5,10,15,20]"
+    [columns]="cols" 
+    [rows]="20" 
+    [paginator]="false" 
+    [autoLayout]="false" 
     [lazy]="true" 
     (onLazyLoad)="handleEvent('onLazyLoad', $event)" 
     [totalRecords]="totalRecords"
@@ -31,7 +32,8 @@
     [scrollable]="true"
     [virtualScroll]="true"
     [loading]="loading"
-    [virtualRowHeight]="30"
+    [virtualRowHeight]="28"
+    [virtualScrollDelay]="100"
     >
      <!--[style]="'{height:200px}'"  scrollHeight="700px"-->
    <!--[rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,15,20]"  [style.width]="col.width"-->
