@@ -1,3 +1,8 @@
+<p-dialog appendTo="body" header="Cambio Utente" [(visible)]="this.cambioUtentePopupVisibile" [modal]="true" [responsive]="true"
+  [width]="350">
+  <app-cambio-utente></app-cambio-utente>
+</p-dialog>
+
 <div class="height64 center-vertically">
   <div class="p-col-12 p-grid"> <!--p-nogutter-->
       <div class="p-md-8 p-sm-12 header-left-style ">
@@ -36,6 +41,18 @@
         </p-overlayPanel>
 
         <!-- <img class="icons-style pr-8" src="assets/images/baseline_dashboard_white_48dp.png"/> -->
+        <img *ngIf="this.utenteConnesso && this.utenteConnesso.isDemiurgo()" class="icons-style pr-8 demiurge" (click)="op2.toggle($event)" src="assets/images/baseline_verified_user_white_48dp.png" alt="Menu Demiurgo"/>
+
+        <p-overlayPanel #op2 styleClass="overlaypanel-background">
+          <div class="p-grid p-dir-col" *ngIf="this.utenteConnesso && this.utenteConnesso.isDemiurgo()">
+              <div class="p-col clickable-menu-item" (click)="this.cambioUtentePopupVisibile = true">
+                <ul class="ul-user-information">
+                  <li class="li-user-information">Cambio Utente</li>
+                </ul>
+              </div>
+          </div>
+        </p-overlayPanel>
+
         <img class="dim-box-image-signout d-inline-block logout ml-1" src="assets/images/signout.svg" (click)="onLogout()" alt="logout"/>
       </div>
     </div>
