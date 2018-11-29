@@ -54,6 +54,7 @@ export class HeaderComponent implements OnInit {
   onCambioUtente(persona: Persona) {
     this.cambioUtentePopupVisibile = false;
 
+    console.log(persona.codiceFiscale);
     this.loginService.login(LoginType.Sso, persona.codiceFiscale).then(result => {
       window.location.reload(true);
     });
