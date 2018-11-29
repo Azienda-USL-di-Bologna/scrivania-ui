@@ -8,7 +8,7 @@ import { getInternautaUrl, BaseUrlType } from 'src/environments/app-constants';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'Babel-internauta';
+  title = 'Babel-Internauta';
 
   constructor(private loginService: NtJwtLoginService) {}
 

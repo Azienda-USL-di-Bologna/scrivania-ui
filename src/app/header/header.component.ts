@@ -2,7 +2,7 @@ import { Utente, Persona } from "@bds/ng-internauta-model";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import {Router} from "@angular/router";
 import {getInternautaUrl, BaseUrlType} from "../../environments/app-constants";
-import { NtJwtLoginService } from "@bds/nt-jwt-login";
+import { NtJwtLoginService, LoginType } from "@bds/nt-jwt-login";
 import { Observable } from "rxjs";
 import { FunctionExpr, TransitiveCompileNgModuleMetadata } from "@angular/compiler";
 import { Dialog, DialogModule } from "primeng/dialog";
@@ -53,11 +53,8 @@ export class HeaderComponent implements OnInit {
 
   onCambioUtente(persona: Persona) {
     this.cambioUtentePopupVisibile = false;
-    
-    this.http.get(getInternautaUrl(BaseUrlType.Login), {
-      withCredentials: true,
-      params: new HttpParams().append('utenteImpersonato', persona.codiceFiscale)
-    }).subscribe(k => {
+
+    this.loginService.login(LoginType.Sso, persona.codiceFiscale).then(result => {
       window.location.reload(true);
     });
   }
