@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { Attivita } from '@bds/ng-internauta-model';
 import { HttpAbstractService } from '@bds/nt-communicator';
-import { ENTITIES_CONFIGURATION, ENTITIES, BASE_URL } from '../../../environments/app-constants';
+import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType } from '../../../environments/app-constants';
 import { Observable, Subscriber } from 'rxjs';
 import { NtJwtLoginService } from '@bds/nt-jwt-login';
 
@@ -16,7 +16,7 @@ export class ScrivaniaService extends HttpAbstractService {
   //private blobEmitter: BehaviorSubject<any> = new BehaviorSubject(new URL("http://localhost:4200/assets/images/no_anteprima.png"));
 
   constructor(protected http: HttpClient, protected datepipe: DatePipe, private loginService: NtJwtLoginService) {
-    super(http, datepipe, ENTITIES_CONFIGURATION[ENTITIES.menu], BASE_URL);
+    super(http, datepipe, ENTITIES_CONFIGURATION[ENTITIES.menu], getInternautaUrl(BaseUrlType.Scrivania));
   }
 
   update(elementToUpdate: Attivita): Promise<any> {

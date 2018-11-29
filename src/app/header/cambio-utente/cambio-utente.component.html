@@ -1,1 +1,22 @@
-<p-autoComplete [(ngModel)]="text" [suggestions]="this.usersSuggestions" (completeMethod)="search($event.query)"></p-autoComplete>
+<div class="p-grid">
+    <div class="p-col">
+        <p-autoComplete [(ngModel)]="text" (onClear)="this.onClear()" [suggestions]="this.personeSuggestions" field="descrizione" (onSelect)="onUtenteSelected($event)" (completeMethod)="search($event.query)" [autoZIndex]="true" appendTo="body" [style]="{'width':'100%'}"></p-autoComplete>
+    </div>
+</div>
+
+<p-dialog appendTo="body" header="Conferma Cambio Utente" [(visible)]="this.cambioUtenteConfirmVisible" [modal]="true"
+    [responsive]="false" [minWidth]='300'>
+    <div class="p-grid">
+        <div class="p-col">
+            <p>Vuoi impersonare l'utente <b>{{this.selectedPersona?.descrizione}}</b> ?</p>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col">
+            <p-button label="Conferma" (onClick)="this.onUtenteSelectionConfirmed()"></p-button>
+        </div>
+        <div class="p-col" style="text-align: right">
+            <p-button label="Annulla" (onClick)="this.cambioUtenteConfirmVisible = false"></p-button>
+        </div>
+    </div>
+</p-dialog>

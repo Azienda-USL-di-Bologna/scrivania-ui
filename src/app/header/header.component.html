@@ -1,6 +1,5 @@
-<p-dialog appendTo="body" header="Cambio Utente" [(visible)]="this.cambioUtentePopupVisibile" [modal]="true" [responsive]="true"
-  [width]="350">
-  <app-cambio-utente></app-cambio-utente>
+<p-dialog appendTo="body" header="Cambio Utente" [(visible)]="this.cambioUtentePopupVisibile" [modal]="true" [responsive]="false">
+  <app-cambio-utente (onUtenteSelectedEmitter)="this.onCambioUtente($event)"></app-cambio-utente>
 </p-dialog>
 
 <div class="height64 center-vertically">
