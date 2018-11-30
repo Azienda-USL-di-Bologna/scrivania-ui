@@ -1,13 +1,14 @@
 import { Utente, Persona } from "@bds/ng-internauta-model";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import {Router} from "@angular/router";
-import {getInternautaUrl, BaseUrlType} from "../../environments/app-constants";
+import {getInternautaUrl, BaseUrlType, HOME_ROUTE} from "../../environments/app-constants";
 import { NtJwtLoginService, LoginType } from "@bds/nt-jwt-login";
 import { Observable } from "rxjs";
 import { FunctionExpr, TransitiveCompileNgModuleMetadata } from "@angular/compiler";
 import { Dialog, DialogModule } from "primeng/dialog";
 import { Header } from "primeng/components/common/shared";
 import { HttpClient, HttpParams } from "@angular/common/http";
+import { HomepageComponent } from "../pagine/homepage/homepage.component";
 
 
 @Component({
@@ -54,10 +55,6 @@ export class HeaderComponent implements OnInit {
   onCambioUtente(persona: Persona) {
     this.cambioUtentePopupVisibile = false;
 
-    console.log(persona.codiceFiscale);
-    this.loginService.clearSession();
-    this.loginService.login(LoginType.Sso, persona.codiceFiscale).then(result => {
-      window.location.reload(true);
-    });
+    window.open(this.router.serializeUrl(this.router.createUrlTree([''], { queryParams: { 'impersonatedUser': persona.codiceFiscale } })));
   }
 }
