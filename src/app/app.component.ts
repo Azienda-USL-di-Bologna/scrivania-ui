@@ -23,8 +23,6 @@ export class AppComponent implements OnInit {
           this.loginService.login(LoginType.Local, params['impersonatedUser']).then(result => {
             if(result)
               window.location.reload(true);
-            else
-              window.close();
           });
         }
       });
