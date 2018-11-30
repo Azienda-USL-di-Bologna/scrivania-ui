@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NtJwtLoginService, LoginType } from '@bds/nt-jwt-login';
-import { getInternautaUrl, BaseUrlType } from 'src/environments/app-constants';
-import { ActivatedRoute, Params } from '@angular/router';
+import { getInternautaUrl, BaseUrlType, HOME_ROUTE } from 'src/environments/app-constants';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 export class AppComponent implements OnInit {
   title = 'Babel-Internauta';
 
-  constructor(private loginService: NtJwtLoginService, private route: ActivatedRoute) {}
+  constructor(private loginService: NtJwtLoginService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
@@ -22,7 +22,9 @@ export class AppComponent implements OnInit {
         {
           this.loginService.login(LoginType.Sso, params['impersonatedUser']).then(result => {
             if(result)
-              window.location.reload(true);
+            {
+              this.router.navigate([HOME_ROUTE]);
+            }
             else
               window.close();
           });
