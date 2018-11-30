@@ -20,9 +20,11 @@ export class AppComponent implements OnInit {
       this.loginService.loggedUser.subscribe(user => {
         if(params.hasOwnProperty('impersonatedUser'))
         {
-          this.loginService.login(LoginType.Local, params['impersonatedUser']).then(result => {
+          this.loginService.login(LoginType.Sso, params['impersonatedUser']).then(result => {
             if(result)
               window.location.reload(true);
+            else
+              window.close();
           });
         }
       });
