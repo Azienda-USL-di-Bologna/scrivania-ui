@@ -55,6 +55,13 @@ export class HeaderComponent implements OnInit {
   onCambioUtente(persona: Persona) {
     this.cambioUtentePopupVisibile = false;
 
-    window.open(this.router.serializeUrl(this.router.createUrlTree([this.route.pathFromRoot], { queryParams: { 'impersonatedUser': persona.codiceFiscale } })));
+    let url: string = '';
+    if(window.URL.toString().indexOf('?'))
+      url = window.URL.toString() + '&impersonatedUser=' + persona.codiceFiscale;
+    else
+      url = window.URL.toString() + '?impersonatedUser=' + persona.codiceFiscale;
+
+
+     window.open(url, '_blank');
   }
 }
