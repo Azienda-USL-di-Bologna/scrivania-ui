@@ -1,6 +1,6 @@
 import { Utente, Persona } from "@bds/ng-internauta-model";
 import { Component, OnInit, ViewChild } from "@angular/core";
-import {Router} from "@angular/router";
+import {Router, ActivatedRoute} from "@angular/router";
 import {getInternautaUrl, BaseUrlType, HOME_ROUTE} from "../../environments/app-constants";
 import { NtJwtLoginService, LoginType } from "@bds/nt-jwt-login";
 import { Observable } from "rxjs";
@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
   public $utenteConnesso: Observable<Utente>;
   cambioUtentePopupVisibile: boolean = false;
 
-  constructor(public router: Router, private loginService: NtJwtLoginService, private http: HttpClient) { }
+  constructor(public router: Router, private loginService: NtJwtLoginService, private http: HttpClient, private route: ActivatedRoute) { }
 
 
   onCambioUtenteClick() {
@@ -55,6 +55,6 @@ export class HeaderComponent implements OnInit {
   onCambioUtente(persona: Persona) {
     this.cambioUtentePopupVisibile = false;
 
-    window.open(this.router.serializeUrl(this.router.createUrlTree(['.'], { queryParams: { 'impersonatedUser': persona.codiceFiscale } })));
+    window.open(this.router.serializeUrl(this.router.createUrlTree([this.route], { queryParams: { 'impersonatedUser': persona.codiceFiscale } })));
   }
 }
