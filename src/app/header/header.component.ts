@@ -56,10 +56,10 @@ export class HeaderComponent implements OnInit {
     this.cambioUtentePopupVisibile = false;
 
     let url: string = '';
-    if(window.URL.toString().indexOf('?'))
-      url = window.URL.toString() + '&impersonatedUser=' + persona.codiceFiscale;
+    if (window.location.href.indexOf('?'))
+      url = window.location.href.toString() + '&impersonatedUser=' + persona.codiceFiscale;
     else
-      url = window.URL.toString() + '?impersonatedUser=' + persona.codiceFiscale;
+      url = window.location.href.toString() + '?impersonatedUser=' + persona.codiceFiscale;
 
 
      window.open(url, '_blank');
