@@ -57,6 +57,8 @@ export class ScrivaniaComponent implements OnInit {
     this.loginService.loggedUser.subscribe((u: Utente) => {
       this.loggedUser = u;
     })
+    console.log('logged user: ', this.loggedUser);
+    
     this.loadMenu();
     this.setLook();
   }
@@ -218,33 +220,54 @@ export class ScrivaniaComponent implements OnInit {
                 }
                 if(!found){ // Il comando non è presente, lo aggiungo
                   found = true;
-                  elementAlbero.items.push(new TreeNode(
+                  if(this.loggedUser['aziende'] && this.loggedUser['aziende'].length > 1){
+                    elementAlbero.items.push(new TreeNode(
+                      elementArray.descrizione,
+                      [new TreeNode(
+                        elementArray.idAzienda.nome,
+                        null,
+                        (onclick)=> {this.handleItemClick(elementArray.openCommand)}
+                        )],
+                      null
+                    ));
+                    break
+                  }else{
+                    elementAlbero.items.push(new TreeNode(
+                      elementArray.descrizione,
+                      null,
+                      (onclick)=> {this.handleItemClick(elementArray.openCommand)}
+                    ));
+                    break
+                  } 
+                }
+              }
+            }
+            if(!found){ // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
+              if(this.loggedUser['aziende'] && this.loggedUser['aziende'].length > 1){
+                this.alberoMenu.push(new TreeNode(
+                  elementArray.idApplicazione.nome,
+                  [new TreeNode(
                     elementArray.descrizione,
                     [new TreeNode(
                       elementArray.idAzienda.nome,
                       null,
                       (onclick)=> {this.handleItemClick(elementArray.openCommand)}
-                      )],
+                    )],
                     null
-                  ));
-                  break
-                }
-              }
-            }
-            if(!found){ // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
-              this.alberoMenu.push(new TreeNode(
-                elementArray.idApplicazione.nome,
-                [new TreeNode(
-                  elementArray.descrizione,
+                  )],
+                  null
+                ));
+              }else{
+                this.alberoMenu.push(new TreeNode(
+                  elementArray.idApplicazione.nome,
                   [new TreeNode(
-                    elementArray.idAzienda.nome,
+                    elementArray.descrizione,
                     null,
                     (onclick)=> {this.handleItemClick(elementArray.openCommand)}
                   )],
                   null
-                )],
-                null
-              ));
+                ));
+              }
             }
           });
         }
