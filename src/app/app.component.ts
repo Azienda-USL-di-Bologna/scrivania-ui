@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NtJwtLoginService, LoginType } from '@bds/nt-jwt-login';
-import { getInternautaUrl, BaseUrlType, HOME_ROUTE } from 'src/environments/app-constants';
+import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE } from 'src/environments/app-constants';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
           this.loginService.login(LoginType.Sso, params['impersonatedUser']).then(result => {
             if(result)
             {
-              this.router.navigate([HOME_ROUTE]);
+              this.router.navigate([SCRIVANIA_ROUTE]);
             }
             else
               window.close();

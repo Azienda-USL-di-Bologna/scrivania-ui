@@ -16,6 +16,7 @@ export const LOGIN_RELATIVE_URL: string = "/internauta-api/login";
 export const LOCALHOST_PORT = "10005";
 export const LOGIN_ROUTE: string = "/login";
 export const HOME_ROUTE: string = "/homepage";
+export const SCRIVANIA_ROUTE: string = "/scrivania";
 
 export enum BaseUrlType {
     Scrivania,
