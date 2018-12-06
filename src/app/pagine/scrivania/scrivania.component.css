@@ -124,17 +124,26 @@
     float: right;
 }
 :host>>>.ui-tieredmenu {
-    background-color:#f5f5f5;
+    background-color:#737272;
 }
 :host>>>.ui-tieredmenu .ui-submenu-list{
-    background-color:#f5f5f5;
+    background-color:#737272;
+}
+:host>>>.ui-tieredmenu .ui-menuitem-link .ui-menuitem-text {
+    color: #ffffff;
+}
+:host>>>.ui-submenu-icon {
+    color: #ffffff
+}
+:host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link {
+    background-color:#e0e0e0;
 }
 .position-relative{
     position: relative;
 }
 .slider{
     position: absolute;
-    /*right: 0;*/
+    left: 0;
     top: 0;
     bottom: 0;
     width: 15px;

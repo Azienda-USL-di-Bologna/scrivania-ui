@@ -13,6 +13,7 @@ import { TabellaAttivitaComponent } from './tabella-attivita/tabella-attivita.co
 import { ScrivaniaComponent } from './pagine/scrivania/scrivania.component';
 import { HomepageComponent } from './pagine/homepage/homepage.component';
 import { HeaderComponent } from './header/header.component';
+import { CambioUtenteComponent } from './header/cambio-utente/cambio-utente.component';
 
 
 /* PrimeNG component */
@@ -29,6 +30,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import {DialogModule} from 'primeng/dialog';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 /* Login */
 import { NtJwtLoginModule } from '@bds/nt-jwt-login';
@@ -40,7 +42,8 @@ import { loginModuleConfig } from './config/module-config';
     TabellaAttivitaComponent,
     ScrivaniaComponent,
     HomepageComponent,
-    HeaderComponent
+    HeaderComponent,
+    CambioUtenteComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
@@ -61,6 +64,7 @@ import { loginModuleConfig } from './config/module-config';
     OverlayPanelModule,
     TieredMenuModule,
     DialogModule,
+    AutoCompleteModule,
   ],
   providers: [AttivitaService, DatePipe],
   bootstrap: [AppComponent]

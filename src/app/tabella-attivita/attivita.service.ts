@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { HttpAbstractService } from "@bds/nt-communicator"
-import { ENTITIES_CONFIGURATION, ENTITIES, BASE_URL } from '../../environments/app-constants';
+import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType } from '../../environments/app-constants';
 import { Attivita } from '@bds/ng-internauta-model';
 
 @Injectable()
 export class AttivitaService extends HttpAbstractService {
 
   constructor(protected http: HttpClient, protected datepipe: DatePipe) {
-    super(http, datepipe, ENTITIES_CONFIGURATION[ENTITIES.attivita], BASE_URL);
+    super(http, datepipe, ENTITIES_CONFIGURATION[ENTITIES.attivita], getInternautaUrl(BaseUrlType.Scrivania));
   }
 
   update(elementToUpdate: Attivita): Promise<any> {

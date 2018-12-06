@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from "@bds/nt-communicator";
@@ -7,6 +7,7 @@ import { AttivitaService } from "./attivita.service";
 import { PROJECTIONS } from "../../environments/app-constants";
 import { Attivita, Utente } from "@bds/ng-internauta-model";
 import { NtJwtLoginService } from "@bds/nt-jwt-login";
+import { Table } from "primeng/table";
 @Component({
   selector: "app-tabella-attivita",
   templateUrl: "./tabella-attivita.component.html",
@@ -32,13 +33,24 @@ export class TabellaAttivitaComponent implements OnInit {
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   public loggedUser: Utente;
   public loading:boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
+  public selectedRowIndex: number = -1;
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
+  @ViewChild("dt") private dataTable: Table;
 
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
+  
+  @HostListener('document:keydown.arrowdown', ['$event']) onKeydownHandlerArrowDown(event: KeyboardEvent) {
+    this.selectIndex(this.selectedRowIndex + 1);
+  }
+
+  @HostListener('document:keydown.arrowup', ['$event']) onKeydownHandlerArrowUp(event: KeyboardEvent) {
+    this.selectIndex(this.selectedRowIndex - 1);
+  }
 
   ngOnInit() {
+    
     // imposto l'utente loggato nell'apposita variabile
     this.loginService.loggedUser.subscribe((u: Utente) => {
       this.loggedUser = u;
@@ -163,8 +175,17 @@ export class TabellaAttivitaComponent implements OnInit {
     this.loadData(event);
   }
 
-  private rowSelect(event: any) {
-    this.attivitaEmitter.emit(event.data);
+  public selectIndex(index: number)
+  {
+    if(index < 0 || index >= this.attivita.length) return;
+
+    this.selectedRowIndex = index;
+    this.dataTable.selection = this.attivita[this.selectedRowIndex];
+    this.attivitaEmitter.emit(this.dataTable.selection);
+  }
+
+  public rowSelect(event: any) {
+    this.selectIndex(this.attivita.indexOf(event.data));
   }
 
   private buildInitialFiltersAndSorts(): FiltersAndSorts {

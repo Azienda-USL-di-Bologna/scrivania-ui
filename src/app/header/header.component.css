@@ -46,7 +46,7 @@
     height: 25px;
 }
 
-.btn, .toggle, .logout {
+.btn, .toggle, .logout, .demiurge {
     cursor: pointer;
 }
 
@@ -84,4 +84,12 @@
 
 .li-user-information{
     margin-top: 10px;
+}
+
+.clickable-menu-item {
+    cursor: pointer;
+}
+
+.clickable-menu-item:hover {
+    background-color: grey;
 }
