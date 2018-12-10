@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
-import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from "@bds/nt-communicator";
+import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { PROJECTIONS } from "../../environments/app-constants";
@@ -32,7 +32,7 @@ export class TabellaAttivitaComponent implements OnInit {
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   public loggedUser: Utente;
-  public loading:boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
+  public loading: boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
   public selectedRowIndex: number = -1;
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
@@ -40,17 +40,17 @@ export class TabellaAttivitaComponent implements OnInit {
   @ViewChild("dt") private dataTable: Table;
 
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
-  
-  @HostListener('document:keydown.arrowdown', ['$event']) onKeydownHandlerArrowDown(event: KeyboardEvent) {
+
+  @HostListener("document:keydown.arrowdown", ["$event"]) onKeydownHandlerArrowDown(event: KeyboardEvent) {
     this.selectIndex(this.selectedRowIndex + 1);
   }
 
-  @HostListener('document:keydown.arrowup', ['$event']) onKeydownHandlerArrowUp(event: KeyboardEvent) {
+  @HostListener("document:keydown.arrowup", ["$event"]) onKeydownHandlerArrowUp(event: KeyboardEvent) {
     this.selectIndex(this.selectedRowIndex - 1);
   }
 
   ngOnInit() {
-    
+
     // imposto l'utente loggato nell'apposita variabile
     this.loginService.loggedUser.subscribe((u: Utente) => {
       this.loggedUser = u;
@@ -126,6 +126,7 @@ export class TabellaAttivitaComponent implements OnInit {
         width: "30px"
       },
     ];
+    this.loadData(null);
   }
 
   public attivitaEmitterHandler() {
@@ -169,15 +170,14 @@ export class TabellaAttivitaComponent implements OnInit {
   }
 
   private lazyLoad(event: LazyLoadEvent) {
-    const functionName = "lazyLoad"
+    const functionName = "lazyLoad";
     // console.log(this.componentDescription, functionName, "event: ", event);
 
     this.loadData(event);
   }
 
-  public selectIndex(index: number)
-  {
-    if(index < 0 || index >= this.attivita.length) return;
+  public selectIndex(index: number) {
+    if (index < 0 || index >= this.attivita.length) { return; }
 
     this.selectedRowIndex = index;
     this.dataTable.selection = this.attivita[this.selectedRowIndex];
@@ -194,7 +194,8 @@ export class TabellaAttivitaComponent implements OnInit {
     initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.desc));
     const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.fk_idPersona.id);
     initialFiltersAndSorts.addFilter(filter);
-    //console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
+    initialFiltersAndSorts.rows = NO_LIMIT;
+    // console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
     return initialFiltersAndSorts;
   }
 
@@ -240,9 +241,9 @@ export class TabellaAttivitaComponent implements OnInit {
 
   }
 
-  public apriAttivita(attivita: any){
+  public apriAttivita(attivita: any) {
     const attivitaJsonArray = JSON.parse(attivita.urls);
-    if (attivitaJsonArray && attivitaJsonArray[0]){
+    if (attivitaJsonArray && attivitaJsonArray[0]) {
       /* abbiamo bisogno di un uuid diverso ad ogni entrata sull'ambiente,
          se no per un controllo anti-inde-sminchiamento onCommand ritorna e basta */
       window.open(attivitaJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
@@ -265,7 +266,7 @@ export class TabellaAttivitaComponent implements OnInit {
        this.fourRandomChar() + this.fourRandomChar() + this.fourRandomChar() ;  // 16
   }
 
-  private fourRandomChar(){
+  private fourRandomChar() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   }
 

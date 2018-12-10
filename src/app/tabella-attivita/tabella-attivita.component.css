@@ -6,7 +6,7 @@
 }
 
 .openTabLink{
-    color: #993366;
+    color: #993366 !important;
 }
 
 .openTabLink:hover{
