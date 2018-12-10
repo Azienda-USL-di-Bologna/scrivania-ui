@@ -17,8 +17,7 @@ export class AppComponent implements OnInit {
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
 
     this.route.queryParams.subscribe((params: Params) => {
-      this.loginService.loggedUser.subscribe(user => {
-        if(params.hasOwnProperty('impersonatedUser'))
+      if(params.hasOwnProperty('impersonatedUser'))
         {
           this.loginService.login(LoginType.Sso, params['impersonatedUser']).then(result => {
             if(result)
@@ -29,7 +28,7 @@ export class AppComponent implements OnInit {
               window.close();
           });
         }
-      });
+      
     });
 
 
