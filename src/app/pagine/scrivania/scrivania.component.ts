@@ -196,7 +196,6 @@ export class ScrivaniaComponent implements OnInit {
     this.scrivaniaService.getData(PROJECTIONS.menu.standardProjections.menuWithIdApplicazioneAndIdAzienda, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
       .then(
         data => {
-          console.log("data codeBase", data);
           let arrayMenu = data._embedded.menu;
           arrayMenu.forEach( elementArray => {
             let found = false;

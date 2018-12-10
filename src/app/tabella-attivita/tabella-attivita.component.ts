@@ -165,6 +165,9 @@ export class TabellaAttivitaComponent implements OnInit {
         break;
       case "onRowSelect":
         this.rowSelect(event);
+        let attivitaSelezionata:Attivita = event.data
+        attivitaSelezionata.giaAperta = true; 
+        this.attivitaService.update(attivitaSelezionata);
         break;
     }
   }
