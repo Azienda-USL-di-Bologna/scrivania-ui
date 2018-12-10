@@ -57,11 +57,10 @@ export class ScrivaniaComponent implements OnInit {
     // imposto l'utente loggato nell'apposita variabile
     this.loginService.loggedUser.subscribe((u: Utente) => {
       this.loggedUser = u;
+      this.loadMenu();
+      this.setLook();
     })
-    console.log("logged user: ", this.loggedUser);
-
-    this.loadMenu();
-    this.setLook();
+    //console.log("logged user: ", this.loggedUser);
   }
 
   private setLook():void {
