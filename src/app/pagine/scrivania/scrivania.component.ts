@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { Attivita, Utente } from '@bds/ng-internauta-model';
-import { Dropdown } from 'primeng/dropdown';
-import { TieredMenuModule } from 'primeng/tieredmenu';
-import { MenuItem, LazyLoadEvent } from 'primeng/api';
-import { ScrivaniaService } from './scrivania.service';
-import { NtJwtLoginService } from '@bds/nt-jwt-login';
-import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from '@bds/nt-communicator';
-import { PROJECTIONS } from '../../../environments/app-constants';
-import { forEach } from '@angular/router/src/utils/collection';
-import { bind } from '@angular/core/src/render3/instructions';
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
+import { Attivita, Utente } from "@bds/ng-internauta-model";
+import { Dropdown } from "primeng/dropdown";
+import { TieredMenuModule } from "primeng/tieredmenu";
+import { MenuItem, LazyLoadEvent } from "primeng/api";
+import { ScrivaniaService } from "./scrivania.service";
+import { NtJwtLoginService } from "@bds/nt-jwt-login";
+import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
+import { PROJECTIONS } from "../../../environments/app-constants";
+import { forEach } from "@angular/router/src/utils/collection";
+import { bind } from "@angular/core/src/render3/instructions";
 
 @Component({
   selector: "app-scrivania",
@@ -57,8 +57,8 @@ export class ScrivaniaComponent implements OnInit {
     this.loginService.loggedUser.subscribe((u: Utente) => {
       this.loggedUser = u;
     })
-    console.log('logged user: ', this.loggedUser);
-    
+    console.log("logged user: ", this.loggedUser);
+
     this.loadMenu();
     this.setLook();
   }
@@ -78,8 +78,8 @@ export class ScrivaniaComponent implements OnInit {
       }
       document.onmousemove = function(e){
         e.preventDefault();
-        that.leftSide.nativeElement.style.width = e.clientX + 'px';
-        that.slider.nativeElement.style.marginLeft = e.clientX + 'px';
+        that.leftSide.nativeElement.style.width = e.clientX + "px";
+        that.slider.nativeElement.style.marginLeft = e.clientX + "px";
       }
     }
   }
@@ -93,9 +93,9 @@ export class ScrivaniaComponent implements OnInit {
 
     var ext: string = matchExtRegex.exec(fileName)[1];
 
-    fileName = fileName.replace('.' + ext, '');
+    fileName = fileName.replace("." + ext, "");
 
-    fileName = fileName.substr(0, maxFileName) + '...' + fileName.substr(fileName.length - 5, 5);
+    fileName = fileName.substr(0, maxFileName) + "..." + fileName.substr(fileName.length - 5, 5);
 
     if(ext) fileName += ext;
 
@@ -136,20 +136,18 @@ export class ScrivaniaComponent implements OnInit {
         this.allegati.push({label: this.shrinkFileName(element.nome_file), value: element})
       });
       this.allegatoSelected({value: this.allegati[0].value})
-    }
-    else {
+    } else {
       this.noAnteprima = true;
     }
 
 
-    if((this.allegatiDropDown.disabled = this.allegati.length == 0) === true)
-    {
-      this.allegati = [{label:'Documenti non presenti', value: null}];
+    if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
+      this.allegati = [{label: "Documenti non presenti", value: null}];
       this.allegatiDropDown.disabled = true;
     }
 
     // this.allegatiDropDown.updateDimensions();
-    this.allegatiDropDown.show();
+    // this.allegatiDropDown.show();
 
   }
 
@@ -220,7 +218,7 @@ export class ScrivaniaComponent implements OnInit {
                 }
                 if(!found){ // Il comando non è presente, lo aggiungo
                   found = true;
-                  if(this.loggedUser['aziende'] && this.loggedUser['aziende'].length > 1){
+                  if(this.loggedUser["aziende"] && this.loggedUser["aziende"].length > 1){
                     elementAlbero.items.push(new TreeNode(
                       elementArray.descrizione,
                       [new TreeNode(
@@ -238,12 +236,12 @@ export class ScrivaniaComponent implements OnInit {
                       (onclick)=> {this.handleItemClick(elementArray.openCommand)}
                     ));
                     break
-                  } 
+                  }
                 }
               }
             }
             if(!found){ // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
-              if(this.loggedUser['aziende'] && this.loggedUser['aziende'].length > 1){
+              if(this.loggedUser["aziende"] && this.loggedUser["aziende"].length > 1){
                 this.alberoMenu.push(new TreeNode(
                   elementArray.idApplicazione.nome,
                   [new TreeNode(

@@ -18,22 +18,16 @@
         </ng-template>
     </p-table>
 -->
-<p-table #dt 
-    [value]="attivita" 
-    [columns]="cols" 
-    [rows]="20" 
-    [paginator]="false" 
-    [autoLayout]="false" 
-    [lazy]="true" 
-    (onLazyLoad)="handleEvent('onLazyLoad', $event)" 
+<p-table #dt
+    [value]="attivita"
+    [columns]="cols"
+    [paginator]="false"
+    [autoLayout]="false"
     [totalRecords]="totalRecords"
     selectionMode="single"
     (onRowSelect)="handleEvent('onRowSelect', $event)"
     [scrollable]="true"
-    [virtualScroll]="true"
     [loading]="loading"
-    [virtualRowHeight]="28"
-    [virtualScrollDelay]="100"
     >
      <!--[style]="'{height:200px}'"  scrollHeight="700px"-->
    <!--[rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,15,20]"  [style.width]="col.width"-->
@@ -63,7 +57,7 @@
                         (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
                         appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
                     </p-calendar>
-                    <input *ngSwitchDefault pInputText attr.aria-label="Colonnna {{col.header}}, Cella filtro" type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
+                    <input *ngSwitchDefault pInputText attr.aria-label="Colonnna {{col.header}}, Cella filtro" type="text" (input)="dt.filter($event.target.value, col.field, 'contains')"
                         style="width:100%" #filterInputText>
                 </div>
             </td>
@@ -71,7 +65,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
-        <tr class="row-class" [pSelectableRow]="rowData">
+        <tr #selRow class="row-class" [pSelectableRow]="rowData" style="height:30px">
             <td [style.width]="cols[0].width" class="column-class p0">
                 <img [src]="attivita.iconaAttivita" alt="priorita" class="img-table" />
                 <!-- <img *ngIf="attivita.priorita===2" src="assets/images/baseline_flag_black_48dp.png" alt="priorita" class="img-table"> -->
@@ -85,8 +79,8 @@
             <td [style.width]="cols[5].width" class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
             <td [style.width]="cols[6].width" class="column-class">{{attivita.descrizione}}</td>
             <td [style.width]="cols[7].width">
-                <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' && 
-                    (attivita.idApplicazione.nome==='Pico' || attivita.idApplicazione.nome==='Dete' || attivita.idApplicazione.nome==='Deli'))" 
+                <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' &&
+                    (attivita.idApplicazione.nome==='Pico' || attivita.idApplicazione.nome==='Dete' || attivita.idApplicazione.nome==='Deli'))"
                 (click)="apriAttivita(attivita)"><b>Apri</b></a>
             </td>
 
