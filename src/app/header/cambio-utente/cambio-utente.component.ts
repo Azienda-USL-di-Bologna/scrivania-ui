@@ -63,6 +63,7 @@ export class CambioUtenteComponent implements OnInit {
   }
 
   onUtenteSelectionConfirmed() {
+    console.log("onUtenteSelectionConfirmed()");
     this.cambioUtenteConfirmVisible = false;
     this.onUtenteSelectedEmitter.emit(this.selectedPersona);
   }

@@ -26,11 +26,13 @@ export class HeaderComponent implements OnInit {
 
 
   onCambioUtenteClick() {
+    console.log("header onCambioUtenteClick()");
     
     this.cambioUtentePopupVisibile = true;
   }
 
   ngOnInit() {
+    console.log("header ngOnInit()");
     this.$utenteConnesso = this.loginService.loggedUser;
     this.$utenteConnesso.subscribe((utente: Utente) => {
       this.utenteConnesso = utente;
@@ -53,6 +55,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onCambioUtente(persona: Persona) {
+    console.log("header onCambioUtente")
     this.cambioUtentePopupVisibile = false;
 
     let url: string = '';

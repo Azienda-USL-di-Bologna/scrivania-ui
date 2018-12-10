@@ -53,6 +53,7 @@ export class ScrivaniaComponent implements OnInit {
    }
 
   ngOnInit() {
+    console.log("scivania ngOnInit()");
     // imposto l'utente loggato nell'apposita variabile
     this.loginService.loggedUser.subscribe((u: Utente) => {
       this.loggedUser = u;
