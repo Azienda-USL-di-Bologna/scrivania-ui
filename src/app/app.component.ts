@@ -14,14 +14,19 @@ export class AppComponent implements OnInit {
   constructor(private loginService: NtJwtLoginService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
+    console.log("inizio onInit()");
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
 
     this.route.queryParams.subscribe((params: Params) => {
+      console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
       if(params.hasOwnProperty('impersonatedUser'))
         {
+          console.log("chiamo login");
+          console.log(params['impersonatedUser']);
           this.loginService.login(LoginType.Sso, params['impersonatedUser']).then(result => {
             if(result)
             {
+              console.log("sto qui");
               this.router.navigate([SCRIVANIA_ROUTE]);
             }
             else
