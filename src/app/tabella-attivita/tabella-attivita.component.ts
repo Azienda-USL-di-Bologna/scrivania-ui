@@ -8,6 +8,7 @@ import { PROJECTIONS } from "../../environments/app-constants";
 import { Attivita, Utente } from "@bds/ng-internauta-model";
 import { NtJwtLoginService } from "@bds/nt-jwt-login";
 import { Table } from "primeng/table";
+import { Subscription } from "rxjs";
 @Component({
   selector: "app-tabella-attivita",
   templateUrl: "./tabella-attivita.component.html",
@@ -34,6 +35,7 @@ export class TabellaAttivitaComponent implements OnInit {
   public loggedUser: Utente;
   public loading: boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
   public selectedRowIndex: number = -1;
+  private subscriptions: Subscription[];
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
@@ -42,11 +44,22 @@ export class TabellaAttivitaComponent implements OnInit {
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
 
   ngOnInit() {
-
-    // imposto l'utente loggato nell'apposita variabile
-    this.loginService.loggedUser.subscribe((u: Utente) => {
-      this.loggedUser = u;
-    });
+    if (this.subscriptions && this.subscriptions.length > 0) {
+      for (let i = 0; i < this.subscriptions.length; i++) {
+        const s: Subscription = this.subscriptions.pop();
+        console.log("sub: ", s);
+        s.unsubscribe();
+      }
+    }
+    else {
+      this.subscriptions = [];
+      // imposto l'utente loggato nell'apposita variabile
+      this.subscriptions.push(this.loginService.loggedUser.subscribe((u: Utente) => {
+        this.loggedUser = u;
+        console.log("faccio il load data di nuovo");
+        this.loadData(null);
+      }));
+    }
 
     this.cols = [
       /* {
@@ -166,6 +179,9 @@ export class TabellaAttivitaComponent implements OnInit {
         break;
       case "onRowSelect":
         this.rowSelect(event);
+        let attivitaSelezionata:Attivita = event.data
+        attivitaSelezionata.giaAperta = true; 
+        this.attivitaService.update(attivitaSelezionata);
         break;
     }
   }
@@ -202,6 +218,8 @@ export class TabellaAttivitaComponent implements OnInit {
 
 
   private loadData(event: LazyLoadEvent) {
+    console.log("TOKEN: ", this.loginService.token);
+    console.log("UTENTE: ", this.loggedUser);
     this.loading = true;
     const functionName = "loadData";
     // console.log(this.componentDescription, functionName, "event: ", event);

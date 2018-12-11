@@ -7,3 +7,4 @@ yarn.lock
 builda.sh
 node_modules
 .idea
+dist

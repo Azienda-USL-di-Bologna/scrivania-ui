@@ -53,14 +53,14 @@ export class ScrivaniaComponent implements OnInit {
    }
 
   ngOnInit() {
+    console.log("scivania ngOnInit()");
     // imposto l'utente loggato nell'apposita variabile
     this.loginService.loggedUser.subscribe((u: Utente) => {
       this.loggedUser = u;
+      this.loadMenu();
+      this.setLook();
     })
-    console.log("logged user: ", this.loggedUser);
-
-    this.loadMenu();
-    this.setLook();
+    //console.log("logged user: ", this.loggedUser);
   }
 
   private setLook():void {
@@ -195,7 +195,6 @@ export class ScrivaniaComponent implements OnInit {
     this.scrivaniaService.getData(PROJECTIONS.menu.standardProjections.menuWithIdApplicazioneAndIdAzienda, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
       .then(
         data => {
-          console.log("data codeBase", data);
           let arrayMenu = data._embedded.menu;
           arrayMenu.forEach( elementArray => {
             let found = false;

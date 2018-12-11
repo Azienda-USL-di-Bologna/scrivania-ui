@@ -74,13 +74,13 @@
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->
             </td>
             <!-- <td class="column-class">{{attivita.tipo}}</td> -->
-            <td [style.width]="cols[1].width" class="column-class">{{attivita.idAzienda.nome}}</td>
-            <td [style.width]="cols[2].width" class="column-class">{{attivita.idApplicazione.nome}}</td>
-            <td [style.width]="cols[3].width" class="column-class">{{attivita.provenienza}}</td>
-            <td class="column-class">{{attivita.oggetto}}</td>
-            <td [style.width]="cols[5].width" class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
-            <td [style.width]="cols[6].width" class="column-class">{{attivita.descrizione}}</td>
-            <td [style.width]="cols[7].width">
+            <td [style.width]="cols[1].width" class="column-class" [ngStyle]="!attivita.giaAperta ? {'font-weight':'bold'}: ''">{{attivita.idAzienda.nome}}</td>
+            <td [style.width]="cols[2].width" class="column-class" [ngStyle]="!attivita.giaAperta ? {'font-weight':'bold'}: ''">{{attivita.idApplicazione.nome}}</td>
+            <td [style.width]="cols[3].width" class="column-class" [ngStyle]="!attivita.giaAperta ? {'font-weight':'bold'}: ''">{{attivita.provenienza}}</td>
+            <td class="column-class" [ngStyle]="!attivita.giaAperta ? {'font-weight':'bold'}: ''">{{attivita.oggetto}}</td>
+            <td [style.width]="cols[5].width" class="column-class" [ngStyle]="!attivita.giaAperta ? {'font-weight':'bold'}: ''">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
+            <td [style.width]="cols[6].width" class="column-class" [ngStyle]="!attivita.giaAperta ? {'font-weight':'bold'}: ''">{{attivita.descrizione}}</td>
+            <td [style.width]="cols[7].width" [ngStyle]="!attivita.giaAperta ? {'font-weight':'bold'}: ''">
                 <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' &&
                     (attivita.idApplicazione.nome==='Pico' || attivita.idApplicazione.nome==='Dete' || attivita.idApplicazione.nome==='Deli'))"
                 (click)="apriAttivita(attivita)"><b>Apri</b></a>
