@@ -26,21 +26,21 @@ export enum BaseUrlType {
 }
 
 export const BaseUrls: Map<BaseUrlType, string> = new Map<BaseUrlType, string>([
-    [BaseUrlType.Scrivania,  '/internauta-api/resources/scrivania'],
-    [BaseUrlType.Baborg, '/internauta-api/resources/baborg'],
-    [BaseUrlType.Login, '/internauta-api/login'],
-    [BaseUrlType.Logout, '/Shibboleth.sso/Logout']
+    [BaseUrlType.Scrivania,  "/internauta-api/resources/scrivania"],
+    [BaseUrlType.Baborg, "/internauta-api/resources/baborg"],
+    [BaseUrlType.Login, "/internauta-api/login"],
+    [BaseUrlType.Logout, "/Shibboleth.sso/Logout"]
 ]);
 
 export function getInternautaUrl(type: BaseUrlType): string {
     if(!BaseUrls.has(type))
-        throw 'Failed to obtain internauta url, type does not exists!'
+        throw "Failed to obtain internauta url, type does not exists!"
 
     let wl = window.location;
-    let out: string = wl.protocol + "//" + wl.hostname + (wl.hostname === 'localhost' ? ':' + LOCALHOST_PORT : ":" + wl.port) + BaseUrls.get(type);
+    let out: string = wl.protocol + "//" + wl.hostname + (wl.hostname === "localhost" ? ":" + LOCALHOST_PORT : ":" + wl.port) + BaseUrls.get(type);
 
     console.log(out);
-    
+
     return out;
 }
 
@@ -70,13 +70,19 @@ export const PROJECTIONS = {
         standardProjections: {
             menuWithPlainFields: "menuWithPlainFields",
             menuWithIdApplicazioneAndIdAzienda: "MenuWithIdApplicazioneAndIdAzienda"
-        }, 
+        },
         customProjections: {}
     },
-
     persona: {
         standardProjections: {
             personaWithPlainFields: "PersonaWithPlainFields"
+        },
+        customProjections: {}
+    },
+    utente: {
+        standardProjections: {
+            utenteWithIdAziendaAndIdPersona: "UtenteWithIdAziendaAndIdPersona",
+            utenteWithIdAziendaAndIdPersonaAndUtenteStrutturaList: "UtenteWithIdAziendaAndIdPersonaAndUtenteStrutturaList"
         },
         customProjections: {}
     }
@@ -94,5 +100,15 @@ export const ENTITIES_CONFIGURATION: EntitiesConfiguration = {
     },
     persona: {
         path: "persona"
+    },
+    utente: {
+        path: "utente"
     }
+};
+
+export const AFFERENZA_STRUTTURA = {
+    DIRETTA: 1,
+    FUNZIONALE: 3,
+    UNIFICATA: 9,
+    TEST: 7
 };

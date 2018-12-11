@@ -1,46 +1,52 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { FiltersAndSorts, FilterDefinition, FILTER_TYPES } from '@bds/nt-communicator';
-import {PROJECTIONS} from '../../../environments/app-constants';
-import { CambioUtenteService } from './cambio-utente.service';
-import { Persona } from '@bds/ng-internauta-model';
+import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { FiltersAndSorts, FilterDefinition, FILTER_TYPES } from "@bds/nt-communicator";
+import {PROJECTIONS, AFFERENZA_STRUTTURA} from "../../../environments/app-constants";
+import { CambioUtenteService } from "./cambio-utente.service";
+import { Persona, Utente } from "@bds/ng-internauta-model";
 
 @Component({
-  selector: 'app-cambio-utente',
-  templateUrl: './cambio-utente.component.html',
-  styleUrls: ['./cambio-utente.component.css']
+  selector: "app-cambio-utente",
+  templateUrl: "./cambio-utente.component.html",
+  styleUrls: ["./cambio-utente.component.css"]
 })
 export class CambioUtenteComponent implements OnInit {
 
   constructor(private cambioUtenteService: CambioUtenteService) { }
 
-  text: string = '';
-  personeSuggestions: Persona[] = [];
-  selectedPersona: Persona = null;
+  text: string = "";
+  personeSuggestions: Utente[] = [];
+  selectedPersona: Utente = null;
   cambioUtenteConfirmVisible: boolean = false;
+  initialFilter: FiltersAndSorts;
 
-  @Output("onUtenteSelectedEmitter") public onUtenteSelectedEmitter: EventEmitter<Persona> = new EventEmitter<Persona>();
+  @Output("onUtenteSelectedEmitter") public onUtenteSelectedEmitter: EventEmitter<Utente> = new EventEmitter<Utente>();
 
   ngOnInit() {
+    this.initialFilter = new FiltersAndSorts();
+    this.initialFilter.addFilter(
+      new FilterDefinition(
+        "utenteStrutturaList.idAfferenzaStruttura.id", FILTER_TYPES.not_string.equals, AFFERENZA_STRUTTURA.DIRETTA));
   }
 
   search(str: string) {
-    let filter: FiltersAndSorts = new FiltersAndSorts();
-    filter.addFilter(new FilterDefinition('descrizione', FILTER_TYPES.string.containsIgnoreCase, str));
-    this.cambioUtenteService.getData(PROJECTIONS.persona.standardProjections.personaWithPlainFields, filter, new FiltersAndSorts()).then(k => {
-      this.onClear();
-      if(k && k._embedded && k._embedded.persona)
-      {
-        this.personeSuggestions = k._embedded.persona;
-        this.personeSuggestions.forEach(k => k.descrizione += ' (' + k.codiceFiscale + ')');
+    const filter: FiltersAndSorts = new FiltersAndSorts();
+    filter.addFilter(new FilterDefinition("idPersona.descrizione", FILTER_TYPES.string.containsIgnoreCase, str));
+    this.cambioUtenteService
+      .getData(PROJECTIONS.utente.standardProjections.utenteWithIdAziendaAndIdPersona, this.initialFilter, filter)
+      .then(k => {
+        this.onClear();
+        if (k && k._embedded && k._embedded.utente) {
+        this.personeSuggestions = k._embedded.utente;
+          this.personeSuggestions.forEach(
+            el => el.idPersona.descrizione += " (" + el.idPersona.codiceFiscale + ") " + "- " + el.idAzienda.nome);
       }
 
-      switch(this.personeSuggestions.length)
-      {
+      switch (this.personeSuggestions.length) {
         case 0:
-          let dummyPersona: Persona = new Persona();
-          dummyPersona.descrizione = 'Nessun Risultato';
-          dummyPersona.id = null;
-          this.personeSuggestions.push(dummyPersona);
+          let dummyUtente: Utente = new Utente();
+          dummyUtente.idPersona.descrizione = "Nessun Risultato";
+          dummyUtente.id = null;
+          this.personeSuggestions.push(dummyUtente);
           break;
 
         case 1:
@@ -55,7 +61,7 @@ export class CambioUtenteComponent implements OnInit {
     this.selectedPersona = null;
   }
 
-  onUtenteSelected(selected: Persona) {
+  onUtenteSelected(selected: Utente) {
     if(selected.id === null) return;
 
     this.selectedPersona = selected;

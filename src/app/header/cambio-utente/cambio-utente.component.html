@@ -1,6 +1,18 @@
 <div class="p-grid">
     <div class="p-col">
-        <p-autoComplete [(ngModel)]="text" (onClear)="this.onClear()" [suggestions]="this.personeSuggestions" field="descrizione" (onSelect)="onUtenteSelected($event)" (completeMethod)="search($event.query)" [autoZIndex]="true" appendTo="body" [style]="{'width':'100%'}"></p-autoComplete>
+        <p-autoComplete
+            [(ngModel)]="text"
+            (onClear)="this.onClear()"
+            [suggestions]="this.personeSuggestions"
+            field="idPersona.descrizione"
+            (onSelect)="onUtenteSelected($event)"
+            (completeMethod)="search($event.query)"
+            [autoZIndex]="true"
+            appendTo="body"
+            [style]="{'width':'100%'}"
+            [inputStyle]="{'width':'100%'}"
+            placeholder="Cerca...">
+        </p-autoComplete>
     </div>
 </div>
 
@@ -8,7 +20,7 @@
     [responsive]="false" [minWidth]='300'>
     <div class="p-grid">
         <div class="p-col">
-            <p>Vuoi impersonare l'utente <b>{{this.selectedPersona?.descrizione}}</b>?</p>
+            <p>Vuoi impersonare l'utente <b>{{this.selectedPersona?.idPersona.descrizione}}</b>?</p>
         </div>
     </div>
     <div class="p-grid">
