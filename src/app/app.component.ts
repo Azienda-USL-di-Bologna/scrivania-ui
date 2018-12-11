@@ -25,16 +25,17 @@ export class AppComponent implements OnInit {
           console.log("chiamo login");
           console.log(params['impersonatedUser']);
           this.loginService.login(LoginType.Sso, params['impersonatedUser']).then(result => {
+            console.log("result login: ", result)
             if(result)
             {
               console.log("sto qui");
               
-              const u: Utente = this.buildLoggedUser(sessionStorage.getItem("loggedUser"));
-              this.loginService.setLoggedUser(u);
+              // const u: Utente = this.buildLoggedUser(sessionStorage.getItem("loggedUser"));
+              // this.loginService.setLoggedUser(u);
               this.router.navigate([SCRIVANIA_ROUTE]);
             }
-            else
-              window.close();
+            // else
+            //   window.close();
           });
         }
       
