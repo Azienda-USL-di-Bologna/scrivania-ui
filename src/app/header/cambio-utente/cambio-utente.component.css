@@ -5,3 +5,16 @@
 >>> body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon {
     color: white;
 }
+
+.button-wrapper {
+    justify-content: center;
+    padding-top: 10px;
+}
+
+.button-styles {
+    width: 100px;
+}
+
+.button-margin-left {
+    margin-left: 100px;
+}

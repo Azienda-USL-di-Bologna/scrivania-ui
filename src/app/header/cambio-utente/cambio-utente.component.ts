@@ -43,7 +43,7 @@ export class CambioUtenteComponent implements OnInit {
 
       switch (this.personeSuggestions.length) {
         case 0:
-          let dummyUtente: Utente = new Utente();
+          const dummyUtente: Utente = new Utente();
           dummyUtente.idPersona.descrizione = "Nessun Risultato";
           dummyUtente.id = null;
           this.personeSuggestions.push(dummyUtente);
@@ -62,7 +62,7 @@ export class CambioUtenteComponent implements OnInit {
   }
 
   onUtenteSelected(selected: Utente) {
-    if(selected.id === null) return;
+    if (selected.id === null) { return; }
 
     this.selectedPersona = selected;
     this.cambioUtenteConfirmVisible = true;

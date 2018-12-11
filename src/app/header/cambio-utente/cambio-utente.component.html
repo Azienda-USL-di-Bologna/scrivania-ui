@@ -23,12 +23,8 @@
             <p>Vuoi impersonare l'utente <b>{{this.selectedPersona?.idPersona.descrizione}}</b>?</p>
         </div>
     </div>
-    <div class="p-grid">
-        <div class="p-col">
-            <p-button label="Conferma" (onClick)="this.onUtenteSelectionConfirmed()"></p-button>
-        </div>
-        <div class="p-col" style="text-align: right">
-            <p-button label="Annulla" (onClick)="this.cambioUtenteConfirmVisible = false"></p-button>
-        </div>
+    <div class="p-grid button-wrapper">
+        <button pButton class="button-styles" label="Conferma" (click)="this.onUtenteSelectionConfirmed()"></button>
+        <button pButton class="button-styles button-margin-left" label="Annulla" (click)="this.cambioUtenteConfirmVisible = false"></button>
     </div>
 </p-dialog>
