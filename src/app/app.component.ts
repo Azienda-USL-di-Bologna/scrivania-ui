@@ -32,7 +32,6 @@ export class AppComponent implements OnInit {
               
               // const u: Utente = this.buildLoggedUser(sessionStorage.getItem("loggedUser"));
               // this.loginService.setLoggedUser(u);
-              this.router.navigate([HOME_ROUTE]);
               this.router.navigate([SCRIVANIA_ROUTE]);
             }
             // else

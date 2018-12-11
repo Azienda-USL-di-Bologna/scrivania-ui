@@ -58,12 +58,14 @@ export class HeaderComponent implements OnInit {
     console.log("header onCambioUtente")
     this.cambioUtentePopupVisibile = false;
 
+    this.router.navigate([HOME_ROUTE]);
+
     let url: string = '';
     if (window.location.href.indexOf('?') >= 0)
+
       url = window.location.href.toString() + '&impersonatedUser=' + utente.idPersona.codiceFiscale;
     else
       url = window.location.href.toString() + '?impersonatedUser=' + utente.idPersona.codiceFiscale;
-
 
      window.open(url, '_blank');
   }
