@@ -28,6 +28,8 @@
     (onRowSelect)="handleEvent('onRowSelect', $event)"
     [scrollable]="true"
     [loading]="loading"
+    (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
+    (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
     >
      <!--[style]="'{height:200px}'"  scrollHeight="700px"-->
    <!--[rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,15,20]"  [style.width]="col.width"-->

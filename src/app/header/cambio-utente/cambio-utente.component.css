@@ -1,3 +1,7 @@
 .ui-autocomplete-panel {
     z-index: 100000;
 }
+
+>>> body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon {
+    color: white;
+}

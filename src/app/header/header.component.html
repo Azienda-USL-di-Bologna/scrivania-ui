@@ -1,4 +1,10 @@
-<p-dialog appendTo="body" header="Cambio Utente" [(visible)]="this.cambioUtentePopupVisibile" [modal]="true" [responsive]="false">
+<p-dialog
+  appendTo="body"
+  header="Cambio Utente"
+  [(visible)]="this.cambioUtentePopupVisibile"
+  [modal]="true"
+  [responsive]="false"
+  [minHeight]="100">
   <app-cambio-utente (onUtenteSelectedEmitter)="this.onCambioUtente($event)"></app-cambio-utente>
 </p-dialog>
 
@@ -9,15 +15,15 @@
         <span class="title-header padding-top-12">Babel Internauta</span>
       </div>
       <div class="p-md-4 p-sm-12 icons-wrapper">
-            
+
         <div class="d-inline-block float-right pr-8">
           <div class="box-nome-cognome text-center padding-top-12">
             {{utenteConnesso? utenteConnesso.idPersona.nome: ''}} {{utenteConnesso? utenteConnesso.idPersona.cognome: ''}}
           </div>
         </div>
-        
+
         <i class="pi pi-user pi-icon-style toggle pr-8" (click)="op1.toggle($event)"></i>
-        
+
         <p-overlayPanel #op1 styleClass="overlaypanel-background">
             <div class="p-grid p-dir-col" *ngIf="utenteConnesso">
                 <div class="p-col titolo-popup"><b>Aziende</b></div>
@@ -36,7 +42,7 @@
                         </li>
                       </ul>
                 </div>
-            </div>    
+            </div>
         </p-overlayPanel>
 
         <!-- <img class="icons-style pr-8" src="assets/images/baseline_dashboard_white_48dp.png"/> -->

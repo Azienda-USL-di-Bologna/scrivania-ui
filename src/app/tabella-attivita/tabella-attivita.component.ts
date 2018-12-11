@@ -43,14 +43,6 @@ export class TabellaAttivitaComponent implements OnInit {
 
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
 
-  @HostListener("document:keydown.arrowdown", ["$event"]) onKeydownHandlerArrowDown(event: KeyboardEvent) {
-    this.selectIndex(this.selectedRowIndex + 1);
-  }
-
-  @HostListener("document:keydown.arrowup", ["$event"]) onKeydownHandlerArrowUp(event: KeyboardEvent) {
-    this.selectIndex(this.selectedRowIndex - 1);
-  }
-
   ngOnInit() {
     if (this.subscriptions && this.subscriptions.length > 0) {
       for (let i = 0; i < this.subscriptions.length; i++) {
@@ -154,6 +146,15 @@ export class TabellaAttivitaComponent implements OnInit {
       calElm.setAttribute("aria-label", element.ariaLabelDescription);
     });
   }
+
+  public onKeydownHandlerArrowDown(event: KeyboardEvent) {
+    this.selectIndex(this.selectedRowIndex + 1);
+  }
+
+  public onKeydownHandlerArrowUp(event: KeyboardEvent) {
+    this.selectIndex(this.selectedRowIndex - 1);
+  }
+
 
 
   calendarTooltip(field: string) {
