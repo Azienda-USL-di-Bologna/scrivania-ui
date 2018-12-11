@@ -3,7 +3,6 @@ import { NtJwtLoginService, LoginType } from '@bds/nt-jwt-login';
 import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE } from 'src/environments/app-constants';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Utente } from '@bds/ng-internauta-model';
-import { UtilityFunctions } from '@bds/nt-jwt-login/lib/utility-functions';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +29,7 @@ export class AppComponent implements OnInit {
             {
               console.log("sto qui");
               
-              const u: Utente = UtilityFunctions.buildLoggedUser(sessionStorage.getItem("loggedUser"));
+              const u: Utente = this.buildLoggedUser(sessionStorage.getItem("loggedUser"));
               this.loginService.setLoggedUser(u);
               this.router.navigate([SCRIVANIA_ROUTE]);
             }
@@ -44,5 +43,14 @@ export class AppComponent implements OnInit {
 
   }
 
+  public buildLoggedUser(userInfo: any): Utente {
+    let loggedUser: Utente = new Utente();
+    for (const key in userInfo) {
+      if (userInfo.hasOwnProperty(key)) {
+        loggedUser[key] = userInfo[key];
+      }
+    }
+    return loggedUser;
+  }
 
 }
