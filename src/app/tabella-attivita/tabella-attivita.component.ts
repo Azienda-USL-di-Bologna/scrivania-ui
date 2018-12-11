@@ -206,6 +206,8 @@ export class TabellaAttivitaComponent implements OnInit {
 
 
   private loadData(event: LazyLoadEvent) {
+    console.log("TOKEN: ", this.loginService.token);
+    console.log("UTENTE: ", this.loggedUser);
     this.loading = true;
     const functionName = "loadData";
     // console.log(this.componentDescription, functionName, "event: ", event);
