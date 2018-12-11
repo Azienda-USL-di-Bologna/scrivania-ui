@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NtJwtLoginService, LoginType } from '@bds/nt-jwt-login';
 import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE } from 'src/environments/app-constants';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Utente } from '@bds/ng-internauta-model';
+import { UtilityFunctions } from '@bds/nt-jwt-login/lib/utility-functions';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +29,9 @@ export class AppComponent implements OnInit {
             if(result)
             {
               console.log("sto qui");
+              
+              const u: Utente = UtilityFunctions.buildLoggedUser(sessionStorage.getItem("loggedUser"));
+              this.loginService.setLoggedUser(u);
               this.router.navigate([SCRIVANIA_ROUTE]);
             }
             else
