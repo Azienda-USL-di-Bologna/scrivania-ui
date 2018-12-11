@@ -56,8 +56,8 @@ export class TabellaAttivitaComponent implements OnInit {
       // imposto l'utente loggato nell'apposita variabile
       this.subscriptions.push(this.loginService.loggedUser.subscribe((u: Utente) => {
         this.loggedUser = u;
-        console.log("faccio il load data di nuovo");
-        this.loadData(null);
+        // console.log("faccio il load data di nuovo");
+        // this.loadData(null);
       }));
     }
 
