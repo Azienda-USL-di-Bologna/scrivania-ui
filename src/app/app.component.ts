@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NtJwtLoginService, LoginType } from '@bds/nt-jwt-login';
+import { NtJwtLoginService, LoginType, NtJwtLoginComponent } from '@bds/nt-jwt-login';
 import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE } from 'src/environments/app-constants';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Utente } from '@bds/ng-internauta-model';
@@ -20,26 +20,12 @@ export class AppComponent implements OnInit {
 
     this.route.queryParams.subscribe((params: Params) => {
       console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
-      if(params.hasOwnProperty('impersonatedUser'))
-        {
-          console.log("chiamo login");
-          console.log(params['impersonatedUser']);
-          this.loginService.login(LoginType.Sso, params['impersonatedUser']).then(result => {
-            console.log("result login: ", result)
-            if(result)
-            {
-              console.log("sto qui");
-              
-              // const u: Utente = this.buildLoggedUser(sessionStorage.getItem("loggedUser"));
-              // this.loginService.setLoggedUser(u);
-              this.router.navigate([SCRIVANIA_ROUTE]);
-            }
-            // else
-            //   window.close();
-          });
-        }
-      
-    });
+   
+        console.log("chiamo login");
+        console.log(params['impersonatedUser']);
+        this.loginService.redirectTo = "/scrivania";
+        //this.ntJwtLoginComponent.doLogin();
+   });
 
 
   }

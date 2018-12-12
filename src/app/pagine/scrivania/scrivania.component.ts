@@ -5,7 +5,7 @@ import { Dropdown } from "primeng/dropdown";
 import { TieredMenuModule } from "primeng/tieredmenu";
 import { MenuItem, LazyLoadEvent } from "primeng/api";
 import { ScrivaniaService } from "./scrivania.service";
-import { NtJwtLoginService } from "@bds/nt-jwt-login";
+import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
 import { PROJECTIONS } from "../../../environments/app-constants";
 import { forEach } from "@angular/router/src/utils/collection";
@@ -43,7 +43,7 @@ export class ScrivaniaComponent implements OnInit {
 
   public filtriApribili: any[] = [{label: "label0", value: "Tutte"}, {label: "label1", value: "105"}, {label: "label2", value: "102"}, {label: "label3", value: "909"}];
   public filtroScelto: any;
-  public loggedUser: Utente;
+  public loggedUser: UtenteUtilities;
   public alberoMenu : any[];
 
   public showNote: boolean = false;
@@ -55,7 +55,7 @@ export class ScrivaniaComponent implements OnInit {
   ngOnInit() {
     console.log("scivania ngOnInit()");
     // imposto l'utente loggato nell'apposita variabile
-    this.loginService.loggedUser.subscribe((u: Utente) => {
+    this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       this.loggedUser = u;
       this.loadMenu();
       this.setLook();
@@ -217,7 +217,7 @@ export class ScrivaniaComponent implements OnInit {
                 }
                 if(!found){ // Il comando non è presente, lo aggiungo
                   found = true;
-                  if(this.loggedUser["aziende"] && this.loggedUser["aziende"].length > 1){
+                  if(this.loggedUser.getUtente()["aziende"] && this.loggedUser.getUtente()["aziende"].length > 1){
                     elementAlbero.items.push(new TreeNode(
                       elementArray.descrizione,
                       [new TreeNode(
@@ -240,7 +240,7 @@ export class ScrivaniaComponent implements OnInit {
               }
             }
             if(!found){ // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
-              if(this.loggedUser["aziende"] && this.loggedUser["aziende"].length > 1){
+              if(this.loggedUser.getUtente()["aziende"] && this.loggedUser.getUtente()["aziende"].length > 1){
                 this.alberoMenu.push(new TreeNode(
                   elementArray.idApplicazione.nome,
                   [new TreeNode(

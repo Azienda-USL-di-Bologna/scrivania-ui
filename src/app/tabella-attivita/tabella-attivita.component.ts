@@ -6,7 +6,7 @@ import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { PROJECTIONS } from "../../environments/app-constants";
 import { Attivita, Utente } from "@bds/ng-internauta-model";
-import { NtJwtLoginService } from "@bds/nt-jwt-login";
+import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 @Component({
@@ -32,7 +32,7 @@ export class TabellaAttivitaComponent implements OnInit {
   private previousEvent: LazyLoadEvent;
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
-  public loggedUser: Utente;
+  public loggedUser: UtenteUtilities;
   public loading: boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
   public selectedRowIndex: number = -1;
   private subscriptions: Subscription[];
@@ -44,22 +44,14 @@ export class TabellaAttivitaComponent implements OnInit {
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
 
   ngOnInit() {
-    if (this.subscriptions && this.subscriptions.length > 0) {
-      for (let i = 0; i < this.subscriptions.length; i++) {
-        const s: Subscription = this.subscriptions.pop();
-        console.log("sub: ", s);
-        s.unsubscribe();
-      }
-    }
-    else {
       this.subscriptions = [];
       // imposto l'utente loggato nell'apposita variabile
-      this.subscriptions.push(this.loginService.loggedUser.subscribe((u: Utente) => {
+      this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
         this.loggedUser = u;
         // console.log("faccio il load data di nuovo");
         // this.loadData(null);
       }));
-    }
+    
 
     this.cols = [
       /* {
@@ -209,7 +201,7 @@ export class TabellaAttivitaComponent implements OnInit {
     const functionName = "buildInitialFiltersAndSorts";
     let initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.desc));
-    const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.fk_idPersona.id);
+    const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
     initialFiltersAndSorts.addFilter(filter);
     initialFiltersAndSorts.rows = NO_LIMIT;
     // console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
@@ -219,7 +211,7 @@ export class TabellaAttivitaComponent implements OnInit {
 
   private loadData(event: LazyLoadEvent) {
     console.log("TOKEN: ", this.loginService.token);
-    console.log("UTENTE: ", this.loggedUser);
+    console.log("UTENTE: ", this.loggedUser.getUtente());
     this.loading = true;
     const functionName = "loadData";
     // console.log(this.componentDescription, functionName, "event: ", event);

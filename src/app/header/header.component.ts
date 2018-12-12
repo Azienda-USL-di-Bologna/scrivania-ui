@@ -2,7 +2,7 @@ import { Utente, Persona } from "@bds/ng-internauta-model";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import {Router, ActivatedRoute} from "@angular/router";
 import {getInternautaUrl, BaseUrlType, HOME_ROUTE} from "../../environments/app-constants";
-import { NtJwtLoginService, LoginType } from "@bds/nt-jwt-login";
+import { NtJwtLoginService, LoginType, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Observable } from "rxjs";
 import { FunctionExpr, TransitiveCompileNgModuleMetadata } from "@angular/compiler";
 import { Dialog, DialogModule } from "primeng/dialog";
@@ -18,8 +18,7 @@ import { HomepageComponent } from "../pagine/homepage/homepage.component";
 })
 export class HeaderComponent implements OnInit {
 
-  public utenteConnesso: Utente;
-  public $utenteConnesso: Observable<Utente>;
+  public utenteConnesso: UtenteUtilities;
   cambioUtentePopupVisibile: boolean = false;
 
   constructor(public router: Router, private loginService: NtJwtLoginService, private http: HttpClient, private route: ActivatedRoute) { }
@@ -33,8 +32,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     console.log("header ngOnInit()");
-    this.$utenteConnesso = this.loginService.loggedUser;
-    this.$utenteConnesso.subscribe((utente: Utente) => {
+    this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
       this.utenteConnesso = utente;
     });
   }
@@ -58,14 +56,13 @@ export class HeaderComponent implements OnInit {
     console.log("header onCambioUtente")
     this.cambioUtentePopupVisibile = false;
 
-    //this.router.navigate([HOME_ROUTE]);
-
     let url: string = '';
     if (window.location.href.indexOf('?') >= 0)
-
-      url = window.location.href.replace("/scrivania/scrivania", "/scrivania/homepage").toString() + '&impersonatedUser=' + utente.idPersona.codiceFiscale;
+    
+      url = window.location.href.toString() + '&impersonatedUser=' + utente.idPersona.codiceFiscale;
     else
-      url = window.location.href.replace("/scrivania/scrivania", "/scrivania/homepage").toString() + '?impersonatedUser=' + utente.idPersona.codiceFiscale;
+      url = window.location.href.toString() + '?impersonatedUser=' + utente.idPersona.codiceFiscale;
+
 
      window.open(url, '_blank');
   }
