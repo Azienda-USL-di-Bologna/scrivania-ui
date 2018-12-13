@@ -14,6 +14,11 @@ import { ScrivaniaComponent } from "./pagine/scrivania/scrivania.component";
 import { HomepageComponent } from "./pagine/homepage/homepage.component";
 import { HeaderComponent } from "./header/header.component";
 import { CambioUtenteComponent } from "./header/cambio-utente/cambio-utente.component";
+import { AttivitaFatteComponent } from './tabelle/attivita-fatte/attivita-fatte.component';
+
+/* Custom services */
+import { AttivitaService } from "./tabella-attivita/attivita.service";
+import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
 
 
 /* PrimeNG component */
@@ -24,17 +29,18 @@ import { DropdownModule } from "primeng/dropdown";
 import { TableModule } from "primeng/table";
 import { CalendarModule } from "primeng/calendar";
 import { TooltipModule } from "primeng/tooltip";
-import { AttivitaService } from "./tabella-attivita/attivita.service";
+
 import { DatePipe } from "@angular/common";
 import { InputTextModule } from "primeng/inputtext";
 import { OverlayPanelModule } from "primeng/overlaypanel";
 import { TieredMenuModule } from "primeng/tieredmenu";
-import {DialogModule} from "primeng/dialog";
+import { DialogModule } from "primeng/dialog";
 import { AutoCompleteModule } from "primeng/autocomplete";
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
+
 
 @NgModule({
   declarations: [
@@ -43,7 +49,8 @@ import { loginModuleConfig } from "./config/module-config";
     ScrivaniaComponent,
     HomepageComponent,
     HeaderComponent,
-    CambioUtenteComponent
+    CambioUtenteComponent,
+    AttivitaFatteComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
@@ -66,7 +73,7 @@ import { loginModuleConfig } from "./config/module-config";
     DialogModule,
     AutoCompleteModule,
   ],
-  providers: [AttivitaService, DatePipe],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
