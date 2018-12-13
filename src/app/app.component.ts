@@ -35,7 +35,8 @@ export class AppComponent implements OnInit {
         console.log("chiamo login");
         console.log(params['impersonatedUser']);
         if (params.hasOwnProperty('impersonatedUser')) {
-          //this.loginService.clearSession();
+        if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
+          this.loginService.clearSession();
           //delete params['impersonatedUser'];
         }
         //this.ntJwtLoginComponent.doLogin();
