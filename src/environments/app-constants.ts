@@ -49,7 +49,8 @@ export const ENTITIES = {
     azienda: "azienda",
     attivita: "attivita",
     applicazione: "applicazione",
-    menu: "menu"
+    menu: "menu",
+    attivitaFatta: "attivitafatta"
 }
 
 export const PROJECTIONS = {
@@ -63,6 +64,13 @@ export const PROJECTIONS = {
         standardProjections: {
             attivitaWithPlainFields: "attivitaWithPlainFields",
             AttivitaWithIdApplicazioneAndIdAzienda: "AttivitaWithIdApplicazioneAndIdAzienda"
+        },
+        customProjections: {}
+    },
+    attivitaFatta: {
+        standardProjections: {
+            attivitaFattaWithPlainFields: "attivitaFattaWithPlainFields",
+            AttivitaFattaWithIdApplicazioneAndIdAzienda: "AttivitaFattaWithIdApplicazioneAndIdAzienda"
         },
         customProjections: {}
     },
@@ -94,6 +102,9 @@ export const ENTITIES_CONFIGURATION: EntitiesConfiguration = {
     },
     attivita: {
         path: "attivita"
+    },
+    attivitafatta: {
+        path: "attivitafatta"
     },
 	menu: {
         path: "menu"

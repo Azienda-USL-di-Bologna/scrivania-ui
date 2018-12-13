@@ -1,0 +1,15 @@
+.img-table{
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: auto;
+}
+.openTabLink{
+    color: #993366 !important;
+}
+.openTabLink:hover{
+    cursor: pointer;
+}
+.p0{
+    padding: 0 !important;
+}
