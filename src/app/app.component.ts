@@ -18,12 +18,26 @@ export class AppComponent implements OnInit {
     console.log("inizio onInit()");
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
 
-    this.route.queryParams.subscribe((params: Params) => {
+  //   this.route.queryParams.subscribe((params: Params) => {
+  //     console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
+   
+  //       console.log("chiamo login");
+  //       console.log(params['impersonatedUser']);
+  //       if (params.hasOwnProperty('impersonatedUser')) {
+  //         this.loginService.redirectTo = "/scrivania";
+
+  //       }
+  //       //this.ntJwtLoginComponent.doLogin();
+  //  });
+      this.route.queryParams.subscribe((params: Params) => {
       console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
    
         console.log("chiamo login");
         console.log(params['impersonatedUser']);
-        this.loginService.redirectTo = "/scrivania";
+        if (params.hasOwnProperty('impersonatedUser')) {
+          this.loginService.clearSession();
+          //delete params['impersonatedUser'];
+        }
         //this.ntJwtLoginComponent.doLogin();
    });
 
