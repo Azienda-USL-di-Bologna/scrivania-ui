@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
         console.log(params['impersonatedUser']);
         if (params.hasOwnProperty('impersonatedUser')) {
           this.loginService.clearSession();
-          delete params['impersonatedUser'];
+          //delete params['impersonatedUser'];
         }
         //this.ntJwtLoginComponent.doLogin();
    });
