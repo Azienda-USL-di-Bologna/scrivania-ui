@@ -180,4 +180,12 @@ export class AttivitaFatteComponent implements OnInit {
     this.loadData(event);
   }
 
+  public onKeydownHandlerArrowDown(event: KeyboardEvent) {
+    // this.selectIndex(this.selectedRowIndex + 1);
+  }
+
+  public onKeydownHandlerArrowUp(event: KeyboardEvent) {
+    // this.selectIndex(this.selectedRowIndex - 1);
+  }
+
 }
