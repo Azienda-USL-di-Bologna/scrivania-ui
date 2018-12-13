@@ -18,6 +18,8 @@ import { bind } from "@angular/core/src/render3/instructions";
 })
 export class ScrivaniaComponent implements OnInit {
 
+  public visibileOrNot :boolean = true;
+
    @ViewChild("anteprima") private anteprima: ElementRef;
    @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
 
