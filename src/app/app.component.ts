@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
         //if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
           this.loginService.clearSession();
           sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
-          //delete params['impersonatedUser'];
+          delete params['impersonatedUser'];
         }
         //this.ntJwtLoginComponent.doLogin();
    });
