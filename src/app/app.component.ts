@@ -29,14 +29,18 @@ export class AppComponent implements OnInit {
   //       }
   //       //this.ntJwtLoginComponent.doLogin();
   //  });
-      this.route.queryParams.subscribe((params: Params) => {
+        // if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
+        //   this.loginService.clearSession();
+        // }
+    this.route.queryParams.subscribe((params: Params) => {
       console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
    
         console.log("chiamo login");
         console.log(params['impersonatedUser']);
-        //if (params.hasOwnProperty('impersonatedUser')) {
-        if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
+        if (params.hasOwnProperty('impersonatedUser')) {
+        //if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
           this.loginService.clearSession();
+          sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
           //delete params['impersonatedUser'];
         }
         //this.ntJwtLoginComponent.doLogin();
