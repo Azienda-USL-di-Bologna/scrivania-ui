@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
    
         console.log("chiamo login");
         console.log(params['impersonatedUser']);
-        if (params.hasOwnProperty('impersonatedUser')) {
+        //if (params.hasOwnProperty('impersonatedUser')) {
         if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
           this.loginService.clearSession();
           //delete params['impersonatedUser'];
