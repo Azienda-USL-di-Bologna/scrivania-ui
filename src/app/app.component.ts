@@ -42,8 +42,8 @@ export class AppComponent implements OnInit {
       if (params.hasOwnProperty('impersonatedUser')) {
       //if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
         this.loginService.clearSession();
-        this.loginService.setimpersonatedUser(params['impersonatedUser']);
-        //sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
+        //this.loginService.setimpersonatedUser(params['impersonatedUser']);
+        sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
         delete params['impersonatedUser'];
         
         //window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
