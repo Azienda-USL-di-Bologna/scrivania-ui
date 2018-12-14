@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit {
         window.location.href = getInternautaUrl(BaseUrlType.Logout);
       }
     } else {
-      this.router.navigate(["/login"]);
+      window.close();
     }
    
   }
