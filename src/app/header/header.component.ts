@@ -41,15 +41,18 @@ export class HeaderComponent implements OnInit {
 
     const loginMethod = sessionStorage.getItem("loginMethod");
 
-     this.loginService.clearSession();
+    this.loginService.clearSession();
 
-    if (loginMethod !== "sso") {
-      console.log(loginMethod);
-      this.router.navigate(["/login"]);
-    } else {
-      // window.location.href = "https://gdml.internal.ausl.bologna.it/Shibboleth.sso/Logout";
-      window.location.href = getInternautaUrl(BaseUrlType.Logout);
+    if (!this.loginService.isUserImpersonated) {
+      if (loginMethod !== "sso") {
+        console.log(loginMethod);
+        this.router.navigate(["/login"]);
+      } else {
+        // window.location.href = "https://gdml.internal.ausl.bologna.it/Shibboleth.sso/Logout";
+        window.location.href = getInternautaUrl(BaseUrlType.Logout);
+      }
     }
+   
   }
 
   onCambioUtente(utente: Utente) {
