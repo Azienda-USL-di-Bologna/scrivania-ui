@@ -43,7 +43,7 @@ export class HeaderComponent implements OnInit {
 
     this.loginService.clearSession();
 
-    //if (!this.loginService.isUserImpersonated) {
+    if (!this.loginService.isUserImpersonated) {
       if (loginMethod !== "sso") {
         console.log(loginMethod);
         this.router.navigate(["/login"]);
@@ -51,7 +51,7 @@ export class HeaderComponent implements OnInit {
         // window.location.href = "https://gdml.internal.ausl.bologna.it/Shibboleth.sso/Logout";
         window.location.href = getInternautaUrl(BaseUrlType.Logout);
       }
-    //}
+    }
    
   }
 
