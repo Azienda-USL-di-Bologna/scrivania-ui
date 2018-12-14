@@ -67,7 +67,7 @@ export class HeaderComponent implements OnInit {
      else
        url = window.location.href.toString() + '?impersonatedUser=' + utente.idPersona.codiceFiscale;
 
-     //sessionStorage.setItem("impersonatedUser", utente.idPersona.codiceFiscale);
+     sessionStorage.setItem("impersonatedUser", utente.idPersona.codiceFiscale);
      window.open(url, '_blank');
   }
 }
