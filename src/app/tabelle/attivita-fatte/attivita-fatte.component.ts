@@ -61,7 +61,7 @@ export class AttivitaFatteComponent implements OnInit {
     },
     {
       field: "dataInserimentoRiga",
-      header: "Data",
+      header: "Svolta il",
       filterMatchMode: FILTER_TYPES.not_string.equals,
       fieldType: "DateTime",
       filterWidget: "Calendar",
@@ -73,18 +73,6 @@ export class AttivitaFatteComponent implements OnInit {
       header: "Tipo",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "120px"
-    },
-    {
-      // colonna azione
-      width: "60px"
-    },
-    {
-      // colonna posso procedere
-      width: "30px"
-    },
-    {
-      // colonna trash
-      width: "30px"
     },
     {
     // colonna note
@@ -187,5 +175,29 @@ export class AttivitaFatteComponent implements OnInit {
   public onKeydownHandlerArrowUp(event: KeyboardEvent) {
     // this.selectIndex(this.selectedRowIndex - 1);
   }
+
+  // public apriAttivita(attivita: any) {
+  //   const attivitaJsonArray = JSON.parse(attivita.urls);
+  //   if (attivitaJsonArray && attivitaJsonArray[0]) {
+  //     /* abbiamo bisogno di un uuid diverso ad ogni entrata sull'ambiente,
+  //        se no per un controllo anti-inde-sminchiamento onCommand ritorna e basta */
+  //     window.open(attivitaJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
+  //   }
+
+  // }
+
+  // /**************************
+  // ** SuperSaloRollsTheUUID **
+  // **************************/
+  // private myRandomUUID() {
+  //   // 8 - 4 - 4 - 4 - 16
+  //   return this.fourRandomChar() + this.fourRandomChar() +                      // 8
+  //      "-" + this.fourRandomChar() + "-" + this.fourRandomChar() + "-" +        // -4-4-4-
+  //      this.fourRandomChar() + this.fourRandomChar() + this.fourRandomChar() ;  // 16
+  // }
+
+  // private fourRandomChar() {
+  //   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  // }
 
 }

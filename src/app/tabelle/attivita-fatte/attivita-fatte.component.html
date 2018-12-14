@@ -55,17 +55,8 @@
             <td class="column-class">{{attivita.oggetto}}</td>
             <td [style.width]="cols[5].width" class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
             <td [style.width]="cols[6].width" class="column-class">{{attivita.descrizione}}</td>
-            <td [style.width]="cols[7].width">
-                <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' &&
-                    (attivita.idApplicazione.nome==='Pico' || attivita.idApplicazione.nome==='Dete' || attivita.idApplicazione.nome==='Deli'))"
-                (click)="apriAttivita(attivita)"><b>Apri</b></a>
-            </td>
 
-            <td [style.width]="cols[8].width" class="p0">
-            </td>
-            <td [style.width]="cols[9].width" class="p0">
-            </td>
-            <td [style.width]="cols[10].width" class="p0">
+            <td [style.width]="cols[7].width" class="p0">
                 <img *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="onNoteClick(attivita)" alt="note" class="img-table">
                 <img *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table">
             </td>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Attivita, Utente } from "@bds/ng-internauta-model";
 import { Dropdown } from "primeng/dropdown";
@@ -18,7 +18,7 @@ import { bind } from "@angular/core/src/render3/instructions";
 })
 export class ScrivaniaComponent implements OnInit {
 
-  public visibileOrNot :boolean = true;
+  public mostraStorico :boolean = false;
 
    @ViewChild("anteprima") private anteprima: ElementRef;
    @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;

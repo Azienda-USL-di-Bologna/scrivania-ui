@@ -3,11 +3,16 @@
   <!-- Left side -->
   <div class="p-col content-left" #leftSide>
     <div class="option-bar">
-        <div>
-            <button #btn type="button" pButton (click)="menu.toggle($event)" class="clMenu" iconPos="left" label="Apri">
+        <div class="buttons-bar">
+            
+            <button [ngClass]="mostraStorico?'d-hidden':'d-flex'" #btn type="button" pButton (click)="menu.toggle($event)" class="clMenu" iconPos="left" label="Apri">
                 <img src="assets/images/baseline_dashboard_white_48dp.png" width="24px" alt="Apri">
             </button> <!-- menu.toggle($event) -->
             <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" styleClass="clMenu" (itemClick)="handleItemClick($event)"></p-tieredMenu>
+          
+            <button type="button" pButton [label]="mostraStorico?'Indietro':'Cronologia'" (click)="mostraStorico=!mostraStorico" iconPos="left" class="ui-button-raised ui-button-secondary button-with-icon .button-indietro">
+                <img [ngClass]="mostraStorico?'d-flex':'d-hidden'" src="assets/images/outline-arrow_back_ios-24px.svg" width="24px" alt="Apri">
+            </button>  
         </div>
 
         <div>
@@ -17,17 +22,17 @@
     </div>
     <div class="table-wrapper">
         <div class="table-inner">
-            <app-attivita (attivitaEmitter)="attivitaClicked($event)" (onAttivitaNoteEmitter)="onNoteClick($event)"></app-attivita>
-            <!-- <app-attivita-fatte></app-attivita-fatte> -->
+            <app-attivita *ngIf="!mostraStorico" (attivitaEmitter)="attivitaClicked($event)" (onAttivitaNoteEmitter)="onNoteClick($event)"></app-attivita>
+            <app-attivita-fatte *ngIf="mostraStorico"></app-attivita-fatte>
         </div>
     </div>
 
   </div>
 
-  <div *ngIf="visibileOrNot" class="p-offset-7 d-inline-block slider" #slider><div></div></div>
+  <div class="p-offset-7 d-inline-block slider" [ngClass]="mostraStorico?'d-hidden':'d-flex'" #slider><div></div></div>
 
   <!-- Right side -->
-  <div *ngIf="visibileOrNot" class="p-md-5 p-sm-12 content-right" #rightSide>
+  <div class="p-md-5 p-sm-12 content-right" [ngClass]="mostraStorico?'d-hidden':'d-flex'" #rightSide>
 
     <div class="info-doc-wrapper">
         <div class="div-info-doc">
