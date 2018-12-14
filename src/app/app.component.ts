@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   //   this.route.queryParams.subscribe((params: Params) => {
   //     console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
    
-  //       console.log("chiamo login");
+         console.log("chiamo login");
   //       console.log(params['impersonatedUser']);
   //       if (params.hasOwnProperty('impersonatedUser')) {
   //         this.loginService.redirectTo = "/scrivania";
@@ -33,9 +33,9 @@ export class AppComponent implements OnInit {
         //   this.loginService.clearSession();
         // }
     this.route.queryParams.subscribe((params: Params) => {
-      //console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
-      //console.log("chiamo login");
-      //console.log(params['impersonatedUser']);
+      console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
+      console.log("chiamo login");
+      console.log(params['impersonatedUser']);
 
       // se nei params c'è la proprietà impersonatedUser, allora pulisci la sessione, setta nella sessionStorage l'utente impersonato
       // e cancellalo dai params
