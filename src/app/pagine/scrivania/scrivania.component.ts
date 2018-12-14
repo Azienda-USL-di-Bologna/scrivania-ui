@@ -18,6 +18,8 @@ import { bind } from "@angular/core/src/render3/instructions";
 })
 export class ScrivaniaComponent implements OnInit {
 
+  public visibileOrNot :boolean = true;
+
    @ViewChild("anteprima") private anteprima: ElementRef;
    @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
 
@@ -69,17 +71,18 @@ export class ScrivaniaComponent implements OnInit {
 
   private setResponsiveSlider(): void {
     let that = this;
+    let totalX = this.rightSide.nativeElement.offsetWidth + this.leftSide.nativeElement.offsetWidth;
     this.slider.nativeElement.onmousedown = function(e) {
       e.preventDefault();
-      // that.posX = e.clientX;
       document.onmouseup = function(){
-        // document.onmouseup = null;
         document.onmousemove = null;
       }
       document.onmousemove = function(e){
         e.preventDefault();
-        that.leftSide.nativeElement.style.width = e.clientX + "px";
-        that.slider.nativeElement.style.marginLeft = e.clientX + "px";
+        if(!(e.clientX <= 225) && !(totalX - e.clientX <= 225)){
+          that.rightSide.nativeElement.style.width = totalX - e.clientX + 34 + "px";
+          that.slider.nativeElement.style.marginLeft = e.clientX - 34 + "px";
+        }
       }
     }
   }

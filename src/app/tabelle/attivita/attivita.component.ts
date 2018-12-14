@@ -4,15 +4,15 @@ import { LazyLoadEvent } from "primeng/api";
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
-import { PROJECTIONS } from "../../environments/app-constants";
+import { PROJECTIONS } from "../../../environments/app-constants";
 import { Attivita, Utente } from "@bds/ng-internauta-model";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 @Component({
-  selector: "app-tabella-attivita",
-  templateUrl: "./tabella-attivita.component.html",
-  styleUrls: ["./tabella-attivita.component.css"],
+  selector: "app-attivita",
+  templateUrl: "./attivita.component.html",
+  styleUrls: ["./attivita.component.css"],
   providers: [DatePipe]
 })
 export class TabellaAttivitaComponent implements OnInit {

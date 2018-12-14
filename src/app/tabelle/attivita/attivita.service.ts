@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { HttpAbstractService } from "@bds/nt-communicator"
-import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType } from '../../environments/app-constants';
+import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType } from '../../../environments/app-constants';
 import { Attivita } from '@bds/ng-internauta-model';
 
 @Injectable()

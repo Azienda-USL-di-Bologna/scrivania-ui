@@ -9,7 +9,7 @@ import { HttpModule } from "@angular/http";
 
 /* Custom component */
 import { AppComponent } from "./app.component";
-import { TabellaAttivitaComponent } from "./tabella-attivita/tabella-attivita.component";
+import { TabellaAttivitaComponent } from "./tabelle/attivita/attivita.component";
 import { ScrivaniaComponent } from "./pagine/scrivania/scrivania.component";
 import { HomepageComponent } from "./pagine/homepage/homepage.component";
 import { HeaderComponent } from "./header/header.component";
@@ -17,7 +17,7 @@ import { CambioUtenteComponent } from "./header/cambio-utente/cambio-utente.comp
 import { AttivitaFatteComponent } from './tabelle/attivita-fatte/attivita-fatte.component';
 
 /* Custom services */
-import { AttivitaService } from "./tabella-attivita/attivita.service";
+import { AttivitaService } from "./tabelle/attivita/attivita.service";
 import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
 
 

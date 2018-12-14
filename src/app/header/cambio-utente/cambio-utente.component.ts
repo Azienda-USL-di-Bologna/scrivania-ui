@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from "@angular/core";
-import { FiltersAndSorts, FilterDefinition, FILTER_TYPES } from "@bds/nt-communicator";
+import { FiltersAndSorts, FilterDefinition, FILTER_TYPES, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
 import {PROJECTIONS, AFFERENZA_STRUTTURA} from "../../../environments/app-constants";
 import { CambioUtenteService } from "./cambio-utente.service";
 import { Persona, Utente } from "@bds/ng-internauta-model";
@@ -26,6 +26,7 @@ export class CambioUtenteComponent implements OnInit {
     this.initialFilter.addFilter(
       new FilterDefinition(
         "utenteStrutturaList.idAfferenzaStruttura.id", FILTER_TYPES.not_string.equals, AFFERENZA_STRUTTURA.DIRETTA));
+    this.initialFilter.addSort(new SortDefinition("idPersona.descrizione", SORT_MODES.asc));
   }
 
   search(str: string) {
