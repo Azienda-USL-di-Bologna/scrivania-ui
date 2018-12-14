@@ -40,14 +40,14 @@ export class AppComponent implements OnInit {
       // se nei params c'è la proprietà impersonatedUser, allora pulisci la sessione, setta nella sessionStorage l'utente impersonato
       // e cancellalo dai params
       if (params.hasOwnProperty('impersonatedUser')) {
-      if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
+      //if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
         this.loginService.clearSession();
         this.loginService.setimpersonatedUser(params['impersonatedUser']);
         //sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
         delete params['impersonatedUser'];
         
         //window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
-      }}
+      }
       //this.ntJwtLoginComponent.doLogin();
    });
   }
