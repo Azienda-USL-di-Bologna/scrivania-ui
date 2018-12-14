@@ -51,6 +51,8 @@ export class HeaderComponent implements OnInit {
         // window.location.href = "https://gdml.internal.ausl.bologna.it/Shibboleth.sso/Logout";
         window.location.href = getInternautaUrl(BaseUrlType.Logout);
       }
+    } else {
+      this.router.navigate(["/login"]);
     }
    
   }
