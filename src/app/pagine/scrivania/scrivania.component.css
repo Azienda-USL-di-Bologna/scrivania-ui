@@ -22,6 +22,17 @@
     right: 0;
     */
 }
+.buttons-bar{
+    display: flex;
+    flex-direction: row;
+}
+.buttons-bar > button{
+    margin: 0 6px 0 0;
+}
+:host>>> .button-indietro{
+    background-color: #e2e2e2;
+    height: 33px;
+}
 .table-wrapper{
     /*position: absolute;
     top: 60px;
@@ -71,13 +82,23 @@
 .li-description{
     font-weight: bold;
 }
-
+.button-with-icon{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 6px 0;
+}
+/* >>> .button-with-icon > span{
+    padding: 0 0 0 3px !important;
+} */
 .div-info-doc {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
 }
-
+.px-16{
+    padding: 0 16px;
+}
 .span-info-doc {
     margin-left: 30px;
 }
@@ -164,6 +185,23 @@
 .p-left-0{
     padding-left: 0;
 }
+.d-hidden{
+    display: none;
+}
+.d-flex{
+    display: flex;
+}
 :host>>>.clMenu{
     top: auto !important;
+}
+:host >>> .ui-button.ui-state-default.ui-button-secondary:enabled:focus, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default:enabled:focus {
+    box-shadow: 0px 1px 1px 0 #993464;
+}
+:host >>> .ui-button.ui-button-raised {
+    box-shadow: 0px 1px 1px 0 #99346452;
+}
+:host >>> .ui-button.ui-state-default.ui-button-secondary:enabled:hover, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default:enabled:hover {
+    background-color: #ffffff;
+    color: #993464;
+    box-shadow: 0px 1px 1px 0 #993464;
 }
