@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
@@ -7,13 +7,12 @@ import { AttivitaFatteService } from "./attivita-fatte.service";
 import { PROJECTIONS } from "../../../environments/app-constants";
 import { AttivitaFatta } from "@bds/ng-internauta-model";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
-import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 
 @Component({
-  selector: 'app-attivita-fatte',
-  templateUrl: './attivita-fatte.component.html',
-  styleUrls: ['./attivita-fatte.component.css'],
+  selector: "app-attivita-fatte",
+  templateUrl: "./attivita-fatte.component.html",
+  styleUrls: ["./attivita-fatte.component.css"],
   providers: [DatePipe]
 })
 export class AttivitaFatteComponent implements OnInit {
@@ -90,7 +89,6 @@ export class AttivitaFatteComponent implements OnInit {
       this.loggedUser = u;
     }));
     this.loadData(null);
-    
   }
 
   private loadData(event: LazyLoadEvent) {
@@ -105,7 +103,7 @@ export class AttivitaFatteComponent implements OnInit {
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
 
-    this.attivitaFatteService.getData(PROJECTIONS.attivitaFatta.standardProjections.AttivitaFattaWithIdApplicazioneAndIdAzienda, this.initialFiltersAndSorts, this.lazyLoadFiltersAndSorts)
+    this.attivitaFatteService.getData(PROJECTIONS.attivitaFatta.customProjections.attivitaFattaWithIdApplicazioneAndIdAziendaAndTransientFields, this.initialFiltersAndSorts, this.lazyLoadFiltersAndSorts)
       .then(
         data => {
           this.attivitaFatte = undefined;
@@ -132,7 +130,7 @@ export class AttivitaFatteComponent implements OnInit {
 
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const functionName = "buildInitialFiltersAndSorts";
-    let initialFiltersAndSorts = new FiltersAndSorts();
+    const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.desc));
     const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
     initialFiltersAndSorts.addFilter(filter);

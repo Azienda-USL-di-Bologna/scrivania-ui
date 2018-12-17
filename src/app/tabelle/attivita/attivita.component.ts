@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
@@ -15,7 +15,7 @@ import { Subscription } from "rxjs";
   styleUrls: ["./attivita.component.css"],
   providers: [DatePipe]
 })
-export class TabellaAttivitaComponent implements OnInit {
+export class TabellaAttivitaComponent implements OnInit, AfterViewInit {
   /*
   attivita: any = [
     {priorita:'A', tipo: 'qq', azienda: '102', applicazione:'pico'},
@@ -51,7 +51,6 @@ export class TabellaAttivitaComponent implements OnInit {
         // console.log("faccio il load data di nuovo");
         // this.loadData(null);
       }));
-    
 
     this.cols = [
       /* {
@@ -182,6 +181,9 @@ export class TabellaAttivitaComponent implements OnInit {
         break;
       case "onRowSelect":
         this.rowSelect(event);
+        const attivitaSelezionata: Attivita = event.data;
+        attivitaSelezionata.aperta = true;
+        this.attivitaService.update(attivitaSelezionata);
         break;
     }
   }
@@ -210,7 +212,7 @@ export class TabellaAttivitaComponent implements OnInit {
 
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const functionName = "buildInitialFiltersAndSorts";
-    let initialFiltersAndSorts = new FiltersAndSorts();
+    const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.desc));
     const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
     initialFiltersAndSorts.addFilter(filter);
@@ -235,7 +237,7 @@ export class TabellaAttivitaComponent implements OnInit {
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
 
-    this.attivitaService.getData(PROJECTIONS.attivita.standardProjections.AttivitaWithIdApplicazioneAndIdAzienda, this.initialFiltersAndSorts, this.lazyLoadFiltersAndSorts)
+    this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, this.initialFiltersAndSorts, this.lazyLoadFiltersAndSorts)
       .then(
         data => {
           this.attivita = undefined;
@@ -263,12 +265,12 @@ export class TabellaAttivitaComponent implements OnInit {
 
   }
 
-  public apriAttivita(attivita: any) {
-    const attivitaJsonArray = JSON.parse(attivita.urls);
-    if (attivitaJsonArray && attivitaJsonArray[0]) {
+  public apriAttivita(attivita: Attivita) {
+    const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
+    if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
       /* abbiamo bisogno di un uuid diverso ad ogni entrata sull'ambiente,
          se no per un controllo anti-inde-sminchiamento onCommand ritorna e basta */
-      window.open(attivitaJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
+      window.open(compiledUrlsJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
     }
 
   }

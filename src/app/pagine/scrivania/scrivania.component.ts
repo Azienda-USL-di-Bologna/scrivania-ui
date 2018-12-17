@@ -1,15 +1,11 @@
 import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Attivita, Utente } from "@bds/ng-internauta-model";
+import { Attivita, Menu } from "@bds/ng-internauta-model";
 import { Dropdown } from "primeng/dropdown";
-import { TieredMenuModule } from "primeng/tieredmenu";
-import { MenuItem, LazyLoadEvent } from "primeng/api";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
 import { PROJECTIONS } from "../../../environments/app-constants";
-import { forEach } from "@angular/router/src/utils/collection";
-import { bind } from "@angular/core/src/render3/instructions";
 
 @Component({
   selector: "app-scrivania",
@@ -18,7 +14,7 @@ import { bind } from "@angular/core/src/render3/instructions";
 })
 export class ScrivaniaComponent implements OnInit {
 
-  public mostraStorico :boolean = false;
+  public mostraStorico: boolean = false;
 
    @ViewChild("anteprima") private anteprima: ElementRef;
    @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
@@ -40,13 +36,13 @@ export class ScrivaniaComponent implements OnInit {
   public destinatari: string = null; // "Nessun destinatario";
   public destinatariCC: string = null; // "Li dobbiamo mettere?? sulla scrivania non ci sono mai stati";
 
-  public finestreApribili: any[] = [{label:"Elenco documenti", items:[{label:"AOSPBO", command: (onclick)=> {this.handleItemClick("ciao")}},{label:"AUSLBO"}]},{label:"Elenco determine"},{label:"Elenco delibere"}];
+  public finestreApribili: any[] = [{label: "Elenco documenti", items: [{label: "AOSPBO", command: (onclick) => {this.handleItemClick("ciao"); }}, {label: "AUSLBO"}]}, {label: "Elenco determine"}, {label: "Elenco delibere"}];
   public finestraScelta: any;
 
   public filtriApribili: any[] = [{label: "label0", value: "Tutte"}, {label: "label1", value: "105"}, {label: "label2", value: "102"}, {label: "label3", value: "909"}];
   public filtroScelto: any;
   public loggedUser: UtenteUtilities;
-  public alberoMenu : any[];
+  public alberoMenu: any[];
 
   public showNote: boolean = false;
   public noteText: string = null;
@@ -61,23 +57,24 @@ export class ScrivaniaComponent implements OnInit {
       this.loggedUser = u;
       this.loadMenu();
       this.setLook();
-    })
-    //console.log("logged user: ", this.loggedUser);
+    });
+    // console.log("logged user: ", this.loggedUser);
   }
 
-  private setLook():void {
+  private setLook(): void {
     this.setResponsiveSlider();
   }
 
   private setResponsiveSlider(): void {
-    let that = this;
+    const that = this;
+   
     this.slider.nativeElement.onmousedown = function(e) {
-      let totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
+      const totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
       e.preventDefault();
-      document.onmouseup = function(){
+      document.onmouseup = function() {
         document.onmousemove = null;
-      }
-      document.onmousemove = function(e){
+      };
+      document.onmousemove = function(e ) {
         e.preventDefault();
         if (!(e.clientX <= 385) && !(totalX - e.clientX <= 225)) {
           const rx = (totalX - e.clientX + 34) * 100 / totalX;
@@ -87,24 +84,24 @@ export class ScrivaniaComponent implements OnInit {
           // that.rightSide.nativeElement.style.width = totalX - e.clientX + 34 + "px";
           // that.slider.nativeElement.style.marginLeft = e.clientX - 34 + "px";
         }
-      }
-    }
+      };
+    };
   }
 
   private shrinkFileName(fileName: string): string {
     const maxFileName: number = 50;
 
-    if(fileName.length <= maxFileName) return fileName;
+    if (fileName.length <= maxFileName) { return fileName; }
 
     const matchExtRegex = /(?:\.([^.]+))?$/;
 
-    var ext: string = matchExtRegex.exec(fileName)[1];
+    const ext: string = matchExtRegex.exec(fileName)[1];
 
     fileName = fileName.replace("." + ext, "");
 
     fileName = fileName.substr(0, maxFileName) + "..." + fileName.substr(fileName.length - 5, 5);
 
-    if(ext) fileName += ext;
+    if (ext) { fileName += ext; }
 
 
     return fileName;
@@ -135,14 +132,14 @@ export class ScrivaniaComponent implements OnInit {
 
     this.allegati = [];
     this.allegatiDropDown.clear(null);
-    let allegatiAttivita: any[] = JSON.parse(this.attivitaSelezionata.allegati);
+    const allegatiAttivita: any[] = JSON.parse(this.attivitaSelezionata.allegati);
     if (allegatiAttivita) {
-      allegatiAttivita.sort((a: any, b: any) => { if (a.default) return -1; else if (a.default && b.default) return 0; else return 1});
+      allegatiAttivita.sort((a: any, b: any) => { if (a.default) { return -1; } else if (a.default && b.default) { return 0; } else { return 1; }});
       allegatiAttivita.forEach(element => {
         console.log(element);
-        this.allegati.push({label: this.shrinkFileName(element.nome_file), value: element})
+        this.allegati.push({label: this.shrinkFileName(element.nome_file), value: element});
       });
-      this.allegatoSelected({value: this.allegati[0].value})
+      this.allegatoSelected({value: this.allegati[0].value});
     } else {
       this.noAnteprima = true;
     }
@@ -180,74 +177,74 @@ export class ScrivaniaComponent implements OnInit {
   }
 
   fullscreen(event: any) {
-    let iframeElement: any = this.anteprima.nativeElement;
-    let fullScreenFunction = iframeElement.requestFullscreen || iframeElement.webkitRequestFullscreen || iframeElement.mozRequestFullScreen || iframeElement.msRequestFullscreen;
+    const iframeElement: any = this.anteprima.nativeElement;
+    const fullScreenFunction = iframeElement.requestFullscreen || iframeElement.webkitRequestFullscreen || iframeElement.mozRequestFullScreen || iframeElement.msRequestFullscreen;
     fullScreenFunction.call(iframeElement);
   }
 
-  handleItemClick(event){
+  handleItemClick(event) {
     window.open(event);
   }
 
   private loadMenu() {
-    if(this.alberoMenu){
+    if (this.alberoMenu) {
       return;
     }
     this.alberoMenu = [];
-    let initialFiltersAndSorts = new FiltersAndSorts();
+    const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.rows = NO_LIMIT;
     initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
     initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
-    let lazyLoadFiltersAndSorts = new FiltersAndSorts();
-    this.scrivaniaService.getData(PROJECTIONS.menu.standardProjections.menuWithIdApplicazioneAndIdAzienda, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
+    const lazyLoadFiltersAndSorts = new FiltersAndSorts();
+    this.scrivaniaService.getData(PROJECTIONS.menu.customProjections.menuWithIdApplicazioneAndIdAziendaAndTransientFields, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
       .then(
         data => {
-          let arrayMenu = data._embedded.menu;
+          const arrayMenu: Menu[] = data._embedded.menu;
           arrayMenu.forEach( elementArray => {
             let found = false;
-            for (let elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
-              if(elementAlbero.label === elementArray.idApplicazione.nome){
-                if(elementAlbero.items){ // nell'applicazione è presente almeno un comando
-                  for (let item of elementAlbero.items) {
-                    if(item.label === elementArray.descrizione){ // vedo se un comado simile è gia stato aggiunto
+            for (const elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
+              if (elementAlbero.label === elementArray.idApplicazione.nome) {
+                if (elementAlbero.items) { // nell'applicazione è presente almeno un comando
+                  for (const item of elementAlbero.items) {
+                    if (item.label === elementArray.descrizione) { // vedo se un comado simile è gia stato aggiunto
                       // comando presente quindi aggiungo solo l'azienda TODO
                       found = true;
                       item.items ? true : item.items = [];
                       item.items.push(new TreeNode(
                         elementArray.idAzienda.nome,
                         null,
-                        (onclick)=> {this.handleItemClick(elementArray.openCommand)}
+                        (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                       ));
                       break;
                     }
                   }
                 }
-                if(!found){ // Il comando non è presente, lo aggiungo
+                if (!found) { // Il comando non è presente, lo aggiungo
                   found = true;
-                  if(this.loggedUser.getUtente()["aziende"] && this.loggedUser.getUtente()["aziende"].length > 1){
+                  if (this.loggedUser.getUtente()["aziende"] && this.loggedUser.getUtente()["aziende"].length > 1) {
                     elementAlbero.items.push(new TreeNode(
                       elementArray.descrizione,
                       [new TreeNode(
                         elementArray.idAzienda.nome,
                         null,
-                        (onclick)=> {this.handleItemClick(elementArray.openCommand)}
+                        (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                         )],
                       null
                     ));
-                    break
-                  }else{
+                    break;
+                  } else {
                     elementAlbero.items.push(new TreeNode(
                       elementArray.descrizione,
                       null,
-                      (onclick)=> {this.handleItemClick(elementArray.openCommand)}
+                      (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                     ));
-                    break
+                    break;
                   }
                 }
               }
             }
-            if(!found){ // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
-              if(this.loggedUser.getUtente()["aziende"] && this.loggedUser.getUtente()["aziende"].length > 1){
+            if (!found) { // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
+              if (this.loggedUser.getUtente()["aziende"] && this.loggedUser.getUtente()["aziende"].length > 1) {
                 this.alberoMenu.push(new TreeNode(
                   elementArray.idApplicazione.nome,
                   [new TreeNode(
@@ -255,19 +252,19 @@ export class ScrivaniaComponent implements OnInit {
                     [new TreeNode(
                       elementArray.idAzienda.nome,
                       null,
-                      (onclick)=> {this.handleItemClick(elementArray.openCommand)}
+                      (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                     )],
                     null
                   )],
                   null
                 ));
-              }else{
+              } else {
                 this.alberoMenu.push(new TreeNode(
                   elementArray.idApplicazione.nome,
                   [new TreeNode(
                     elementArray.descrizione,
                     null,
-                    (onclick)=> {this.handleItemClick(elementArray.openCommand)}
+                    (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                   )],
                   null
                 ));
@@ -290,7 +287,7 @@ class TreeNode{
   private command: any;
 
   constructor(label: string, items: TreeNode[], command: any){
-    //this.key = key;
+    // this.key = key;
     this.label = label;
     this.items = items;
     this.command = command;

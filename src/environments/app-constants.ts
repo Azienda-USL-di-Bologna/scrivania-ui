@@ -21,23 +21,22 @@ export const SCRIVANIA_ROUTE: string = "/scrivania";
 export enum BaseUrlType {
     Scrivania,
     Baborg,
-    Login,
-    Logout
+    Login
 }
 
 export const BaseUrls: Map<BaseUrlType, string> = new Map<BaseUrlType, string>([
     [BaseUrlType.Scrivania,  "/internauta-api/resources/scrivania"],
     [BaseUrlType.Baborg, "/internauta-api/resources/baborg"],
-    [BaseUrlType.Login, "/internauta-api/login"],
-    [BaseUrlType.Logout, "/Shibboleth.sso/Logout"]
+    [BaseUrlType.Login, "/internauta-api/login"]
 ]);
 
 export function getInternautaUrl(type: BaseUrlType): string {
-    if(!BaseUrls.has(type))
-        throw "Failed to obtain internauta url, type does not exists!"
+    if (!BaseUrls.has(type)) {
+        throw new Error("Failed to obtain internauta url, type does not exists!")
+    }
 
-    let wl = window.location;
-    let out: string = wl.protocol + "//" + wl.hostname + (wl.hostname === "localhost" ? ":" + LOCALHOST_PORT : ":" + wl.port) + BaseUrls.get(type);
+    const wl = window.location;
+    const out: string = wl.protocol + "//" + wl.hostname + (wl.hostname === "localhost" ? ":" + LOCALHOST_PORT : ":" + wl.port) + BaseUrls.get(type);
 
     console.log(out);
 
@@ -56,30 +55,36 @@ export const ENTITIES = {
 export const PROJECTIONS = {
     azienda: {
         standardProjections: {
-            aziendaWithPlainFields: "aziendaWithPlainFields",
+            aziendaWithPlainFields: "AziendaWithPlainFields",
         },
         customProjections: {}
     },
     attivita: {
         standardProjections: {
-            attivitaWithPlainFields: "attivitaWithPlainFields",
-            AttivitaWithIdApplicazioneAndIdAzienda: "AttivitaWithIdApplicazioneAndIdAzienda"
+            attivitaWithPlainFields: "AttivitaWithPlainFields",
+            attivitaWithIdApplicazioneAndIdAzienda: "AttivitaWithIdApplicazioneAndIdAzienda"
         },
-        customProjections: {}
+        customProjections: {
+            attivitaWithIdApplicazioneAndIdAziendaAndTransientFields: "AttivitaWithIdApplicazioneAndIdAziendaAndTransientFields"
+        }
     },
     attivitaFatta: {
         standardProjections: {
             attivitaFattaWithPlainFields: "attivitaFattaWithPlainFields",
-            AttivitaFattaWithIdApplicazioneAndIdAzienda: "AttivitaFattaWithIdApplicazioneAndIdAzienda"
+            attivitaFattaWithIdApplicazioneAndIdAzienda: "AttivitaFattaWithIdApplicazioneAndIdAzienda"
         },
-        customProjections: {}
+        customProjections: {
+            attivitaFattaWithIdApplicazioneAndIdAziendaAndTransientFields: "AttivitaFattaWithIdApplicazioneAndIdAziendaAndTransientFields"
+        }
     },
     menu: {
         standardProjections: {
             menuWithPlainFields: "menuWithPlainFields",
             menuWithIdApplicazioneAndIdAzienda: "MenuWithIdApplicazioneAndIdAzienda"
         },
-        customProjections: {}
+        customProjections: {
+            menuWithIdApplicazioneAndIdAziendaAndTransientFields: "MenuWithIdApplicazioneAndIdAziendaAndTransientFields"
+        }
     },
     persona: {
         standardProjections: {
@@ -106,7 +111,7 @@ export const ENTITIES_CONFIGURATION: EntitiesConfiguration = {
     attivitafatta: {
         path: "attivitafatta"
     },
-	menu: {
+    menu: {
         path: "menu"
     },
     persona: {
