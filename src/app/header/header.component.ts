@@ -34,9 +34,11 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     console.log("header ngOnInit()");
     this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
-      this.utenteConnesso = utente;
-      const jsonParametri = JSON.parse(utente.getUtente().idAzienda.parametri);
-      this.logoutUrl = (jsonParametri.logoutUrl as string).replace("return-url", "/scrivania/scrivania");
+      if (utente) {
+        this.utenteConnesso = utente;
+        const jsonParametri = JSON.parse(utente.getUtente().idAzienda.parametri);
+        this.logoutUrl = (jsonParametri.logoutUrl as string).replace("return-url", "/scrivania/scrivania");
+      }
     });
   }
 
