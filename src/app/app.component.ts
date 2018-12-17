@@ -1,3 +1,4 @@
+import { AfterViewInit } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { NtJwtLoginService, LoginType, NtJwtLoginComponent } from '@bds/nt-jwt-login';
 import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE } from 'src/environments/app-constants';
@@ -9,8 +10,9 @@ import { Utente } from '@bds/ng-internauta-model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   title = 'Babel-Internauta';
+  private deletedImpersonatedUserQueryParams = false;
 
   constructor(private loginService: NtJwtLoginService, private route: ActivatedRoute, private router: Router) {}
 
@@ -46,9 +48,19 @@ export class AppComponent implements OnInit {
         //sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
         delete params['impersonatedUser'];
         window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
+        this.deletedImpersonatedUserQueryParams = true;
       }
+      console.log("this.deletedImpersonatedUserQueryParams: ", this.deletedImpersonatedUserQueryParams);
+      // if (this.deletedImpersonatedUserQueryParams) {
+      //   window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
+      // }
       //this.ntJwtLoginComponent.doLogin();
    });
+  }
+
+  ngAfterViewInit() {
+    console.log("dentro ngAfterViewInit");
+    //window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
   }
 
 
