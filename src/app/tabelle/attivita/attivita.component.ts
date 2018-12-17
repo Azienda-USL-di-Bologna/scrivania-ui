@@ -171,9 +171,6 @@ export class TabellaAttivitaComponent implements OnInit {
         break;
       case "onRowSelect":
         this.rowSelect(event);
-        let attivitaSelezionata:Attivita = event.data
-        attivitaSelezionata.aperta = true; 
-        this.attivitaService.update(attivitaSelezionata);
         break;
     }
   }
@@ -190,6 +187,9 @@ export class TabellaAttivitaComponent implements OnInit {
 
     this.selectedRowIndex = index;
     this.dataTable.selection = this.attivita[this.selectedRowIndex];
+    const attivitaSelezionata: Attivita = this.attivita[this.selectedRowIndex];
+    attivitaSelezionata.aperta = true;
+    this.attivitaService.update(attivitaSelezionata);
     this.attivitaEmitter.emit(this.dataTable.selection);
   }
 
