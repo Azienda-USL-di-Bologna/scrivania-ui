@@ -47,9 +47,12 @@ export class TabellaAttivitaComponent implements OnInit, AfterViewInit {
       this.subscriptions = [];
       // imposto l'utente loggato nell'apposita variabile
       this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
-        this.loggedUser = u;
+        if (u) {
+          this.loggedUser = u;
+          //this.loadData(null);
+        }
         // console.log("faccio il load data di nuovo");
-        // this.loadData(null);
+        this.loadData(null);
       }));
 
     this.cols = [
@@ -133,7 +136,7 @@ export class TabellaAttivitaComponent implements OnInit, AfterViewInit {
         minWidth: "30px"
       },
     ];
-    this.loadData(null);
+    
   }
 
   public attivitaEmitterHandler() {
