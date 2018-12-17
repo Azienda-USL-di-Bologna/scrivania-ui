@@ -16,7 +16,8 @@ export class CambioUtenteComponent implements OnInit {
   text: string = "";
   personeSuggestions: Utente[] = [];
   selectedPersona: Utente = null;
-  cambioUtenteConfirmVisible: boolean = false;
+  changeUserVisible: boolean = true;
+  // cambioUtenteConfirmVisible: boolean = false;
   initialFilter: FiltersAndSorts;
 
   @Output("onUtenteSelectedEmitter") public onUtenteSelectedEmitter: EventEmitter<Utente> = new EventEmitter<Utente>();
@@ -50,9 +51,9 @@ export class CambioUtenteComponent implements OnInit {
           this.personeSuggestions.push(dummyUtente);
           break;
 
-        case 1:
-          this.onUtenteSelected(this.personeSuggestions.pop());
-          break;
+        // case 1:
+        //   //this.onUtenteSelected(this.personeSuggestions.pop());
+        //   break;
       }
     });
   }
@@ -62,16 +63,21 @@ export class CambioUtenteComponent implements OnInit {
     this.selectedPersona = null;
   }
 
-  onUtenteSelected(selected: Utente) {
-    if (selected.id === null) { return; }
+  onClose() {
+    this.changeUserVisible = false;
+    this.onUtenteSelectedEmitter.emit(null);
+  }
 
-    this.selectedPersona = selected;
-    this.cambioUtenteConfirmVisible = true;
+  onUtenteSelected(selected: Utente) {
+    
+    if (selected.id === null) { return; }
+     this.selectedPersona = selected;
+    // this.cambioUtenteConfirmVisible = true;
   }
 
   onUtenteSelectionConfirmed() {
-    console.log("onUtenteSelectionConfirmed()");
-    this.cambioUtenteConfirmVisible = false;
+    // console.log("onUtenteSelectionConfirmed()");
+    // this.cambioUtenteConfirmVisible = false;
     this.onUtenteSelectedEmitter.emit(this.selectedPersona);
   }
 
