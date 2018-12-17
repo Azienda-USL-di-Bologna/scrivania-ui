@@ -21,15 +21,13 @@ export const SCRIVANIA_ROUTE: string = "/scrivania";
 export enum BaseUrlType {
     Scrivania,
     Baborg,
-    Login,
-    Logout
+    Login
 }
 
 export const BaseUrls: Map<BaseUrlType, string> = new Map<BaseUrlType, string>([
     [BaseUrlType.Scrivania,  "/internauta-api/resources/scrivania"],
     [BaseUrlType.Baborg, "/internauta-api/resources/baborg"],
-    [BaseUrlType.Login, "/internauta-api/login"],
-    [BaseUrlType.Logout, "/Shibboleth.sso/Logout"]
+    [BaseUrlType.Login, "/internauta-api/login"]
 ]);
 
 export function getInternautaUrl(type: BaseUrlType): string {

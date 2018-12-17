@@ -46,7 +46,7 @@
         </p-overlayPanel>
 
         <!-- <img class="icons-style pr-8" src="assets/images/baseline_dashboard_white_48dp.png"/> -->
-        <img *ngIf="this.utenteConnesso && this.utenteConnesso.getUtente().isDemiurgo()" class="icons-style pr-8 demiurge" (click)="op2.toggle($event)" src="assets/images/baseline_verified_user_white_48dp.png" alt="Menu Demiurgo"/>
+        <img *ngIf="this.utenteConnesso && this.utenteConnesso.getUtente().isDemiurgo()" class="icons-style pr-8 demiurgo" (click)="op2.toggle($event)" src="assets/images/baseline_verified_user_white_48dp.png" alt="Menu Demiurgo"/>
 
         <p-overlayPanel #op2 styleClass="overlaypanel-background">
           <div class="p-grid p-dir-col" *ngIf="this.utenteConnesso && this.utenteConnesso.getUtente().isDemiurgo()">

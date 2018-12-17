@@ -20,6 +20,7 @@ export class HeaderComponent implements OnInit {
 
   public utenteConnesso: UtenteUtilities;
   cambioUtentePopupVisibile: boolean = false;
+  private logoutUrl: string;
 
   constructor(public router: Router, private loginService: NtJwtLoginService, private http: HttpClient, private route: ActivatedRoute) { }
 
@@ -34,6 +35,8 @@ export class HeaderComponent implements OnInit {
     console.log("header ngOnInit()");
     this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
       this.utenteConnesso = utente;
+      const jsonParametri = JSON.parse(utente.getUtente().idAzienda.parametri);
+      this.logoutUrl = (jsonParametri.logoutUrl as string).replace("return-url", "/scrivania/scrivania");
     });
   }
 
@@ -49,7 +52,7 @@ export class HeaderComponent implements OnInit {
         this.router.navigate(["/login"]);
       } else {
         // window.location.href = "https://gdml.internal.ausl.bologna.it/Shibboleth.sso/Logout";
-        window.location.href = getInternautaUrl(BaseUrlType.Logout);
+        window.location.href = this.logoutUrl;
       }
     } else {
       window.close();
