@@ -22,7 +22,7 @@
     [value]="attivita"
     [columns]="cols"
     [paginator]="false"
-    [autoLayout]="false"
+    [autoLayout]="true"
     [totalRecords]="totalRecords"
     selectionMode="single"
     (onRowSelect)="handleEvent('onRowSelect', $event)"
@@ -34,16 +34,16 @@
      <!--[style]="'{height:200px}'"  scrollHeight="700px"-->
    <!--[rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,15,20]"  [style.width]="col.width"-->
 
-    <ng-template pTemplate="colgroup" let-columns>
+    <!-- <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
             <col *ngFor="let col of columns">
         </colgroup>
-    </ng-template>
+    </ng-template> -->
 
 
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngFor="let col of columns"  [style.width]="col.width">
+            <th *ngFor="let col of columns"  [style.width]="col.width" [style.minWidth]="col.minWidth">
                 <div *ngIf="col.field != undefined" [pSortableColumn]="col.field">
                     {{col.header}}
                     <p-sortIcon [field]="col.field" ariaLabelAsc="Colonnna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonnna {{col.header}}, Ordinamento discendente">
@@ -52,7 +52,7 @@
             </th>
         </tr>
         <tr>
-            <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget">
+            <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget" [style.width]="col.width" [style.minWidth]="col.minWidth">
                 <div *ngIf="col.field != undefined">
                     <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." showButtonBar="true"
                         [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
@@ -68,33 +68,33 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
         <tr #selRow class="row-class" [pSelectableRow]="rowData" style="height:30px">
-            <td [style.width]="cols[0].width" class="column-class p0">
+            <td [style.width]="cols[0].width" [style.minWidth]="cols[0].minWidth" class="column-class p0">
                 <img [src]="attivita.iconaAttivita" alt="priorita" class="img-table" />
                 <!-- <img *ngIf="attivita.priorita===2" src="assets/images/baseline_flag_black_48dp.png" alt="priorita" class="img-table"> -->
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->
             </td>
             <!-- <td class="column-class">{{attivita.tipo}}</td> -->
-            <td [style.width]="cols[1].width" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.idAzienda.nome}}</td>
-            <td [style.width]="cols[2].width" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.idApplicazione.nome}}</td>
-            <td [style.width]="cols[3].width" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.provenienza}}</td>
-            <td class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.oggetto}}</td>
-            <td [style.width]="cols[5].width" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
-            <td [style.width]="cols[6].width" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.descrizione}}</td>
-            <td [style.width]="cols[7].width" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">
+            <td [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.idAzienda.nome}}</td>
+            <td [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.idApplicazione.nome}}</td>
+            <td [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.provenienza}}</td>
+            <td class="column-class" [style.minWidth]="cols[4].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.oggetto}}</td>
+            <td [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
+            <td [style.width]="cols[6].width" [style.minWidth]="cols[6].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.descrizione}}</td>
+            <td [style.width]="cols[7].width" [style.minWidth]="cols[7].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">
                 <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' &&
                     (attivita.idApplicazione.nome==='Pico' || attivita.idApplicazione.nome==='Dete' || attivita.idApplicazione.nome==='Deli'))"
                 (click)="apriAttivita(attivita)"><b>Apri</b></a>
             </td>
 
-            <td [style.width]="cols[8].width" class="p0">
+            <td [style.width]="cols[8].width" [style.minWidth]="cols[8].minWidth" class="p0">
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->
             </td>
-            <td [style.width]="cols[9].width" class="p0">
+            <td [style.width]="cols[9].width" [style.minWidth]="cols[9].minWidth" class="p0">
                 <!-- <img *ngIf="attivita.note" src="assets/images/baseline_notes_black_48dp.png" alt="note" class="img-table"> -->
                 <!-- placeholder -->
                 <!-- <button pButton icon="pi pi-trash" (click)="deleteWithButton(rowData)"></button> -->
             </td>
-            <td [style.width]="cols[10].width" class="p0">
+            <td [style.width]="cols[10].width" [style.minWidth]="cols[10].minWidth" class="p0">
                 <img *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="onNoteClick(attivita)" alt="note" class="img-table">
                 <img *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table">
             </td>

@@ -71,17 +71,21 @@ export class ScrivaniaComponent implements OnInit {
 
   private setResponsiveSlider(): void {
     let that = this;
-    let totalX = this.rightSide.nativeElement.offsetWidth + this.leftSide.nativeElement.offsetWidth;
     this.slider.nativeElement.onmousedown = function(e) {
+      let totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
       e.preventDefault();
       document.onmouseup = function(){
         document.onmousemove = null;
       }
       document.onmousemove = function(e){
         e.preventDefault();
-        if(!(e.clientX <= 225) && !(totalX - e.clientX <= 225)){
-          that.rightSide.nativeElement.style.width = totalX - e.clientX + 34 + "px";
-          that.slider.nativeElement.style.marginLeft = e.clientX - 34 + "px";
+        if (!(e.clientX <= 385) && !(totalX - e.clientX <= 225)) {
+          const rx = (totalX - e.clientX + 34) * 100 / totalX;
+          const lx = (e.clientX - 34) * 100 / totalX;
+          that.rightSide.nativeElement.style.width = rx + "%";
+          that.slider.nativeElement.style.marginLeft = lx + "%";
+          // that.rightSide.nativeElement.style.width = totalX - e.clientX + 34 + "px";
+          // that.slider.nativeElement.style.marginLeft = e.clientX - 34 + "px";
         }
       }
     }

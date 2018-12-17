@@ -66,30 +66,35 @@ export class TabellaAttivitaComponent implements OnInit {
       }, */
       {
         // E' l'insieme di priorità e tipo attività
-        width: "30px"
+        width: "30px",
+        minWidth: "30px"
       },
       {
         field: "idAzienda.nome",
         header: "Ente",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "85px"
+        width: "85px",
+        minWidth: "85px"
       },
       {
         field: "idApplicazione.nome",
         header: "App",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "80px"
+        width: "80px",
+        minWidth: "80px"
       },
       {
         field: "provenienza",
         header: "Da",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "140px"
+        width: "140px",
+        minWidth: "140px"
       },
       {
         field: "oggetto",
         header: "Oggetto",
-        filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
+        filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
+        minWidth: "200px"
       },
       {
         field: "dataInserimentoRiga",
@@ -98,29 +103,35 @@ export class TabellaAttivitaComponent implements OnInit {
         fieldType: "DateTime",
         filterWidget: "Calendar",
         ariaLabelDescription: "Colonna Inserimento, Cella filtro",
-        width: "100px"
+        width: "100px",
+        minWidth: "100px"
       },
       {
         field: "descrizione",
         header: "Tipo",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "120px"
+        width: "120px",
+        minWidth: "120px"
       },
       {
         // colonna azione
-        width: "60px"
+        width: "60px",
+        minWidth: "60px"
       },
       {
         // colonna posso procedere
-        width: "30px"
+        width: "30px",
+        minWidth: "30px"
       },
       {
         // colonna trash
-        width: "30px"
+        width: "30px",
+        minWidth: "30px"
       },
       {
       // colonna note
-        width: "30px"
+        width: "30px",
+        minWidth: "30px"
       },
     ];
     this.loadData(null);
