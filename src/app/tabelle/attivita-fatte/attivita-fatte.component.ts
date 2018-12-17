@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
@@ -30,6 +30,8 @@ export class AttivitaFatteComponent implements OnInit {
   public loading: boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
   public selectedRowIndex: number = -1;
   private subscriptions: Subscription[];
+
+  @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<AttivitaFatta> = new EventEmitter();
 
   public cols: any[] = [
     {
@@ -174,6 +176,10 @@ export class AttivitaFatteComponent implements OnInit {
 
   public onKeydownHandlerArrowUp(event: KeyboardEvent) {
     // this.selectIndex(this.selectedRowIndex - 1);
+  }
+
+  private onNoteClick(attivita: any) {
+    this.onAttivitaNoteEmitter.emit(attivita);
   }
 
   // public apriAttivita(attivita: any) {

@@ -29,10 +29,10 @@
 .buttons-bar > button{
     margin: 0 6px 0 0;
 }
-:host>>> .button-indietro{
+/* :host>>> .button-indietro{
     background-color: #e2e2e2;
     height: 33px;
-}
+} */
 .table-wrapper{
     /*position: absolute;
     top: 60px;
@@ -194,14 +194,6 @@
 :host>>>.clMenu{
     top: auto !important;
 }
-:host >>> .ui-button.ui-state-default.ui-button-secondary:enabled:focus, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default:enabled:focus {
-    box-shadow: 0px 1px 1px 0 #993464;
-}
-:host >>> .ui-button.ui-button-raised {
-    box-shadow: 0px 1px 1px 0 #99346452;
-}
-:host >>> .ui-button.ui-state-default.ui-button-secondary:enabled:hover, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default:enabled:hover {
-    background-color: #ffffff;
-    color: #993464;
-    box-shadow: 0px 1px 1px 0 #993464;
+ :host >>> .ui-button.ui-state-default.ui-button-secondary:enabled:focus, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default:enabled:focus {
+    box-shadow: 0 0 0 1px #9E9E9E;
 }
