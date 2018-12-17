@@ -44,10 +44,9 @@ export class AppComponent implements OnInit {
         this.loginService.clearSession();
         this.loginService.setimpersonatedUser(params['impersonatedUser']);
         //sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
-        delete params['impersonatedUser'];
-        window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
+        delete params.impersonatedUser;//params['impersonatedUser'];
+        //window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
       }
-      
       //this.ntJwtLoginComponent.doLogin();
    });
   }
