@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   //   this.route.queryParams.subscribe((params: Params) => {
   //     console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
    
-  //       console.log("chiamo login");
+         console.log("chiamo login");
   //       console.log(params['impersonatedUser']);
   //       if (params.hasOwnProperty('impersonatedUser')) {
   //         this.loginService.redirectTo = "/scrivania";
@@ -33,20 +33,20 @@ export class AppComponent implements OnInit {
         //   this.loginService.clearSession();
         // }
     this.route.queryParams.subscribe((params: Params) => {
-      //console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
-      //console.log("chiamo login");
-      //console.log(params['impersonatedUser']);
+      console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
+      console.log("chiamo login");
+      console.log(params['impersonatedUser']);
 
       // se nei params c'è la proprietà impersonatedUser, allora pulisci la sessione, setta nella sessionStorage l'utente impersonato
       // e cancellalo dai params
       if (params.hasOwnProperty('impersonatedUser')) {
       //if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
         this.loginService.clearSession();
-        //this.loginService.setimpersonatedUser(params['impersonatedUser']);
-        sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
+        this.loginService.setimpersonatedUser(params['impersonatedUser']);
+        //sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
         delete params['impersonatedUser'];
         
-        //window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
+        window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
       }
       //this.ntJwtLoginComponent.doLogin();
    });
