@@ -46,10 +46,9 @@ export class AppComponent implements OnInit {
         //sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
         delete params['impersonatedUser'];
         
-        let url: string = this.router.url.substring(0, this.router.url.indexOf("?"));
-        this.router.navigateByUrl(url);
         //window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
       }
+      window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
       //this.ntJwtLoginComponent.doLogin();
    });
   }
