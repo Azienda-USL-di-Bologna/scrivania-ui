@@ -113,7 +113,7 @@ export const ENTITIES_CONFIGURATION: EntitiesConfiguration = {
     attivitafatta: {
         path: "attivitafatta"
     },
-	menu: {
+    menu: {
         path: "menu"
     },
     persona: {
