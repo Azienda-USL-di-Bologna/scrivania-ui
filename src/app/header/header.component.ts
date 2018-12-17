@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
       if (utente) {
         this.utenteConnesso = utente;
         const jsonParametri = JSON.parse(utente.getUtente().idAzienda.parametri);
-        this.logoutUrl = (jsonParametri.logoutUrl as string).replace("return-url", "/scrivania/scrivania");
+        this.logoutUrl = (jsonParametri.logoutUrl as string).replace("[return-url]", "/scrivania/scrivania");
       }
     });
   }
