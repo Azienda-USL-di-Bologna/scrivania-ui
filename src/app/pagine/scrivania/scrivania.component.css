@@ -83,14 +83,20 @@
     font-weight: bold;
 }
 .button-with-icon{
-    display: flex;
+    /* display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: center; */
     padding: 0 6px 0;
+    display: table;
 }
-/* >>> .button-with-icon > span{
-    padding: 0 0 0 3px !important;
-} */
+:host>>> .button-with-icon > span{
+    display: inline;
+    vertical-align: middle
+}
+.button-with-icon > img{
+    display: inline;
+    vertical-align: middle
+}
 .div-info-doc {
     display: flex;
     justify-content: space-between;
@@ -186,10 +192,13 @@
     padding-left: 0;
 }
 .d-hidden{
-    display: none;
+    display: none !important;
 }
 .d-flex{
     display: flex;
+}
+.d-inline{
+    display: inline;
 }
 :host>>>.clMenu{
     top: auto !important;
