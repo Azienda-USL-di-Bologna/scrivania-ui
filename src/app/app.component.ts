@@ -1,8 +1,8 @@
 import { AfterViewInit } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { NtJwtLoginService, LoginType, NtJwtLoginComponent } from '@bds/nt-jwt-login';
-import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE } from 'src/environments/app-constants';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE } from 'src/environments/app-constants';
+import { ActivatedRoute, Params, Router, RouterStateSnapshot } from '@angular/router';
 import { Utente } from '@bds/ng-internauta-model';
 
 @Component({
@@ -43,10 +43,17 @@ export class AppComponent implements OnInit, AfterViewInit {
       // e cancellalo dai params
       if (params.hasOwnProperty('impersonatedUser')) {
       //if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
-        this.loginService.clearSession();
-        this.loginService.setimpersonatedUser(params['impersonatedUser']);
-        this.loginService.redirectTo = "/scrivania";
-        this.router.navigate(["/login"]);
+
+      this.loginService.clearSession();
+      this.loginService.setimpersonatedUser(params['impersonatedUser']);
+      this.loginService.redirectTo = this.router.routerState.snapshot.url.replace(/(?<=&|\?)impersonatedUser(=[^&]*)?(&|$)/, "");
+      if (this.loginService.redirectTo.endsWith("?") || this.loginService.redirectTo.endsWith("&")) {
+        this.loginService.redirectTo = this.loginService.redirectTo.substr(0, this.loginService.redirectTo.length - 1)
+      }
+      console.log("STATE: ", this.loginService.redirectTo);  
+        //this.loginService.redirectTo = "/scrivania";
+      this.router.navigate([LOGIN_ROUTE]);
+        
 
         //sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
         //delete params['impersonatedUser'];
