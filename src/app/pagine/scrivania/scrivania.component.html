@@ -11,7 +11,7 @@
             <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" styleClass="clMenu" (itemClick)="handleItemClick($event)"></p-tieredMenu>
           
             <button type="button" pButton [label]="mostraStorico?'Indietro':'Cronologia'" (click)="mostraStorico=!mostraStorico" iconPos="left" class="ui-button-secondary button-with-icon .button-indietro">
-                <img [ngClass]="mostraStorico?'d-flex':'d-hidden'" src="assets/images/outline-arrow_back_ios-24px.svg" width="24px" alt="Apri">
+                <img [ngClass]="mostraStorico?'d-inline':'d-hidden'" src="assets/images/outline-arrow_back_ios-24px.svg" width="24px" alt="Apri">
             </button>  
         </div>
 
