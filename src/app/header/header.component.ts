@@ -51,7 +51,7 @@ export class HeaderComponent implements OnInit {
     if (!this.loginService.isUserImpersonated) {
       if (loginMethod !== "sso") {
         console.log(loginMethod);
-        this.router.navigate(["/login"]);
+        //this.router.navigate(["/scrivania"]);
       } else {
         // window.location.href = "https://gdml.internal.ausl.bologna.it/Shibboleth.sso/Logout";
         window.location.href = this.logoutUrlTemplate.replace("[return-url]", window.location.href);
