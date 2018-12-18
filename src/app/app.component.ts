@@ -10,7 +10,7 @@ import { Utente } from '@bds/ng-internauta-model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit {
   title = 'Babel-Internauta';
   private deletedImpersonatedUserQueryParams = false;
 
@@ -20,20 +20,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     console.log("inizio onInit() appComponent");
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
 
-  //   this.route.queryParams.subscribe((params: Params) => {
-  //     console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
-   
-         
-  //       console.log(params['impersonatedUser']);
-  //       if (params.hasOwnProperty('impersonatedUser')) {
-  //         this.loginService.redirectTo = "/scrivania";
-
-  //       }
-  //       //this.ntJwtLoginComponent.doLogin();
-  //  });
-        // if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
-        //   this.loginService.clearSession();
-        // }
     this.route.queryParams.subscribe((params: Params) => {
       console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
       console.log("chiamo login");
@@ -42,37 +28,22 @@ export class AppComponent implements OnInit, AfterViewInit {
       // se nei params c'è la proprietà impersonatedUser, allora pulisci la sessione, setta nella sessionStorage l'utente impersonato
       // e cancellalo dai params
       if (params.hasOwnProperty('impersonatedUser')) {
-      //if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
+        this.loginService.clearSession();
+        this.loginService.setimpersonatedUser(params['impersonatedUser']);
 
-      this.loginService.clearSession();
-      this.loginService.setimpersonatedUser(params['impersonatedUser']);
-      this.loginService.redirectTo = this.router.routerState.snapshot.url.replace(/(?<=&|\?)impersonatedUser(=[^&]*)?(&|$)/, "");
-      if (this.loginService.redirectTo.endsWith("?") || this.loginService.redirectTo.endsWith("&")) {
-        this.loginService.redirectTo = this.loginService.redirectTo.substr(0, this.loginService.redirectTo.length - 1)
-      }
-      console.log("STATE: ", this.loginService.redirectTo);  
-        //this.loginService.redirectTo = "/scrivania";
-      this.router.navigate([LOGIN_ROUTE]);
-        
-
-        //sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
-        //delete params['impersonatedUser'];
-        //window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
+        // eliminazione dai query params di impersonatedUser
+        this.loginService.redirectTo = this.router.routerState.snapshot.url.replace(/(?<=&|\?)impersonatedUser(=[^&]*)?(&|$)/, "");
+        if (this.loginService.redirectTo.endsWith("?") || this.loginService.redirectTo.endsWith("&")) {
+          this.loginService.redirectTo = this.loginService.redirectTo.substr(0, this.loginService.redirectTo.length - 1)
+        }
+        console.log("STATE: ", this.loginService.redirectTo);  
+        this.router.navigate([LOGIN_ROUTE]);  
         this.deletedImpersonatedUserQueryParams = true;
       }
-      console.log("this.deletedImpersonatedUserQueryParams: ", this.deletedImpersonatedUserQueryParams);
-      // if (this.deletedImpersonatedUserQueryParams) {
-      //   window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
-      // }
-      //this.ntJwtLoginComponent.doLogin();
+
+      //console.log("this.deletedImpersonatedUserQueryParams: ", this.deletedImpersonatedUserQueryParams);
    });
   }
-
-  ngAfterViewInit() {
-    console.log("dentro ngAfterViewInit");
-    //window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
-  }
-
 
   // crea l'utente a partire dai dati "grezzi" UserInfo della risposta
   public buildLoggedUser(userInfo: any): Utente {
@@ -84,5 +55,4 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
     return loggedUser;
   }
-
 }

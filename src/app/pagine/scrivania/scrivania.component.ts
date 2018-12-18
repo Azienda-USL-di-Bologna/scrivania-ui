@@ -65,7 +65,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         this.setLook();
       }
     }));
-    // console.log("logged user: ", this.loggedUser);
   }
 
   private setLook(): void {
