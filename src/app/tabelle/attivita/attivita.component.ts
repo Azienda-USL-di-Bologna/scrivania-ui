@@ -45,13 +45,14 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnInit() {
       // imposto l'utente loggato nell'apposita variabile
+      console.log("attivita onInit()");
       this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
         if (u) {
           this.loggedUser = u;
-          // this.loadData(null);
+          console.log("faccio loadData");
+          this.loadData(null);
         }
         // console.log("faccio il load data di nuovo");
-        this.loadData(null);
       }));
 
     this.cols = [
@@ -226,7 +227,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   private loadData(event: LazyLoadEvent) {
     console.log("TOKEN: ", this.loginService.token);
-    console.log("UTENTE: ", this.loggedUser.getUtente());
+    console.log("UTENTE: ", this.loggedUser);
     this.loading = true;
     const functionName = "loadData";
     // console.log(this.componentDescription, functionName, "event: ", event);

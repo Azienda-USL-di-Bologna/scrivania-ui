@@ -23,7 +23,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   //   this.route.queryParams.subscribe((params: Params) => {
   //     console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
    
-         console.log("chiamo login");
+         
   //       console.log(params['impersonatedUser']);
   //       if (params.hasOwnProperty('impersonatedUser')) {
   //         this.loginService.redirectTo = "/scrivania";
@@ -45,9 +45,12 @@ export class AppComponent implements OnInit, AfterViewInit {
       //if (sessionStorage.getItem('impersonatedUser') && sessionStorage.getItem('impersonatedUser') != '') {
         this.loginService.clearSession();
         this.loginService.setimpersonatedUser(params['impersonatedUser']);
+        this.loginService.redirectTo = "/scrivania";
+        this.router.navigate(["/login"]);
+
         //sessionStorage.setItem('impersonatedUser', params['impersonatedUser']);
         //delete params['impersonatedUser'];
-        window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
+        //window.history.replaceState("object or string", "Title", window.location.pathname.split("?")[0]);
         this.deletedImpersonatedUserQueryParams = true;
       }
       console.log("this.deletedImpersonatedUserQueryParams: ", this.deletedImpersonatedUserQueryParams);
