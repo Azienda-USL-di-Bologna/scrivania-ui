@@ -11,6 +11,7 @@ import { Utente } from '@bds/ng-internauta-model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
   title = 'Babel-Internauta';
   private deletedImpersonatedUserQueryParams = false;
 
@@ -32,10 +33,11 @@ export class AppComponent implements OnInit {
         this.loginService.setimpersonatedUser(params['impersonatedUser']);
 
         // eliminazione dai query params di impersonatedUser
-        this.loginService.redirectTo = this.router.routerState.snapshot.url.replace(/(?<=&|\?)impersonatedUser(=[^&]*)?(&|$)/, "");
-        if (this.loginService.redirectTo.endsWith("?") || this.loginService.redirectTo.endsWith("&")) {
-          this.loginService.redirectTo = this.loginService.redirectTo.substr(0, this.loginService.redirectTo.length - 1)
-        }
+        // this.loginService.redirectTo = this.router.routerState.snapshot.url.replace(/(?<=&|\?)impersonatedUser(=[^&]*)?(&|$)/, "");
+        this.loginService.redirectTo = this.removeQueryParams(this.router.routerState.snapshot.url, "impersonatedUser");
+        // if (this.loginService.redirectTo.endsWith("?") || this.loginService.redirectTo.endsWith("&")) {
+        //   this.loginService.redirectTo = this.loginService.redirectTo.substr(0, this.loginService.redirectTo.length - 1)
+        // }
         console.log("STATE: ", this.loginService.redirectTo);  
         this.router.navigate([LOGIN_ROUTE]);  
         this.deletedImpersonatedUserQueryParams = true;
@@ -55,4 +57,28 @@ export class AppComponent implements OnInit {
     }
     return loggedUser;
   }
+
+  public removeQueryParams(url: string, paramToRemove: string) {
+    const splittedUrl: string[] = url.split("?");
+    if (splittedUrl.length == 1) {
+      return url;
+    }
+    let purgedQueryParams: string = "";
+    const queryParams: string = splittedUrl[1];
+    const splittedQueryParams: string[] = queryParams.split("&");
+    for (let i = 0; i<splittedQueryParams.length; i ++) {
+      const splittedQueryParam: string[] = splittedQueryParams[i].split("=");
+      if (splittedQueryParam[0] !== paramToRemove) {
+        purgedQueryParams += splittedQueryParams[i] + "&";
+      }
+    }
+
+    if (purgedQueryParams !== "") {
+      return splittedUrl[0] + "?" + purgedQueryParams.substr(0, purgedQueryParams.length - 1);
+    }
+    else {
+      return splittedUrl[0];
+    }
+  }
+
 }
