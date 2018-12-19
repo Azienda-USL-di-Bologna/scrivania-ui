@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList } from "@angular/core";
+import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList, HostListener } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Attivita, Menu } from "@bds/ng-internauta-model";
 import { Dropdown } from "primeng/dropdown";
@@ -46,6 +46,8 @@ export class ScrivaniaComponent implements OnInit {
 
   public showNote: boolean = false;
   public noteText: string = null;
+  private MIN_X_LEFT_SIDE: number = 385;
+  private MIN_X_RIGHT_SIDE: number = 225;
 
   constructor(private domSanitizer: DomSanitizer, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
    }
@@ -69,25 +71,34 @@ export class ScrivaniaComponent implements OnInit {
 
   private setResponsiveSlider(): void {
     const that = this;
-   
-    this.slider.nativeElement.onmousedown = function(e) {
+    this.slider.nativeElement.onmousedown = function(event: MouseEvent) {
+      event.preventDefault();
       const totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
-      e.preventDefault();
       document.onmouseup = function() {
         document.onmousemove = null;
       };
-      document.onmousemove = function(e ) {
+      document.onmousemove = function(e: MouseEvent) {
         e.preventDefault();
-        if (!(e.clientX <= 385) && !(totalX - e.clientX <= 225)) {
-          const rx = (totalX - e.clientX + 34) * 100 / totalX;
-          const lx = (e.clientX - 34) * 100 / totalX;
-          that.rightSide.nativeElement.style.width = rx + "%";
-          that.slider.nativeElement.style.marginLeft = lx + "%";
-          // that.rightSide.nativeElement.style.width = totalX - e.clientX + 34 + "px";
-          // that.slider.nativeElement.style.marginLeft = e.clientX - 34 + "px";
+        const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia 32px che sfasano il conteggio
+        if (!(e.clientX <= that.MIN_X_LEFT_SIDE) && !(totalX - e.clientX <= that.MIN_X_RIGHT_SIDE)) {
+          const rxPercent = rx * 100 / totalX;
+          that.rightSide.nativeElement.style.width = rxPercent + "%";
+          that.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
         }
       };
     };
+  }
+
+  @HostListener("window:resize", ["$event"])
+  onResize(event: any) {
+    const lx = this.leftSide.nativeElement.offsetWidth;
+    const rx = this.rightSide.nativeElement.offsetWidth;
+    const screenX = event.currentTarget.innerWidth;
+    if ((screenX - lx) < this.MIN_X_RIGHT_SIDE || (screenX - rx) < this.MIN_X_LEFT_SIDE) { // Se rightside è minore di 385 o leftside è minore di 225  setto rightside a 225 e leftside il resto
+      const rxPercent = this.MIN_X_RIGHT_SIDE * 100 / screenX;
+      this.rightSide.nativeElement.style.width = rxPercent + "%";
+      this.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
+    }
   }
 
   private shrinkFileName(fileName: string): string {
