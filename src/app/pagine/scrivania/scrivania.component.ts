@@ -224,7 +224,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                     if (item.label === elementArray.descrizione) { // vedo se un comado simile è gia stato aggiunto
                       // comando presente quindi aggiungo solo l'azienda TODO
                       found = true;
-                      item.items ? true : item.items = [];
+                      // item.items ? true : item.items = [];
                       item.items.push(new TreeNode(
                         elementArray.idAzienda.nome,
                         null,
