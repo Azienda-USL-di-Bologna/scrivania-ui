@@ -151,7 +151,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     if (allegatiAttivita) {
       allegatiAttivita.sort((a: any, b: any) => { if (a.default) { return -1; } else if (a.default && b.default) { return 0; } else { return 1; }});
       allegatiAttivita.forEach(element => {
-        console.log(element);
         this.allegati.push({label: this.shrinkFileName(element.nome_file), value: element});
       });
       this.allegatoSelected({value: this.allegati[0].value});

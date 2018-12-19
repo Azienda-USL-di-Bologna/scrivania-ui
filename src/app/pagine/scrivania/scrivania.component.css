@@ -61,20 +61,23 @@
 :host>>> .ui-table-scrollable-body{
     flex: 1;
 }
-.preview-wrapper{
+/* .preview-wrapper{
     flex: 1;
     position: relative;
-}
+} */
 .pr-8{
-   padding-right: 8px; 
+   padding-right: 8px;
 }
 .preview-inner{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
     overflow-y: auto;
+}
+.preview-inner > iframe{
+    height: 100%;
+    width: 100%;
 }
 .ul-info-doc{
     list-style: none;
@@ -209,4 +212,26 @@
 }
 :host >>> .ui-button.ui-state-default.ui-button-secondary, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default {
     border: 1px solid #d2d2d2;
+}
+.allegati-dropdown{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 8px 0;
+}
+.allegati-dropdown > img{
+    cursor: pointer;
+    width: 33px;
+}
+.allegati-dropdown > p-dropdown{
+    flex-grow: 1;
+}
+:host>>> .allegati-dropdown > p-dropdown > div{
+    width: 100% !important;
+}
+.flex-grow-1{
+    flex-grow: 1;
+}
+.overflow-y-a{
+    overflow-y: auto;
 }

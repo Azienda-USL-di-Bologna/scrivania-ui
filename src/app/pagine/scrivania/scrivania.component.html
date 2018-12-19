@@ -1,5 +1,4 @@
-<div class="p-grid attivita-wrapper position-relative"> <!--p-nogutter-->
-
+<div class="p-grid attivita-wrapper position-relative">
   <!-- Left side -->
   <div class="p-col content-left" #leftSide>
     <div class="option-bar">
@@ -7,7 +6,7 @@
             
             <button [ngClass]="mostraStorico?'d-hidden':'d-flex'" #btn type="button" pButton (click)="menu.toggle($event)" class="clMenu" iconPos="left" label="Apri">
                 <img src="assets/images/baseline_dashboard_white_48dp.png" width="24px" alt="Apri">
-            </button> <!-- menu.toggle($event) -->
+            </button>
             <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" styleClass="clMenu" (itemClick)="handleItemClick($event)"></p-tieredMenu>
           
             <button type="button" pButton [label]="mostraStorico?'Indietro':'Cronologia'" (click)="mostraStorico=!mostraStorico" iconPos="left" class="ui-button-secondary button-with-icon .button-indietro">
@@ -36,7 +35,6 @@
 
     <div class="info-doc-wrapper">
         <div class="div-info-doc">
-            <!-- <span>{{documento.tipo}}{{documento.numero}} - {{documento.oggetto}}</span><span class="span-info-doc">{{documento.protocollatoIl}}</span> -->
             <b>{{oggetto}}</b>
         </div>
         <p-accordion>
@@ -51,34 +49,20 @@
                 </div>
             </p-accordionTab>
         </p-accordion>
-        <div class="p-grid" style="height: 31px; margin: 5px 0; margin-bottom: 20px" >
-            <p-dropdown #allegatiDropDown styleClass="width100x100 mt16" class="p-col" [autoWidth]="false" [options]="allegati" (onChange)="allegatoSelected($event)"></p-dropdown>
-            <!-- <p-button label="Click" (onClick)="fullscreen($event)" style="float: right;" ></p-button> -->
-            <img *ngIf="!noAnteprima" class="p-col-1" style="cursor: pointer; display: inline-block; float: right; width: 50px; height: 50px; max-width: 100%; min-height: 100%" src="assets/images/fullscreen-symbol.svg" (click)="fullscreen($event)" alt="fullscreen"/>
+        <div class="allegati-dropdown">
+            <p-dropdown #allegatiDropDown [options]="allegati" (onChange)="allegatoSelected($event)"></p-dropdown>
+            <img *ngIf="!noAnteprima" src="assets/images/fullscreen-symbol.svg" (click)="fullscreen($event)" alt="fullscreen"/>
         </div>
     </div>
-    <div class="preview-wrapper">
+    <div class="d-flex flex-grow-1">
         <div class="preview-inner">
-            <p-panel>
-                <iframe *ngIf="!noAnteprima" #anteprima id="anteprima" width="100%" height="600px" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen >
-                </iframe>
-                <!-- <img *ngIf="noAnteprima" [src]="noAnteprimaImg" width="100%" height="600px" frameborder="0"/> -->
-                <div *ngIf="noAnteprima" class="no-anteprima">Anteprima non disponibile.</div>
-            </p-panel>
+            <iframe *ngIf="!noAnteprima" #anteprima id="anteprima" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen >
+            </iframe>
+            <div *ngIf="noAnteprima" class="no-anteprima">Anteprima non disponibile.</div>
         </div>
-
     </div>
-  <!-- <div>
-    <p-lightbox type="content">
-            <a class="group" href="#">
-                Watch Video
-            </a>
-            <iframe width="560" height="315" src="https://gdml.internal.ausl.bologna.it/Babel/temp/pdfPreview/80E5BC2C-5E92-FF20-B4FB-7A6B3A59F13F_da_convertire_swf_.pdf" frameborder="0" allowfullscreen></iframe>
-        </p-lightbox>
-    </div> -->
     </div>
 </div>
-
 
 <p-dialog header="Note Attività" [(visible)]="this.showNote" [modal]="true" [responsive]="true" [width]="350" [minWidth]="200" [minY]="70"
         [maximizable]="true" [baseZIndex]="10000">
