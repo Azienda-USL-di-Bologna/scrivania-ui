@@ -176,6 +176,7 @@
     width: 15px;
     cursor: w-resize;
     text-align: center;
+    justify-content: center;
 }
 .slider > div{
     border: dotted 1px grey;
