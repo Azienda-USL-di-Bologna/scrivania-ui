@@ -43,7 +43,6 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout() {
-
     const loginMethod = sessionStorage.getItem("loginMethod");
 
     this.loginService.clearSession();
@@ -51,15 +50,13 @@ export class HeaderComponent implements OnInit {
     if (!this.loginService.isUserImpersonated) {
       if (loginMethod !== "sso") {
         console.log(loginMethod);
-        this.router.navigate(["/login"]);
       } else {
-        // window.location.href = "https://gdml.internal.ausl.bologna.it/Shibboleth.sso/Logout";
+        // prende l'url di logout dall'azienda dell'utente loggato
         window.location.href = this.logoutUrlTemplate.replace("[return-url]", window.location.href);
       }
     } else {
       window.close();
     }
-   
   }
 
   onCambioUtente(utente: Utente) {
@@ -68,14 +65,12 @@ export class HeaderComponent implements OnInit {
 
     if (utente) {
       let url: string = '';
-      //url = window.location.href.toString();
-       if (window.location.href.indexOf('?') >= 0)
-      
+
+       if (window.location.href.indexOf('?') >= 0)      
          url = window.location.href.toString() + '&impersonatedUser=' + utente.idPersona.codiceFiscale;
        else
          url = window.location.href.toString() + '?impersonatedUser=' + utente.idPersona.codiceFiscale;
-  
-       //sessionStorage.setItem("impersonatedUser", utente.idPersona.codiceFiscale);
+
        window.open(url, '_blank');
     }    
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit, OnDestroy } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
@@ -15,7 +15,7 @@ import { Subscription } from "rxjs";
   styleUrls: ["./attivita.component.css"],
   providers: [DatePipe]
 })
-export class TabellaAttivitaComponent implements OnInit, AfterViewInit {
+export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewInit {
   /*
   attivita: any = [
     {priorita:'A', tipo: 'qq', azienda: '102', applicazione:'pico'},
@@ -35,7 +35,7 @@ export class TabellaAttivitaComponent implements OnInit, AfterViewInit {
   public loggedUser: UtenteUtilities;
   public loading: boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
   public selectedRowIndex: number = -1;
-  private subscriptions: Subscription[];
+  private subscriptions: Subscription[] = [];
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
@@ -44,15 +44,15 @@ export class TabellaAttivitaComponent implements OnInit, AfterViewInit {
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
 
   ngOnInit() {
-      this.subscriptions = [];
       // imposto l'utente loggato nell'apposita variabile
+      console.log("attivita onInit()");
       this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
         if (u) {
           this.loggedUser = u;
-          //this.loadData(null);
+          console.log("faccio loadData");
+          this.loadData(null);
         }
         // console.log("faccio il load data di nuovo");
-        this.loadData(null);
       }));
 
     this.cols = [
@@ -227,7 +227,7 @@ export class TabellaAttivitaComponent implements OnInit, AfterViewInit {
 
   private loadData(event: LazyLoadEvent) {
     console.log("TOKEN: ", this.loginService.token);
-    console.log("UTENTE: ", this.loggedUser.getUtente());
+    console.log("UTENTE: ", this.loggedUser);
     this.loading = true;
     const functionName = "loadData";
     // console.log(this.componentDescription, functionName, "event: ", event);
@@ -295,6 +295,14 @@ export class TabellaAttivitaComponent implements OnInit, AfterViewInit {
 
   private fourRandomChar() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscriptions && this.subscriptions.length > 0) {
+      while (this.subscriptions.length > 0) {
+        this.subscriptions.pop().unsubscribe();
+      }
+    }
   }
 
 }

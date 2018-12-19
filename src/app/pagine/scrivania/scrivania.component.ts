@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList, HostListener } from "@angular/core";
+import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList, OnDestroy, HostListener } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Attivita, Menu } from "@bds/ng-internauta-model";
 import { Dropdown } from "primeng/dropdown";
@@ -6,13 +6,14 @@ import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
 import { PROJECTIONS } from "../../../environments/app-constants";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-scrivania",
   templateUrl: "./scrivania.component.html",
   styleUrls: ["./scrivania.component.css"]
 })
-export class ScrivaniaComponent implements OnInit {
+export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   public mostraStorico: boolean = false;
 
@@ -22,7 +23,9 @@ export class ScrivaniaComponent implements OnInit {
    @ViewChild("leftSide") private leftSide: ElementRef;
    @ViewChild("rightSide") private rightSide: ElementRef;
    @ViewChild("slider") private slider: ElementRef;
-   private posX: number;
+
+  private posX: number;
+  private subscriptions: Subscription[] = [];
 
   public attivitaSelezionata: Attivita;
   public noAnteprimaImg: string = "assets/images/no_anteprima.png";
@@ -55,14 +58,13 @@ export class ScrivaniaComponent implements OnInit {
   ngOnInit() {
     console.log("scivania ngOnInit()");
     // imposto l'utente loggato nell'apposita variabile
-    this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
+    this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       if (u) {
         this.loggedUser = u;
         this.loadMenu();
         this.setLook();
       }
-    });
-    // console.log("logged user: ", this.loggedUser);
+    }));
   }
 
   private setLook(): void {
@@ -293,13 +295,21 @@ export class ScrivaniaComponent implements OnInit {
     this.showNote = ((this.noteText = attivita.note) !== null);
   }
 
+  ngOnDestroy(): void {
+    if (this.subscriptions && this.subscriptions.length > 0) {
+      while (this.subscriptions.length > 0) {
+        this.subscriptions.pop().unsubscribe();
+      }
+    }
+  }
 }
-class TreeNode{
+
+class TreeNode {
   private label: string;
   private items: TreeNode[];
   private command: any;
 
-  constructor(label: string, items: TreeNode[], command: any){
+  constructor(label: string, items: TreeNode[], command: any) {
     // this.key = key;
     this.label = label;
     this.items = items;
