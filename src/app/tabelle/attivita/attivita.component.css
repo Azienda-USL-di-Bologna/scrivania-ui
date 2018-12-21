@@ -1,0 +1,26 @@
+.img-table{
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: auto;
+}
+
+.openTabLink{
+    color: #993366 !important;
+}
+
+.openTabLink:hover{
+    cursor: pointer;
+}
+.p0{
+    padding: 0 !important;
+}
+:host>>>table.ui-table-scrollable-body-table{
+    table-layout: auto;
+}
+:host>>>table.ui-table-scrollable-header-table{
+    table-layout: auto;
+}
+:host>>> .ui-table .ui-table-tbody > tr > td {
+    padding: 10px;
+}

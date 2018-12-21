@@ -1,7 +1,9 @@
+import { AfterViewInit } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { NtJwtLoginService, LoginType } from '@bds/nt-jwt-login';
-import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE } from 'src/environments/app-constants';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { NtJwtLoginService, LoginType, NtJwtLoginComponent } from '@bds/nt-jwt-login';
+import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE } from 'src/environments/app-constants';
+import { ActivatedRoute, Params, Router, RouterStateSnapshot } from '@angular/router';
+import { Utente } from '@bds/ng-internauta-model';
 
 @Component({
   selector: 'app-root',
@@ -9,31 +11,74 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
   title = 'Babel-Internauta';
+  private deletedImpersonatedUserQueryParams = false;
 
   constructor(private loginService: NtJwtLoginService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
+    console.log("inizio onInit() appComponent");
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
 
     this.route.queryParams.subscribe((params: Params) => {
-      this.loginService.loggedUser.subscribe(user => {
-        if(params.hasOwnProperty('impersonatedUser'))
-        {
-          this.loginService.login(LoginType.Sso, params['impersonatedUser']).then(result => {
-            if(result)
-            {
-              this.router.navigate([SCRIVANIA_ROUTE]);
-            }
-            else
-              window.close();
-          });
-        }
-      });
-    });
+      console.log("dentro subscribe, ", params.hasOwnProperty('impersonatedUser'));
+      console.log("chiamo login");
+      console.log("impersonateUser: ", params['impersonatedUser']);
 
+      // se nei params c'è la proprietà impersonatedUser, allora pulisci la sessione, setta nella sessionStorage l'utente impersonato
+      // e cancellalo dai params
+      if (params.hasOwnProperty('impersonatedUser')) {
+        this.loginService.clearSession();
+        this.loginService.setimpersonatedUser(params['impersonatedUser']);
 
+        // eliminazione dai query params di impersonatedUser
+        // this.loginService.redirectTo = this.router.routerState.snapshot.url.replace(/(?<=&|\?)impersonatedUser(=[^&]*)?(&|$)/, "");
+        this.loginService.redirectTo = this.removeQueryParams(this.router.routerState.snapshot.url, "impersonatedUser");
+        // if (this.loginService.redirectTo.endsWith("?") || this.loginService.redirectTo.endsWith("&")) {
+        //   this.loginService.redirectTo = this.loginService.redirectTo.substr(0, this.loginService.redirectTo.length - 1)
+        // }
+        console.log("STATE: ", this.loginService.redirectTo);  
+        this.router.navigate([LOGIN_ROUTE]);  
+        this.deletedImpersonatedUserQueryParams = true;
+      }
+
+      //console.log("this.deletedImpersonatedUserQueryParams: ", this.deletedImpersonatedUserQueryParams);
+   });
   }
 
+  // crea l'utente a partire dai dati "grezzi" UserInfo della risposta
+  public buildLoggedUser(userInfo: any): Utente {
+    let loggedUser: Utente = new Utente();
+    for (const key in userInfo) {
+      if (userInfo.hasOwnProperty(key)) {
+        loggedUser[key] = userInfo[key];
+      }
+    }
+    return loggedUser;
+  }
+
+  public removeQueryParams(url: string, paramToRemove: string) {
+    const splittedUrl: string[] = url.split("?");
+    if (splittedUrl.length == 1) {
+      return url;
+    }
+    let purgedQueryParams: string = "";
+    const queryParams: string = splittedUrl[1];
+    const splittedQueryParams: string[] = queryParams.split("&");
+    for (let i = 0; i<splittedQueryParams.length; i ++) {
+      const splittedQueryParam: string[] = splittedQueryParams[i].split("=");
+      if (splittedQueryParam[0] !== paramToRemove) {
+        purgedQueryParams += splittedQueryParams[i] + "&";
+      }
+    }
+
+    if (purgedQueryParams !== "") {
+      return splittedUrl[0] + "?" + purgedQueryParams.substr(0, purgedQueryParams.length - 1);
+    }
+    else {
+      return splittedUrl[0];
+    }
+  }
 
 }

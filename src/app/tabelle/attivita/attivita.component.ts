@@ -1,20 +1,21 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit, OnDestroy } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
-import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from "@bds/nt-communicator";
+import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
-import { PROJECTIONS } from "../../environments/app-constants";
+import { PROJECTIONS } from "../../../environments/app-constants";
 import { Attivita, Utente } from "@bds/ng-internauta-model";
-import { NtJwtLoginService } from "@bds/nt-jwt-login";
+import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Table } from "primeng/table";
+import { Subscription } from "rxjs";
 @Component({
-  selector: "app-tabella-attivita",
-  templateUrl: "./tabella-attivita.component.html",
-  styleUrls: ["./tabella-attivita.component.css"],
+  selector: "app-attivita",
+  templateUrl: "./attivita.component.html",
+  styleUrls: ["./attivita.component.css"],
   providers: [DatePipe]
 })
-export class TabellaAttivitaComponent implements OnInit {
+export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewInit {
   /*
   attivita: any = [
     {priorita:'A', tipo: 'qq', azienda: '102', applicazione:'pico'},
@@ -31,30 +32,28 @@ export class TabellaAttivitaComponent implements OnInit {
   private previousEvent: LazyLoadEvent;
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
-  public loggedUser: Utente;
-  public loading:boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
+  public loggedUser: UtenteUtilities;
+  public loading: boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
   public selectedRowIndex: number = -1;
+  private subscriptions: Subscription[] = [];
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
   @ViewChild("dt") private dataTable: Table;
 
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
-  
-  @HostListener('document:keydown.arrowdown', ['$event']) onKeydownHandlerArrowDown(event: KeyboardEvent) {
-    this.selectIndex(this.selectedRowIndex + 1);
-  }
-
-  @HostListener('document:keydown.arrowup', ['$event']) onKeydownHandlerArrowUp(event: KeyboardEvent) {
-    this.selectIndex(this.selectedRowIndex - 1);
-  }
 
   ngOnInit() {
-    
-    // imposto l'utente loggato nell'apposita variabile
-    this.loginService.loggedUser.subscribe((u: Utente) => {
-      this.loggedUser = u;
-    });
+      // imposto l'utente loggato nell'apposita variabile
+      console.log("attivita onInit()");
+      this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
+        if (u) {
+          this.loggedUser = u;
+          console.log("faccio loadData");
+          this.loadData(null);
+        }
+        // console.log("faccio il load data di nuovo");
+      }));
 
     this.cols = [
       /* {
@@ -69,30 +68,35 @@ export class TabellaAttivitaComponent implements OnInit {
       }, */
       {
         // E' l'insieme di priorità e tipo attività
-        width: "30px"
+        width: "30px",
+        minWidth: "30px"
       },
       {
         field: "idAzienda.nome",
         header: "Ente",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "85px"
+        width: "85px",
+        minWidth: "85px"
       },
       {
         field: "idApplicazione.nome",
         header: "App",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "80px"
+        width: "80px",
+        minWidth: "80px"
       },
       {
         field: "provenienza",
         header: "Da",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "140px"
+        width: "140px",
+        minWidth: "140px"
       },
       {
         field: "oggetto",
         header: "Oggetto",
-        filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
+        filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
+        minWidth: "200px"
       },
       {
         field: "dataInserimentoRiga",
@@ -101,31 +105,38 @@ export class TabellaAttivitaComponent implements OnInit {
         fieldType: "DateTime",
         filterWidget: "Calendar",
         ariaLabelDescription: "Colonna Inserimento, Cella filtro",
-        width: "100px"
+        width: "100px",
+        minWidth: "100px"
       },
       {
         field: "descrizione",
         header: "Tipo",
         filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-        width: "120px"
+        width: "120px",
+        minWidth: "120px"
       },
       {
         // colonna azione
-        width: "60px"
+        width: "60px",
+        minWidth: "60px"
       },
       {
         // colonna posso procedere
-        width: "30px"
+        width: "30px",
+        minWidth: "30px"
       },
       {
         // colonna trash
-        width: "30px"
+        width: "30px",
+        minWidth: "30px"
       },
       {
       // colonna note
-        width: "30px"
+        width: "30px",
+        minWidth: "30px"
       },
     ];
+    
   }
 
   public attivitaEmitterHandler() {
@@ -140,6 +151,15 @@ export class TabellaAttivitaComponent implements OnInit {
       calElm.setAttribute("aria-label", element.ariaLabelDescription);
     });
   }
+
+  public onKeydownHandlerArrowDown(event: KeyboardEvent) {
+    this.selectIndex(this.selectedRowIndex + 1);
+  }
+
+  public onKeydownHandlerArrowUp(event: KeyboardEvent) {
+    this.selectIndex(this.selectedRowIndex - 1);
+  }
+
 
 
   calendarTooltip(field: string) {
@@ -164,23 +184,28 @@ export class TabellaAttivitaComponent implements OnInit {
         break;
       case "onRowSelect":
         this.rowSelect(event);
+        const attivitaSelezionata: Attivita = event.data;
+        attivitaSelezionata.aperta = true;
+        this.attivitaService.update(attivitaSelezionata);
         break;
     }
   }
 
   private lazyLoad(event: LazyLoadEvent) {
-    const functionName = "lazyLoad"
+    const functionName = "lazyLoad";
     // console.log(this.componentDescription, functionName, "event: ", event);
 
     this.loadData(event);
   }
 
-  public selectIndex(index: number)
-  {
-    if(index < 0 || index >= this.attivita.length) return;
+  public selectIndex(index: number) {
+    if (index < 0 || index >= this.attivita.length) { return; }
 
     this.selectedRowIndex = index;
     this.dataTable.selection = this.attivita[this.selectedRowIndex];
+    const attivitaSelezionata: Attivita = this.attivita[this.selectedRowIndex];
+    attivitaSelezionata.aperta = true;
+    this.attivitaService.update(attivitaSelezionata);
     this.attivitaEmitter.emit(this.dataTable.selection);
   }
 
@@ -190,16 +215,19 @@ export class TabellaAttivitaComponent implements OnInit {
 
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const functionName = "buildInitialFiltersAndSorts";
-    let initialFiltersAndSorts = new FiltersAndSorts();
+    const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.desc));
-    const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.fk_idPersona.id);
+    const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
     initialFiltersAndSorts.addFilter(filter);
-    //console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
+    initialFiltersAndSorts.rows = NO_LIMIT;
+    // console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
     return initialFiltersAndSorts;
   }
 
 
   private loadData(event: LazyLoadEvent) {
+    console.log("TOKEN: ", this.loginService.token);
+    console.log("UTENTE: ", this.loggedUser);
     this.loading = true;
     const functionName = "loadData";
     // console.log(this.componentDescription, functionName, "event: ", event);
@@ -212,7 +240,7 @@ export class TabellaAttivitaComponent implements OnInit {
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
 
-    this.attivitaService.getData(PROJECTIONS.attivita.standardProjections.AttivitaWithIdApplicazioneAndIdAzienda, this.initialFiltersAndSorts, this.lazyLoadFiltersAndSorts)
+    this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, this.initialFiltersAndSorts, this.lazyLoadFiltersAndSorts)
       .then(
         data => {
           this.attivita = undefined;
@@ -240,12 +268,12 @@ export class TabellaAttivitaComponent implements OnInit {
 
   }
 
-  public apriAttivita(attivita: any){
-    const attivitaJsonArray = JSON.parse(attivita.urls);
-    if (attivitaJsonArray && attivitaJsonArray[0]){
+  public apriAttivita(attivita: Attivita) {
+    const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
+    if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
       /* abbiamo bisogno di un uuid diverso ad ogni entrata sull'ambiente,
          se no per un controllo anti-inde-sminchiamento onCommand ritorna e basta */
-      window.open(attivitaJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
+      window.open(compiledUrlsJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
     }
 
   }
@@ -265,8 +293,16 @@ export class TabellaAttivitaComponent implements OnInit {
        this.fourRandomChar() + this.fourRandomChar() + this.fourRandomChar() ;  // 16
   }
 
-  private fourRandomChar(){
+  private fourRandomChar() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscriptions && this.subscriptions.length > 0) {
+      while (this.subscriptions.length > 0) {
+        this.subscriptions.pop().unsubscribe();
+      }
+    }
   }
 
 }

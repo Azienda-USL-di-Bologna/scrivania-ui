@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { ScrivaniaService } from './scrivania/scrivania.service';
+import { ScrivaniaService } from './scrivania.service';
 
 describe('ScrivaniaService', () => {
   beforeEach(() => {

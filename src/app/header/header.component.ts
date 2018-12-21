@@ -2,7 +2,7 @@ import { Utente, Persona } from "@bds/ng-internauta-model";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import {Router, ActivatedRoute} from "@angular/router";
 import {getInternautaUrl, BaseUrlType, HOME_ROUTE} from "../../environments/app-constants";
-import { NtJwtLoginService, LoginType } from "@bds/nt-jwt-login";
+import { NtJwtLoginService, LoginType, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Observable } from "rxjs";
 import { FunctionExpr, TransitiveCompileNgModuleMetadata } from "@angular/compiler";
 import { Dialog, DialogModule } from "primeng/dialog";
@@ -18,50 +18,60 @@ import { HomepageComponent } from "../pagine/homepage/homepage.component";
 })
 export class HeaderComponent implements OnInit {
 
-  public utenteConnesso: Utente;
-  public $utenteConnesso: Observable<Utente>;
+  public utenteConnesso: UtenteUtilities;
   cambioUtentePopupVisibile: boolean = false;
+  private logoutUrlTemplate: string;
 
   constructor(public router: Router, private loginService: NtJwtLoginService, private http: HttpClient, private route: ActivatedRoute) { }
 
 
   onCambioUtenteClick() {
+    console.log("header onCambioUtenteClick()");
     
     this.cambioUtentePopupVisibile = true;
   }
 
   ngOnInit() {
-    this.$utenteConnesso = this.loginService.loggedUser;
-    this.$utenteConnesso.subscribe((utente: Utente) => {
-      this.utenteConnesso = utente;
+    console.log("header ngOnInit()");
+    this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
+      if (utente) {
+        this.utenteConnesso = utente;
+        const jsonParametri = JSON.parse(utente.getUtente().idAzienda.parametri);
+        this.logoutUrlTemplate = jsonParametri.logoutUrl as string;
+      }
     });
   }
 
   onLogout() {
-
     const loginMethod = sessionStorage.getItem("loginMethod");
 
-     this.loginService.clearSession();
+    this.loginService.clearSession();
 
-    if (loginMethod !== "sso") {
-      console.log(loginMethod);
-      this.router.navigate(["/login"]);
+    if (!this.loginService.isUserImpersonated) {
+      if (loginMethod !== "sso") {
+        console.log(loginMethod);
+      } else {
+        // prende l'url di logout dall'azienda dell'utente loggato
+        window.location.href = this.logoutUrlTemplate.replace("[return-url]", window.location.href);
+      }
     } else {
-      // window.location.href = "https://gdml.internal.ausl.bologna.it/Shibboleth.sso/Logout";
-      window.location.href = getInternautaUrl(BaseUrlType.Logout);
+      window.close();
     }
   }
 
-  onCambioUtente(persona: Persona) {
+  onCambioUtente(utente: Utente) {
+    console.log("header onCambioUtente")
     this.cambioUtentePopupVisibile = false;
 
-    let url: string = '';
-    if (window.location.href.indexOf('?') >= 0)
-      url = window.location.href.toString() + '&impersonatedUser=' + persona.codiceFiscale;
-    else
-      url = window.location.href.toString() + '?impersonatedUser=' + persona.codiceFiscale;
+    if (utente) {
+      let url: string = '';
 
+       if (window.location.href.indexOf('?') >= 0)      
+         url = window.location.href.toString() + '&impersonatedUser=' + utente.idPersona.codiceFiscale;
+       else
+         url = window.location.href.toString() + '?impersonatedUser=' + utente.idPersona.codiceFiscale;
 
-     window.open(url, '_blank');
+       window.open(url, '_blank');
+    }    
   }
 }

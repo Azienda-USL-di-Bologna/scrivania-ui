@@ -21,7 +21,7 @@
 }
 .center-vertically {
     display: flex;
-    
+
     align-items: center;
 }
 .width100x100 {
@@ -46,7 +46,7 @@
     height: 25px;
 }
 
-.btn, .toggle, .logout, .demiurge {
+.btn, .toggle, .logout, .demiurgo {
     cursor: pointer;
 }
 
@@ -60,15 +60,20 @@
 }
 
 .pi-icon-style {
-    font-size: 2em; 
+    font-size: 2em;
     color: white;
 }
 
 
- .titolo-popup{
+>>> body .ui-dialog .ui-dialog-titlebar, .titolo-popup {
     background-color: #993366;
     color: white;
- } 
+ }
+
+ >>> body .ui-dialog .ui-dialog-titlebar {
+    min-width: 443px;
+    border: none;
+ }
 
  :host>>>.overlaypanel-background .ui-overlaypanel-content{
      /* background-color: greenyellow; */

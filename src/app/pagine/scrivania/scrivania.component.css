@@ -22,6 +22,17 @@
     right: 0;
     */
 }
+.buttons-bar{
+    display: flex;
+    flex-direction: row;
+}
+.buttons-bar > button{
+    margin: 0 6px 0 0;
+}
+/* :host>>> .button-indietro{
+    background-color: #e2e2e2;
+    height: 33px;
+} */
 .table-wrapper{
     /*position: absolute;
     top: 60px;
@@ -50,20 +61,23 @@
 :host>>> .ui-table-scrollable-body{
     flex: 1;
 }
-.preview-wrapper{
+/* .preview-wrapper{
     flex: 1;
     position: relative;
-}
+} */
 .pr-8{
-   padding-right: 8px; 
+   padding-right: 8px;
 }
 .preview-inner{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
     overflow-y: auto;
+}
+.preview-inner > iframe{
+    height: 100%;
+    width: 100%;
 }
 .ul-info-doc{
     list-style: none;
@@ -71,13 +85,29 @@
 .li-description{
     font-weight: bold;
 }
-
+.button-with-icon{
+    /* display: flex;
+    flex-direction: row;
+    align-items: center; */
+    padding: 0 6px 0;
+    display: table;
+}
+:host>>> .button-with-icon > span{
+    display: inline;
+    vertical-align: middle
+}
+.button-with-icon > img{
+    display: inline;
+    vertical-align: middle
+}
 .div-info-doc {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
 }
-
+.px-16{
+    padding: 0 16px;
+}
 .span-info-doc {
     margin-left: 30px;
 }
@@ -149,6 +179,7 @@
     width: 15px;
     cursor: w-resize;
     text-align: center;
+    justify-content: center;
 }
 .slider > div{
     border: dotted 1px grey;
@@ -164,6 +195,43 @@
 .p-left-0{
     padding-left: 0;
 }
+.d-hidden{
+    display: none !important;
+}
+.d-flex{
+    display: flex;
+}
+.d-inline{
+    display: inline;
+}
 :host>>>.clMenu{
     top: auto !important;
+}
+:host >>> .ui-button.ui-state-default.ui-button-secondary:enabled:focus, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default:enabled:focus {
+    box-shadow: 0 0 0 1px #9E9E9E;
+}
+:host >>> .ui-button.ui-state-default.ui-button-secondary, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default {
+    border: 1px solid #d2d2d2;
+}
+.allegati-dropdown{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 8px 0;
+}
+.allegati-dropdown > img{
+    cursor: pointer;
+    width: 33px;
+}
+.allegati-dropdown > p-dropdown{
+    flex-grow: 1;
+}
+:host>>> .allegati-dropdown > p-dropdown > div{
+    width: 100% !important;
+}
+.flex-grow-1{
+    flex-grow: 1;
+}
+.overflow-y-a{
+    overflow-y: auto;
 }
