@@ -14,14 +14,11 @@
             </button>  
         </div>
 
-        <div>
-            <span class="pr-8">Ente:</span>
-            <p-dropdown [options]="filtriApribili" [(ngModel)]="filtroScelto" optionLabel="value"></p-dropdown>
-        </div>
+        <app-dropdown-aziende (aziendaEmitter)="aziendaChanged($event)"></app-dropdown-aziende>
     </div>
     <div class="table-wrapper">
         <div class="table-inner">
-            <app-attivita *ngIf="!mostraStorico" (attivitaEmitter)="attivitaClicked($event)" (onAttivitaNoteEmitter)="onNoteClick($event)"></app-attivita>
+            <app-attivita *ngIf="!mostraStorico" (attivitaEmitter)="attivitaClicked($event)" (onAttivitaNoteEmitter)="onNoteClick($event)" [idAzienda]="idAzienda"></app-attivita>
             <app-attivita-fatte *ngIf="mostraStorico" (onAttivitaNoteEmitter)="onNoteClick($event)"></app-attivita-fatte>
         </div>
     </div>

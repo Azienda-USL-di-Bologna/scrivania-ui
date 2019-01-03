@@ -24,7 +24,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
    @ViewChild("rightSide") private rightSide: ElementRef;
    @ViewChild("slider") private slider: ElementRef;
 
-  private posX: number;
   private subscriptions: Subscription[] = [];
 
   public attivitaSelezionata: Attivita;
@@ -42,8 +41,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public finestreApribili: any[] = [{label: "Elenco documenti", items: [{label: "AOSPBO", command: (onclick) => {this.handleItemClick("ciao"); }}, {label: "AUSLBO"}]}, {label: "Elenco determine"}, {label: "Elenco delibere"}];
   public finestraScelta: any;
 
-  public filtriApribili: any[] = [{label: "label0", value: "Tutte"}, {label: "label1", value: "105"}, {label: "label2", value: "102"}, {label: "label3", value: "909"}];
-  public filtroScelto: any;
   public loggedUser: UtenteUtilities;
   public alberoMenu: any[];
 
@@ -51,6 +48,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public noteText: string = null;
   private MIN_X_LEFT_SIDE: number = 385;
   private MIN_X_RIGHT_SIDE: number = 225;
+
+  public idAzienda: number = -1;
 
   constructor(private domSanitizer: DomSanitizer, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
    }
@@ -235,7 +234,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                 }
                 if (!found) { // Il comando non è presente, lo aggiungo
                   found = true;
-                  if (this.loggedUser.getUtente()["aziende"] && this.loggedUser.getUtente()["aziende"].length > 1) {
+                  if (this.loggedUser.getUtente().aziende && this.loggedUser.getUtente().aziende.length > 1) {
                     elementAlbero.items.push(new TreeNode(
                       elementArray.descrizione,
                       [new TreeNode(
@@ -258,7 +257,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
               }
             }
             if (!found) { // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
-              if (this.loggedUser.getUtente()["aziende"] && this.loggedUser.getUtente()["aziende"].length > 1) {
+              if (this.loggedUser.getUtente().aziende && this.loggedUser.getUtente().aziende.length > 1) {
                 this.alberoMenu.push(new TreeNode(
                   elementArray.idApplicazione.nome,
                   [new TreeNode(
@@ -288,6 +287,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         }
       );
 
+  }
+
+  public aziendaChanged(event) {
+    console.log("Azienda arrivata a scrivania: ", event);
+    this.idAzienda = event;
   }
 
   public  onNoteClick(attivita: any) {
