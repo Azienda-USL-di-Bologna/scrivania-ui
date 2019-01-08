@@ -32,7 +32,7 @@ export class CambioUtenteComponent implements OnInit {
 
   search(str: string) {
     const filter: FiltersAndSorts = new FiltersAndSorts();
-    filter.addFilter(new FilterDefinition("idPersona.descrizione", FILTER_TYPES.string.containsIgnoreCase, str));
+    filter.addFilter(new FilterDefinition("idPersona.descrizione", FILTER_TYPES.string.startsWithIgnoreCase, str));
     this.cambioUtenteService
       .getData(PROJECTIONS.utente.standardProjections.utenteWithIdAziendaAndIdPersona, this.initialFilter, filter)
       .then(k => {
