@@ -19,7 +19,7 @@
     <div class="table-wrapper">
         <div class="table-inner">
             <app-attivita *ngIf="!mostraStorico" (attivitaEmitter)="attivitaClicked($event)" (onAttivitaNoteEmitter)="onNoteClick($event)" [idAzienda]="idAzienda"></app-attivita>
-            <app-attivita-fatte *ngIf="mostraStorico" (onAttivitaNoteEmitter)="onNoteClick($event)"></app-attivita-fatte>
+            <app-attivita-fatte *ngIf="mostraStorico" (onAttivitaNoteEmitter)="onNoteClick($event)" [idAzienda]="idAzienda"></app-attivita-fatte>
         </div>
     </div>
 
