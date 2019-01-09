@@ -40,8 +40,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private _idAzienda: number = -1;
   @Input("idAzienda")
   set idAzienda(idAzienda: number) {
-    if ( !this.loggedUser ) { return; }
     this._idAzienda = idAzienda;
+    if ( !this.loggedUser ) { return; }
     this.loadData(null);
   }
 
