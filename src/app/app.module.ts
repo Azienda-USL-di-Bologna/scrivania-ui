@@ -14,7 +14,8 @@ import { ScrivaniaComponent } from "./pagine/scrivania/scrivania.component";
 import { HomepageComponent } from "./pagine/homepage/homepage.component";
 import { HeaderComponent } from "./header/header.component";
 import { CambioUtenteComponent } from "./header/cambio-utente/cambio-utente.component";
-import { AttivitaFatteComponent } from './tabelle/attivita-fatte/attivita-fatte.component';
+import { AttivitaFatteComponent } from "./tabelle/attivita-fatte/attivita-fatte.component";
+import { DropdownAziendeComponent } from "./components/dropdown-aziende/dropdown-aziende.component";
 
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
@@ -42,6 +43,7 @@ import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,7 +52,8 @@ import { loginModuleConfig } from "./config/module-config";
     HomepageComponent,
     HeaderComponent,
     CambioUtenteComponent,
-    AttivitaFatteComponent
+    AttivitaFatteComponent,
+    DropdownAziendeComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),

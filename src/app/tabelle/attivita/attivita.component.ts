@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit, OnDestroy, Input } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
@@ -36,6 +36,14 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public loading: boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
   public selectedRowIndex: number = -1;
   private subscriptions: Subscription[] = [];
+
+  private _idAzienda: number = -1;
+  @Input("idAzienda")
+  set idAzienda(idAzienda: number) {
+    this._idAzienda = idAzienda;
+    if ( !this.loggedUser ) { return; }
+    this.loadData(null);
+  }
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
@@ -136,7 +144,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         minWidth: "30px"
       },
     ];
-    
   }
 
   public attivitaEmitterHandler() {
@@ -217,8 +224,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const functionName = "buildInitialFiltersAndSorts";
     const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.desc));
-    const filter: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
-    initialFiltersAndSorts.addFilter(filter);
+    const filterIdPersona: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
+    initialFiltersAndSorts.addFilter(filterIdPersona);
+    if (this._idAzienda !== -1) { // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
+      const filterIdAzienda: FilterDefinition = new FilterDefinition("idAzienda.id", FILTER_TYPES.not_string.equals, this._idAzienda);
+      initialFiltersAndSorts.addFilter(filterIdAzienda);
+    }
     initialFiltersAndSorts.rows = NO_LIMIT;
     // console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
     return initialFiltersAndSorts;
