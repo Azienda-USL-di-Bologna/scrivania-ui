@@ -5,8 +5,9 @@ import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
-import { PROJECTIONS } from "../../../environments/app-constants";
+import { PROJECTIONS, MAX_CHARS_100 } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
+import { Accordion } from "primeng/accordion";
 
 @Component({
   selector: "app-scrivania",
@@ -17,12 +18,13 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   public mostraStorico: boolean = false;
 
-   @ViewChild("anteprima") private anteprima: ElementRef;
-   @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
+  @ViewChild("anteprima") private anteprima: ElementRef;
+  @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
+  @ViewChild("accordionDetail") private accordionDetail: Accordion;
 
-   @ViewChild("leftSide") private leftSide: ElementRef;
-   @ViewChild("rightSide") private rightSide: ElementRef;
-   @ViewChild("slider") private slider: ElementRef;
+  @ViewChild("leftSide") private leftSide: ElementRef;
+  @ViewChild("rightSide") private rightSide: ElementRef;
+  @ViewChild("slider") private slider: ElementRef;
 
   private subscriptions: Subscription[] = [];
 
@@ -37,6 +39,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public mittente: string = null; // "Nessun mittente";
   public destinatari: string = null; // "Nessun destinatario";
   public destinatariCC: string = null; // "Li dobbiamo mettere?? sulla scrivania non ci sono mai stati";
+  public datiDiFlusso: string = null;
 
   public finestreApribili: any[] = [{label: "Elenco documenti", items: [{label: "AOSPBO", command: (onclick) => {this.handleItemClick("ciao"); }}, {label: "AUSLBO"}]}, {label: "Elenco determine"}, {label: "Elenco delibere"}];
   public finestraScelta: any;
@@ -121,7 +124,15 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     return fileName;
   }
 
+  private clearAccordionDetailFields() {
+    this.mittente = null;
+    this.destinatari = null;
+    this.destinatariCC = null;
+    this.datiDiFlusso = null;
+  }
+
   public attivitaClicked(attivitaCliccata: Attivita) {
+    this.clearAccordionDetailFields();
     this.attivitaSelezionata = attivitaCliccata;
     this.oggetto = this.attivitaSelezionata.oggetto;
     const datiAggiuntiviAttivita: any = JSON.parse(this.attivitaSelezionata.datiAggiuntivi);
@@ -140,6 +151,13 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
           destinatariCC = e.replace("Esterni: ", "<b>Esterni: </b>");
         }
       });
+    }
+    if (datiAggiuntiviAttivita.custom_app_4) {
+      this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
+      if (this.datiDiFlusso.length > MAX_CHARS_100) {
+        this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
+      }
+      // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
     }
     this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
     this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";

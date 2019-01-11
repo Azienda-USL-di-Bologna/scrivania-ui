@@ -49,7 +49,7 @@
     left: 0;
     right: 0;
 }
-:host>>> .ui-table, 
+:host>>> .ui-table,
 :host>>> .ui-table-scrollable-wrapper,
 :host>>> .ui-table-scrollable-view{
     height: 100%;
@@ -114,7 +114,7 @@
 
 .width100x100 {
     width: 100% !important;
-} 
+}
 
 .mt16 {
     margin-top: 16px;
@@ -234,4 +234,12 @@
 }
 .overflow-y-a{
     overflow-y: auto;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
 }

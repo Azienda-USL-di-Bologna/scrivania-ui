@@ -17,6 +17,7 @@ export const LOCALHOST_PORT = "10005";
 export const LOGIN_ROUTE: string = "/login";
 export const HOME_ROUTE: string = "/homepage";
 export const SCRIVANIA_ROUTE: string = "/scrivania";
+export const MAX_CHARS_100 = 100;
 
 export enum BaseUrlType {
     Scrivania,
