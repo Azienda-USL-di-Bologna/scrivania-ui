@@ -19,6 +19,8 @@
     </p-table>
 -->
 <p-table #dt
+    [lazy]="true"
+    (onLazyLoad)="handleEvent('onLazyLoad', $event)"
     [value]="attivita"
     [columns]="cols"
     [paginator]="false"
