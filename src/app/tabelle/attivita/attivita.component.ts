@@ -57,7 +57,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
         if (u) {
           this.loggedUser = u;
-          console.log("faccio loadData");
+          /* console.log("faccio loadData"); */
           this.loadData(null);
         }
         // console.log("faccio il load data di nuovo");
@@ -144,6 +144,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         minWidth: "30px"
       },
     ];
+    const that = this;
+    window.addEventListener("resize", function(event) {
+      const bodyTable = document.getElementsByClassName("ui-table-scrollable-body")[0] as HTMLElement;
+      bodyTable.style.paddingBottom = "1px";
+      bodyTable.style.paddingBottom = "1px";
+    });
   }
 
   public attivitaEmitterHandler() {
@@ -237,8 +243,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
 
   private loadData(event: LazyLoadEvent) {
-    console.log("TOKEN: ", this.loginService.token);
-    console.log("UTENTE: ", this.loggedUser);
+    /* console.log("TOKEN: ", this.loginService.token);
+    console.log("UTENTE: ", this.loggedUser); */
     this.loading = true;
     const functionName = "loadData";
     // console.log(this.componentDescription, functionName, "event: ", event);
@@ -259,7 +265,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           if (data && data._embedded && data.page) {
             this.attivita = <Attivita[]>data._embedded.attivita;
             this.totalRecords = data.page.totalElements;
-            console.log("ATTIVITA: ", this.attivita);
+            /* console.log("ATTIVITA: ", this.attivita); */
             // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
             this.attivita.forEach(a => {console.log(a.tipo, a.priorita);
               if (a.tipo === "notifica") {
