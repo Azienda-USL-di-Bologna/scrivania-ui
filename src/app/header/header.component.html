@@ -4,11 +4,12 @@
   [(visible)]="this.cambioUtentePopupVisibile"
   [modal]="true"
   [responsive]="false"
-  [minHeight]="100">
+  [minHeight]="100"
+  [focusOnShow]="false">
   <app-cambio-utente (onUtenteSelectedEmitter)="this.onCambioUtente($event)"></app-cambio-utente>
 </p-dialog>
 
-<div class="height64 center-vertically">
+<div aria-hidden="true" class="height64 center-vertically">
   <div class="p-col-12 p-grid"> <!--p-nogutter-->
       <div class="p-md-8 p-sm-12 header-left-style ">
         <img class="logo" src="assets/images/logo2.png"/>

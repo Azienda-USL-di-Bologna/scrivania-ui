@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit, OnDestroy, Input } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
@@ -9,6 +9,7 @@ import { Attivita, Utente } from "@bds/ng-internauta-model";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
+import { Calendar } from "primeng/calendar";
 @Component({
   selector: "app-attivita",
   templateUrl: "./attivita.component.html",
@@ -48,6 +49,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
   @ViewChild("dt") private dataTable: Table;
+  @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
 
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
 
@@ -293,6 +295,35 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       window.open(compiledUrlsJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
     }
 
+  }
+
+  public onCalendarAction(event: any, field: string, action: string) {
+    let calSel: Calendar = null;
+    switch (action) {
+      case "today":
+        calSel = this._calGen.find(e => e.inputId === "CalInput_" + field);
+        if (calSel) {
+          calSel.overlayVisible = false;
+        }
+        break;
+
+      case "clear":
+        this.dataTable.filter(null, field, null);
+        break;
+
+      case "select":
+        if (this._calGen) {
+          calSel = this._calGen.find(a => a.inputId === "CalInput_" + field);
+          if (calSel && this.dataRange && this.dataRange[field].length === 2
+            && this.dataRange[field][0] && this.dataRange[field][1]) {
+            calSel.overlayVisible = false;
+          }
+        }
+
+        const value = this.dataRange[field];
+        this.dataTable.filter(value, field, null);
+        break;
+    }
   }
 
   private onNoteClick(attivita: any) {
