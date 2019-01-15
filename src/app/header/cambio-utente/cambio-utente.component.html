@@ -1,6 +1,11 @@
-<div class="p-grid">
+<div
+    class="p-grid"
+    (keydown.tab)="onKeyTabPressed($event)"
+    (keydown.enter)="onUtenteSelectionConfirmed()">
     <div class="p-col">
         <p-autoComplete
+            #autoComplete
+            [autofocus]="true"
             [(ngModel)]="text"
             (onClear)="this.onClear()"
             [suggestions]="this.personeSuggestions"
