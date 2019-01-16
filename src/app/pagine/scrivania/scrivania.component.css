@@ -70,14 +70,24 @@
 }
 .preview-inner{
     display: flex;
+    position: relative;
     flex-grow: 1;
     justify-content: center;
     align-items: center;
     overflow-y: auto;
 }
+.overlapDiv{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
 .preview-inner > iframe{
     height: 100%;
     width: 100%;
+    z-index: 99;
 }
 .ul-info-doc{
     list-style: none;

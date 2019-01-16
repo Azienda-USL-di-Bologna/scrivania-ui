@@ -49,7 +49,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   public showNote: boolean = false;
   public noteText: string = null;
-  private MIN_X_LEFT_SIDE: number = 385;
+  private MIN_X_LEFT_SIDE: number = 420;
   private MIN_X_RIGHT_SIDE: number = 225;
 
   public idAzienda: number = -1;
