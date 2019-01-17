@@ -47,11 +47,14 @@
                     Non sono presenti dettagli da visualizzare.
                 </div>
             </p-accordionTab>
-            <p-accordionTab *ngIf="datiDiFlusso" [selected]="true" header="Dati di flusso">
-                <div>
+            <p-accordionTab [selected]="datiDiFlusso" header="Dati di flusso">
+                <div *ngIf="datiDiFlusso" >
                     <ul class="ul-info-doc">
-                        <li><span pTooltip="{{datiFlussoTooltip}}" class="li-content">{{datiDiFlusso}}</span></li>
+                        <li><span pTooltip="{{datiFlussoTooltip}}" [innerHTML]="datiDiFlusso" class="li-content"></span></li>
                     </ul>
+                </div>
+                <div *ngIf="!datiDiFlusso" class="text-centered">
+                    Non sono presenti dati di flusso da visualizzare.
                 </div>
             </p-accordionTab>
         </p-accordion>

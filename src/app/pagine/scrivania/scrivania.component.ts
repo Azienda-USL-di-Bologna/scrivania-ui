@@ -159,6 +159,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         this.datiFlussoTooltip = this.datiDiFlusso;
         this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
       }
+      this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
       // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
     }
     this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
