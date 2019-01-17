@@ -20,7 +20,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   @ViewChild("anteprima") private anteprima: ElementRef;
   @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
-  @ViewChild("accordionDetail") private accordionDetail: Accordion;
 
   @ViewChild("leftSide") private leftSide: ElementRef;
   @ViewChild("rightSide") private rightSide: ElementRef;
@@ -40,6 +39,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public destinatari: string = null; // "Nessun destinatario";
   public destinatariCC: string = null; // "Li dobbiamo mettere?? sulla scrivania non ci sono mai stati";
   public datiDiFlusso: string = null;
+  public datiDiFlussoFull: string = null;
 
   public finestreApribili: any[] = [{label: "Elenco documenti", items: [{label: "AOSPBO", command: (onclick) => {this.handleItemClick("ciao"); }}, {label: "AUSLBO"}]}, {label: "Elenco determine"}, {label: "Elenco delibere"}];
   public finestraScelta: any;
@@ -129,6 +129,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     this.destinatari = null;
     this.destinatariCC = null;
     this.datiDiFlusso = null;
+    this.datiDiFlussoFull = null;
   }
 
   public attivitaClicked(attivitaCliccata: Attivita) {
@@ -153,9 +154,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       });
     }
     if (datiAggiuntiviAttivita.custom_app_4) {
-      this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
-      if (this.datiDiFlusso.length > MAX_CHARS_100) {
-        this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
+      this.datiDiFlussoFull = this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
+      if (this.datiDiFlussoFull.length > MAX_CHARS_100) {
+        this.datiDiFlusso = this.datiDiFlussoFull.substring(0, MAX_CHARS_100 - 3).concat("...");
       }
       // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
     }
