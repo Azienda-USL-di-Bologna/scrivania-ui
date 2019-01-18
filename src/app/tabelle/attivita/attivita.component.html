@@ -19,10 +19,13 @@
     </p-table>
 -->
 <p-table #dt
+    [lazy]="true"
+    (onLazyLoad)="handleEvent('onLazyLoad', $event)"
     [value]="attivita"
     [columns]="cols"
     [paginator]="false"
     [autoLayout]="true"
+    [responsive]="true"
     [totalRecords]="totalRecords"
     selectionMode="single"
     (onRowSelect)="handleEvent('onRowSelect', $event)"
@@ -34,16 +37,16 @@
      <!--[style]="'{height:200px}'"  scrollHeight="700px"-->
    <!--[rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,15,20]"  [style.width]="col.width"-->
 
-    <!-- <ng-template pTemplate="colgroup" let-columns>
+<!--     <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
-            <col *ngFor="let col of columns">
+            <col *ngFor="let col of columns" [style.width]="col.width" [style.minWidth]="col.minWidth">
         </colgroup>
     </ng-template> -->
 
 
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngFor="let col of columns"  [style.width]="col.width" [style.minWidth]="col.minWidth">
+            <th *ngFor="let col of columns" [style.width]="col.width" [style.minWidth]="col.minWidth">
                 <div *ngIf="col.field != undefined" [pSortableColumn]="col.field">
                     {{col.header}}
                     <p-sortIcon [field]="col.field" ariaLabelAsc="Colonnna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonnna {{col.header}}, Ordinamento discendente">
@@ -60,7 +63,7 @@
                         appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
                     </p-calendar>
                     <input *ngSwitchDefault pInputText attr.aria-label="Colonnna {{col.header}}, Cella filtro" type="text" (input)="dt.filter($event.target.value, col.field, 'contains')"
-                        style="width:100%" #filterInputText>
+                        #filterInputText>
                 </div>
             </td>
 

@@ -5,7 +5,7 @@ import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
-import { PROJECTIONS, MAX_CHARS_100 } from "../../../environments/app-constants";
+import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
 import { Accordion } from "primeng/accordion";
 
@@ -20,7 +20,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   @ViewChild("anteprima") private anteprima: ElementRef;
   @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
-  @ViewChild("accordionDetail") private accordionDetail: Accordion;
 
   @ViewChild("leftSide") private leftSide: ElementRef;
   @ViewChild("rightSide") private rightSide: ElementRef;
@@ -40,18 +39,20 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public destinatari: string = null; // "Nessun destinatario";
   public destinatariCC: string = null; // "Li dobbiamo mettere?? sulla scrivania non ci sono mai stati";
   public datiDiFlusso: string = null;
+  public datiFlussoTooltip: string = null;
 
   public finestreApribili: any[] = [{label: "Elenco documenti", items: [{label: "AOSPBO", command: (onclick) => {this.handleItemClick("ciao"); }}, {label: "AUSLBO"}]}, {label: "Elenco determine"}, {label: "Elenco delibere"}];
   public finestraScelta: any;
 
   public loggedUser: UtenteUtilities;
   public alberoMenu: any[];
+  public alberoFirma: any[];
   public aziendeMenu: any[];
   private arrayScrivaniaCompiledUrls: any[];
 
   public showNote: boolean = false;
   public noteText: string = null;
-  private MIN_X_LEFT_SIDE: number = 385;
+  private MIN_X_LEFT_SIDE: number = 420;
   private MIN_X_RIGHT_SIDE: number = 225;
 
   public idAzienda: number = -1;
@@ -66,6 +67,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       if (u) {
         this.loggedUser = u;
         this.loadMenu();
+        this.loadMenuFirma();
         this.setLook();
         //this.loadAziendeMenu();
         
@@ -133,6 +135,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     this.destinatari = null;
     this.destinatariCC = null;
     this.datiDiFlusso = null;
+    this.datiFlussoTooltip = null;
   }
 
   public attivitaClicked(attivitaCliccata: Attivita) {
@@ -159,8 +162,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     if (datiAggiuntiviAttivita.custom_app_4) {
       this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
       if (this.datiDiFlusso.length > MAX_CHARS_100) {
+        this.datiFlussoTooltip = this.datiDiFlusso;
         this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
       }
+      this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
       // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
     }
     this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
@@ -363,8 +368,19 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     
   }
 
+  public loadMenuFirma() {
+    this.alberoFirma = [];
+    const wl = window.location;
+    const out: string = wl.protocol + "//" + wl.hostname + (wl.hostname === "localhost" ? ":" + LOCALHOST_PDD_PORT : ":" + wl.port) + "/Babel/Babel.htm" ;
+    this.loggedUser.getUtente().aziende.forEach(element => {
+      this.alberoFirma.push(new TreeNode(
+        element.nome,
+        null,
+        (onClick) => {this.handleItemClick(out); }));
+    });
+  }
+
   public aziendaChanged(event) {
-    console.log("Azienda arrivata a scrivania: ", event);
     this.idAzienda = event;
   }
 

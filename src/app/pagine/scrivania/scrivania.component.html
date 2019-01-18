@@ -7,7 +7,11 @@
             <button [ngClass]="mostraStorico?'d-hidden':'d-flex'" #btn type="button" pButton (click)="menu.toggle($event)" class="clMenu" iconPos="left" label="Apri">
                 <img src="assets/images/baseline_dashboard_white_48dp.png" width="24px" alt="Apri">
             </button>
-            <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" styleClass="clMenu" (itemClick)="handleItemClick($event)"></p-tieredMenu>
+            <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
+
+            <button [ngClass]="mostraStorico?'d-hidden':'d-flex'" class="ui-button-secondary" #btn type="button" pButton (click)="firmaMenu.toggle($event)" label="Firma">
+            </button>
+            <p-tieredMenu #firmaMenu [model]="alberoFirma" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
             
             <!-- PRENDI -->
             <button [ngClass]="mostraStorico?'d-hidden':'d-flex'" #btn type="button" pButton (click)="azMenu.toggle($event)" class="clMenu"  label="Prendi">
@@ -39,24 +43,27 @@
         <div class="div-info-doc">
             <b>{{oggetto}}</b>
         </div>
-        <p-accordion #accordionDetail>
+        <p-accordion [multiple]="true" #accordionDetail>
             <p-accordionTab header="Dettagli documento">
-                <div *ngIf="mittente || destinatari || destinatariCC || datiDiFlusso" class="row">
-                    <div *ngIf="mittente || destinatari || destinatariCC" class="column">
-                        <ul class="ul-info-doc">
-                            <li *ngIf="mittente"><span class="li-description">Da: </span><span class="li-content">{{mittente}}</span></li>
-                            <li *ngIf="destinatari"><span class="li-content" [innerHTML]="destinatari"></span></li>
-                            <li *ngIf="destinatariCC"><span class="li-content" [innerHTML]="destinatariCC"></span></li>
-                        </ul>
-                    </div>
-                    <div *ngIf="datiDiFlusso" class="column">
-                        <ul class="ul-info-doc">
-                            <li><span class="li-description">Dati di flusso: </span><span class="li-content">{{datiDiFlusso}}</span></li>
-                        </ul>
-                    </div>
+                <div *ngIf="mittente || destinatari || destinatariCC">
+                    <ul class="ul-info-doc">
+                        <li *ngIf="mittente"><span class="li-description">Da: </span><span class="li-content">{{mittente}}</span></li>
+                        <li *ngIf="destinatari"><span class="li-content" [innerHTML]="destinatari"></span></li>
+                        <li *ngIf="destinatariCC"><span class="li-content" [innerHTML]="destinatariCC"></span></li>
+                    </ul>
                 </div>
-                <div *ngIf="!(mittente || destinatari || destinatariCC || datiDiFlusso)" class="text-centered">
+                <div *ngIf="!(mittente || destinatari || destinatariCC)" class="text-centered">
                     Non sono presenti dettagli da visualizzare.
+                </div>
+            </p-accordionTab>
+            <p-accordionTab [selected]="datiDiFlusso" header="Dati di flusso">
+                <div *ngIf="datiDiFlusso" >
+                    <ul class="ul-info-doc">
+                        <li><span pTooltip="{{datiFlussoTooltip}}" [innerHTML]="datiDiFlusso" class="li-content"></span></li>
+                    </ul>
+                </div>
+                <div *ngIf="!datiDiFlusso" class="text-centered">
+                    Non sono presenti dati di flusso da visualizzare.
                 </div>
             </p-accordionTab>
         </p-accordion>
@@ -67,6 +74,7 @@
     </div>
     <div class="d-flex flex-grow-1">
         <div class="preview-inner">
+            <div class="overlapDiv"></div>
             <iframe *ngIf="!noAnteprima" #anteprima id="anteprima" frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen >
             </iframe>
             <div *ngIf="noAnteprima" class="no-anteprima">Anteprima non disponibile.</div>

@@ -12,13 +12,6 @@
     (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
     >
 
-    <ng-template pTemplate="colgroup" let-columns>
-        <colgroup>
-            <col *ngFor="let col of columns">
-        </colgroup>
-    </ng-template>
-
-
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns"  [style.width]="col.width">
