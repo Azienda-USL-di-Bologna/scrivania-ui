@@ -242,8 +242,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       .then(
         data => {
           const arrayMenu: Menu[] = data._embedded.menu;
-          arrayMenu.forEach( elementArray => { 
-            console.log("+ elementArray +", elementArray.descrizione)           
+          arrayMenu.forEach( elementArray => {         
             // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
             // tanto tutto il resto (azienda, idp, ecc...) è identico
             if(elementArray.descrizione===ATTIVITA_STATICHE_DESCRIPTION.scrivania){
