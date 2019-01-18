@@ -5,7 +5,7 @@ import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
-import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT } from "../../../environments/app-constants";
+import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STATICHE_DESCRIPTION } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
 import { Accordion } from "primeng/accordion";
 
@@ -223,8 +223,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   }
 
   handleItemClick(event) {
-    console.log("**** EVENT *****", event);
-    
     window.open(event);
   }
 
@@ -244,11 +242,13 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       .then(
         data => {
           const arrayMenu: Menu[] = data._embedded.menu;
-          arrayMenu.forEach( elementArray => {            
-            if(elementArray.descrizione==="Scrivania"){
-              console.log("elementArray",elementArray)
+          arrayMenu.forEach( elementArray => { 
+            console.log("+ elementArray +", elementArray.descrizione)           
+            // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
+            // tanto tutto il resto (azienda, idp, ecc...) è identico
+            if(elementArray.descrizione===ATTIVITA_STATICHE_DESCRIPTION.scrivania){
               let command = elementArray.compiledUrl
-              command = command.replace("scrivania_local","open_prendone_local")
+              command = command.replace(COMMANDS.scrivania_local,COMMANDS.open_prendone_local)
               this.aziendeMenu.push(new TreeNode(
                 elementArray.idAzienda.nome,
                 null,
@@ -332,13 +332,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   }
 
   public loadAziendeMenu(){
-    console.log("***LOADAZIENDEMENU****");
     if(this.aziendeMenu)
       return;
     
     this.aziendeMenu = [];
     if (this.loggedUser.getUtente().aziende) {
-      console.log("sì ho aziende...");
       this.loggedUser.getUtente().aziende.forEach(element => {
         let command = this.getBabelCommandByAzienda(element.nome);
         this.aziendeMenu.push(new TreeNode(
@@ -347,17 +345,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
           (onclick) => {this.handleItemClick(command)}
         ))
         
-      });
-      console.log("THIS.AZIENDEMENU", this.aziendeMenu);
-      console.log("***YOO***");
-      
+      });      
     }
   }
 
   private getBabelCommandByAzienda(aziendaLabel: string){
-    let urlCommand;
-    console.log("**getBabelCompiledUrlByAzienda()", aziendaLabel);
-    console.log("** this.arrayScrivaniaCompiledUrls", this.arrayScrivaniaCompiledUrls)
     this.arrayScrivaniaCompiledUrls.forEach(map => {
       if(map.get(aziendaLabel)){
         console.log("ritorno questo command", map.get(aziendaLabel));

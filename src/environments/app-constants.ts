@@ -54,6 +54,25 @@ export const ENTITIES = {
     attivitaFatta: "attivitafatta"
 }
 
+export const COMMANDS = {
+    scrivania_local: "scrivania_local",
+    open_prendone_local: "open_prendone_local"
+}
+
+export const ATTIVITA_STATICHE_DESCRIPTION = {
+    scrivania: "Scrivania",
+    elenco_delibere: "Elenco Delibere",
+    nuova_delibera: "Nuova Delibera",
+    elenco_determine: "Elenco Determine",
+    nuova_determina: "Nuova Determina",
+    gipi: "GiPi",
+    elenco_documenti: "Elenco Documenti",
+    nuovo_protocollo_in_entrata_riservato: "Nuovo Protocollo In Entrata Riservato",
+    nuovo_protocollo_in_uscita_riservato: "Nuovo Protocollo In Uscita Riservato",
+    nuovo_protocollo_in_uscita: "Nuovo Protocollo In Uscita",
+    nuovo_protocollo_in_entrata: "Nuovo Protocollo In Entrata",
+}
+
 export const PROJECTIONS = {
     azienda: {
         standardProjections: {
