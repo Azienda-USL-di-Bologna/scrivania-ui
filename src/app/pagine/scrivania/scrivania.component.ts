@@ -5,7 +5,7 @@ import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
-import { PROJECTIONS, MAX_CHARS_100 } from "../../../environments/app-constants";
+import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
 import { Accordion } from "primeng/accordion";
 
@@ -46,6 +46,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   public loggedUser: UtenteUtilities;
   public alberoMenu: any[];
+  public alberoFirma: any[];
 
   public showNote: boolean = false;
   public noteText: string = null;
@@ -64,6 +65,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       if (u) {
         this.loggedUser = u;
         this.loadMenu();
+        this.loadMenuFirma();
         this.setLook();
       }
     }));
@@ -307,8 +309,19 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   }
 
+  public loadMenuFirma() {
+    this.alberoFirma = [];
+    const wl = window.location;
+    const out: string = wl.protocol + "//" + wl.hostname + (wl.hostname === "localhost" ? ":" + LOCALHOST_PDD_PORT : ":" + wl.port) + "/Babel/Babel.htm" ;
+    this.loggedUser.getUtente().aziende.forEach(element => {
+      this.alberoFirma.push(new TreeNode(
+        element.nome,
+        null,
+        (onClick) => {this.handleItemClick(out); }));
+    });
+  }
+
   public aziendaChanged(event) {
-    console.log("Azienda arrivata a scrivania: ", event);
     this.idAzienda = event;
   }
 
