@@ -5,7 +5,7 @@ import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
-import { PROJECTIONS, MAX_CHARS_100 } from "../../../environments/app-constants";
+import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STATICHE_DESCRIPTION } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
 import { Accordion } from "primeng/accordion";
 
@@ -46,6 +46,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   public loggedUser: UtenteUtilities;
   public alberoMenu: any[];
+  public alberoFirma: any[];
+  public aziendeMenu: any[];
+  private arrayScrivaniaCompiledUrls: any[];
 
   public showNote: boolean = false;
   public noteText: string = null;
@@ -64,7 +67,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       if (u) {
         this.loggedUser = u;
         this.loadMenu();
+        this.loadMenuFirma();
         this.setLook();
+        //this.loadAziendeMenu();
+        
       }
     }));
   }
@@ -230,11 +236,24 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
     initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
     const lazyLoadFiltersAndSorts = new FiltersAndSorts();
+    this.arrayScrivaniaCompiledUrls = [];
+    this.aziendeMenu  = [];
     this.scrivaniaService.getData(PROJECTIONS.menu.customProjections.menuWithIdApplicazioneAndIdAziendaAndTransientFields, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
       .then(
         data => {
           const arrayMenu: Menu[] = data._embedded.menu;
-          arrayMenu.forEach( elementArray => {
+          arrayMenu.forEach( elementArray => {         
+            // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
+            // tanto tutto il resto (azienda, idp, ecc...) è identico
+            if(elementArray.descrizione===ATTIVITA_STATICHE_DESCRIPTION.scrivania){
+              let command = elementArray.compiledUrl
+              command = command.replace(COMMANDS.scrivania_local,COMMANDS.open_prendone_local)
+              this.aziendeMenu.push(new TreeNode(
+                elementArray.idAzienda.nome,
+                null,
+                (onclick) => {this.handleItemClick(command)}
+              ))             
+            }
             let found = false;
             for (const elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
               if (elementAlbero.label === elementArray.idApplicazione.nome) {
@@ -305,13 +324,54 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
               }
             }
           });
+          //this.loadAziendeMenu();
         }
       );
 
   }
 
+  public loadAziendeMenu(){
+    if(this.aziendeMenu)
+      return;
+    
+    this.aziendeMenu = [];
+    if (this.loggedUser.getUtente().aziende) {
+      this.loggedUser.getUtente().aziende.forEach(element => {
+        let command = this.getBabelCommandByAzienda(element.nome);
+        this.aziendeMenu.push(new TreeNode(
+          element.nome,
+          null,
+          (onclick) => {this.handleItemClick(command)}
+        ))
+        
+      });      
+    }
+  }
+
+  private getBabelCommandByAzienda(aziendaLabel: string){
+    this.arrayScrivaniaCompiledUrls.forEach(map => {
+      if(map.get(aziendaLabel)){
+        console.log("ritorno questo command", map.get(aziendaLabel));
+        return map.get(aziendaLabel);
+      }
+      
+    });
+    
+  }
+
+  public loadMenuFirma() {
+    this.alberoFirma = [];
+    const wl = window.location;
+    const out: string = wl.protocol + "//" + wl.hostname + (wl.hostname === "localhost" ? ":" + LOCALHOST_PDD_PORT : ":" + wl.port) + "/Babel/Babel.htm" ;
+    this.loggedUser.getUtente().aziende.forEach(element => {
+      this.alberoFirma.push(new TreeNode(
+        element.nome,
+        null,
+        (onClick) => {this.handleItemClick(out); }));
+    });
+  }
+
   public aziendaChanged(event) {
-    console.log("Azienda arrivata a scrivania: ", event);
     this.idAzienda = event;
   }
 

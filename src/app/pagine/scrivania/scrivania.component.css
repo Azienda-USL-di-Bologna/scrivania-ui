@@ -147,6 +147,9 @@
     font-weight: bold;
     padding: 4px 8px;
 }
+:host>>>.clMenuPosition > .ui-tieredmenu{
+    top: 43px !important;
+}
 .clMenu:enabled{
     background-color: #993366 !important; /* #909090  #848484*/
     border-color: #d4d4d4 !important;

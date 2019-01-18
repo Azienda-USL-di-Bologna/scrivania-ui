@@ -11,3 +11,6 @@ body{
     /*background-color: #a0a3af14;*/
     margin: 0;
 }
+body .ui-button:enabled:focus{
+    box-shadow: none;
+}
