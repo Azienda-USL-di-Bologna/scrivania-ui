@@ -38,24 +38,27 @@
         <div class="div-info-doc">
             <b>{{oggetto}}</b>
         </div>
-        <p-accordion #accordionDetail>
+        <p-accordion [multiple]="true" #accordionDetail>
             <p-accordionTab header="Dettagli documento">
-                <div *ngIf="mittente || destinatari || destinatariCC || datiDiFlusso" class="row">
-                    <div *ngIf="mittente || destinatari || destinatariCC" class="column">
-                        <ul class="ul-info-doc">
-                            <li *ngIf="mittente"><span class="li-description">Da: </span><span class="li-content">{{mittente}}</span></li>
-                            <li *ngIf="destinatari"><span class="li-content" [innerHTML]="destinatari"></span></li>
-                            <li *ngIf="destinatariCC"><span class="li-content" [innerHTML]="destinatariCC"></span></li>
-                        </ul>
-                    </div>
-                    <div *ngIf="datiDiFlusso" class="column">
-                        <ul class="ul-info-doc">
-                            <li><span class="li-description">Dati di flusso: </span><span class="li-content">{{datiDiFlusso}}</span></li>
-                        </ul>
-                    </div>
+                <div *ngIf="mittente || destinatari || destinatariCC">
+                    <ul class="ul-info-doc">
+                        <li *ngIf="mittente"><span class="li-description">Da: </span><span class="li-content">{{mittente}}</span></li>
+                        <li *ngIf="destinatari"><span class="li-content" [innerHTML]="destinatari"></span></li>
+                        <li *ngIf="destinatariCC"><span class="li-content" [innerHTML]="destinatariCC"></span></li>
+                    </ul>
                 </div>
-                <div *ngIf="!(mittente || destinatari || destinatariCC || datiDiFlusso)" class="text-centered">
+                <div *ngIf="!(mittente || destinatari || destinatariCC)" class="text-centered">
                     Non sono presenti dettagli da visualizzare.
+                </div>
+            </p-accordionTab>
+            <p-accordionTab [selected]="datiDiFlusso" header="Dati di flusso">
+                <div *ngIf="datiDiFlusso" >
+                    <ul class="ul-info-doc">
+                        <li><span pTooltip="{{datiFlussoTooltip}}" [innerHTML]="datiDiFlusso" class="li-content"></span></li>
+                    </ul>
+                </div>
+                <div *ngIf="!datiDiFlusso" class="text-centered">
+                    Non sono presenti dati di flusso da visualizzare.
                 </div>
             </p-accordionTab>
         </p-accordion>
