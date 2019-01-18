@@ -5,5 +5,6 @@ export const loginModuleConfig: NTJWTModuleConfig = {
     loginURL: '' /*getInternautaUrl(BaseUrlType.Login)*/,
     loginComponentRoute: LOGIN_ROUTE,
     homeComponentRoute: HOME_ROUTE,
-    localhostPort: LOCALHOST_PORT
+    localhostPort: LOCALHOST_PORT,
+    applicazione: "scrivania"
 };
