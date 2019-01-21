@@ -69,8 +69,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         this.loadMenu();
         this.loadMenuFirma();
         this.setLook();
-        //this.loadAziendeMenu();
-        
+        // this.loadAziendeMenu();
       }
     }));
   }
