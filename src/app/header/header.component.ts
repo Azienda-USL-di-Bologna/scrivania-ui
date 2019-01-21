@@ -44,16 +44,18 @@ export class HeaderComponent implements OnInit {
 
   onLogout() {
 
-    this.loginService.clearSession();
     if (!this.loginService.isUserImpersonated) {
-      if (this.loginService.loginMethod !== "sso") {
+      if (this.loginService.loginMethod !== LoginType.SSO) {
         console.log(this.loginService.loginMethod);
+        this.loginService.clearSession();
         window.location.reload();
       } else {
         // prende l'url di logout dall'azienda dell'utente loggato
+        this.loginService.clearSession();
         window.location.href = this.logoutUrlTemplate.replace("[return-url]", window.location.href);
       }
     } else {
+      this.loginService.clearSession();
       window.close();
     }
   }
@@ -67,7 +69,7 @@ export class HeaderComponent implements OnInit {
 
       let user: string;
       let realUser: string;
-      if (this.loginService.loginMethod === "sso") {
+      if (this.loginService.loginMethod === LoginType.SSO) {
         user = utente.idPersona.codiceFiscale;
         realUser = this.utenteConnesso.getUtente().idPersona.codiceFiscale;
       } else {
