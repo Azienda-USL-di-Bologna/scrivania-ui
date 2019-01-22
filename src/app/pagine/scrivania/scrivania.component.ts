@@ -141,7 +141,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     this.clearAccordionDetailFields();
     this.attivitaSelezionata = attivitaCliccata;
     this.oggetto = this.attivitaSelezionata.oggetto;
-    const datiAggiuntiviAttivita: any = JSON.parse(this.attivitaSelezionata.datiAggiuntivi);
+    const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
     this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
     let destinatariA, destinatariCC: string;
     if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
@@ -241,17 +241,17 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       .then(
         data => {
           const arrayMenu: Menu[] = data._embedded.menu;
-          arrayMenu.forEach( elementArray => {         
+          arrayMenu.forEach( elementArray => {
             // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
             // tanto tutto il resto (azienda, idp, ecc...) è identico
-            if(elementArray.descrizione===ATTIVITA_STATICHE_DESCRIPTION.scrivania){
+            if (elementArray.descrizione === ATTIVITA_STATICHE_DESCRIPTION.scrivania){
               let command = elementArray.compiledUrl
-              command = command.replace(COMMANDS.scrivania_local,COMMANDS.open_prendone_local)
+              command = command.replace(COMMANDS.scrivania_local, COMMANDS.open_prendone_local)
               this.aziendeMenu.push(new TreeNode(
                 elementArray.idAzienda.nome,
                 null,
                 (onclick) => {this.handleItemClick(command)}
-              ))             
+              ))
             }
             let found = false;
             for (const elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
@@ -323,16 +323,16 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
               }
             }
           });
-          //this.loadAziendeMenu();
+          // this.loadAziendeMenu();
         }
       );
 
   }
 
   public loadAziendeMenu(){
-    if(this.aziendeMenu)
+    if (this.aziendeMenu)
       return;
-    
+
     this.aziendeMenu = [];
     if (this.loggedUser.getUtente().aziende) {
       this.loggedUser.getUtente().aziende.forEach(element => {
@@ -342,20 +342,20 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
           null,
           (onclick) => {this.handleItemClick(command)}
         ))
-        
-      });      
+
+      });
     }
   }
 
   private getBabelCommandByAzienda(aziendaLabel: string){
     this.arrayScrivaniaCompiledUrls.forEach(map => {
-      if(map.get(aziendaLabel)){
+      if (map.get(aziendaLabel)){
         console.log("ritorno questo command", map.get(aziendaLabel));
         return map.get(aziendaLabel);
       }
-      
+
     });
-    
+
   }
 
   public loadMenuFirma() {

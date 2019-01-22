@@ -262,6 +262,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, this.initialFiltersAndSorts, this.lazyLoadFiltersAndSorts)
       .then(
         data => {
+
           this.attivita = undefined;
           this.totalRecords = 0;
           if (data && data._embedded && data.page) {
@@ -270,6 +271,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             /* console.log("ATTIVITA: ", this.attivita); */
             // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
             this.attivita.forEach(a => {console.log(a.tipo, a.priorita);
+              a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);
+
               if (a.tipo === "notifica") {
                 a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
               } else if (!a.priorita || a.priorita === 3) {
@@ -353,4 +356,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
+  prova(row) {
+    console.log(row);
+    console.log(typeof row);
+  }
 }
