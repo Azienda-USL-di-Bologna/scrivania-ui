@@ -90,7 +90,8 @@
             </td>
 
             <td [style.width]="cols[8].width" [style.minWidth]="cols[8].minWidth" class="p0">
-                <img *ngIf="attivita.datiAggiuntivi.custom_app_3 === '0'" src="assets/images/baseline-not_interested-24px.svg" alt="prendi" class="img-table">
+                <img *ngIf="attivita.datiAggiuntivi.custom_app_3 === '0'" src="assets/images/baseline-not_interested-24px.svg" alt="prendi" class="img-table"
+                    pTooltip="Sul documento mancano alcuni dati che devono essere inseriti prima di poter procedere.">
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->
             </td>
             <td [style.width]="cols[9].width" [style.minWidth]="cols[9].minWidth" class="p0">
