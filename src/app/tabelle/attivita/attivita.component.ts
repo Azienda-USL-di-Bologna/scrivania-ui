@@ -231,7 +231,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const functionName = "buildInitialFiltersAndSorts";
     const initialFiltersAndSorts = new FiltersAndSorts();
-    initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.desc));
+    initialFiltersAndSorts.addSort(new SortDefinition("data", SORT_MODES.desc));
     const filterIdPersona: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
     initialFiltersAndSorts.addFilter(filterIdPersona);
     if (this._idAzienda !== -1) { // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
