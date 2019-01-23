@@ -109,7 +109,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         minWidth: "200px"
       },
       {
-        field: "dataInserimentoRiga",
+        field: "data",
         header: "Data",
         filterMatchMode: FILTER_TYPES.not_string.equals,
         fieldType: "DateTime",

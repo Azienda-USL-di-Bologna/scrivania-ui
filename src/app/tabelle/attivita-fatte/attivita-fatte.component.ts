@@ -69,7 +69,7 @@ export class AttivitaFatteComponent implements OnInit {
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
     },
     {
-      field: "dataInserimentoRiga",
+      field: "data",
       header: "Svolta il",
       filterMatchMode: FILTER_TYPES.not_string.equals,
       fieldType: "DateTime",
