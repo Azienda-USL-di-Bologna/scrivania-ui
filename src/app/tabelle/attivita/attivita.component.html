@@ -81,7 +81,7 @@
             <td [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.idApplicazione.nome}}</td>
             <td [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.provenienza}}</td>
             <td class="column-class" [style.minWidth]="cols[4].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.oggetto}}</td>
-            <td [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
+            <td [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.data | date:'dd/MM/yyyy'}}</td>
             <td [style.width]="cols[6].width" [style.minWidth]="cols[6].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.descrizione}}</td>
             <td [style.width]="cols[7].width" [style.minWidth]="cols[7].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">
                 <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' &&
