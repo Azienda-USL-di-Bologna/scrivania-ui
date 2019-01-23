@@ -52,12 +52,17 @@ export const ENTITIES = {
     applicazione: "applicazione",
     menu: "menu",
     attivitaFatta: "attivitafatta"
-}
+};
+
+export const CONTROLLERS_ENDPOINT = {
+    FIRMONE_URLS: "/getFirmoneUrls"
+};
 
 export const COMMANDS = {
     scrivania_local: "scrivania_local",
-    open_prendone_local: "open_prendone_local"
-}
+    open_prendone_local: "open_prendone_local",
+    open_firmone_local: "open_firmone_local"
+};
 
 export const ATTIVITA_STATICHE_DESCRIPTION = {
     scrivania: "Scrivania",

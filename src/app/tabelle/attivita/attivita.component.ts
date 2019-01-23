@@ -270,7 +270,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             this.totalRecords = data.page.totalElements;
             /* console.log("ATTIVITA: ", this.attivita); */
             // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
-            this.attivita.forEach(a => {console.log(a.tipo, a.priorita);
+            this.attivita.forEach(a => {
               a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);
 
               if (a.tipo === "notifica") {

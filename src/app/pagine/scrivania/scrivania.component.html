@@ -9,7 +9,7 @@
             </button>
             <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
 
-            <button [ngClass]="mostraStorico?'d-hidden':'d-flex'" class="ui-button-secondary" #btn type="button" pButton (click)="firmaMenu.toggle($event)" label="Firma">
+            <button [ngClass]="mostraStorico || alberoMenu.length === 0?'d-hidden':'d-flex'" class="ui-button-secondary" #btn type="button" pButton (click)="firmaMenu.toggle($event)" label="Firma">
             </button>
             <p-tieredMenu #firmaMenu [model]="alberoFirma" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
             

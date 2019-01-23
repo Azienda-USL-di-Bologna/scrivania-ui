@@ -52,7 +52,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   public showNote: boolean = false;
   public noteText: string = null;
-  private MIN_X_LEFT_SIDE: number = 420;
+  private MIN_X_LEFT_SIDE: number = 570;
   private MIN_X_RIGHT_SIDE: number = 225;
 
   public idAzienda: number = -1;
@@ -67,11 +67,15 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       if (u) {
         this.loggedUser = u;
         this.loadMenu();
-        this.loadMenuFirma();
         this.setLook();
         // this.loadAziendeMenu();
       }
     }));
+    this.scrivaniaService.getUrlsFirmone().subscribe(data => {
+      if (data.size > 0) {
+        this.loadMenuFirma(data.aziende);
+      }
+    });
   }
 
   private setLook(): void {
@@ -358,15 +362,13 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   }
 
-  public loadMenuFirma() {
+  public loadMenuFirma(aziende) {
     this.alberoFirma = [];
-    const wl = window.location;
-    const out: string = wl.protocol + "//" + wl.hostname + (wl.hostname === "localhost" ? ":" + LOCALHOST_PDD_PORT : ":" + wl.port) + "/Babel/Babel.htm" ;
-    this.loggedUser.getUtente().aziende.forEach(element => {
+    aziende.forEach(element => {
       this.alberoFirma.push(new TreeNode(
         element.nome,
         null,
-        (onClick) => {this.handleItemClick(out); }));
+        (onClick) => {this.handleItemClick(element.url); }));
     });
   }
 
