@@ -70,9 +70,12 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       if (u) {
         if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
           this.loggedUser = u;
-          this.impostazioniVisualizzazione = JSON.parse(this.loggedUser.getImpostazioniApplicazione().impostazioniVisualizzazione);
+          if (this.loggedUser.getImpostazioniApplicazione()) {
+            this.impostazioniVisualizzazione = JSON.parse(this.loggedUser.getImpostazioniApplicazione().impostazioniVisualizzazione);
+          } else {
+            this.impostazioniVisualizzazione = {};
+          }
           this.loadMenu();
-          this.loadMenuFirma();
           this.setLook();
         } else {
           this.loggedUser = u;
@@ -93,9 +96,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   private setLook(): void {
     this.setResponsiveSlider();
 
-    // const impostazioniVisualizzazione = JSON.parse(this.loggedUser.getImpostazioniApplicazione().impostazioniVisualizzazione);
-    this.rightSide.nativeElement.style.width = this.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
-    this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
+    if (this.impostazioniVisualizzazione) {
+      this.rightSide.nativeElement.style.width = this.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
+      this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
+    }
   }
 
   private setResponsiveSlider(): void {
