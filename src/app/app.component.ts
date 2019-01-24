@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     console.log("inizio onInit() appComponent");
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
+    this.loginService.setImpostazioniApplicazioniUrl(getInternautaUrl(BaseUrlType.ConfigurazioneImpostazioniApplicazioni));
 
     this.route.queryParams.subscribe((params: Params) => {
       console.log("dentro subscribe, ", params.hasOwnProperty("impersonatedUser"));

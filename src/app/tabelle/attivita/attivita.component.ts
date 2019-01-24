@@ -58,9 +58,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       console.log("attivita onInit()");
       this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
         if (u) {
-          this.loggedUser = u;
-          /* console.log("faccio loadData"); */
-          this.loadData(null);
+          if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
+            this.loggedUser = u;
+            /* console.log("faccio loadData"); */
+            this.loadData(null);
+          } else {
+            this.loggedUser = u;
+          }
         }
         // console.log("faccio il load data di nuovo");
       }));

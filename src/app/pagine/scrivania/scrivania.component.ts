@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList, OnDestroy, HostListener } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Attivita, Menu } from "@bds/ng-internauta-model";
+import { Attivita, Menu, ImpostazioniApplicazioni } from "@bds/ng-internauta-model";
 import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
@@ -8,6 +8,7 @@ import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-c
 import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STATICHE_DESCRIPTION } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
 import { Accordion } from "primeng/accordion";
+import { applicationCustiomization } from "src/environments/application_customization";
 
 @Component({
   selector: "app-scrivania",
@@ -45,6 +46,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public finestraScelta: any;
 
   public loggedUser: UtenteUtilities;
+  public impostazioniVisualizzazione: any;
   public alberoMenu: any[];
   public alberoFirma: any[] = [];
   public aziendeMenu: any[];
@@ -66,9 +68,15 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     // imposto l'utente loggato nell'apposita variabile
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       if (u) {
-        this.loggedUser = u;
-        this.loadMenu();
-        this.setLook();
+        if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
+          this.loggedUser = u;
+          this.impostazioniVisualizzazione = JSON.parse(this.loggedUser.getImpostazioniApplicazione().impostazioniVisualizzazione);
+          this.loadMenu();
+          this.loadMenuFirma();
+          this.setLook();
+        } else {
+          this.loggedUser = u;
+        }
         // this.loadAziendeMenu();
       }
     }));
@@ -84,6 +92,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   private setLook(): void {
     this.setResponsiveSlider();
+
+    // const impostazioniVisualizzazione = JSON.parse(this.loggedUser.getImpostazioniApplicazione().impostazioniVisualizzazione);
+    this.rightSide.nativeElement.style.width = this.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
+    this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
   }
 
   private setResponsiveSlider(): void {
@@ -93,6 +105,13 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       const totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
       document.onmouseup = function() {
         document.onmousemove = null;
+      };
+      that.slider.nativeElement.onmouseup = function() {
+        console.log("that.slider.nativeElement.onmouseup");
+        that.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] = parseInt(that.rightSide.nativeElement.style.width, 10);
+        // const impostazioni: ImpostazioniApplicazioni = that.loggedUser.getImpostazioniApplicazione();
+        // impostazioni.impostazioniVisualizzazione = JSON.stringify(that.impostazioniVisualizzazione);
+        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniVisualizzazione);
       };
       document.onmousemove = function(e: MouseEvent) {
         e.preventDefault();

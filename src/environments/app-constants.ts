@@ -23,12 +23,16 @@ export const MAX_CHARS_100 = 100;
 export enum BaseUrlType {
     Scrivania,
     Baborg,
+    Configurazione,
+    ConfigurazioneImpostazioniApplicazioni,
     Login
 }
 
 export const BaseUrls: Map<BaseUrlType, string> = new Map<BaseUrlType, string>([
     [BaseUrlType.Scrivania,  "/internauta-api/resources/scrivania"],
     [BaseUrlType.Baborg, "/internauta-api/resources/baborg"],
+    [BaseUrlType.Configurazione, "/internauta-api/resources/configurazione"],
+    [BaseUrlType.ConfigurazioneImpostazioniApplicazioni, "/internauta-api/resources/configurazione/custom/setImpostazioniApplicazioni"],
     [BaseUrlType.Login, "/internauta-api/login"]
 ]);
 
