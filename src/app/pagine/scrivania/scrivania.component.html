@@ -14,7 +14,7 @@
                 </button>
             </a>
 
-            <button [ngClass]="{'d-hidden': mostraStorico || !mostraFirma || alberoFirma.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary" #btn type="button" pButton (click)="firmaMenu.toggle($event)" label="Firma">
+            <button [ngClass]="{'d-hidden': mostraStorico || alberoFirma.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary" #btn type="button" pButton (click)="firmaMenu.toggle($event)" label="Firma">
             </button>
             <p-tieredMenu #firmaMenu [model]="alberoFirma" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
             
