@@ -9,7 +9,7 @@
             </button>
             <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
 
-            <a target="_blank" href="{{urlFirmone}}" [ngClass]="{'pr-8':true, 'd-hidden': mostraStorico || urlFirmone === '', 'd-flex': !mostraStorico}">
+            <a target="_blank" href="{{urlFirmone}}" [ngClass]="{'pr-8':true, 'd-hidden': mostraStorico || urlFirmone === '#', 'd-flex': !mostraStorico}">
                 <button class="ui-button-secondary" type="button" pButton label="Firma">
                 </button>
             </a>
