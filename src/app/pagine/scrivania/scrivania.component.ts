@@ -46,8 +46,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   public loggedUser: UtenteUtilities;
   public alberoMenu: any[];
-  public alberoFirma: any[];
+  public alberoFirma: any[] = [];
   public aziendeMenu: any[];
+  public urlFirmone: string = "#";
   private arrayScrivaniaCompiledUrls: any[];
 
   public showNote: boolean = false;
@@ -73,6 +74,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     }));
     this.scrivaniaService.getUrlsFirmone().subscribe(data => {
       if (data.size > 0) {
+        if (data.size === 1) {
+          this.urlFirmone = data.aziende[0].url;
+        }
         this.loadMenuFirma(data.aziende);
       }
     });
@@ -363,7 +367,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   }
 
   public loadMenuFirma(aziende) {
-    this.alberoFirma = [];
     aziende.forEach(element => {
       this.alberoFirma.push(new TreeNode(
         element.nome,
