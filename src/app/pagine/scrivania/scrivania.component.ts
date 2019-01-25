@@ -419,6 +419,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  prova(){
+    console.log("aaaaaaaaaaaaaaaaaaaaa")
+  }
 }
 
 class TreeNode {
