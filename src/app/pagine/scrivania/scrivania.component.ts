@@ -109,14 +109,20 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       const totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
       document.onmouseup = function() {
         document.onmousemove = null;
-      };
-      that.slider.nativeElement.onmouseup = function() {
         console.log("that.slider.nativeElement.onmouseup");
         that.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] = parseInt(that.rightSide.nativeElement.style.width, 10);
         // const impostazioni: ImpostazioniApplicazioni = that.loggedUser.getImpostazioniApplicazione();
         // impostazioni.impostazioniVisualizzazione = JSON.stringify(that.impostazioniVisualizzazione);
         that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniVisualizzazione);
+        document.onmouseup = null;
       };
+      // that.slider.nativeElement.onmouseup = function() {
+      //   console.log("that.slider.nativeElement.onmouseup");
+      //   that.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] = parseInt(that.rightSide.nativeElement.style.width, 10);
+      //   // const impostazioni: ImpostazioniApplicazioni = that.loggedUser.getImpostazioniApplicazione();
+      //   // impostazioni.impostazioniVisualizzazione = JSON.stringify(that.impostazioniVisualizzazione);
+      //   that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniVisualizzazione);
+      // };
       document.onmousemove = function(e: MouseEvent) {
         e.preventDefault();
         const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia 32px che sfasano il conteggio
