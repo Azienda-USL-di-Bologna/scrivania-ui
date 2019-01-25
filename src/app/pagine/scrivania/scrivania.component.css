@@ -49,7 +49,7 @@
     left: 0;
     right: 0;
 }
-:host>>> .ui-table, 
+:host>>> .ui-table,
 :host>>> .ui-table-scrollable-wrapper,
 :host>>> .ui-table-scrollable-view{
     height: 100%;
@@ -70,14 +70,24 @@
 }
 .preview-inner{
     display: flex;
+    position: relative;
     flex-grow: 1;
     justify-content: center;
     align-items: center;
     overflow-y: auto;
 }
+.overlapDiv{
+    position: absolute;
+    top: 0;
+    bottom: 15px;
+    left: 0;
+    right: 15px;
+    z-index: 100;
+}
 .preview-inner > iframe{
     height: 100%;
     width: 100%;
+    z-index: 99;
 }
 .ul-info-doc{
     list-style: none;
@@ -114,7 +124,7 @@
 
 .width100x100 {
     width: 100% !important;
-} 
+}
 
 .mt16 {
     margin-top: 16px;
@@ -136,6 +146,9 @@
     /* display: flex; */
     font-weight: bold;
     padding: 4px 8px;
+}
+:host>>>.clMenuPosition > .ui-tieredmenu{
+    top: 43px !important;
 }
 .clMenu:enabled{
     background-color: #993366 !important; /* #909090  #848484*/
@@ -234,4 +247,16 @@
 }
 .overflow-y-a{
     overflow-y: auto;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+}
+
+::ng-deep .ui-tooltip {
+    max-width: 20.5em;
 }

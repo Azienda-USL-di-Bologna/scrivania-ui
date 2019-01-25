@@ -1,8 +1,9 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild } from "@angular/core";
 import { FiltersAndSorts, FilterDefinition, FILTER_TYPES, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
 import {PROJECTIONS, AFFERENZA_STRUTTURA} from "../../../environments/app-constants";
 import { CambioUtenteService } from "./cambio-utente.service";
 import { Persona, Utente } from "@bds/ng-internauta-model";
+import { AutoComplete } from "primeng/autocomplete";
 
 @Component({
   selector: "app-cambio-utente",
@@ -20,6 +21,7 @@ export class CambioUtenteComponent implements OnInit {
   // cambioUtenteConfirmVisible: boolean = false;
   initialFilter: FiltersAndSorts;
 
+  @ViewChild("autoComplete") private autoComplete: AutoComplete;
   @Output("onUtenteSelectedEmitter") public onUtenteSelectedEmitter: EventEmitter<Utente> = new EventEmitter<Utente>();
 
   ngOnInit() {
@@ -69,7 +71,6 @@ export class CambioUtenteComponent implements OnInit {
   }
 
   onUtenteSelected(selected: Utente) {
-    
     if (selected.id === null) { return; }
      this.selectedPersona = selected;
     // this.cambioUtenteConfirmVisible = true;
@@ -78,7 +79,11 @@ export class CambioUtenteComponent implements OnInit {
   onUtenteSelectionConfirmed() {
     // console.log("onUtenteSelectionConfirmed()");
     // this.cambioUtenteConfirmVisible = false;
-    this.onUtenteSelectedEmitter.emit(this.selectedPersona);
+    if ( this.autoComplete.value !== "" && this.autoComplete.value !== null ) {
+      this.onUtenteSelectedEmitter.emit(this.selectedPersona);
+    }
   }
-
+  onKeyTabPressed(event: any) {
+    event.preventDefault();
+  }
 }

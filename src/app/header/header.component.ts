@@ -27,7 +27,7 @@ export class HeaderComponent implements OnInit {
 
   onCambioUtenteClick() {
     console.log("header onCambioUtenteClick()");
-    
+
     this.cambioUtentePopupVisibile = true;
   }
 
@@ -43,35 +43,46 @@ export class HeaderComponent implements OnInit {
   }
 
   onLogout() {
-    const loginMethod = sessionStorage.getItem("loginMethod");
-
-    this.loginService.clearSession();
 
     if (!this.loginService.isUserImpersonated) {
-      if (loginMethod !== "sso") {
-        console.log(loginMethod);
+      if (this.loginService.loginMethod !== LoginType.SSO) {
+        console.log(this.loginService.loginMethod);
+        this.loginService.clearSession();
+        window.location.reload();
       } else {
         // prende l'url di logout dall'azienda dell'utente loggato
+        this.loginService.clearSession();
         window.location.href = this.logoutUrlTemplate.replace("[return-url]", window.location.href);
       }
     } else {
+      this.loginService.clearSession();
       window.close();
     }
   }
 
   onCambioUtente(utente: Utente) {
-    console.log("header onCambioUtente")
+    console.log("header onCambioUtente");
     this.cambioUtentePopupVisibile = false;
 
     if (utente) {
-      let url: string = '';
+      let url: string = "''";
 
-       if (window.location.href.indexOf('?') >= 0)      
-         url = window.location.href.toString() + '&impersonatedUser=' + utente.idPersona.codiceFiscale;
-       else
-         url = window.location.href.toString() + '?impersonatedUser=' + utente.idPersona.codiceFiscale;
+      let user: string;
+      let realUser: string;
+      if (this.loginService.loginMethod === LoginType.SSO) {
+        user = utente.idPersona.codiceFiscale;
+        realUser = this.utenteConnesso.getUtente().idPersona.codiceFiscale;
+      } else {
+        user = utente.username;
+        realUser = this.utenteConnesso.getUtente().username;
+      }
 
-       window.open(url, '_blank');
-    }    
+      if (window.location.href.indexOf("?") >= 0) {
+        url = window.location.href.toString() + "&impersonatedUser=" + user + "&realUser=" + realUser;
+      } else {
+        url = window.location.href.toString() + "?impersonatedUser=" + user + "&realUser=" + realUser;
+      }
+      window.open(url, "_blank");
+    }
   }
 }

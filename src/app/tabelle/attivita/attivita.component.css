@@ -24,3 +24,9 @@
 :host>>> .ui-table .ui-table-tbody > tr > td {
     padding: 10px;
 }
+.column-class{
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+}

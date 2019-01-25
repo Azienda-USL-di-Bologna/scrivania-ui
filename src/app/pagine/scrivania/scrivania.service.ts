@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { DatePipe } from "@angular/common";
 import { Attivita } from "@bds/ng-internauta-model";
 import { HttpAbstractService } from "@bds/nt-communicator";
-import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType } from "../../../environments/app-constants";
+import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType, COMMANDS, CONTROLLERS_ENDPOINT } from "../../../environments/app-constants";
 import { Observable, Subscriber } from "rxjs";
 import { NtJwtLoginService } from "@bds/nt-jwt-login";
 
@@ -72,5 +72,14 @@ export class ScrivaniaService extends HttpAbstractService {
       });
 
        // return this.http.get<any>(url);
+  }
+
+
+  public getUrlsFirmone(): Observable<any> {
+    const url: string = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.FIRMONE_URLS;
+    return this.http.get(url);
+    /* return new Observable((observer: Subscriber<any>) => {
+        // return this.http.get<any>(url);
+    }); */
   }
 }

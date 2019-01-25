@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit, OnDestroy, Input } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
@@ -9,6 +9,7 @@ import { Attivita, Utente } from "@bds/ng-internauta-model";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
+import { Calendar } from "primeng/calendar";
 @Component({
   selector: "app-attivita",
   templateUrl: "./attivita.component.html",
@@ -48,6 +49,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
   @ViewChild("dt") private dataTable: Table;
+  @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
 
   constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService) { }
 
@@ -56,9 +58,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       console.log("attivita onInit()");
       this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
         if (u) {
-          this.loggedUser = u;
-          console.log("faccio loadData");
-          this.loadData(null);
+          if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
+            this.loggedUser = u;
+            /* console.log("faccio loadData"); */
+            this.loadData(null);
+          } else {
+            this.loggedUser = u;
+          }
         }
         // console.log("faccio il load data di nuovo");
       }));
@@ -107,7 +113,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         minWidth: "200px"
       },
       {
-        field: "dataInserimentoRiga",
+        field: "data",
         header: "Data",
         filterMatchMode: FILTER_TYPES.not_string.equals,
         fieldType: "DateTime",
@@ -144,6 +150,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         minWidth: "30px"
       },
     ];
+    const that = this;
+    window.addEventListener("resize", function(event) {
+      const bodyTable = document.getElementsByClassName("ui-table-scrollable-body")[0] as HTMLElement;
+      bodyTable.style.paddingBottom = "1px";
+      bodyTable.style.paddingBottom = "1px";
+    });
   }
 
   public attivitaEmitterHandler() {
@@ -223,7 +235,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const functionName = "buildInitialFiltersAndSorts";
     const initialFiltersAndSorts = new FiltersAndSorts();
-    initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.desc));
+    initialFiltersAndSorts.addSort(new SortDefinition("data", SORT_MODES.desc));
     const filterIdPersona: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
     initialFiltersAndSorts.addFilter(filterIdPersona);
     if (this._idAzienda !== -1) { // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
@@ -237,8 +249,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
 
   private loadData(event: LazyLoadEvent) {
-    console.log("TOKEN: ", this.loginService.token);
-    console.log("UTENTE: ", this.loggedUser);
+    /* console.log("TOKEN: ", this.loginService.token);
+    console.log("UTENTE: ", this.loggedUser); */
     this.loading = true;
     const functionName = "loadData";
     // console.log(this.componentDescription, functionName, "event: ", event);
@@ -254,14 +266,17 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, this.initialFiltersAndSorts, this.lazyLoadFiltersAndSorts)
       .then(
         data => {
+
           this.attivita = undefined;
           this.totalRecords = 0;
           if (data && data._embedded && data.page) {
             this.attivita = <Attivita[]>data._embedded.attivita;
             this.totalRecords = data.page.totalElements;
-            console.log("ATTIVITA: ", this.attivita);
+            /* console.log("ATTIVITA: ", this.attivita); */
             // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
-            this.attivita.forEach(a => {console.log(a.tipo, a.priorita);
+            this.attivita.forEach(a => {
+              a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);
+
               if (a.tipo === "notifica") {
                 a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
               } else if (!a.priorita || a.priorita === 3) {
@@ -287,6 +302,35 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       window.open(compiledUrlsJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
     }
 
+  }
+
+  public onCalendarAction(event: any, field: string, action: string) {
+    let calSel: Calendar = null;
+    switch (action) {
+      case "today":
+        calSel = this._calGen.find(e => e.inputId === "CalInput_" + field);
+        if (calSel) {
+          calSel.overlayVisible = false;
+        }
+        break;
+
+      case "clear":
+        this.dataTable.filter(null, field, null);
+        break;
+
+      case "select":
+        if (this._calGen) {
+          calSel = this._calGen.find(a => a.inputId === "CalInput_" + field);
+          if (calSel && this.dataRange && this.dataRange[field].length === 2
+            && this.dataRange[field][0] && this.dataRange[field][1]) {
+            calSel.overlayVisible = false;
+          }
+        }
+
+        const value = this.dataRange[field];
+        this.dataTable.filter(value, field, null);
+        break;
+    }
   }
 
   private onNoteClick(attivita: any) {
@@ -316,4 +360,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
+  prova(row) {
+    console.log(row);
+    console.log(typeof row);
+  }
 }

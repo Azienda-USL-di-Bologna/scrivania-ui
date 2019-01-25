@@ -12,13 +12,6 @@
     (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
     >
 
-    <ng-template pTemplate="colgroup" let-columns>
-        <colgroup>
-            <col *ngFor="let col of columns">
-        </colgroup>
-    </ng-template>
-
-
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns"  [style.width]="col.width">
@@ -53,7 +46,7 @@
             <td [style.width]="cols[2].width" class="column-class">{{attivita.idApplicazione.nome}}</td>
             <td [style.width]="cols[3].width" class="column-class">{{attivita.provenienza}}</td>
             <td class="column-class">{{attivita.oggetto}}</td>
-            <td [style.width]="cols[5].width" class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
+            <td [style.width]="cols[5].width" class="column-class">{{attivita.data | date:'dd/MM/yyyy'}}</td>
             <td [style.width]="cols[6].width" class="column-class">{{attivita.descrizione}}</td>
 
             <td [style.width]="cols[7].width" class="p0">
