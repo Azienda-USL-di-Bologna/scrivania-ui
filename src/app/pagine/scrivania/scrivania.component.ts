@@ -7,7 +7,6 @@ import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
 import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STATICHE_DESCRIPTION } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
-import { Accordion } from "primeng/accordion";
 import { applicationCustiomization } from "src/environments/application_customization";
 
 @Component({
@@ -281,14 +280,13 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
           arrayMenu.forEach( elementArray => {
             // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
             // tanto tutto il resto (azienda, idp, ecc...) è identico
-            if (elementArray.descrizione === ATTIVITA_STATICHE_DESCRIPTION.scrivania){
-              let command = elementArray.compiledUrl
-              command = command.replace(COMMANDS.scrivania_local, COMMANDS.open_prendone_local)
+            if (elementArray.descrizione === ATTIVITA_STATICHE_DESCRIPTION.scrivania) {
+              let command = elementArray.compiledUrl;
+              command = command.replace(COMMANDS.scrivania_local, COMMANDS.open_prendone_local);
               this.aziendeMenu.push(new TreeNode(
                 elementArray.idAzienda.nome,
                 null,
-                (onclick) => {this.handleItemClick(command)}
-              ))
+                (onclick) => {this.handleItemClick(command); }));
             }
             let found = false;
             for (const elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
@@ -318,7 +316,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                         null,
                         (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                         )],
-                      null
+                      (onclick) => {this.doNothingNodeClick(); }
                     ));
                     break;
                   } else {
@@ -343,9 +341,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                       null,
                       (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                     )],
-                    null
+                    (onclick) => {this.doNothingNodeClick(); }
                   )],
-                  null
+                  (onclick) => {this.doNothingNodeClick(); }
                 ));
               } else {
                 this.alberoMenu.push(new TreeNode(
@@ -355,7 +353,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                     null,
                     (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                   )],
-                  null
+                  (onclick) => {this.doNothingNodeClick(); }
                 ));
               }
             }
@@ -366,27 +364,25 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   }
 
-  public loadAziendeMenu(){
-    if (this.aziendeMenu)
+  public loadAziendeMenu() {
+    if (this.aziendeMenu) {
       return;
-
+    }
     this.aziendeMenu = [];
     if (this.loggedUser.getUtente().aziende) {
       this.loggedUser.getUtente().aziende.forEach(element => {
-        let command = this.getBabelCommandByAzienda(element.nome);
+        const command = this.getBabelCommandByAzienda(element.nome);
         this.aziendeMenu.push(new TreeNode(
           element.nome,
           null,
-          (onclick) => {this.handleItemClick(command)}
-        ))
-
+          (onclick) => { this.handleItemClick(command); }));
       });
     }
   }
 
-  private getBabelCommandByAzienda(aziendaLabel: string){
+  private getBabelCommandByAzienda(aziendaLabel: string) {
     this.arrayScrivaniaCompiledUrls.forEach(map => {
-      if (map.get(aziendaLabel)){
+      if (map.get(aziendaLabel)) {
         console.log("ritorno questo command", map.get(aziendaLabel));
         return map.get(aziendaLabel);
       }
@@ -419,9 +415,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  prova(){
-    console.log("aaaaaaaaaaaaaaaaaaaaa")
+  /* Metodo agganciato ad ogni nodo del menu (non alle foglie) per evitare che si chiuda al click */
+  doNothingNodeClick() {
+    event.stopPropagation();
   }
 }
 
