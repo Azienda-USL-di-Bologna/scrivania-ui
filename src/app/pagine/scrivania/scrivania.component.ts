@@ -7,7 +7,7 @@ import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
 import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STATICHE_DESCRIPTION } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
-import { applicationCustiomization } from "src/environments/application_customization";
+import { ApplicationCustiomization } from "src/environments/application_customization";
 
 @Component({
   selector: "app-scrivania",
@@ -96,8 +96,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     this.setResponsiveSlider();
 
     if (this.impostazioniVisualizzazione) {
-      this.rightSide.nativeElement.style.width = this.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
-      this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
+      this.rightSide.nativeElement.style.width = this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
+      this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
     }
   }
 
@@ -109,7 +109,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       document.onmouseup = function() {
         document.onmousemove = null;
         console.log("that.slider.nativeElement.onmouseup");
-        that.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] = parseInt(that.rightSide.nativeElement.style.width, 10);
+        that.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.rigthside.offsetWidth] = parseInt(that.rightSide.nativeElement.style.width, 10);
         // const impostazioni: ImpostazioniApplicazioni = that.loggedUser.getImpostazioniApplicazione();
         // impostazioni.impostazioniVisualizzazione = JSON.stringify(that.impostazioniVisualizzazione);
         that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniVisualizzazione);
@@ -286,7 +286,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
               this.aziendeMenu.push(new TreeNode(
                 elementArray.idAzienda.nome,
                 null,
-                (onclick) => {this.handleItemClick(command); }));
+                (onclick) => {this.handleItemClick(command); }
+              ));
             }
             let found = false;
             for (const elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
@@ -375,7 +376,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         this.aziendeMenu.push(new TreeNode(
           element.nome,
           null,
-          (onclick) => { this.handleItemClick(command); }));
+          (onclick) => {this.handleItemClick(command); }
+        ));
       });
     }
   }

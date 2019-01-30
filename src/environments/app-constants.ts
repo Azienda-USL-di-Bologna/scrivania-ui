@@ -22,6 +22,7 @@ export const MAX_CHARS_100 = 100;
 
 export enum BaseUrlType {
     Scrivania,
+    ScrivaniaCommonParameters,
     Baborg,
     Configurazione,
     ConfigurazioneImpostazioniApplicazioni,
@@ -30,6 +31,7 @@ export enum BaseUrlType {
 
 export const BaseUrls: Map<BaseUrlType, string> = new Map<BaseUrlType, string>([
     [BaseUrlType.Scrivania,  "/internauta-api/resources/scrivania"],
+    [BaseUrlType.ScrivaniaCommonParameters,  "/internauta-api/resources/scrivania/getScrivaniaCommonParameters"],
     [BaseUrlType.Baborg, "/internauta-api/resources/baborg"],
     [BaseUrlType.Configurazione, "/internauta-api/resources/configurazione"],
     [BaseUrlType.ConfigurazioneImpostazioniApplicazioni, "/internauta-api/resources/configurazione/custom/setImpostazioniApplicazioni"],
@@ -38,7 +40,7 @@ export const BaseUrls: Map<BaseUrlType, string> = new Map<BaseUrlType, string>([
 
 export function getInternautaUrl(type: BaseUrlType): string {
     if (!BaseUrls.has(type)) {
-        throw new Error("Failed to obtain internauta url, type does not exists!")
+        throw new Error("Failed to obtain internauta url, type does not exists!");
     }
 
     const wl = window.location;
@@ -158,3 +160,8 @@ export const AFFERENZA_STRUTTURA = {
     UNIFICATA: 9,
     TEST: 7
 };
+
+export const COMMON_PARAMETERS = {
+    BABEL_APPLICATION: "BABEL_APPLICATION"
+};
+

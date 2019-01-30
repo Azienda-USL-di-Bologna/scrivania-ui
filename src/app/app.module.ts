@@ -42,6 +42,9 @@ import { AutoCompleteModule } from "primeng/autocomplete";
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
 
+/* Guards */
+import { RedirectBabelGuard } from "./guards/redirect-babel.guard";
+
 
 
 @NgModule({
@@ -76,7 +79,7 @@ import { loginModuleConfig } from "./config/module-config";
     DialogModule,
     AutoCompleteModule,
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe, RedirectBabelGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
