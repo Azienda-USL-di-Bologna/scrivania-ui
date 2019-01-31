@@ -1,7 +1,7 @@
 import { Utente, Persona } from "@bds/ng-internauta-model";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import {Router, ActivatedRoute} from "@angular/router";
-import {getInternautaUrl, BaseUrlType, HOME_ROUTE} from "../../environments/app-constants";
+import {getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE} from "../../environments/app-constants";
 import { NtJwtLoginService, LoginType, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Observable } from "rxjs";
 import { FunctionExpr, TransitiveCompileNgModuleMetadata } from "@angular/compiler";
@@ -52,7 +52,9 @@ export class HeaderComponent implements OnInit {
       } else {
         // prende l'url di logout dall'azienda dell'utente loggato
         this.loginService.clearSession();
-        window.location.href = this.logoutUrlTemplate.replace("[return-url]", window.location.href);
+        const lastSlash: number = window.location.href.lastIndexOf("/");
+        const returnUrl: string = window.location.href.substring(0, lastSlash) + SCRIVANIA_ROUTE;
+        window.location.href = this.logoutUrlTemplate.replace("[return-url]", returnUrl);
       }
     } else {
       this.loginService.clearSession();
