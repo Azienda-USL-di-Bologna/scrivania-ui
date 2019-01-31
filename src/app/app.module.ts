@@ -16,6 +16,7 @@ import { HeaderComponent } from "./header/header.component";
 import { CambioUtenteComponent } from "./header/cambio-utente/cambio-utente.component";
 import { AttivitaFatteComponent } from "./tabelle/attivita-fatte/attivita-fatte.component";
 import { DropdownAziendeComponent } from "./components/dropdown-aziende/dropdown-aziende.component";
+import { LoadingComponent } from "./pagine/loading/loading.component";
 
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
@@ -42,10 +43,6 @@ import { AutoCompleteModule } from "primeng/autocomplete";
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
 
-/* Guards */
-import { RedirectBabelGuard } from "./guards/redirect-babel.guard";
-
-
 
 @NgModule({
   declarations: [
@@ -56,7 +53,8 @@ import { RedirectBabelGuard } from "./guards/redirect-babel.guard";
     HeaderComponent,
     CambioUtenteComponent,
     AttivitaFatteComponent,
-    DropdownAziendeComponent
+    DropdownAziendeComponent,
+    LoadingComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
@@ -79,7 +77,7 @@ import { RedirectBabelGuard } from "./guards/redirect-babel.guard";
     DialogModule,
     AutoCompleteModule,
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe, RedirectBabelGuard],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
