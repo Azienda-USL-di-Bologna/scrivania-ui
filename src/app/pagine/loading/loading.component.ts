@@ -33,6 +33,7 @@ export class LoadingComponent implements OnInit {
                   baseUrl = window.location.protocol + "//" + window.location.host;
               }
               const babelUrl = baseUrl + babelApplication.baseUrl + "/" + babelApplication.indexPage;
+              this.loginService.clearSession();
               window.location.assign(babelUrl);
             });
         } else {
