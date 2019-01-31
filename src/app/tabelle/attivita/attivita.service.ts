@@ -14,6 +14,7 @@ export class AttivitaService extends HttpAbstractService {
 
   update(elementToUpdate: Attivita): Promise<any> {
     const functioName = "update";
+    elementToUpdate.datiAggiuntivi = JSON.stringify(elementToUpdate.datiAggiuntivi);
     //console.log(this.classDescriptionLocal, functioName, "id", elementToUpdate.id, "elmToUpdate", elementToUpdate);
     return this.patchHttpCall(elementToUpdate, elementToUpdate.id);
   }
