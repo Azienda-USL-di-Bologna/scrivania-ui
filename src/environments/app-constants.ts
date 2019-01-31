@@ -18,6 +18,7 @@ export const LOCALHOST_PDD_PORT = "8080";
 export const LOGIN_ROUTE: string = "/login";
 export const HOME_ROUTE: string = "/homepage";
 export const SCRIVANIA_ROUTE: string = "/scrivania";
+export const ATTIVITA_ROUTE: string = "/attivita";
 export const MAX_CHARS_100 = 100;
 
 export enum BaseUrlType {
