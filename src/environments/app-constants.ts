@@ -20,6 +20,7 @@ export const HOME_ROUTE: string = "/homepage";
 export const SCRIVANIA_ROUTE: string = "/scrivania";
 export const ATTIVITA_ROUTE: string = "/attivita";
 export const MAX_CHARS_100 = 100;
+export const BABELMAN_URL = "https://babelman-auslbo.avec.emr.it/";
 
 export enum BaseUrlType {
     Scrivania,

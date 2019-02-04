@@ -23,7 +23,10 @@
           </div>
         </div>
 
-        <i class="pi pi-user pi-icon-style toggle pr-8" (click)="op1.toggle($event)"></i>
+        <p-slideMenu #slideMenu class="slidemenu-class" [model]="itemsMenu" [popup]="true" [backLabel]="'Indietro'" [viewportHeight]="210"></p-slideMenu>
+        <button #btn class="user-button" type="button" pButton icon="pi pi-user pi-icon-style" (click)="slideMenu.toggle($event)"></button>
+
+ <!--        <i class="pi pi-user pi-icon-style toggle pr-8" (click)="op1.toggle($event)"></i> -->
 
         <p-overlayPanel #op1 styleClass="overlaypanel-background">
             <div class="p-grid p-dir-col" *ngIf="utenteConnesso">
