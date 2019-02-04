@@ -155,8 +155,8 @@
     border-color: #d4d4d4 !important;
 }
 .clMenu:hover{
-    background-color: #203244 !important; /* #737272 */
-    border-color: #d4d4d4 !important;
+    background-color: #203142 !important; /* #737272 */
+    /* border-color: #d4d4d4 !important; */
 }
 .clMenu > img {
     float: left;
@@ -168,11 +168,13 @@
 }
 :host>>>.ui-tieredmenu {
     /* background-color:#737272; */
-    background-color:#203244;
+    /* background-color:#203244; */
+    background-color:  rgba(32, 50, 68, 0.980392) !important;
 }
 :host>>>.ui-tieredmenu .ui-submenu-list {
     /* background-color:#737272; */
-    background-color:#203244;
+    /* background-color:#203244; */
+    background-color:  rgba(32, 50, 68, 0.980392) !important;
 }
 :host>>>.ui-tieredmenu .ui-menuitem-link .ui-menuitem-text {
     /* color: #ffffff; */
@@ -183,12 +185,14 @@
     color: #999;
 }
 :host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link {
-    background-color:#7e7e7e;/*#d3d3d3b0;*/   
+    /* background-color:#7e7e7e;#d3d3d3b0;    */
+   background-color:  #203142;
 }
 
 :host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-menuitem-text {
     color: #ffffff;
 }
+
 
 .position-relative{
     position: relative;
