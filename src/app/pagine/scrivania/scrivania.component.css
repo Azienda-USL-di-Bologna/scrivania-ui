@@ -193,6 +193,10 @@
     color: #ffffff;
 }
 
+:host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-submenu-icon {
+    color: #ffffff;
+}
+
 
 .position-relative{
     position: relative;
