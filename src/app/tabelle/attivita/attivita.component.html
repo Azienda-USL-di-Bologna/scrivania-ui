@@ -62,7 +62,10 @@
                         (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
                         appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
                     </p-calendar>
-                    <input *ngSwitchDefault pInputText attr.aria-label="Colonnna {{col.header}}, Cella filtro" type="text" (input)="dt.filter($event.target.value, col.field, 'contains')"
+                    <input *ngSwitchDefault pInputText 
+                        attr.aria-label="Colonnna {{col.header}}, Cella filtro" 
+                        type="text" 
+                        (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
                         #filterInputText>
                 </div>
             </td>

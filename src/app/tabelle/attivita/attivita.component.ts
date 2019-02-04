@@ -55,7 +55,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnInit() {
       // imposto l'utente loggato nell'apposita variabile
-      console.log("attivita onInit()");
       this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
         if (u) {
           if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
@@ -312,11 +311,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         if (calSel) {
           calSel.overlayVisible = false;
         }
-        break;
+      break;
 
       case "clear":
         this.dataTable.filter(null, field, null);
-        break;
+      break;
 
       case "select":
         if (this._calGen) {
@@ -329,7 +328,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
         const value = this.dataRange[field];
         this.dataTable.filter(value, field, null);
-        break;
+      break;
     }
   }
 

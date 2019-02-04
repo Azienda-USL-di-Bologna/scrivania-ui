@@ -8,3 +8,4 @@ builda.sh
 node_modules
 .idea
 dist
+package-lock.json
