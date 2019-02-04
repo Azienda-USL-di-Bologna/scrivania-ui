@@ -10,6 +10,8 @@ import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
+import { MenuItem } from "primeng/components/common/menuitem";
+
 @Component({
   selector: "app-attivita",
   templateUrl: "./attivita.component.html",
@@ -37,6 +39,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public loading: boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
   public selectedRowIndex: number = -1;
   private subscriptions: Subscription[] = [];
+  public attivitaSelezionata: Attivita;
+  public contextMenuItems: MenuItem[];
 
   private _idAzienda: number = -1;
   @Input("idAzienda")
@@ -156,6 +160,14 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       bodyTable.style.paddingBottom = "1px";
       bodyTable.style.paddingBottom = "1px";
     });
+    this.contextMenuItems = [
+      { label: "View", icon: "pi pi-search", command: (event) => this.handleContextMenu(this.attivitaSelezionata) },
+      { label: "Delete", icon: "pi pi-times", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
+    ];
+  }
+
+  handleContextMenu(attivitaSelezionata: Attivita) {
+    console.log("Context menu: ", attivitaSelezionata);
   }
 
   public attivitaEmitterHandler() {

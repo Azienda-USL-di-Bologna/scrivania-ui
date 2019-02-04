@@ -31,6 +31,7 @@ import { DropdownModule } from "primeng/dropdown";
 import { TableModule } from "primeng/table";
 import { CalendarModule } from "primeng/calendar";
 import { TooltipModule } from "primeng/tooltip";
+import { ContextMenuModule } from "primeng/contextmenu";
 
 import { DatePipe } from "@angular/common";
 import { InputTextModule } from "primeng/inputtext";
@@ -76,6 +77,7 @@ import { loginModuleConfig } from "./config/module-config";
     TieredMenuModule,
     DialogModule,
     AutoCompleteModule,
+    ContextMenuModule
   ],
   providers: [AttivitaService, AttivitaFatteService, DatePipe],
   bootstrap: [AppComponent]
