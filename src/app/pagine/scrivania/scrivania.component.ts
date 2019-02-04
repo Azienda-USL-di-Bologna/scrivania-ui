@@ -58,12 +58,17 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   private MIN_X_RIGHT_SIDE: number = 225;
 
   public idAzienda: number = -1;
+  public changeColOrder: boolean = false;
+  public rightSideVisible = true;
 
   constructor(private domSanitizer: DomSanitizer, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
    }
 
   ngOnInit() {
     console.log("scivania ngOnInit()");
+    if (window.screen.width <= 1280) {
+      this.rightSideVisible = false;
+    }
     // imposto l'utente loggato nell'apposita variabile
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       if (u) {
@@ -125,10 +130,15 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       document.onmousemove = function(e: MouseEvent) {
         e.preventDefault();
         const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia 32px che sfasano il conteggio
-        if (!(e.clientX <= that.MIN_X_LEFT_SIDE) && !(totalX - e.clientX <= that.MIN_X_RIGHT_SIDE)) {
-          const rxPercent = rx * 100 / totalX;
-          that.rightSide.nativeElement.style.width = rxPercent + "%";
-          that.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
+        if (!(e.clientX <= that.MIN_X_LEFT_SIDE)) {
+          that.changeColOrder = false;
+          if (!(totalX - e.clientX <= that.MIN_X_RIGHT_SIDE)) {
+            const rxPercent = rx * 100 / totalX;
+            that.rightSide.nativeElement.style.width = rxPercent + "%";
+            that.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
+          }
+        } else {
+          that.changeColOrder = true;
         }
       };
     };
@@ -317,7 +327,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                         null,
                         (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                         )],
-                      (onclick) => {this.doNothingNodeClick(); }
+                      (onclick) => {this.doNothingNodeClick(onclick); }
                     ));
                     break;
                   } else {
@@ -342,9 +352,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                       null,
                       (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                     )],
-                    (onclick) => {this.doNothingNodeClick(); }
+                    (onclick) => {this.doNothingNodeClick(onclick); }
                   )],
-                  (onclick) => {this.doNothingNodeClick(); }
+                  (onclick) => {this.doNothingNodeClick(onclick); }
                 ));
               } else {
                 this.alberoMenu.push(new TreeNode(
@@ -354,7 +364,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                     null,
                     (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                   )],
-                  (onclick) => {this.doNothingNodeClick(); }
+                  (onclick) => {this.doNothingNodeClick(onclick); }
                 ));
               }
             }
@@ -418,8 +428,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     }
   }
   /* Metodo agganciato ad ogni nodo del menu (non alle foglie) per evitare che si chiuda al click */
-  doNothingNodeClick() {
-    event.stopPropagation();
+  doNothingNodeClick(event: any) {
+    if (event && event.originalEvent) {
+      event.originalEvent.stopPropagation();
+    }
   }
 }
 

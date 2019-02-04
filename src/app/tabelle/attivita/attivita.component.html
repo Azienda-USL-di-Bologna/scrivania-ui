@@ -1,23 +1,3 @@
-<!--
-    <p-table [value]="attivita">
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Priorità</th>
-                <th>Tipo</th>
-                <th>Azienda</th>
-                <th>Applicazione</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-attivita>
-            <tr>
-                <td>{{attivita.priorita}}</td>
-                <td>{{attivita.tipo}}</td>
-                <td>{{attivita.azienda}}</td>
-                <td>{{attivita.applicazione}}</td>
-            </tr>
-        </ng-template>
-    </p-table>
--->
 <p-table #dt
     [lazy]="true"
     (onLazyLoad)="handleEvent('onLazyLoad', $event)"
@@ -79,19 +59,13 @@
                 <!-- <img *ngIf="attivita.priorita===2" src="assets/images/baseline_flag_black_48dp.png" alt="priorita" class="img-table"> -->
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->
             </td>
-            <!-- <td class="column-class">{{attivita.tipo}}</td> -->
-            <td [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.idAzienda.nome}}</td>
-            <td [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.idApplicazione.nome}}</td>
-            <td [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.provenienza}}</td>
-            <td class="column-class" [style.minWidth]="cols[4].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.oggetto}}</td>
-            <td [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.data | date:'dd/MM/yyyy'}}</td>
-            <td [style.width]="cols[6].width" [style.minWidth]="cols[6].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.descrizione}}</td>
-            <td [style.width]="cols[7].width" [style.minWidth]="cols[7].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">
-                <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' &&
-                    (attivita.idApplicazione.nome==='Pico' || attivita.idApplicazione.nome==='Dete' || attivita.idApplicazione.nome==='Deli'))"
-                (click)="apriAttivita(attivita)"><b>Apri</b></a>
-            </td>
-
+            <td [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
+            <td [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[2])}}</td>
+            <td #td3 [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[3], td3)}}</td>
+            <td [style.width]="cols[4].width" [style.minWidth]="cols[4].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[4])}}</td>
+            <td [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
+            <td [style.width]="cols[6].width" [style.minWidth]="cols[6].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[6])}}</td>
+            <td #td7 [style.width]="cols[7].width" [style.minWidth]="cols[7].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[7], td7)}}</td>
             <td [style.width]="cols[8].width" [style.minWidth]="cols[8].minWidth" class="p0">
                 <img *ngIf="attivita.datiAggiuntivi.custom_app_3 === '0'" src="assets/images/baseline-not_interested-24px.svg" alt="prendi" class="img-table"
                     pTooltip="Sul documento mancano alcuni dati che devono essere inseriti prima di poter procedere.">

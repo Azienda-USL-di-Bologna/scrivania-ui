@@ -189,10 +189,7 @@
    background-color:  #203142;
 }
 
-:host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-menuitem-text {
-    color: #ffffff;
-}
-
+:host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-menuitem-text,
 :host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-submenu-icon {
     color: #ffffff;
 }
