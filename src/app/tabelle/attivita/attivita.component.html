@@ -13,6 +13,7 @@
     [loading]="loading"
     (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
     (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
+    [(contextMenuSelection)]="attivitaSelezionata" [contextMenu]="cm"
     >
      <!--[style]="'{height:200px}'"  scrollHeight="700px"-->
    <!--[rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,15,20]"  [style.width]="col.width"-->
@@ -85,3 +86,4 @@
     </ng-template>
 
 </p-table>
+<p-contextMenu #cm [model]="contextMenuItems"></p-contextMenu>
