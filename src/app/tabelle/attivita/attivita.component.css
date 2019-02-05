@@ -30,3 +30,7 @@
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
 }
+:host>>> .ui-table .ui-table-tbody > tr.ui-contextmenu-selected {
+    background-color: #ffffff !important;
+    color: black !important;
+}

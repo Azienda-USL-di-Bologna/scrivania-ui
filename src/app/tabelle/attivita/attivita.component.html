@@ -1,3 +1,4 @@
+<p-toast ></p-toast>
 <p-table #dt
     [lazy]="true"
     (onLazyLoad)="handleEvent('onLazyLoad', $event)"
@@ -54,8 +55,15 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
-        <tr #selRow class="row-class" [pSelectableRow]="rowData" style="height:30px">
-            <td [style.width]="cols[0].width" [style.minWidth]="cols[0].minWidth" class="column-class p0">
+        <tr #selRow *ngIf="attivita.aperta"  class="row-class" [pSelectableRow]="rowData" [pContextMenuRow]="rowData" style="height:30px">
+            <ng-container *ngTemplateOutlet="rowColumns"></ng-container>
+        </tr>
+        <tr #selRow *ngIf="!attivita.aperta" class="row-class" [pSelectableRow]="rowData" style="height:30px">
+            <ng-container *ngTemplateOutlet="rowColumns"></ng-container>
+        </tr>
+
+        <ng-template #rowColumns>
+            <td [style.width]="cols[0].width"  [style.minWidth]="cols[0].minWidth" class="column-class p0">
                 <img [src]="attivita.iconaAttivita" alt="priorita" class="img-table" />
                 <!-- <img *ngIf="attivita.priorita===2" src="assets/images/baseline_flag_black_48dp.png" alt="priorita" class="img-table"> -->
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->
@@ -81,9 +89,8 @@
                 <img *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="onNoteClick(attivita)" alt="note" class="img-table">
                 <img *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table">
             </td>
-        </tr>
-
+        </ng-template>
     </ng-template>
 
 </p-table>
-<p-contextMenu #cm [model]="contextMenuItems"></p-contextMenu>
+<p-contextMenu #cm [model]="contextMenuItems" [style]="{'margin': '-150px 0 0 -30px'}"></p-contextMenu>

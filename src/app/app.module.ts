@@ -21,6 +21,7 @@ import { LoadingComponent } from "./pagine/loading/loading.component";
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
 import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
+import { MessageService } from "primeng/api";
 
 
 /* PrimeNG component */
@@ -42,6 +43,7 @@ import { TieredMenuModule } from "primeng/tieredmenu";
 import { DialogModule } from "primeng/dialog";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { DatePipe } from "@angular/common";
+import { ToastModule } from "primeng/toast";
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
@@ -86,9 +88,10 @@ import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.compon
     MenubarModule,
     SlideMenuModule,
     DynamicDialogModule,
-    ContextMenuModule
+    ContextMenuModule,
+    ToastModule
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent]
 })

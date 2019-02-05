@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, ElementRef, Renderer2 } from "@angular/core";
 import { DatePipe } from "@angular/common";
-import { LazyLoadEvent } from "primeng/api";
+import { LazyLoadEvent, MessageService } from "primeng/api";
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
@@ -53,7 +53,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild("dt") private dataTable: Table;
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
 
-  constructor(private datepipe: DatePipe, private attivitaService: AttivitaService, private loginService: NtJwtLoginService, private renderer: Renderer2) { }
+  constructor(
+    private datepipe: DatePipe,
+    private attivitaService: AttivitaService,
+    private loginService: NtJwtLoginService,
+    private renderer: Renderer2,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit() {
       // imposto l'utente loggato nell'apposita variabile
@@ -76,13 +82,14 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       bodyTable.style.paddingBottom = "1px";
     });
     this.contextMenuItems = [
-      { label: "View", icon: "pi pi-search", command: (event) => this.handleContextMenu(this.attivitaSelezionata) },
-      { label: "Delete", icon: "pi pi-times", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
+      { label: "Segna come non letta", icon: "pi pi-eye-slash", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
     ];
   }
 
   handleContextMenu(attivitaSelezionata: Attivita) {
-    console.log("Context menu: ", attivitaSelezionata);
+    // this.messageService.add({ severity: "info", summary: "Car Selected", detail: attivitaSelezionata.oggetto });
+    attivitaSelezionata.aperta = false;
+    this.attivitaService.update(attivitaSelezionata);
   }
 
   public attivitaEmitterHandler() {
