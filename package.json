@@ -25,6 +25,7 @@
     "@bds/nt-communicator": "latest",
     "@bds/nt-jwt-login": "latest",
     "@bds/primeng-plugin": "latest",
+    "bowser": "^2.1.0",
     "core-js": "^2.5.4",
     "primeflex": "^1.0.0-rc.1",
     "primeicons": "^1.0.0-beta.10",

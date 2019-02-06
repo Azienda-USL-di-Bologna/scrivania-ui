@@ -142,11 +142,8 @@
     margin-right: 0;
 }
 
-.dialog-class {
-    position: fixed !important;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+>>>.dialog-class {
+    top: 30%;
 }
 
 /* >>> body .ui-menubar .ui-menuitem-link .ui-menuitem-icon {

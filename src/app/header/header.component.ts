@@ -1,10 +1,10 @@
-import { Utente, Persona } from "@bds/ng-internauta-model";
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Utente } from "@bds/ng-internauta-model";
+import { Component, OnInit } from "@angular/core";
 import {Router, ActivatedRoute} from "@angular/router";
-import {getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, BABELMAN_URL} from "../../environments/app-constants";
+import { SCRIVANIA_ROUTE, BABELMAN_URL} from "../../environments/app-constants";
 import { NtJwtLoginService, LoginType, UtenteUtilities } from "@bds/nt-jwt-login";
 import { MenuItem, DialogService } from "primeng/api";
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 
 
@@ -21,8 +21,7 @@ export class HeaderComponent implements OnInit {
   private logoutUrlTemplate: string;
   public itemsMenu: MenuItem[];
 
-  constructor(public router: Router, private loginService: NtJwtLoginService,
-    private http: HttpClient, private route: ActivatedRoute, public dialogService: DialogService) { }
+  constructor(public router: Router, private loginService: NtJwtLoginService, public dialogService: DialogService) { }
 
 
   onCambioUtenteClick() {
@@ -100,38 +99,48 @@ export class HeaderComponent implements OnInit {
     this.utenteConnesso.getUtente().ruoli.forEach(ruolo => {
       ruoli.push({ label: ruolo.nomeBreve, command: (onclick) => {this.doNothingNodeClick(onclick); } });
     });
-
-    this.itemsMenu = [
-      {
-        label: "Aziende",
-        icon: "pi pi-fw pi-globe slide-icon",
-        items: aziende
-      },
-      {
-        label: "Ruoli",
-        icon: "pi pi-fw pi-key slide-icon",
-        items: ruoli
-      },
-      {
-        label: "Manuale",
-        icon: "pi pi-fw pi-question slide-icon",
-        command: () => { window.open(BABELMAN_URL); }
-      },
-      {
-        label: "Impostazioni",
-        icon: "pi pi-fw pi-cog slide-icon",
-        command: () => { this.showSettings(); }
-      }
-  ];
+    aziende.push({
+      label: "Ruoli",
+      icon: "pi pi-fw pi-key slide-icon",
+      items: ruoli
+    });
+    this.itemsMenu = [];
+    this.itemsMenu.push({
+      label: "Aziende",
+      icon: "pi pi-fw pi-globe slide-icon",
+      items: aziende
+    });
+    this.itemsMenu.push({
+      label: "Manuale",
+      icon: "pi pi-fw pi-question slide-icon",
+      command: () => { window.open(BABELMAN_URL); }
+    });
+    this.itemsMenu.push({
+      label: "Impostazioni",
+      icon: "pi pi-fw pi-cog slide-icon",
+      command: () => { this.showSettings(); }
+    });
+    if (this.utenteConnesso.getUtente().isDemiurgo()) {
+      this.itemsMenu.push({
+        label: "Cambia utente",
+        icon: "pi pi-fw pi-sign-in",
+        command: () => { this.onCambioUtenteClick(); }
+      });
+    }
   }
 
   showSettings() {
     const ref = this.dialogService.open(ImpostazioniComponent, {
       header: "Impostazioni utente",
-      width: "50%",
+      width: "480px",
       styleClass: "dialog-class",
-      contentStyle: {"max-height": "350px", "overflow": "auto"}
+      contentStyle: {"max-height": "350px", "overflow": "auto", "height": "200px"}
     });
+    /* ref.onClose.subscribe((form: Impostazioni) => {
+      if (form) {
+        console.log("FORM = ", form);
+      }
+    }); */
   }
 
   doNothingNodeClick(event: any) {

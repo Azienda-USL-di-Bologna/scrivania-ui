@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {rootRouterConfig} from "./app.routes";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { HttpModule } from "@angular/http";
 
@@ -49,6 +49,7 @@ import { ToastModule } from "primeng/toast";
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
 import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.component";
+import { AppSettingsService } from "./services/app-settings.service";
 
 
 @NgModule({
@@ -77,6 +78,7 @@ import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.compon
     TableModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: false }),
     FormsModule,
+    ReactiveFormsModule,
     CalendarModule,
     TooltipModule,
     InputTextModule,
@@ -91,7 +93,7 @@ import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.compon
     ContextMenuModule,
     ToastModule
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, AppSettingsService],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent]
 })
