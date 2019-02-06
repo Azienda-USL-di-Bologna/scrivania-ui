@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {rootRouterConfig} from "./app.routes";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { HttpModule } from "@angular/http";
 
@@ -46,6 +46,7 @@ import { DatePipe } from "@angular/common";
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
 import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.component";
+import { AppSettingsService } from "./services/app-settings.service";
 
 
 @NgModule({
@@ -74,6 +75,7 @@ import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.compon
     TableModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: false }),
     FormsModule,
+    ReactiveFormsModule,
     CalendarModule,
     TooltipModule,
     InputTextModule,
@@ -86,7 +88,7 @@ import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.compon
     SlideMenuModule,
     DynamicDialogModule
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe, AppSettingsService],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent]
 })

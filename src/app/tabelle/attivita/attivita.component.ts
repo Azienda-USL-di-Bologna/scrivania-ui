@@ -11,7 +11,7 @@ import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
-
+import * as Bowser from "bowser";
 
 @Component({
   selector: "app-attivita",
@@ -20,19 +20,23 @@ import { Calendar } from "primeng/calendar";
   providers: [DatePipe]
 })
 export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  private previousEvent: LazyLoadEvent;
+  private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
+  private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
+  private subscriptions: Subscription[] = [];
+  private listeners = new Map();
+
   public attivita: Attivita[];
   public totalRecords: number;
   public localIt = LOCAL_IT;
 
   public cols = ColumnsNormal;
   public dataRange: any = {};
-  private previousEvent: LazyLoadEvent;
-  private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
-  private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   public loggedUser: UtenteUtilities;
   public loading: boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
   public selectedRowIndex: number = -1;
-  private subscriptions: Subscription[] = [];
+  public columnClass = "column-class-o";
 
   private _idAzienda: number = -1;
   @Input("idAzienda")
@@ -73,6 +77,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       bodyTable.style.paddingBottom = "1px";
       bodyTable.style.paddingBottom = "1px";
     });
+    const browser = Bowser.getParser(window.navigator.userAgent);
+    const browserInfo = browser.getBrowser();
+    if (browserInfo.name === "Firefox" && parseInt(browserInfo.version, 10) <= 42) {
+      this.columnClass = "column-class-f";
+    }
+    console.log(browserInfo);
   }
 
   public attivitaEmitterHandler() {
@@ -231,22 +241,40 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           res = this.datepipe.transform(attivita[col.field], "dd/MM/yyy");
           break;
 
+        case "provenienza":
+          if (td && td.classList.length === 0) {
+            this.renderer.addClass(td, this.columnClass);
+            td.innerHTML = attivita[col.field];
+            return;
+          } else {
+            res = attivita[col.field];
+          }
+          break;
+
         case "azione":
+          if (this.listeners[td.id]) {
+            if (this.listeners[td.id][1] === td.cellIndex) {
+              return;
+            } else {
+              this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando
+              this.listeners.delete(td.id); // Lo elimino anche dall'array per aggiungere il nuovo listener nella nuova posizione (td3)
+            }
+          }
           if (td.classList.length > 0) {
-            this.renderer.removeClass(td, "column-class");
+            this.renderer.removeClass(td, this.columnClass);
           }
           if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" &&
             (attivita.idApplicazione.nome === "Pico" || attivita.idApplicazione.nome === "Dete" || attivita.idApplicazione.nome === "Deli"))) {
             td.innerHTML = `<a style="color: #993366"><b>Apri</b></a>`;
-            this.renderer.listen(td, "click", () => {
+            this.listeners[td.id] = [this.renderer.listen(td, "click", () => {
               this.apriAttivita(attivita);
-            });
+            }), td.cellIndex];
           }
           return;
 
         default:
           if (td && td.classList.length === 0) {
-            this.renderer.addClass(td, "column-class");
+            this.renderer.addClass(td, this.columnClass);
           }
           res = attivita[col.field];
           break;

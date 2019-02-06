@@ -26,7 +26,7 @@
             </button>
         </div>
 
-        <app-dropdown-aziende (aziendaEmitter)="aziendaChanged($event)"></app-dropdown-aziende>
+        <app-dropdown-aziende *ngIf="loggedUser.getUtente().aziende.length !== 1" (aziendaEmitter)="aziendaChanged($event)"></app-dropdown-aziende>
     </div>
     <div class="table-wrapper">
         <div class="table-inner">
@@ -38,10 +38,10 @@
 
   </div>
 
-  <div class="p-offset-7 d-inline-block slider" [ngClass]="mostraStorico || !rightSideVisible ? 'd-hidden' : 'd-flex'" #slider><div></div></div>
+  <div class="p-offset-7 d-inline-block slider" [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'" #slider><div></div></div>
 
   <!-- Right side -->
-  <div class="p-md-5 p-sm-12 content-right" [ngClass]="mostraStorico || !rightSideVisible ? 'd-hidden' : 'd-flex'" #rightSide>
+  <div class="p-md-5 p-sm-12 content-right" [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'" #rightSide>
 
     <div class="info-doc-wrapper">
         <div class="div-info-doc">

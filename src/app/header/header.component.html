@@ -25,43 +25,7 @@
 
         <p-slideMenu #slideMenu class="slidemenu-class" [model]="itemsMenu" [popup]="true" [backLabel]="'Indietro'" [viewportHeight]="210"></p-slideMenu>
         <button #btn class="user-button" type="button" pButton icon="pi pi-user pi-icon-style" (click)="slideMenu.toggle($event)"></button>
-
- <!--        <i class="pi pi-user pi-icon-style toggle pr-8" (click)="op1.toggle($event)"></i> -->
-
-        <p-overlayPanel #op1 styleClass="overlaypanel-background">
-            <div class="p-grid p-dir-col" *ngIf="utenteConnesso">
-                <div class="p-col titolo-popup"><b>Aziende</b></div>
-                <div class="p-col">
-                  <ul class="ul-user-information">
-                    <li *ngFor="let azienda of utenteConnesso.getUtente().aziende" class="li-user-information">
-                      {{azienda? azienda.nome: ''}}
-                    </li>
-                  </ul>
-                </div>
-                <div class="p-col titolo-popup"><b>Ruoli</b></div>
-                <div class="p-col">
-                    <ul class="ul-user-information">
-                        <li *ngFor="let ruolo of utenteConnesso.getUtente().ruoli" class="li-user-information">
-                          {{ruolo? ruolo.nomeBreve: ''}}
-                        </li>
-                      </ul>
-                </div>
-            </div>
-        </p-overlayPanel>
-
-        <!-- <img class="icons-style pr-8" src="assets/images/baseline_dashboard_white_48dp.png"/> -->
-        <img *ngIf="this.utenteConnesso && this.utenteConnesso.getUtente().isDemiurgo()" class="icons-style pr-8 demiurgo" (click)="op2.toggle($event)" src="assets/images/baseline_verified_user_white_48dp.png" alt="Menu Demiurgo"/>
-
-        <p-overlayPanel #op2 styleClass="overlaypanel-background">
-          <div class="p-grid p-dir-col" *ngIf="this.utenteConnesso && this.utenteConnesso.getUtente().isDemiurgo()">
-              <div class="p-col clickable-menu-item" (click)="this.cambioUtentePopupVisibile = true">
-                <ul class="ul-user-information">
-                  <li class="li-user-information">Cambio Utente</li>
-                </ul>
-              </div>
-          </div>
-        </p-overlayPanel>
-
+        <span style="width: 10px"></span>
         <img class="dim-box-image-signout d-inline-block logout ml-1" src="assets/images/signout.svg" (click)="onLogout()" alt="logout"/>
       </div>
     </div>

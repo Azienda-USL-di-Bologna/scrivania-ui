@@ -8,6 +8,7 @@ import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-c
 import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STATICHE_DESCRIPTION } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
 import { ApplicationCustiomization } from "src/environments/application_customization";
+import { AppSettingsService } from "src/app/services/app-settings.service";
 
 @Component({
   selector: "app-scrivania",
@@ -59,26 +60,18 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   public idAzienda: number = -1;
   public changeColOrder: boolean = false;
-  public rightSideVisible = true;
+  public hidePreview = false;
 
-  constructor(private domSanitizer: DomSanitizer, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
+  constructor(private appSettingsService: AppSettingsService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
    }
 
   ngOnInit() {
     console.log("scivania ngOnInit()");
-    if (window.screen.width <= 1280) {
-      this.rightSideVisible = false;
-    }
     // imposto l'utente loggato nell'apposita variabile
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       if (u) {
         if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
           this.loggedUser = u;
-          if (this.loggedUser.getImpostazioniApplicazione()) {
-            this.impostazioniVisualizzazione = JSON.parse(this.loggedUser.getImpostazioniApplicazione().impostazioniVisualizzazione);
-          } else {
-            this.impostazioniVisualizzazione = {};
-          }
           this.loadMenu();
           this.setLook();
         } else {
@@ -95,14 +88,21 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         this.loadMenuFirma(data.aziende);
       }
     });
+    this.subscriptions.push(this.appSettingsService.settingsChanged.subscribe(newSettings => {
+      this.hidePreview = this.appSettingsService.getHidePreview() === "true";
+    }));
   }
 
   private setLook(): void {
     this.setResponsiveSlider();
-
-    if (this.impostazioniVisualizzazione) {
-      this.rightSide.nativeElement.style.width = this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
-      this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
+    if (this.appSettingsService.getImpostazioniVisualizzazione()) {
+      this.rightSide.nativeElement.style.width = this.appSettingsService.getRightSideOffsetWidth() + "%";
+      this.slider.nativeElement.style.marginLeft = 100 - this.appSettingsService.getRightSideOffsetWidth() + "%";
+      if (window.screen.width <= 1280) {
+        this.hidePreview = true;
+      } else {
+        this.hidePreview = this.appSettingsService.getHidePreview() === "true";
+      }
     }
   }
 
@@ -114,10 +114,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       document.onmouseup = function() {
         document.onmousemove = null;
         console.log("that.slider.nativeElement.onmouseup");
-        that.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.rigthside.offsetWidth] = parseInt(that.rightSide.nativeElement.style.width, 10);
-        // const impostazioni: ImpostazioniApplicazioni = that.loggedUser.getImpostazioniApplicazione();
-        // impostazioni.impostazioniVisualizzazione = JSON.stringify(that.impostazioniVisualizzazione);
-        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniVisualizzazione);
+        that.appSettingsService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
+        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.appSettingsService.getImpostazioniVisualizzazione());
         document.onmouseup = null;
       };
       // that.slider.nativeElement.onmouseup = function() {
