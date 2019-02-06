@@ -82,7 +82,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       bodyTable.style.paddingBottom = "1px";
     });
     this.contextMenuItems = [
-      { label: "Segna come non letta", icon: "pi pi-eye-slash", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
+      { label: "Segna come da leggere", icon: "pi pi-eye-slash", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
     ];
   }
 
