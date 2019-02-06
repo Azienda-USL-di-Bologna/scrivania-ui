@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, ElementRef, Renderer2 } from "@angular/core";
 import { DatePipe } from "@angular/common";
-import { LazyLoadEvent, MessageService } from "primeng/api";
+import { LazyLoadEvent, MessageService, MenuItem } from "primeng/api";
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
