@@ -258,7 +258,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           break;
 
         case "provenienza":
-          if (td && td.classList.length === 0) {
+          if (td && !td.classList.contains(this.columnClass)) {
             this.renderer.addClass(td, this.columnClass);
             td.innerHTML = attivita[col.field];
             return;
@@ -276,7 +276,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
               this.listeners.delete(td.id); // Lo elimino anche dall'array per aggiungere il nuovo listener nella nuova posizione (td3)
             }
           }
-          if (td.classList.length > 0) {
+          if (td.classList.contains(this.columnClass)) {
             this.renderer.removeClass(td, this.columnClass);
           }
           if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" &&
@@ -285,11 +285,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             this.listeners[td.id] = [this.renderer.listen(td, "click", () => {
               this.apriAttivita(attivita);
             }), td.cellIndex];
+          } else {
+            td.innerHTML = "";
           }
           return;
 
         default:
-          if (td && td.classList.length === 0) {
+          if (td && !td.classList.contains(this.columnClass)) {
             this.renderer.addClass(td, this.columnClass);
           }
           res = attivita[col.field];
