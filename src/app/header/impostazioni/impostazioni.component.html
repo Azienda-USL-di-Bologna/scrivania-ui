@@ -1,5 +1,5 @@
 <section>
-  <form #form="ngForm" (ngSubmit)="onSave()">
+  <form #form="ngForm">
     <div>
       <ul class="settings-items">
         <li>
@@ -10,7 +10,7 @@
       </ul>
     </div>
     <div class="p-grid button-wrapper">
-        <button pButton type="submit" class="button-styles" label="Salva" (click)="onSave()"></button>
+        <button pButton class="button-styles" label="Salva" (click)="saveSettings()"></button>
         <button pButton class="button-styles button-margin-left" label="Annulla" (click)="onClose()"></button>
     </div>
   </form>

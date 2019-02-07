@@ -8,7 +8,7 @@ import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-c
 import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STATICHE_DESCRIPTION } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
 import { ApplicationCustiomization } from "src/environments/application_customization";
-import { AppSettingsService } from "src/app/services/app-settings.service";
+import { ImpostazioniService } from "src/app/services/impostazioni.service";
 
 @Component({
   selector: "app-scrivania",
@@ -62,7 +62,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public changeColOrder: boolean = false;
   public hidePreview = false;
 
-  constructor(private appSettingsService: AppSettingsService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
+  constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
    }
 
   ngOnInit() {
@@ -88,20 +88,20 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         this.loadMenuFirma(data.aziende);
       }
     });
-    this.subscriptions.push(this.appSettingsService.settingsChanged.subscribe(newSettings => {
-      this.hidePreview = this.appSettingsService.getHidePreview() === "true";
+    this.subscriptions.push(this.impostazioniService.settingsChangedNotifier$.subscribe(newSettings => {
+      this.hidePreview = newSettings[ApplicationCustiomization.scrivania.hidePreview] === "true";
     }));
   }
 
   private setLook(): void {
     this.setResponsiveSlider();
-    if (this.appSettingsService.getImpostazioniVisualizzazione()) {
-      this.rightSide.nativeElement.style.width = this.appSettingsService.getRightSideOffsetWidth() + "%";
-      this.slider.nativeElement.style.marginLeft = 100 - this.appSettingsService.getRightSideOffsetWidth() + "%";
+    if (this.impostazioniService.getImpostazioniVisualizzazione()) {
+      this.rightSide.nativeElement.style.width = this.impostazioniService.getRightSideOffsetWidth() + "%";
+      this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniService.getRightSideOffsetWidth() + "%";
       if (window.screen.width <= 1280) {
         this.hidePreview = true;
       } else {
-        this.hidePreview = this.appSettingsService.getHidePreview() === "true";
+        this.hidePreview = this.impostazioniService.getHidePreview() === "true";
       }
     }
   }
@@ -114,8 +114,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       document.onmouseup = function() {
         document.onmousemove = null;
         console.log("that.slider.nativeElement.onmouseup");
-        that.appSettingsService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
-        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.appSettingsService.getImpostazioniVisualizzazione());
+        that.impostazioniService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
+        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniService.getImpostazioniVisualizzazione());
         document.onmouseup = null;
       };
       // that.slider.nativeElement.onmouseup = function() {

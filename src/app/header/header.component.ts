@@ -11,8 +11,7 @@ import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 @Component({
   selector: "app-header",
   templateUrl: "./header.component.html",
-  styleUrls: ["./header.component.css"],
-  providers: [DialogService]
+  styleUrls: ["./header.component.css"]
 })
 export class HeaderComponent implements OnInit {
 
@@ -112,7 +111,7 @@ export class HeaderComponent implements OnInit {
     });
     this.itemsMenu.push({
       label: "Manuale",
-      icon: "pi pi-fw pi-question slide-icon",
+      icon: "pi pi-fw pi-info-circle slide-icon",
       command: () => { window.open(BABELMAN_URL); }
     });
     this.itemsMenu.push({

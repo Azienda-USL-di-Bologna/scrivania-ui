@@ -272,7 +272,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             if (this.listeners[td.id][1] === td.cellIndex) {
               return;
             } else {
-              this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando
+              this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
               this.listeners.delete(td.id); // Lo elimino anche dall'array per aggiungere il nuovo listener nella nuova posizione (td3)
             }
           }

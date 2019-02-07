@@ -21,7 +21,7 @@ import { LoadingComponent } from "./pagine/loading/loading.component";
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
 import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
-import { MessageService } from "primeng/api";
+import { MessageService, DialogService } from "primeng/api";
 
 
 /* PrimeNG component */
@@ -49,7 +49,7 @@ import { ToastModule } from "primeng/toast";
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
 import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.component";
-import { AppSettingsService } from "./services/app-settings.service";
+import { ImpostazioniService } from "./services/impostazioni.service";
 
 
 @NgModule({
@@ -93,7 +93,7 @@ import { AppSettingsService } from "./services/app-settings.service";
     ContextMenuModule,
     ToastModule
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, AppSettingsService],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent]
 })

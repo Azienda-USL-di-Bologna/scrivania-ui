@@ -6,11 +6,11 @@ import { Subscription, Subject } from "rxjs";
 @Injectable({
   providedIn: "root"
 })
-export class AppSettingsService {
+export class ImpostazioniService {
   impostazioniVisualizzazione: any;
   loggedUser: UtenteUtilities;
   subscription: Subscription;
-  settingsChanged = new Subject<boolean>();
+  settingsChangedNotifier$ = new Subject<boolean>();
 
   constructor(private loginService: NtJwtLoginService) {
     this.subscription = this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
@@ -47,8 +47,12 @@ export class AppSettingsService {
     this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.hidePreview] = hidePreviewValue;
   }
 
-  saveSettings() {
-    this.settingsChanged.next(true);
+  /**
+   * Lancia la notifica di cambiamento delle impostazioni ai sottoscrittori
+   * @param settings L'oggetto che contiene le nuove impostazioni
+  */
+  doNotify(settings: any) {
+    this.settingsChangedNotifier$.next(settings);
   }
-
 }
+
