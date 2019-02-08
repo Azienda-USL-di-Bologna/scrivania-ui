@@ -25,7 +25,6 @@
     padding: 10px;
 }
 .column-class-f {
-    word-break: break-all;
     word-wrap: break-word;
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
@@ -34,7 +33,6 @@
     word-break: break-word;
     word-wrap: break-word;
     white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
 }
 
 
@@ -48,7 +46,7 @@
     background-color: #ffffff !important;
     color: black !important;
 }
-:host>>> .clContextMenu .ui-contextmenu, 
+:host>>> .clContextMenu .ui-contextmenu,
 :host>>> .clContextMenu .ui-menuitem-link{
     background-color: #203244fa !important;
 }
