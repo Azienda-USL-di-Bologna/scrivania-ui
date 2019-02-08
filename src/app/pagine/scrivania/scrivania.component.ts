@@ -55,6 +55,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   public showNote: boolean = false;
   public noteText: string = null;
+  private LIMIT_X_LEFT_SIDE: number = 905;
   private MIN_X_LEFT_SIDE: number = 570;
   private MIN_X_RIGHT_SIDE: number = 225;
 
@@ -128,15 +129,17 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       document.onmousemove = function(e: MouseEvent) {
         e.preventDefault();
         const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia 32px che sfasano il conteggio
-        if (!(e.clientX <= that.MIN_X_LEFT_SIDE)) {
+        if (!(e.clientX <= that.LIMIT_X_LEFT_SIDE)) {
           that.changeColOrder = false;
+        } else {
+          that.changeColOrder = true;
+        }
+        if (!(e.clientX <= that.MIN_X_LEFT_SIDE)) {
           if (!(totalX - e.clientX <= that.MIN_X_RIGHT_SIDE)) {
             const rxPercent = rx * 100 / totalX;
             that.rightSide.nativeElement.style.width = rxPercent + "%";
             that.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
           }
-        } else {
-          that.changeColOrder = true;
         }
       };
     };

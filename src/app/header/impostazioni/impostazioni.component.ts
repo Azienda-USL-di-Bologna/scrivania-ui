@@ -16,7 +16,6 @@ export class ImpostazioniComponent implements OnInit, OnDestroy {
   checked: boolean;
   model: Impostazioni;
   loggedUser: UtenteUtilities;
-  previewDisabled: boolean;
   private subscription: Subscription;
 
   constructor(public ref: DynamicDialogRef, private loginService: NtJwtLoginService, private impostazioniService: ImpostazioniService) { }
@@ -34,14 +33,9 @@ export class ImpostazioniComponent implements OnInit, OnDestroy {
 
   loadSettings() {
     this.model = new Impostazioni();
-    if (window.screen.width <= 1280) {
-      this.previewDisabled = true;
-      this.model.hidePreview = true;
-    } else {
-      this.model.hidePreview = this.impostazioniService.getHidePreview() === "true";
-      if (this.model.hidePreview === null || this.model.hidePreview === undefined) {
-        this.model.hidePreview = false;
-      }
+    this.model.hidePreview = this.impostazioniService.getHidePreview() === "true";
+    if (this.model.hidePreview === null || this.model.hidePreview === undefined) {
+      this.model.hidePreview = false;
     }
   }
 

@@ -14,18 +14,20 @@ export class AttivitaService extends HttpAbstractService {
 
   update(elementToUpdate: Attivita): Promise<any> {
     const functioName = "update";
-    elementToUpdate.datiAggiuntivi = JSON.stringify(elementToUpdate.datiAggiuntivi);
+    const temp = new Attivita();
+    Object.assign(temp, elementToUpdate);
+    temp.datiAggiuntivi = JSON.stringify(elementToUpdate.datiAggiuntivi);
     // console.log(this.classDescriptionLocal, functioName, "id", elementToUpdate.id, "elmToUpdate", elementToUpdate);
-    return this.patchHttpCall(elementToUpdate, elementToUpdate.id);
+    return this.patchHttpCall(temp, temp.id);
   }
 
-  insert(elementToInsert: Attivita, datepipe: DatePipe): Promise<any>{
+  insert(elementToInsert: Attivita, datepipe: DatePipe): Promise<any> {
     const functioName = "insert";
    // console.log(this.classDescriptionLocal, functioName, "elementToInsert", elementToInsert);
     return this.postHttpCall(elementToInsert);
   }
 
-  delete(elementToDelete: Attivita): Promise<any>{
+  delete(elementToDelete: Attivita): Promise<any> {
     const functioName = "delete";
     // console.log(this.classDescriptionLocal, functioName, "elementToDelete", elementToDelete);
     return this.deleteHttpCall(elementToDelete.id);

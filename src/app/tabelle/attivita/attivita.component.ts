@@ -36,7 +36,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public loggedUser: UtenteUtilities;
   public loading: boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
   public selectedRowIndex: number = -1;
-  public columnClass = "column-class-o";
+  public columnClass = "column-class-f";
   public attivitaSelezionata: Attivita;
   public contextMenuItems: MenuItem[];
 
@@ -90,8 +90,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     ];
      const browser = Bowser.getParser(window.navigator.userAgent);
     const browserInfo = browser.getBrowser();
-    if (browserInfo.name === "Firefox" && parseInt(browserInfo.version, 10) <= 42) {
-      this.columnClass = "column-class-f";
+    if (browserInfo.name !== "Firefox" || parseInt(browserInfo.version, 10) > 42) {
+      this.columnClass = "column-class-o";
     }
   }
 
@@ -145,9 +145,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         break;
       case "onRowSelect":
         this.rowSelect(event);
-        const attivitaSelezionata: Attivita = event.data;
-        attivitaSelezionata.aperta = true;
-        this.attivitaService.update(attivitaSelezionata);
         break;
     }
   }
@@ -270,6 +267,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         case "azione":
           if (this.listeners[td.id]) {
             if (this.listeners[td.id][1] === td.cellIndex) {
+              this.fillActionCol(attivita, td);
               return;
             } else {
               this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
@@ -279,15 +277,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           if (td.classList.contains(this.columnClass)) {
             this.renderer.removeClass(td, this.columnClass);
           }
-          if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" &&
-            (attivita.idApplicazione.nome === "Pico" || attivita.idApplicazione.nome === "Dete" || attivita.idApplicazione.nome === "Deli"))) {
-            td.innerHTML = `<a style="color: #993366"><b>Apri</b></a>`;
-            this.listeners[td.id] = [this.renderer.listen(td, "click", () => {
-              this.apriAttivita(attivita);
-            }), td.cellIndex];
-          } else {
-            td.innerHTML = "";
-          }
+          this.fillActionCol(attivita, td);
           return;
 
         default:
@@ -299,6 +289,18 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       }
     }
     return res;
+  }
+
+  fillActionCol(attivita, td) {
+    if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" &&
+      (attivita.idApplicazione.nome === "Pico" || attivita.idApplicazione.nome === "Dete" || attivita.idApplicazione.nome === "Deli"))) {
+      td.innerHTML = `<a style="color: #993366"><b>Apri</b></a>`;
+      this.listeners[td.id] = [this.renderer.listen(td, "click", () => {
+        this.apriAttivita(attivita);
+      }), td.cellIndex];
+    } else {
+      td.innerHTML = "";
+    }
   }
 
   public onCalendarAction(event: any, field: string, action: string) {
