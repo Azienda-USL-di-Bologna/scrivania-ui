@@ -48,3 +48,10 @@
     background-color: #ffffff !important;
     color: black !important;
 }
+:host>>> .clContextMenu .ui-contextmenu, 
+:host>>> .clContextMenu .ui-menuitem-link{
+    background-color: #203244fa !important;
+}
+:host>>> .clContextMenu span{
+    color: #ffffff !important;
+}
