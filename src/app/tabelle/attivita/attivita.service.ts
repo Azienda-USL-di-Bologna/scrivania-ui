@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { Injectable } from "@angular/core";
+import { DatePipe } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
 import { HttpAbstractService } from "@bds/nt-communicator"
-import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType } from '../../../environments/app-constants';
-import { Attivita } from '@bds/ng-internauta-model';
+import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType } from "../../../environments/app-constants";
+import { Attivita } from "@bds/ng-internauta-model";
 
 @Injectable()
 export class AttivitaService extends HttpAbstractService {
@@ -14,19 +14,22 @@ export class AttivitaService extends HttpAbstractService {
 
   update(elementToUpdate: Attivita): Promise<any> {
     const functioName = "update";
-    //console.log(this.classDescriptionLocal, functioName, "id", elementToUpdate.id, "elmToUpdate", elementToUpdate);
-    return this.patchHttpCall(elementToUpdate, elementToUpdate.id);
+    const temp = new Attivita();
+    Object.assign(temp, elementToUpdate);
+    temp.datiAggiuntivi = JSON.stringify(elementToUpdate.datiAggiuntivi);
+    // console.log(this.classDescriptionLocal, functioName, "id", elementToUpdate.id, "elmToUpdate", elementToUpdate);
+    return this.patchHttpCall(temp, temp.id);
   }
 
-  insert(elementToInsert: Attivita, datepipe: DatePipe): Promise<any>{
+  insert(elementToInsert: Attivita, datepipe: DatePipe): Promise<any> {
     const functioName = "insert";
    // console.log(this.classDescriptionLocal, functioName, "elementToInsert", elementToInsert);
     return this.postHttpCall(elementToInsert);
   }
 
-  delete(elementToDelete: Attivita): Promise<any>{
+  delete(elementToDelete: Attivita): Promise<any> {
     const functioName = "delete";
-    //console.log(this.classDescriptionLocal, functioName, "elementToDelete", elementToDelete);
+    // console.log(this.classDescriptionLocal, functioName, "elementToDelete", elementToDelete);
     return this.deleteHttpCall(elementToDelete.id);
   }
 }

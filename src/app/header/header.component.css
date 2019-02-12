@@ -59,11 +59,48 @@
     padding-top: 12px;
 }
 
-.pi-icon-style {
-    font-size: 2em;
-    color: white;
+:host>>>.pi-icon-style {
+    font-size: 2.4em;
 }
 
+:host>>>.ui-slidemenu {
+    margin-top: 5px;
+    width: 13.5em;
+}
+:host>>>.ui-slidemenu .ui-menuitem-link:hover,
+:host>>>.ui-menuitem.ui-menuitem-active:hover,
+:host>>>.ui-menuitem.ui-menuitem-active > .ui-menuitem-link:hover,
+:host>>>.ui-slide.ui-slidemenu-backward:hover,
+:host>>>.ui-slidemenu .ui-slidemenu-backward:hover {
+    color: rgba(255,255,255);
+    background-color: #162431 !important;
+}
+:host>>>.ui-slidemenu, :host>>>.ui-submenu-list, :host>>>.ui-menuitem.ui-menuitem-active > .ui-menuitem-link  {
+    background-color: rgb(32, 50, 68) !important;
+    border: none !important;
+}
+
+.user-button, .user-button:hover {
+    background-color: transparent !important;
+    border-color: transparent !important;
+}
+
+:host>>>.ui-slidemenu .ui-slidemenu-backward {
+    background-color: rgba(32, 50, 68);
+    color: #999;
+}
+/* Compatible for firefox 41... meh */
+>>>body .ui-slidemenu .ui-slidemenu-backward {
+    background-color: transparent;
+}
+
+>>>.slidemenu-class li span {
+    color: #999 !important;
+}
+
+>>>.slidemenu-class li:hover > a > span {
+    color: white !important;
+}
 
 >>> body .ui-dialog .ui-dialog-titlebar, .titolo-popup {
     background-color: #993366;
@@ -75,6 +112,44 @@
     border: none;
  }
 
+
+>>>.slidemenu-class > div:before {
+    width: 0;
+    content: "";
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #203142;
+    z-index: 1000;
+    position: absolute;
+    top: -5px;
+    left: 166px;
+}
+
+>>> .fay-class ul > li:first-child > a:hover {
+    background-color: transparent;
+}
+
+>>> .fay-class .ui-menuitem-link {
+    background-color: transparent !important;
+}
+
+>>>.fay-class .ui-menubar-root-list > li:first-child > a > span ~ span {
+    display: none;
+}
+
+>>>.fay-class .ui-menubar-root-list > li:first-child > a > span {
+    margin-right: 0;
+}
+
+>>>.dialog-class {
+    top: 30%;
+}
+
+/* >>> body .ui-menubar .ui-menuitem-link .ui-menuitem-icon {
+    color: #ffffff;
+    font-size: 2.25em;
+} */
  :host>>>.overlaypanel-background .ui-overlaypanel-content{
      /* background-color: greenyellow; */
      background-color: whitesmoke;

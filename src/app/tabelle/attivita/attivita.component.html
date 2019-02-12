@@ -1,23 +1,4 @@
-<!--
-    <p-table [value]="attivita">
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Priorità</th>
-                <th>Tipo</th>
-                <th>Azienda</th>
-                <th>Applicazione</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-attivita>
-            <tr>
-                <td>{{attivita.priorita}}</td>
-                <td>{{attivita.tipo}}</td>
-                <td>{{attivita.azienda}}</td>
-                <td>{{attivita.applicazione}}</td>
-            </tr>
-        </ng-template>
-    </p-table>
--->
+<p-toast ></p-toast>
 <p-table #dt
     [lazy]="true"
     (onLazyLoad)="handleEvent('onLazyLoad', $event)"
@@ -33,6 +14,7 @@
     [loading]="loading"
     (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
     (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
+    [(contextMenuSelection)]="attivitaSelezionata" [contextMenu]="cm"
     >
      <!--[style]="'{height:200px}'"  scrollHeight="700px"-->
    <!--[rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,15,20]"  [style.width]="col.width"-->
@@ -55,14 +37,17 @@
             </th>
         </tr>
         <tr>
-            <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget" [style.width]="col.width" [style.minWidth]="col.minWidth">
+            <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget" class="filters-styles" [style.width]="col.width" [style.minWidth]="col.minWidth">
                 <div *ngIf="col.field != undefined">
                     <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." showButtonBar="true"
                         [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
                         (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
                         appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
                     </p-calendar>
-                    <input *ngSwitchDefault pInputText attr.aria-label="Colonnna {{col.header}}, Cella filtro" type="text" (input)="dt.filter($event.target.value, col.field, 'contains')"
+                    <input *ngSwitchDefault pInputText
+                        attr.aria-label="Colonnna {{col.header}}, Cella filtro"
+                        type="text"
+                        (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
                         #filterInputText>
                 </div>
             </td>
@@ -70,25 +55,26 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
-        <tr #selRow class="row-class" [pSelectableRow]="rowData" style="height:30px">
-            <td [style.width]="cols[0].width" [style.minWidth]="cols[0].minWidth" class="column-class p0">
+        <tr #selRow *ngIf="attivita.aperta"  class="row-class" [pSelectableRow]="rowData" [pContextMenuRow]="rowData" style="height:30px">
+            <ng-container *ngTemplateOutlet="rowColumns"></ng-container>
+        </tr>
+        <tr #selRow *ngIf="!attivita.aperta" class="row-class" [pSelectableRow]="rowData" style="height:30px">
+            <ng-container *ngTemplateOutlet="rowColumns"></ng-container>
+        </tr>
+
+        <ng-template #rowColumns>
+            <td [style.width]="cols[0].width"  [style.minWidth]="cols[0].minWidth" [ngClass]="[columnClass, 'p0']">
                 <img [src]="attivita.iconaAttivita" alt="priorita" class="img-table" />
                 <!-- <img *ngIf="attivita.priorita===2" src="assets/images/baseline_flag_black_48dp.png" alt="priorita" class="img-table"> -->
                 <!-- <button pButton icon="pi pi-pencil" (click)="selectWithButton(rowData)"></button> -->
             </td>
-            <!-- <td class="column-class">{{attivita.tipo}}</td> -->
-            <td [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.idAzienda.nome}}</td>
-            <td [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.idApplicazione.nome}}</td>
-            <td [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.provenienza}}</td>
-            <td class="column-class" [style.minWidth]="cols[4].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.oggetto}}</td>
-            <td [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.data | date:'dd/MM/yyyy'}}</td>
-            <td [style.width]="cols[6].width" [style.minWidth]="cols[6].minWidth" class="column-class" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{attivita.descrizione}}</td>
-            <td [style.width]="cols[7].width" [style.minWidth]="cols[7].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">
-                <a class="openTabLink" *ngIf="attivita.tipo==='attivita' || (attivita.tipo==='notifica' &&
-                    (attivita.idApplicazione.nome==='Pico' || attivita.idApplicazione.nome==='Dete' || attivita.idApplicazione.nome==='Deli'))"
-                (click)="apriAttivita(attivita)"><b>Apri</b></a>
-            </td>
-
+            <td [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
+            <td [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[2])}}</td>
+            <td [id]="attivita.id" #td3 [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[3], td3)}}</td>
+            <td [style.width]="cols[4].width" [style.minWidth]="cols[4].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[4])}}</td>
+            <td [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
+            <td [style.width]="cols[6].width" [style.minWidth]="cols[6].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[6])}}</td>
+            <td [id]="attivita.id" #td7 [style.width]="cols[7].width" [style.minWidth]="cols[7].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[7], td7)}}</td>
             <td [style.width]="cols[8].width" [style.minWidth]="cols[8].minWidth" class="p0">
                 <img *ngIf="attivita.datiAggiuntivi.custom_app_3 === '0'" src="assets/images/baseline-not_interested-24px.svg" alt="prendi" class="img-table"
                     pTooltip="Sul documento mancano alcuni dati che devono essere inseriti prima di poter procedere.">
@@ -103,8 +89,8 @@
                 <img *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="onNoteClick(attivita)" alt="note" class="img-table">
                 <img *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table">
             </td>
-        </tr>
-
+        </ng-template>
     </ng-template>
 
 </p-table>
+<p-contextMenu #cm [model]="contextMenuItems" [ngClass]="'clContextMenu'" [style]="{'margin': '-130px 0 0 -30px'}"></p-contextMenu>

@@ -3,6 +3,7 @@ import { NtJwtLoginService, LoginType, NtJwtLoginComponent } from "@bds/nt-jwt-l
 import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router, RouterStateSnapshot } from "@angular/router";
 import { Utente } from "@bds/ng-internauta-model";
+import { GlobalService } from "./services/global.service";
 
 @Component({
   selector: "app-root",
@@ -14,7 +15,10 @@ export class AppComponent implements OnInit {
   title = "Babel-Internauta";
   private deletedImpersonatedUserQueryParams = false;
 
-  constructor(private loginService: NtJwtLoginService, private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private loginService: NtJwtLoginService,
+    private route: ActivatedRoute,
+    private router: Router) {}
 
   ngOnInit() {
     console.log("inizio onInit() appComponent");

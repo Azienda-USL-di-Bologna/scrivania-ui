@@ -7,8 +7,8 @@ import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
 import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STATICHE_DESCRIPTION } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
-import { Accordion } from "primeng/accordion";
-import { applicationCustiomization } from "src/environments/application_customization";
+import { ApplicationCustiomization } from "src/environments/application_customization";
+import { ImpostazioniService } from "src/app/services/impostazioni.service";
 
 @Component({
   selector: "app-scrivania",
@@ -55,12 +55,15 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   public showNote: boolean = false;
   public noteText: string = null;
+  private LIMIT_X_LEFT_SIDE: number = 905;
   private MIN_X_LEFT_SIDE: number = 570;
   private MIN_X_RIGHT_SIDE: number = 225;
 
   public idAzienda: number = -1;
+  public changeColOrder: boolean = false;
+  public hidePreview = false;
 
-  constructor(private domSanitizer: DomSanitizer, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
+  constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
    }
 
   ngOnInit() {
@@ -70,11 +73,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       if (u) {
         if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
           this.loggedUser = u;
-          if (this.loggedUser.getImpostazioniApplicazione()) {
-            this.impostazioniVisualizzazione = JSON.parse(this.loggedUser.getImpostazioniApplicazione().impostazioniVisualizzazione);
-          } else {
-            this.impostazioniVisualizzazione = {};
-          }
           this.loadMenu();
           this.setLook();
         } else {
@@ -91,14 +89,21 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         this.loadMenuFirma(data.aziende);
       }
     });
+    this.subscriptions.push(this.impostazioniService.settingsChangedNotifier$.subscribe(newSettings => {
+      this.hidePreview = newSettings[ApplicationCustiomization.scrivania.hidePreview] === "true";
+    }));
   }
 
   private setLook(): void {
     this.setResponsiveSlider();
-
-    if (this.impostazioniVisualizzazione) {
-      this.rightSide.nativeElement.style.width = this.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
-      this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] + "%";
+    if (this.impostazioniService.getImpostazioniVisualizzazione()) {
+      this.rightSide.nativeElement.style.width = this.impostazioniService.getRightSideOffsetWidth() + "%";
+      this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniService.getRightSideOffsetWidth() + "%";
+      if (window.screen.width <= 1280) {
+        this.hidePreview = true;
+      } else {
+        this.hidePreview = this.impostazioniService.getHidePreview() === "true";
+      }
     }
   }
 
@@ -110,10 +115,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       document.onmouseup = function() {
         document.onmousemove = null;
         console.log("that.slider.nativeElement.onmouseup");
-        that.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] = parseInt(that.rightSide.nativeElement.style.width, 10);
-        // const impostazioni: ImpostazioniApplicazioni = that.loggedUser.getImpostazioniApplicazione();
-        // impostazioni.impostazioniVisualizzazione = JSON.stringify(that.impostazioniVisualizzazione);
-        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniVisualizzazione);
+        that.impostazioniService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
+        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniService.getImpostazioniVisualizzazione());
         document.onmouseup = null;
       };
       // that.slider.nativeElement.onmouseup = function() {
@@ -126,10 +129,17 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       document.onmousemove = function(e: MouseEvent) {
         e.preventDefault();
         const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia 32px che sfasano il conteggio
-        if (!(e.clientX <= that.MIN_X_LEFT_SIDE) && !(totalX - e.clientX <= that.MIN_X_RIGHT_SIDE)) {
-          const rxPercent = rx * 100 / totalX;
-          that.rightSide.nativeElement.style.width = rxPercent + "%";
-          that.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
+        if (!(e.clientX <= that.LIMIT_X_LEFT_SIDE)) {
+          that.changeColOrder = false;
+        } else {
+          that.changeColOrder = true;
+        }
+        if (!(e.clientX <= that.MIN_X_LEFT_SIDE)) {
+          if (!(totalX - e.clientX <= that.MIN_X_RIGHT_SIDE)) {
+            const rxPercent = rx * 100 / totalX;
+            that.rightSide.nativeElement.style.width = rxPercent + "%";
+            that.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
+          }
         }
       };
     };
@@ -281,14 +291,14 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
           arrayMenu.forEach( elementArray => {
             // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
             // tanto tutto il resto (azienda, idp, ecc...) è identico
-            if (elementArray.descrizione === ATTIVITA_STATICHE_DESCRIPTION.scrivania){
-              let command = elementArray.compiledUrl
-              command = command.replace(COMMANDS.scrivania_local, COMMANDS.open_prendone_local)
+            if (elementArray.descrizione === ATTIVITA_STATICHE_DESCRIPTION.scrivania) {
+              let command = elementArray.compiledUrl;
+              command = command.replace(COMMANDS.scrivania_local, COMMANDS.open_prendone_local);
               this.aziendeMenu.push(new TreeNode(
                 elementArray.idAzienda.nome,
                 null,
-                (onclick) => {this.handleItemClick(command)}
-              ))
+                (onclick) => {this.handleItemClick(command); }
+              ));
             }
             let found = false;
             for (const elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
@@ -318,7 +328,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                         null,
                         (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                         )],
-                      null
+                      (onclick) => {this.doNothingNodeClick(onclick); }
                     ));
                     break;
                   } else {
@@ -343,9 +353,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                       null,
                       (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                     )],
-                    null
+                    (onclick) => {this.doNothingNodeClick(onclick); }
                   )],
-                  null
+                  (onclick) => {this.doNothingNodeClick(onclick); }
                 ));
               } else {
                 this.alberoMenu.push(new TreeNode(
@@ -355,7 +365,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                     null,
                     (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
                   )],
-                  null
+                  (onclick) => {this.doNothingNodeClick(onclick); }
                 ));
               }
             }
@@ -366,27 +376,26 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   }
 
-  public loadAziendeMenu(){
-    if (this.aziendeMenu)
+  public loadAziendeMenu() {
+    if (this.aziendeMenu) {
       return;
-
+    }
     this.aziendeMenu = [];
     if (this.loggedUser.getUtente().aziende) {
       this.loggedUser.getUtente().aziende.forEach(element => {
-        let command = this.getBabelCommandByAzienda(element.nome);
+        const command = this.getBabelCommandByAzienda(element.nome);
         this.aziendeMenu.push(new TreeNode(
           element.nome,
           null,
-          (onclick) => {this.handleItemClick(command)}
-        ))
-
+          (onclick) => {this.handleItemClick(command); }
+        ));
       });
     }
   }
 
-  private getBabelCommandByAzienda(aziendaLabel: string){
+  private getBabelCommandByAzienda(aziendaLabel: string) {
     this.arrayScrivaniaCompiledUrls.forEach(map => {
-      if (map.get(aziendaLabel)){
+      if (map.get(aziendaLabel)) {
         console.log("ritorno questo command", map.get(aziendaLabel));
         return map.get(aziendaLabel);
       }
@@ -419,9 +428,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  prova(){
-    console.log("aaaaaaaaaaaaaaaaaaaaa")
+  /* Metodo agganciato ad ogni nodo del menu (non alle foglie) per evitare che si chiuda al click */
+  doNothingNodeClick(event: any) {
+    if (event && event.originalEvent) {
+      event.originalEvent.stopPropagation();
+    }
   }
 }
 

@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {rootRouterConfig} from "./app.routes";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { HttpModule } from "@angular/http";
 
@@ -16,10 +16,12 @@ import { HeaderComponent } from "./header/header.component";
 import { CambioUtenteComponent } from "./header/cambio-utente/cambio-utente.component";
 import { AttivitaFatteComponent } from "./tabelle/attivita-fatte/attivita-fatte.component";
 import { DropdownAziendeComponent } from "./components/dropdown-aziende/dropdown-aziende.component";
+import { LoadingComponent } from "./pagine/loading/loading.component";
 
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
 import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
+import { MessageService, DialogService } from "primeng/api";
 
 
 /* PrimeNG component */
@@ -30,18 +32,24 @@ import { DropdownModule } from "primeng/dropdown";
 import { TableModule } from "primeng/table";
 import { CalendarModule } from "primeng/calendar";
 import { TooltipModule } from "primeng/tooltip";
-
-import { DatePipe } from "@angular/common";
+import { InputSwitchModule } from "primeng/inputswitch";
+import { MenubarModule } from "primeng/menubar";
+import { SlideMenuModule } from "primeng/slidemenu";
+import { DynamicDialogModule } from "primeng/dynamicdialog";
+import { ContextMenuModule } from "primeng/contextmenu";
 import { InputTextModule } from "primeng/inputtext";
 import { OverlayPanelModule } from "primeng/overlaypanel";
 import { TieredMenuModule } from "primeng/tieredmenu";
 import { DialogModule } from "primeng/dialog";
 import { AutoCompleteModule } from "primeng/autocomplete";
+import { DatePipe } from "@angular/common";
+import { ToastModule } from "primeng/toast";
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
-
+import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.component";
+import { ImpostazioniService } from "./services/impostazioni.service";
 
 
 @NgModule({
@@ -53,7 +61,9 @@ import { loginModuleConfig } from "./config/module-config";
     HeaderComponent,
     CambioUtenteComponent,
     AttivitaFatteComponent,
-    DropdownAziendeComponent
+    DropdownAziendeComponent,
+    LoadingComponent,
+    ImpostazioniComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
@@ -68,6 +78,7 @@ import { loginModuleConfig } from "./config/module-config";
     TableModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: false }),
     FormsModule,
+    ReactiveFormsModule,
     CalendarModule,
     TooltipModule,
     InputTextModule,
@@ -75,8 +86,15 @@ import { loginModuleConfig } from "./config/module-config";
     TieredMenuModule,
     DialogModule,
     AutoCompleteModule,
+    InputSwitchModule,
+    MenubarModule,
+    SlideMenuModule,
+    DynamicDialogModule,
+    ContextMenuModule,
+    ToastModule
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe],
-  bootstrap: [AppComponent]
+  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService],
+  bootstrap: [AppComponent],
+  entryComponents: [ImpostazioniComponent]
 })
 export class AppModule { }
