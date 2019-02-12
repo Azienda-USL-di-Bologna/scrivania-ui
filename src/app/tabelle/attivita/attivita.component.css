@@ -53,3 +53,13 @@
 :host>>> .clContextMenu span{
     color: #ffffff !important;
 }
+.columns-icon{
+    text-align: center;
+}
+.columns-icon > span{
+    font-size: 24px; 
+}
+:host>>> .clToast .ui-toast-message-info{
+    background-color:#283948 !important;
+    color: #ffffff !important;
+}
