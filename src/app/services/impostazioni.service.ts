@@ -19,6 +19,8 @@ export class ImpostazioniService {
           this.loggedUser = utente;
           if (this.loggedUser.getImpostazioniApplicazione()) {
             this.impostazioniVisualizzazione = JSON.parse(this.loggedUser.getImpostazioniApplicazione().impostazioniVisualizzazione);
+          } else {
+            this.impostazioniVisualizzazione = {};
           }
         } else {
           this.loggedUser = utente;
