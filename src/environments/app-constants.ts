@@ -68,6 +68,7 @@ export const CONTROLLERS_ENDPOINT = {
 
 export const COMMANDS = {
     scrivania_local: "scrivania_local",
+    gedi_local: "gedi_local",
     open_prendone_local: "open_prendone_local",
     open_firmone_local: "open_firmone_local"
 };

@@ -291,9 +291,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
           arrayMenu.forEach( elementArray => {
             // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
             // tanto tutto il resto (azienda, idp, ecc...) è identico
-            if (elementArray.descrizione === ATTIVITA_STATICHE_DESCRIPTION.scrivania) {
+            // VA RIFATTO!!!!!
+            if (elementArray.idApplicazione.id === "gedi") {
               let command = elementArray.compiledUrl;
-              command = command.replace(COMMANDS.scrivania_local, COMMANDS.open_prendone_local);
+              command = command.replace(COMMANDS.gedi_local, COMMANDS.open_prendone_local);
               this.aziendeMenu.push(new TreeNode(
                 elementArray.idAzienda.nome,
                 null,
