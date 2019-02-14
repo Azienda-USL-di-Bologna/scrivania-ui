@@ -234,6 +234,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   public apriAttivita(attivita: Attivita) {
     const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
+    this.selectIndex(this.attivita.indexOf(attivita));
     if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
       /* abbiamo bisogno di un uuid diverso ad ogni entrata sull'ambiente,
          se no per un controllo anti-inde-sminchiamento onCommand ritorna e basta */
@@ -279,15 +280,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           break;
 
         case "azione":
-          if (this.listeners[td.id]) {
-            if (this.listeners[td.id][1] === td.cellIndex) {
-              this.fillActionCol(attivita, td);
-              return;
-            } else {
-              this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
-              this.listeners.delete(td.id); // Lo elimino anche dall'array per aggiungere il nuovo listener nella nuova posizione (td3)
-            }
-          }
           if (td.classList.contains(this.columnClass)) {
             this.renderer.removeClass(td, this.columnClass);
           }
@@ -309,6 +301,10 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" &&
       (attivita.idApplicazione.nome === "Pico" || attivita.idApplicazione.nome === "Dete" || attivita.idApplicazione.nome === "Deli"))) {
       td.innerHTML = `<a style="color: #993366"><b>Apri</b></a>`;
+      if (this.listeners[td.id]) {
+        this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
+        this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa
+      }
       this.listeners[td.id] = [this.renderer.listen(td, "click", () => {
         this.apriAttivita(attivita);
       }), td.cellIndex];
