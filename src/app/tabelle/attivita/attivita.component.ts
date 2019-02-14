@@ -91,7 +91,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
      const browser = Bowser.getParser(window.navigator.userAgent);
     const browserInfo = browser.getBrowser();
     console.log("BROWSER = ", browserInfo);
-    if (browserInfo.name !== "Firefox" || parseInt(browserInfo.version, 10) > 42) {
+    if (browserInfo.name !== "Firefox") {
       this.columnClass = "column-class-o";
     }
   }

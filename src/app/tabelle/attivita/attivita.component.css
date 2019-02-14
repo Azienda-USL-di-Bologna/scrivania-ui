@@ -25,6 +25,7 @@
     padding: 10px;
 }
 .column-class-f {
+    word-break: break-all;
     word-wrap: break-word;
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
