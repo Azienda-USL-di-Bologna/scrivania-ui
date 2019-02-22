@@ -20,7 +20,7 @@
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns" [style.width]="col.width" [style.minWidth]="col.minWidth">
-                <div *ngIf="col.field != undefined" [pSortableColumn]="col.field">
+                <div *ngIf="col.field != undefined && col.field !== 'azione'" [pSortableColumn]="col.field">
                     {{col.header}}
                     <p-sortIcon [field]="col.field" ariaLabelAsc="Colonnna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonnna {{col.header}}, Ordinamento discendente">
                     </p-sortIcon>
@@ -29,7 +29,7 @@
         </tr>
         <tr>
             <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget" class="filters-styles" [style.width]="col.width" [style.minWidth]="col.minWidth">
-                <div *ngIf="col.field != undefined">
+                <div *ngIf="col.field != undefined && col.field !== 'azione'">
                     <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." showButtonBar="true"
                         [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
                         (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
