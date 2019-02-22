@@ -30,6 +30,7 @@ export class AttivitaService extends HttpAbstractService {
   delete(elementToDelete: Attivita): Promise<any> {
     const functioName = "delete";
     // console.log(this.classDescriptionLocal, functioName, "elementToDelete", elementToDelete);
+    elementToDelete.datiAggiuntivi = JSON.stringify(elementToDelete.datiAggiuntivi);
     return this.deleteHttpCall(elementToDelete.id);
   }
 }
