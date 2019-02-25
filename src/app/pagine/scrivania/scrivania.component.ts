@@ -31,7 +31,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public attivitaSelezionata: Attivita;
   public noAnteprimaImg: string = "assets/images/no_anteprima.png";
   public noAnteprima: boolean = true;
-  allegati: any[] = [];
+  allegati: any[];
   allegatoSelezionato: any;
 
   public oggetto: any = "Nessuna attivita selezionata.";
@@ -102,6 +102,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.impostazioniService.settingsChangedNotifier$.subscribe(newSettings => {
       this.hidePreview = newSettings[ApplicationCustiomization.scrivania.hidePreview] === "true";
     }));
+    this.allegatiDropDown.disabled = true;
+    this.allegati = [{label: "Documenti non presenti", value: null}];
   }
 
   private setLook(): void {
