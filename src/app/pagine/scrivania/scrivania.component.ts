@@ -50,10 +50,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public alberoMenu: any[];
   public alberoFirma: any[] = [];
   public alberoPrendi: any[] = [];
-  public aziendeMenu: any[];
+  // public aziendeMenu: any[];
   public urlFirmone: string = "#";
   public urlPrendone: string = "#";
-  private arrayScrivaniaCompiledUrls: any[];
+  // private arrayScrivaniaCompiledUrls: any[];
 
   public showNote: boolean = false;
   public noteText: string = null;
@@ -292,8 +292,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
     initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
     const lazyLoadFiltersAndSorts = new FiltersAndSorts();
-    this.arrayScrivaniaCompiledUrls = [];
-    this.aziendeMenu  = [];
+    // this.arrayScrivaniaCompiledUrls = [];
+    // this.aziendeMenu  = [];
     this.scrivaniaService.getData(PROJECTIONS.menu.customProjections.menuWithIdApplicazioneAndIdAziendaAndTransientFields, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
       .then(
         data => {
@@ -302,15 +302,15 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
             // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
             // tanto tutto il resto (azienda, idp, ecc...) è identico
             // VA RIFATTO!!!!!
-            if (elementArray.idApplicazione.id === "gedi") {
-              let command = elementArray.compiledUrl;
-              command = command.replace(COMMANDS.gedi_local, COMMANDS.open_prendone_local);
-              this.aziendeMenu.push(new TreeNode(
-                elementArray.idAzienda.nome,
-                null,
-                (onclick) => {this.handleItemClick(command); }
-              ));
-            }
+            // if (elementArray.idApplicazione.id === "gedi") {
+            //   let command = elementArray.compiledUrl;
+            //   command = command.replace(COMMANDS.gedi_local, COMMANDS.open_prendone_local);
+            //   this.aziendeMenu.push(new TreeNode(
+            //     elementArray.idAzienda.nome,
+            //     null,
+            //     (onclick) => {this.handleItemClick(command); }
+            //   ));
+            // }
             let found = false;
             for (const elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
               if (elementAlbero.label === elementArray.idApplicazione.nome) {
@@ -387,33 +387,33 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   }
 
-  public loadAziendeMenu() {
-    if (this.aziendeMenu) {
-      return;
-    }
-    this.aziendeMenu = [];
-    if (this.loggedUser.getUtente().aziende) {
-      this.loggedUser.getUtente().aziende.forEach(element => {
-        const command = this.getBabelCommandByAzienda(element.nome);
-        this.aziendeMenu.push(new TreeNode(
-          element.nome,
-          null,
-          (onclick) => {this.handleItemClick(command); }
-        ));
-      });
-    }
-  }
+  // public loadAziendeMenu() {
+  //   if (this.aziendeMenu) {
+  //     return;
+  //   }
+  //   this.aziendeMenu = [];
+  //   if (this.loggedUser.getUtente().aziende) {
+  //     this.loggedUser.getUtente().aziende.forEach(element => {
+  //       const command = this.getBabelCommandByAzienda(element.nome);
+  //       this.aziendeMenu.push(new TreeNode(
+  //         element.nome,
+  //         null,
+  //         (onclick) => {this.handleItemClick(command); }
+  //       ));
+  //     });
+  //   }
+  // }
 
-  private getBabelCommandByAzienda(aziendaLabel: string) {
-    this.arrayScrivaniaCompiledUrls.forEach(map => {
-      if (map.get(aziendaLabel)) {
-        console.log("ritorno questo command", map.get(aziendaLabel));
-        return map.get(aziendaLabel);
-      }
+  // private getBabelCommandByAzienda(aziendaLabel: string) {
+  //   this.arrayScrivaniaCompiledUrls.forEach(map => {
+  //     if (map.get(aziendaLabel)) {
+  //       console.log("ritorno questo command", map.get(aziendaLabel));
+  //       return map.get(aziendaLabel);
+  //     }
 
-    });
+  //   });
 
-  }
+  // }
 
   public buildGenericMenu(aziende, albero) {
     aziende.forEach(element => {
