@@ -9,6 +9,7 @@
             </button>
             <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
 
+            <!-- Firma -->
             <button [ngClass]="{'ui-button-secondary': true, 'pr-8':true, 'd-hidden': mostraStorico || urlFirmone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlFirmone)" type="button" pButton label="Firma">
             </button>
 
@@ -17,9 +18,12 @@
             <p-tieredMenu #firmaMenu [model]="alberoFirma" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
 
             <!-- PRENDI -->
-            <button [ngClass]="mostraStorico?'d-hidden':'d-flex'" class="ui-button-secondary" #btn type="button" pButton (click)="azMenu.toggle($event)" label="Prendi">
+            <button [ngClass]="{'ui-button-secondary': true, 'pr-8':true, 'd-hidden': mostraStorico || urlPrendone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlPrendone)" type="button" pButton label="Prendi">
             </button>
-            <p-tieredMenu #azMenu [model]="aziendeMenu"  [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
+
+            <button [ngClass]="{'d-hidden': mostraStorico || alberoPrendi.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary" #btn type="button" pButton (click)="prendoneMenu.toggle($event)" label="Prendi">
+            </button>
+            <p-tieredMenu #prendoneMenu [model]="alberoPrendi" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
 
             <button type="button" pButton [label]="mostraStorico?'Indietro':'Cronologia'" (click)="mostraStorico=!mostraStorico" iconPos="left" class="ui-button-secondary button-with-icon .button-indietro">
                 <img [ngClass]="mostraStorico?'d-inline':'d-hidden'" src="assets/images/outline-arrow_back_ios-24px.svg" width="24px" alt="Apri">

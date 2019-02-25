@@ -63,7 +63,8 @@ export const ENTITIES = {
 };
 
 export const CONTROLLERS_ENDPOINT = {
-    FIRMONE_URLS: "/getFirmoneUrls"
+    FIRMONE_URLS: "/getFirmoneUrls",
+    PRENDONE_URLS: "/getPrendoneUrls"
 };
 
 export const COMMANDS = {

@@ -49,8 +49,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public impostazioniVisualizzazione: any;
   public alberoMenu: any[];
   public alberoFirma: any[] = [];
+  public alberoPrendi: any[] = [];
   public aziendeMenu: any[];
   public urlFirmone: string = "#";
+  public urlPrendone: string = "#";
   private arrayScrivaniaCompiledUrls: any[];
 
   public showNote: boolean = false;
@@ -81,14 +83,22 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         // this.loadAziendeMenu();
       }
     }));
-    this.scrivaniaService.getUrlsFirmone().subscribe(data => {
+    this.subscriptions.push(this.scrivaniaService.getUrlsFirmone().subscribe(data => {
       if (data.size > 0) {
         if (data.size === 1) {
           this.urlFirmone = data.aziende[0].url;
         }
-        this.loadMenuFirma(data.aziende);
+        this.buildGenericMenu(data.aziende, this.alberoFirma);
       }
-    });
+    }));
+    this.subscriptions.push(this.scrivaniaService.getUrlsPrendone().subscribe(data => {
+      if (data.size > 0) {
+        if (data.size === 1) {
+          this.urlPrendone = data.aziende[0].url;
+        }
+        this.buildGenericMenu(data.aziende, this.alberoPrendi);
+      }
+    }));
     this.subscriptions.push(this.impostazioniService.settingsChangedNotifier$.subscribe(newSettings => {
       this.hidePreview = newSettings[ApplicationCustiomization.scrivania.hidePreview] === "true";
     }));
@@ -405,9 +415,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   }
 
-  public loadMenuFirma(aziende) {
+  public buildGenericMenu(aziende, albero) {
     aziende.forEach(element => {
-      this.alberoFirma.push(new TreeNode(
+      albero.push(new TreeNode(
         element.nome,
         null,
         (onClick) => {this.handleItemClick(element.url); }));

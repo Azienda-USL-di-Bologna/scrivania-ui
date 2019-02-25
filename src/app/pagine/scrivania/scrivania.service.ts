@@ -78,8 +78,10 @@ export class ScrivaniaService extends HttpAbstractService {
   public getUrlsFirmone(): Observable<any> {
     const url: string = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.FIRMONE_URLS;
     return this.http.get(url);
-    /* return new Observable((observer: Subscriber<any>) => {
-        // return this.http.get<any>(url);
-    }); */
+  }
+
+  public getUrlsPrendone(): Observable<any> {
+    const url: string = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.PRENDONE_URLS;
+    return this.http.get(url);
   }
 }
