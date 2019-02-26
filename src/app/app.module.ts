@@ -44,12 +44,14 @@ import { DialogModule } from "primeng/dialog";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { DatePipe } from "@angular/common";
 import { ToastModule } from "primeng/toast";
+import { CardModule } from 'primeng/card';
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
 import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
+import { ProfiloComponent } from "./header/profilo/profilo.component";
 
 
 @NgModule({
@@ -63,7 +65,8 @@ import { ImpostazioniService } from "./services/impostazioni.service";
     AttivitaFatteComponent,
     DropdownAziendeComponent,
     LoadingComponent,
-    ImpostazioniComponent
+    ImpostazioniComponent,
+    ProfiloComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
@@ -91,10 +94,11 @@ import { ImpostazioniService } from "./services/impostazioni.service";
     SlideMenuModule,
     DynamicDialogModule,
     ContextMenuModule,
-    ToastModule
+    ToastModule,
+    CardModule
   ],
   providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService],
   bootstrap: [AppComponent],
-  entryComponents: [ImpostazioniComponent]
+  entryComponents: [ImpostazioniComponent, ProfiloComponent]
 })
 export class AppModule { }
