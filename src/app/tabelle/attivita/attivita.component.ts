@@ -12,6 +12,8 @@ import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
+import { IntimusClientService } from "src/app/intimus/intimus-client.service";
+import { IntimusCommand, IntimusCommands } from "src/app/intimus/intimus-command";
 
 @Component({
   selector: "app-attivita",
@@ -62,23 +64,28 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private attivitaService: AttivitaService,
     private loginService: NtJwtLoginService,
     private renderer: Renderer2,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private intimusClientService: IntimusClientService
   ) { }
 
   ngOnInit() {
-      // imposto l'utente loggato nell'apposita variabile
-      this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
-        if (u) {
-          if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
-            this.loggedUser = u;
-            /* console.log("faccio loadData"); */
-            // this.loadData(null);
-          } else {
-            this.loggedUser = u;
-          }
-        }
-        // console.log("faccio il load data di nuovo");
-      }));
+    // imposto l'utente loggato nell'apposita variabile
+    this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
+      if (u) {
+        // if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
+        //   this.loggedUser = u;
+        //   console.log("faccio loadData");
+        //   this.loadData(null);
+        // } else {
+        //   this.loggedUser = u;
+        // }
+        this.loggedUser = u;
+        this.subscriptions.push(this.intimusClientService.command$.subscribe((command: IntimusCommand) => {
+          this.parseIntimusCommand(command);
+        }));
+      }
+      // console.log("faccio il load data di nuovo");
+    }));
     const that = this;
     window.addEventListener("resize", function(event) {
       const bodyTable = document.getElementsByClassName("ui-table-scrollable-body")[0] as HTMLElement;
@@ -93,6 +100,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     console.log("BROWSER = ", browserInfo);
     if (browserInfo.name !== "Firefox") {
       this.columnClass = "column-class-o";
+    }
+  }
+
+  private parseIntimusCommand(command: IntimusCommand) {
+    console.log("ricevuto comando in Attivita: ", command);
+    if (command.command === IntimusCommands.RefreshAttivita) {
+      this.loadData(this.previousEvent);
     }
   }
 

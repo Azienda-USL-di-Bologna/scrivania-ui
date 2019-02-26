@@ -1,9 +1,12 @@
 import { Component, OnInit } from "@angular/core";
-import { NtJwtLoginService, LoginType, NtJwtLoginComponent } from "@bds/nt-jwt-login";
-import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE } from "src/environments/app-constants";
+import { NtJwtLoginService, LoginType, NtJwtLoginComponent, UtenteUtilities } from "@bds/nt-jwt-login";
+import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router, RouterStateSnapshot } from "@angular/router";
 import { Utente } from "@bds/ng-internauta-model";
 import { GlobalService } from "./services/global.service";
+import { IntimusClientService } from "./intimus/intimus-client.service";
+// import { IntimusClient } from "./intimus/intimus-client";
+
 
 @Component({
   selector: "app-root",
@@ -14,11 +17,13 @@ export class AppComponent implements OnInit {
 
   title = "Babel-Internauta";
   private deletedImpersonatedUserQueryParams = false;
+  // private intimusClient: IntimusClient = new IntimusClient();
 
   constructor(
     private loginService: NtJwtLoginService,
     private route: ActivatedRoute,
-    private router: Router) {}
+    private router: Router,
+    private intimusClient: IntimusClientService) { }
 
   ngOnInit() {
     console.log("inizio onInit() appComponent");
@@ -49,7 +54,13 @@ export class AppComponent implements OnInit {
       }
 
       // console.log("this.deletedImpersonatedUserQueryParams: ", this.deletedImpersonatedUserQueryParams);
-   });
+    });
+
+    // this.loginService.loggedUser$.subscribe((utenteUtilities: UtenteUtilities) => {
+    //   if (utenteUtilities) {
+    //     this.intimusClient.initializeIntimus(utenteUtilities.getUtente());
+    //   }
+    // });
   }
 
   // crea l'utente a partire dai dati "grezzi" UserInfo della risposta
@@ -71,7 +82,7 @@ export class AppComponent implements OnInit {
     let purgedQueryParams: string = "";
     const queryParams: string = splittedUrl[1];
     const splittedQueryParams: string[] = queryParams.split("&");
-    for (let i = 0; i < splittedQueryParams.length; i ++) {
+    for (let i = 0; i < splittedQueryParams.length; i++) {
       const splittedQueryParam: string[] = splittedQueryParams[i].split("=");
       if (splittedQueryParam[0] !== paramToRemove) {
         purgedQueryParams += splittedQueryParams[i] + "&";
@@ -84,5 +95,4 @@ export class AppComponent implements OnInit {
       return splittedUrl[0];
     }
   }
-
 }

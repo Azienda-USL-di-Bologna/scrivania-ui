@@ -53,6 +53,8 @@ import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.compon
 import { ImpostazioniService } from "./services/impostazioni.service";
 import { ProfiloComponent } from "./header/profilo/profilo.component";
 
+import { IntimusClientService } from "./intimus/intimus-client.service";
+
 
 @NgModule({
   declarations: [
@@ -97,7 +99,7 @@ import { ProfiloComponent } from "./header/profilo/profilo.component";
     ToastModule,
     CardModule
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService],
+  providers: [IntimusClientService, AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent, ProfiloComponent]
 })
