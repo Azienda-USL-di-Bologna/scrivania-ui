@@ -5,8 +5,6 @@ import { ActivatedRoute, Params, Router, RouterStateSnapshot } from "@angular/ro
 import { Utente } from "@bds/ng-internauta-model";
 import { GlobalService } from "./services/global.service";
 import { IntimusClientService } from "./intimus/intimus-client.service";
-// import { IntimusClient } from "./intimus/intimus-client";
-
 
 @Component({
   selector: "app-root",
