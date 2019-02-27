@@ -14,7 +14,7 @@ export class ProfiloComponent implements OnInit {
   profilo = {} as ProfiloUtente;
   ngOnInit() {
     const utente: Utente = this.config.data;
-    console.log("UTENTE ", utente);
+    // console.log("UTENTE ", utente);
     this.profilo.nome = utente.idPersona.nome;
     this.profilo.cognome = utente.idPersona.cognome;
     this.profilo.email = utente.email;
