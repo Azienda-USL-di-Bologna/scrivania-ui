@@ -106,9 +106,42 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private parseIntimusCommand(command: IntimusCommand) {
     console.log("ricevuto comando in Attivita: ", command);
     if (command.command === IntimusCommands.RefreshAttivita) {
-      this.loadData(this.previousEvent);
+      const idAttivitaToRefresh = command.params.id_attivita;
+      const operation = command.params.operation;
+      console.log(operation + " attivita " + idAttivitaToRefresh);
+      switch (operation) {
+        case "INSERT":
+          this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, null, null, idAttivitaToRefresh)
+          .then((data: Attivita) => {
+            if (data) {
+              this.setAttivitaIcon(data);
+              this.attivita.unshift(data);
+            }
+          });
+        break;
+        case "UPDATE":
+          this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, null, null, idAttivitaToRefresh)
+          .then((data: Attivita) => {
+              if (data) {
+                const idAttivitaToReplace = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
+                if (idAttivitaToReplace >= 0) {
+                  this.setAttivitaIcon(data);
+                  this.attivita[idAttivitaToReplace] = data;
+              }
+            }
+          });
+        break;
+        case "DELETE":
+          const idAttivitaToDelete = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
+          this.attivita.splice(idAttivitaToDelete, 1);
+        break;
+      }
+
+      // this.loadData(this.previousEvent);
     }
   }
+
+
 
   handleContextMenu(attivitaSelezionata: Attivita) {
     // this.messageService.add({ severity: "info", summary: "Car Selected", detail: attivitaSelezionata.oggetto });
@@ -228,23 +261,26 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             /* console.log("ATTIVITA: ", this.attivita); */
             // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
             this.attivita.forEach(a => {
-              a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);
-
-              if (a.tipo === "notifica") {
-                a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
-              } else if (!a.priorita || a.priorita === 3) {
-                a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
-              } else if (a.priorita === 2) {
-                a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.2.svg";
-              } else if (a.priorita === 1) {
-                a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.1.svg";
-              }
+              this.setAttivitaIcon(a);
             });
           }
           this.loading = false;
         }
       );
 
+  }
+
+  private setAttivitaIcon(a: Attivita) {
+    a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);
+    if (a.tipo === "notifica") {
+      a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
+    } else if (!a.priorita || a.priorita === 3) {
+      a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
+    } else if (a.priorita === 2) {
+      a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.2.svg";
+    } else if (a.priorita === 1) {
+      a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.1.svg";
+    }
   }
 
   public apriAttivita(attivita: Attivita) {

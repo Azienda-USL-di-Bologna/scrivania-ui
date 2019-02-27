@@ -5,6 +5,7 @@ import * as Primus from "../../assets/primus.js";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Subject, Observable } from "rxjs";
 import { IntimusCommands, IntimusCommand } from "./intimus-command.js";
+import * as Bowser from "bowser";
 
 @Injectable({
   providedIn: "root"
@@ -33,8 +34,9 @@ export class IntimusClientService  {
     });
 
     primus.on("data", data => {
+      console.log("**********Received a new message from the server*************", data);
       if (data.command === "registerClient") {
-        console.log("Received a new message from the server", data);
+        // console.log("Received a new message from the server", data);
         this.registerClient(primus, utente);
       } else if (data && data.command) {
         const cmd = data.command + "&params=" + JSON.stringify(data.params);
@@ -60,7 +62,7 @@ export class IntimusClientService  {
         user: utente.idPersona.id,
         id_azienda: utente.idAzienda.id,
         application: APPLICATION,
-        browserinfo: "firefox",
+        browserinfo: Bowser.getParser(window.navigator.userAgent),
         ip: null,
         resolution: this.getScreenResolution()
       }
