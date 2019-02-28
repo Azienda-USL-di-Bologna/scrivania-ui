@@ -53,6 +53,14 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   set changeColOrder(changeColOrder: boolean) {
     this.cols = !changeColOrder ? ColumnsNormal : ColumnsReordered;
     }
+  
+  @Input("refresh")
+  set refresh(_refresh: any){
+    console.log("ricaricaaaaa")
+    if(_refresh.name == "attivita")
+    console.log("ricaricabbbbbbb")
+    this.loadData(null)
+  }
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
@@ -66,10 +74,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private renderer: Renderer2,
     private messageService: MessageService,
     private intimusClientService: IntimusClientService
-  ) { }
+  ) {
 
-  ngOnInit() {
-    // imposto l'utente loggato nell'apposita variabile
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       if (u) {
         // if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
@@ -86,6 +92,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       }
       // console.log("faccio il load data di nuovo");
     }));
+   }
+
+  ngOnInit() {
+    // imposto l'utente loggato nell'apposita variabile
+    
     const that = this;
     window.addEventListener("resize", function(event) {
       const bodyTable = document.getElementsByClassName("ui-table-scrollable-body")[0] as HTMLElement;

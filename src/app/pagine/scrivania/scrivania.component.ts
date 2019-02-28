@@ -65,6 +65,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public changeColOrder: boolean = false;
   public hidePreview = false;
 
+  public tabellaDaRefreshare: any={name: ""};
+
   constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
    }
 
@@ -446,6 +448,20 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     if (event && event.originalEvent) {
       event.originalEvent.stopPropagation();
     }
+  }
+  ricarica(){
+    console.log("ricaricafatto")
+
+    if(this.mostraStorico===true){
+      
+      this.tabellaDaRefreshare=Object.assign({},{name: "attivita-fatte"});
+    }
+    
+    else{
+      this.tabellaDaRefreshare=Object.assign({},{name: "attivita"});
+      console.log("ricaricafassss")
+    }
+    console.log("fine funzione", this.tabellaDaRefreshare);
   }
 }
 
