@@ -9,6 +9,7 @@ import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STAT
 import { Subscription } from "rxjs";
 import { ApplicationCustiomization } from "src/environments/application_customization";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
+import { ConfirmationService } from "primeng/components/common/confirmationservice";
 
 @Component({
   selector: "app-scrivania",
@@ -66,8 +67,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public hidePreview = false;
 
   public tabellaDaRefreshare: any={name: ""};
+  public cancellaNotifiche: any={};
 
-  constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
+  constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService,
+    private confirmationService: ConfirmationService) {
    }
 
   ngOnInit() {
@@ -449,6 +452,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       event.originalEvent.stopPropagation();
     }
   }
+
   ricarica(){
     console.log("ricaricafatto")
 
@@ -462,6 +466,28 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       console.log("ricaricafassss")
     }
     console.log("fine funzione", this.tabellaDaRefreshare);
+  }
+
+  delNotifiche(){
+    this.confirmationService.confirm({
+      message: 'Stai per archiviare tutte le notifiche nello storico. Vuoi procedere?',
+      header: 'Cancellazione notifiche',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sì',
+      rejectLabel: 'No',
+      accept: () => {
+          //this.msgs = [{severity:'info', summary:'Confirmed', detail:'You have accepted'}];
+          console.log("dmnalkd")
+          //this.cancellaNotifiche={};
+          this.subscriptions.push(this.scrivaniaService.cancellaNotifiche().subscribe(data => {
+            console.log("tutto ok");
+            this.ricarica();
+          }));
+      },
+      reject: () => {
+        console.log("tutto male")
+      }
+  });
   }
 }
 

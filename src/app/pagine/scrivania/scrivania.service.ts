@@ -84,4 +84,9 @@ export class ScrivaniaService extends HttpAbstractService {
     const url: string = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.PRENDONE_URLS;
     return this.http.get(url);
   }
+
+  public cancellaNotifiche(): Observable<any> {
+    const url: string = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.CANCELLA_NOTIFICHE;
+    return this.http.get(url);
+  }
 }

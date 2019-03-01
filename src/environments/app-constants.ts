@@ -83,7 +83,8 @@ export const ENTITIES = {
 
 export const CONTROLLERS_ENDPOINT = {
     FIRMONE_URLS: "/getFirmoneUrls",
-    PRENDONE_URLS: "/getPrendoneUrls"
+    PRENDONE_URLS: "/getPrendoneUrls",
+    CANCELLA_NOTIFICHE: "/cancellaNotifiche"
 };
 
 export const COMMANDS = {

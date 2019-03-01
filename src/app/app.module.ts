@@ -45,6 +45,8 @@ import { AutoCompleteModule } from "primeng/autocomplete";
 import { DatePipe } from "@angular/common";
 import { ToastModule } from "primeng/toast";
 import { CardModule } from 'primeng/card';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService} from 'primeng/api';
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
@@ -97,9 +99,11 @@ import { IntimusClientService } from "./intimus/intimus-client.service";
     DynamicDialogModule,
     ContextMenuModule,
     ToastModule,
-    CardModule
+    CardModule,
+    ConfirmDialogModule
+    
   ],
-  providers: [IntimusClientService, AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService],
+  providers: [IntimusClientService, AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService,ConfirmationService],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent, ProfiloComponent]
 })

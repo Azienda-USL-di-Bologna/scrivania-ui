@@ -32,13 +32,16 @@
             <button #btn type="button" pButton (click)="ricarica()" class="ui-button-secondary centerIconVertically" iconPos="left" label="Ricarica">
                 <i class="pi pi-refresh" style="font-size: 24px"></i> 
             </button>
+            <button #btn type="button" pButton (click)="delNotifiche()" class="ui-button-secondary centerIconVertically" iconPos="left" label="Elimina Notifiche">
+                <i class="pi pi-trash" style="font-size: 24px"></i> 
+            </button>
         </div>
 
         <app-dropdown-aziende *ngIf="loggedUser.getUtente().aziende.length !== 1" (aziendaEmitter)="aziendaChanged($event)"></app-dropdown-aziende>
     </div>
     <div class="table-wrapper">
         <div class="table-inner">
-            <app-attivita *ngIf="!mostraStorico" (attivitaEmitter)="attivitaClicked($event)" [refresh]="tabellaDaRefreshare"
+            <app-attivita *ngIf="!mostraStorico" (attivitaEmitter)="attivitaClicked($event)" [refresh]="tabellaDaRefreshare" [cancellaNotifiche]="cancellaNotifiche"
             (onAttivitaNoteEmitter)="onNoteClick($event)" [idAzienda]="idAzienda" [changeColOrder]="changeColOrder"></app-attivita>
             <app-attivita-fatte *ngIf="mostraStorico" (onAttivitaNoteEmitter)="onNoteClick($event)" [idAzienda]="idAzienda" [refresh]="tabellaDaRefreshare"></app-attivita-fatte>
         </div>
@@ -99,3 +102,5 @@
         [maximizable]="true" [baseZIndex]="10000">
         {{ this.noteText }}
 </p-dialog>
+
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>

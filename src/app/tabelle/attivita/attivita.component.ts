@@ -61,6 +61,19 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     console.log("ricaricabbbbbbb")
     this.loadData(null)
   }
+  @Input("cancellaNotifiche")
+  set cancellaNotifiche(_cancellaNotifiche: any){
+    console.log("ciao")
+    /* const response = this.attivitaService.delete();
+    response.then(res => {
+      const index = this.attivita.findIndex(element => element === attivita);
+      this.attivita.splice(index, 1);
+      this.messageService.add({ severity: "info", summary: "Eliminazione", detail: "Notifica eliminata con successo!" });
+    }).catch(err => {
+      this.messageService.add({ severity: "error", summary: "Eliminazione", detail: "Non è stato possibile eliminare la notifica. Contattare BabelCare" });
+      console.error("Messaggio errore: ", err);
+    }); */
+  }
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
