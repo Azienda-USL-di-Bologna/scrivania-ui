@@ -66,8 +66,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public changeColOrder: boolean = false;
   public hidePreview = false;
 
-  public tabellaDaRefreshare: any={name: ""};
-  public cancellaNotifiche: any={};
+  public tabellaDaRefreshare: any = {name: ""};
+  public cancellaNotifiche: any = {};
 
   constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService,
     private confirmationService: ConfirmationService) {
@@ -453,39 +453,31 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     }
   }
 
-  ricarica(){
-    console.log("ricaricafatto")
+  ricarica() {
 
-    if(this.mostraStorico===true){
-      
-      this.tabellaDaRefreshare=Object.assign({},{name: "attivita-fatte"});
+    if (this.mostraStorico === true) {
+      this.tabellaDaRefreshare = Object.assign({}, {name: "attivita-fatte"});
+    } else{
+      this.tabellaDaRefreshare = Object.assign({}, {name: "attivita"});
     }
-    
-    else{
-      this.tabellaDaRefreshare=Object.assign({},{name: "attivita"});
-      console.log("ricaricafassss")
-    }
-    console.log("fine funzione", this.tabellaDaRefreshare);
   }
 
-  delNotifiche(){
+  delNotifiche() {
     this.confirmationService.confirm({
-      message: 'Stai per archiviare tutte le notifiche nello storico. Vuoi procedere?',
-      header: 'Cancellazione notifiche',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sì',
-      rejectLabel: 'No',
+      message: "Stai per archiviare tutte le notifiche nello storico. Vuoi procedere?",
+      header: "Cancellazione notifiche",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: "Sì",
+      rejectLabel: "No",
       accept: () => {
           //this.msgs = [{severity:'info', summary:'Confirmed', detail:'You have accepted'}];
-          console.log("dmnalkd")
           //this.cancellaNotifiche={};
           this.subscriptions.push(this.scrivaniaService.cancellaNotifiche().subscribe(data => {
-            console.log("tutto ok");
             this.ricarica();
           }));
       },
       reject: () => {
-        console.log("tutto male")
+        console.log("Errore nel salvataggio");
       }
   });
   }

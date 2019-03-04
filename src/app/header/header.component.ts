@@ -120,7 +120,7 @@ export class HeaderComponent implements OnInit {
       header: header,
       width: width,
       styleClass: "dialog-class",
-      contentStyle: {"max-height": "400px", "min-height": "250px", "overflow": "auto", "height": height, }
+      contentStyle: {"max-height": "450px", "min-height": "250px", "overflow": "auto", "height": height, }
     });
     /* ref.onClose.subscribe((form: Impostazioni) => {
       if (form) {

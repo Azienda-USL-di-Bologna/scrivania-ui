@@ -13,10 +13,6 @@
             <div class="p-col-4 d-inline" style="font-weight: bold">Nome: </div><div class="p-col-8  d-inline" >{{ profilo.nome }}</div>
             <div class="p-col-4 d-inline" style="font-weight: bold">Email: </div><div class="p-col-8  d-inline" >{{ profilo.email }}</div>
             <div class="p-col-4 d-inline" style="font-weight: bold">Aziende: </div><div class="p-col-8  d-inline" >{{ profilo.aziende.join(", ") }}</div>
-        </div>
-        <div class="p-col-6 d-inline">
-            <div class="p-col-4 d-inline" style="font-weight: bold">Cognome: </div><div class="p-col-8  d-inline" >{{ profilo.cognome }}</div>
-            <div class="p-col-4 d-inline" style="font-weight: bold">Telefono: </div><div class="p-col-8  d-inline" >{{ profilo.telefono }}</div>
             <div style="display: flex">
               <div class="p-col-4 d-inline" style="font-weight: bold">Ruoli: </div>
               <div class="d-inline" style="padding: 0.5em">
@@ -25,6 +21,10 @@
                 </span>
               </div>
             </div>
+        </div>
+        <div class="p-col-6 d-inline">
+            <div class="p-col-4 d-inline" style="font-weight: bold">Cognome: </div><div class="p-col-8  d-inline" >{{ profilo.cognome }}</div>
+            <div class="p-col-4 d-inline" style="font-weight: bold">Telefono: </div><div class="p-col-8  d-inline" >{{ profilo.telefono }}</div>
         </div>
       </div>
     </p-card>
