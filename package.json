@@ -24,7 +24,7 @@
     "@bds/ng-internauta-model": "latest",
     "@bds/nt-communicator": "latest",
     "@bds/nt-jwt-login": "latest",
-    "@bds/primeng-plugin": "file:..//Bds_libs/dist/bds/primeng-plugin",
+    "@bds/primeng-plugin": "latest",
     "@nfa/next-sdr": "^1.0.29-bds",
     "bowser": "^2.1.0",
     "core-js": "^2.5.4",
