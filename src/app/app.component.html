@@ -1,5 +1,9 @@
 <div class="p-grid p-nogutter page-wrapper"> <!---->
-  <app-header class="p-col-12 ui-g-nopad custom-header" style="align-items:center"></app-header>
+  <!-- <app-header class="p-col-12 ui-g-nopad custom-header" style="align-items:center"></app-header> -->
+  <prp-header class="p-col-12 ui-g-nopad custom-header" [addToRight]="headerTemplate" [appName]="'Babel Internauta'"></prp-header>
+    <ng-template #headerTemplate>
+      <prp-header-features [params]="headerFeaturesParams" [addToMenu]="addToMenu"></prp-header-features>
+  </ng-template>
   <div class="content-wrapper ui-fluid">
       <router-outlet></router-outlet>
 

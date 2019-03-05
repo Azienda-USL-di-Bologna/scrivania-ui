@@ -4,6 +4,8 @@ import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE
 import { ActivatedRoute, Params, Router, RouterStateSnapshot } from "@angular/router";
 import { Utente } from "@bds/ng-internauta-model";
 import { GlobalService } from "./services/global.service";
+import { MenuItem, DialogService } from "primeng/api";
+import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.component";
 
 @Component({
   selector: "app-root",
@@ -14,11 +16,13 @@ export class AppComponent implements OnInit {
 
   title = "Babel-Internauta";
   private deletedImpersonatedUserQueryParams = false;
+  public addToMenu: MenuItem[] = [];
 
   constructor(
     private loginService: NtJwtLoginService,
     private route: ActivatedRoute,
-    private router: Router) {}
+    private router: Router,
+    public dialogService: DialogService) {}
 
   ngOnInit() {
     console.log("inizio onInit() appComponent");
@@ -50,6 +54,27 @@ export class AppComponent implements OnInit {
 
       // console.log("this.deletedImpersonatedUserQueryParams: ", this.deletedImpersonatedUserQueryParams);
    });
+   this.addToMenu.push({
+    label: "Impostazioni",
+    icon: "pi pi-fw pi-cog slide-icon",
+    command: () => { this.showSettings(); }
+  });
+   this.addToMenu = Object.assign([], this.addToMenu);
+   console.log("addTo menu: ", this.addToMenu);
+  }
+
+  showSettings() {
+    const ref = this.dialogService.open(ImpostazioniComponent, {
+      header: "Impostazioni utente",
+      width: "480px",
+      styleClass: "dialog-class",
+      contentStyle: {"max-height": "350px", "overflow": "auto", "height": "200px"}
+    });
+    /* ref.onClose.subscribe((form: Impostazioni) => {
+      if (form) {
+        console.log("FORM = ", form);
+      }
+    }); */
   }
 
   // crea l'utente a partire dai dati "grezzi" UserInfo della risposta

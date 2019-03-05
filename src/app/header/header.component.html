@@ -19,7 +19,7 @@
 
         <div class="d-inline-block float-right pr-8">
           <div class="box-nome-cognome text-center padding-top-12">
-            {{utenteConnesso? utenteConnesso.getUtente().idPersona.nome: ''}} {{utenteConnesso? utenteConnesso.getUtente().idPersona.cognome: ''}}
+            {{utenteConnesso ? utenteConnesso.getUtente().idPersona.nome + ' ' + utenteConnesso.getUtente().idPersona.cognome : ''}}
           </div>
         </div>
 

@@ -18,6 +18,10 @@ import { AttivitaFatteComponent } from "./tabelle/attivita-fatte/attivita-fatte.
 import { DropdownAziendeComponent } from "./components/dropdown-aziende/dropdown-aziende.component";
 import { LoadingComponent } from "./pagine/loading/loading.component";
 
+import {  HeaderComponent as PPHeader,
+          HeaderFeaturesComponent as PPHeaderFeaturesComponent,
+          CambioUtenteComponent as PPCambioUtenteComponent } from "@bds/primeng-plugin";
+
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
 import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
@@ -63,7 +67,10 @@ import { ImpostazioniService } from "./services/impostazioni.service";
     AttivitaFatteComponent,
     DropdownAziendeComponent,
     LoadingComponent,
-    ImpostazioniComponent
+    ImpostazioniComponent,
+    PPHeader,
+    PPHeaderFeaturesComponent,
+    PPCambioUtenteComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
