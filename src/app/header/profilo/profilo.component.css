@@ -1,0 +1,35 @@
+.user-img {
+    width: 70%;
+    display: block;
+    margin: auto;
+}
+
+.img-circle {
+    border-radius: 50%;
+}
+
+.user-label {
+    display: block;
+    font-size: 1.5em;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.vertical-container {
+    margin: 0;
+    height: 100%;
+    border-radius: 4px;
+}
+
+:host >>>.card-class,
+.card-class > * {
+    border-radius: 4px;
+    min-height: 100%;
+}
+
+:host >>>.ui-card-title {
+    text-align: center;
+}
+.d-inline{
+    display: inline-block;
+}

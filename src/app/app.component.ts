@@ -1,11 +1,12 @@
 import { Component, OnInit } from "@angular/core";
-import { NtJwtLoginService, LoginType, NtJwtLoginComponent } from "@bds/nt-jwt-login";
-import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE } from "src/environments/app-constants";
+import { NtJwtLoginService, LoginType, NtJwtLoginComponent, UtenteUtilities } from "@bds/nt-jwt-login";
+import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router, RouterStateSnapshot } from "@angular/router";
 import { Utente } from "@bds/ng-internauta-model";
 import { GlobalService } from "./services/global.service";
 import { MenuItem, DialogService } from "primeng/api";
 import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.component";
+import { IntimusClientService } from "./intimus/intimus-client.service";
 
 @Component({
   selector: "app-root",
@@ -22,7 +23,8 @@ export class AppComponent implements OnInit {
     private loginService: NtJwtLoginService,
     private route: ActivatedRoute,
     private router: Router,
-    public dialogService: DialogService) {}
+    public dialogService: DialogService,
+	private intimusClient: IntimusClientService) {}
 
   ngOnInit() {
     console.log("inizio onInit() appComponent");
@@ -96,7 +98,7 @@ export class AppComponent implements OnInit {
     let purgedQueryParams: string = "";
     const queryParams: string = splittedUrl[1];
     const splittedQueryParams: string[] = queryParams.split("&");
-    for (let i = 0; i < splittedQueryParams.length; i ++) {
+    for (let i = 0; i < splittedQueryParams.length; i++) {
       const splittedQueryParam: string[] = splittedQueryParams[i].split("=");
       if (splittedQueryParam[0] !== paramToRemove) {
         purgedQueryParams += splittedQueryParams[i] + "&";
@@ -109,5 +111,4 @@ export class AppComponent implements OnInit {
       return splittedUrl[0];
     }
   }
-
 }

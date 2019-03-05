@@ -48,12 +48,18 @@ import { DialogModule } from "primeng/dialog";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { DatePipe } from "@angular/common";
 import { ToastModule } from "primeng/toast";
+import { CardModule } from 'primeng/card';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService} from 'primeng/api';
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
 import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
+import { ProfiloComponent } from "./header/profilo/profilo.component";
+
+import { IntimusClientService } from "./intimus/intimus-client.service";
 
 
 @NgModule({
@@ -70,7 +76,8 @@ import { ImpostazioniService } from "./services/impostazioni.service";
     ImpostazioniComponent,
     PPHeader,
     PPHeaderFeaturesComponent,
-    PPCambioUtenteComponent
+    PPCambioUtenteComponent,
+	ProfiloComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
@@ -98,10 +105,13 @@ import { ImpostazioniService } from "./services/impostazioni.service";
     SlideMenuModule,
     DynamicDialogModule,
     ContextMenuModule,
-    ToastModule
+    ToastModule,
+    CardModule,
+    ConfirmDialogModule
+    
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService],
+  providers: [IntimusClientService, AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService,ConfirmationService],
   bootstrap: [AppComponent],
-  entryComponents: [ImpostazioniComponent]
+  entryComponents: [ImpostazioniComponent, ProfiloComponent]
 })
 export class AppModule { }

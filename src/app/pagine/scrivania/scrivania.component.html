@@ -10,23 +10,31 @@
             <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
 
             <!-- Firma -->
-            <button [ngClass]="{'ui-button-secondary': true, 'pr-8':true, 'd-hidden': mostraStorico || urlFirmone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlFirmone)" type="button" pButton label="Firma">
+            <button type="button" pButton pTooltip="Firma" tooltipPosition="bottom" icon="pi pi-pencil" [ngClass]="{'ui-button-secondary icon-style': true, 'pr-8':true, 'd-hidden': mostraStorico || urlFirmone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlFirmone)" aria-label="Firma">
             </button>
 
-            <button [ngClass]="{'d-hidden': mostraStorico || alberoFirma.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary" #btn type="button" pButton (click)="firmaMenu.toggle($event)" label="Firma">
+            <button #btn type="button" pButton pTooltip="Firma" tooltipPosition="bottom" [ngClass]="{'d-hidden': mostraStorico || alberoFirma.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary icon-style icon-custom" (click)="firmaMenu.toggle($event)" aria-label="Firma">
+                <img src="assets/images/sign.svg" width="21px" alt="Firma">
             </button>
             <p-tieredMenu #firmaMenu [model]="alberoFirma" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
 
             <!-- PRENDI -->
-            <button [ngClass]="{'ui-button-secondary': true, 'pr-8':true, 'd-hidden': mostraStorico || urlPrendone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlPrendone)" type="button" pButton label="Prendi">
+            <button type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" icon="pi pi-folder-open" [ngClass]="{'ui-button-secondary icon-style': true, 'pr-8':true, 'd-hidden': mostraStorico || urlPrendone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlPrendone)" aria-label="Prendi">
             </button>
 
-            <button [ngClass]="{'d-hidden': mostraStorico || alberoPrendi.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary" #btn type="button" pButton (click)="prendoneMenu.toggle($event)" label="Prendi">
+            <button #btn type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" [ngClass]="{'d-hidden': mostraStorico || alberoPrendi.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary icon-style icon-custom" (click)="prendoneMenu.toggle($event)"aria-label="Prendi">
+                <img src="assets/images/hiring.svg" width="22px" alt="Prendi">
             </button>
             <p-tieredMenu #prendoneMenu [model]="alberoPrendi" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
 
-            <button type="button" pButton [label]="mostraStorico?'Indietro':'Cronologia'" (click)="mostraStorico=!mostraStorico" iconPos="left" class="ui-button-secondary button-with-icon .button-indietro">
-                <img [ngClass]="mostraStorico?'d-inline':'d-hidden'" src="assets/images/outline-arrow_back_ios-24px.svg" width="24px" alt="Apri">
+            <button *ngIf="!mostraStorico" type="button" pButton pTooltip="Cronologia" tooltipPosition="bottom" icon="pi pi-clock" iconPos="left" (click)="mostraStorico=!mostraStorico" class="ui-button-secondary icon-style" aria-label="Cronologia">
+            </button>
+            <button *ngIf="mostraStorico" type="button" pButton pTooltip="Indietro" tooltipPosition="bottom" icon="pi pi-chevron-left" iconPos="left" (click)="mostraStorico=!mostraStorico" class="ui-button-secondary icon-style" aria-label="Indietro">
+            </button>
+
+            <button #btn type="button" pButton pTooltip="Aggiorna attività" tooltipPosition="bottom" (click)="ricarica()" iconPos="left" icon="pi pi-refresh" class="ui-button-secondary icon-style" aria-label="Aggiorna attività">
+            </button>
+            <button #btn type="button" pButton pTooltip="Elimina notifiche" tooltipPosition="bottom" (click)="delNotifiche()" iconPos="left" icon="pi pi-trash" class="ui-button-secondary icon-style" aria-label="Elimina notifiche">
             </button>
         </div>
 
@@ -34,9 +42,9 @@
     </div>
     <div class="table-wrapper">
         <div class="table-inner">
-            <app-attivita *ngIf="!mostraStorico" (attivitaEmitter)="attivitaClicked($event)"
+            <app-attivita *ngIf="!mostraStorico" (attivitaEmitter)="attivitaClicked($event)" [refresh]="tabellaDaRefreshare" [cancellaNotifiche]="cancellaNotifiche"
             (onAttivitaNoteEmitter)="onNoteClick($event)" [idAzienda]="idAzienda" [changeColOrder]="changeColOrder"></app-attivita>
-            <app-attivita-fatte *ngIf="mostraStorico" (onAttivitaNoteEmitter)="onNoteClick($event)" [idAzienda]="idAzienda"></app-attivita-fatte>
+            <app-attivita-fatte *ngIf="mostraStorico" (onAttivitaNoteEmitter)="onNoteClick($event)" [idAzienda]="idAzienda" [refresh]="tabellaDaRefreshare"></app-attivita-fatte>
         </div>
     </div>
 
@@ -95,3 +103,5 @@
         [maximizable]="true" [baseZIndex]="10000">
         {{ this.noteText }}
 </p-dialog>
+
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>

@@ -6,6 +6,7 @@ import { NtJwtLoginService, LoginType, UtenteUtilities } from "@bds/nt-jwt-login
 import { MenuItem, DialogService } from "primeng/api";
 import { HttpClient } from "@angular/common/http";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
+import { ProfiloComponent } from "./profilo/profilo.component";
 
 
 @Component({
@@ -88,36 +89,21 @@ export class HeaderComponent implements OnInit {
   }
 
   buildMenu() {
-
-    const aziende = [];
-    this.utenteConnesso.getUtente().aziende.forEach(azienda => {
-      aziende.push({ label: azienda.nome, command: (onclick) => {this.doNothingNodeClick(onclick); }});
-    });
-
-    const ruoli = [];
-    this.utenteConnesso.getUtente().ruoli.forEach(ruolo => {
-      ruoli.push({ label: ruolo.nomeBreve, command: (onclick) => {this.doNothingNodeClick(onclick); } });
-    });
-    aziende.push({
-      label: "Ruoli",
-      icon: "pi pi-fw pi-key slide-icon",
-      items: ruoli
-    });
     this.itemsMenu = [];
     this.itemsMenu.push({
-      label: "Aziende",
-      icon: "pi pi-fw pi-globe slide-icon",
-      items: aziende
+      label: "Profilo utente",
+      icon: "pi pi-fw pi-user-plus",
+      command: () => { this.showSettings(ProfiloComponent, "Profilo utente", "1000px", null, this.utenteConnesso.getUtente()); }
     });
     this.itemsMenu.push({
       label: "Manuale",
-      icon: "pi pi-fw pi-info-circle slide-icon",
+      icon: "pi pi-fw pi-info-circle",
       command: () => { window.open(BABELMAN_URL); }
     });
     this.itemsMenu.push({
       label: "Impostazioni",
-      icon: "pi pi-fw pi-cog slide-icon",
-      command: () => { this.showSettings(); }
+      icon: "pi pi-fw pi-cog",
+      command: () => { this.showSettings(ImpostazioniComponent, "Impostazioni utente", "480px", "200px", null); }
     });
     if (this.utenteConnesso.getUtente().isDemiurgo()) {
       this.itemsMenu.push({
@@ -128,23 +114,18 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  showSettings() {
-    const ref = this.dialogService.open(ImpostazioniComponent, {
-      header: "Impostazioni utente",
-      width: "480px",
+  showSettings(component, header, width, height, data) {
+    const ref = this.dialogService.open(component, {
+      data: data,
+      header: header,
+      width: width,
       styleClass: "dialog-class",
-      contentStyle: {"max-height": "350px", "overflow": "auto", "height": "200px"}
+      contentStyle: {"max-height": "450px", "min-height": "250px", "overflow": "auto", "height": height, }
     });
     /* ref.onClose.subscribe((form: Impostazioni) => {
       if (form) {
         console.log("FORM = ", form);
       }
     }); */
-  }
-
-  doNothingNodeClick(event: any) {
-    if (event && event.originalEvent) {
-      event.preventDefault();
-    }
   }
 }
