@@ -18,9 +18,10 @@ import { AttivitaFatteComponent } from "./tabelle/attivita-fatte/attivita-fatte.
 import { DropdownAziendeComponent } from "./components/dropdown-aziende/dropdown-aziende.component";
 import { LoadingComponent } from "./pagine/loading/loading.component";
 
-import {  HeaderComponent as PPHeader,
-          HeaderFeaturesComponent as PPHeaderFeaturesComponent,
-          CambioUtenteComponent as PPCambioUtenteComponent } from "@bds/primeng-plugin";
+// import {  HeaderComponent as PPHeader,
+//           HeaderFeaturesComponent as PPHeaderFeaturesComponent,
+//           CambioUtenteComponent as PPCambioUtenteComponent } from "@bds/primeng-plugin";
+import { PrimengPluginModule } from "@bds/primeng-plugin";
 
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
@@ -74,10 +75,7 @@ import { IntimusClientService } from "./intimus/intimus-client.service";
     DropdownAziendeComponent,
     LoadingComponent,
     ImpostazioniComponent,
-    PPHeader,
-    PPHeaderFeaturesComponent,
-    PPCambioUtenteComponent,
-	ProfiloComponent
+    ProfiloComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
@@ -107,8 +105,8 @@ import { IntimusClientService } from "./intimus/intimus-client.service";
     ContextMenuModule,
     ToastModule,
     CardModule,
-    ConfirmDialogModule
-    
+    ConfirmDialogModule,
+    PrimengPluginModule
   ],
   providers: [IntimusClientService, AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService,ConfirmationService],
   bootstrap: [AppComponent],
