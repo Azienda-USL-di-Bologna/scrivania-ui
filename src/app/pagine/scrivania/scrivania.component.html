@@ -33,7 +33,7 @@
             </button>
             <button #btn type="button" pButton pTooltip="Aggiorna attività" tooltipPosition="bottom" (click)="ricarica()" iconPos="left" icon="pi pi-refresh" class="ui-button-secondary icon-style" aria-label="Aggiorna attività">
             </button>
-            <button #btn type="button" pButton pTooltip="Elimina notifiche" tooltipPosition="bottom" (click)="delNotifiche()" iconPos="left" icon="pi pi-trash" class="ui-button-secondary icon-style" aria-label="Elimina notifiche">
+            <button #btn *ngIf="!mostraStorico" type="button" pButton pTooltip="Elimina notifiche" tooltipPosition="bottom" (click)="delNotifiche()" iconPos="left" icon="pi pi-trash" class="ui-button-secondary icon-style" aria-label="Elimina notifiche">
             </button>
         </div>
 

@@ -463,7 +463,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   delNotifiche() {
     this.confirmationService.confirm({
-      message: "Stai per archiviare tutte le notifiche nello storico. Vuoi procedere?",
+      message: "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
       header: "Cancellazione notifiche",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Sì",
