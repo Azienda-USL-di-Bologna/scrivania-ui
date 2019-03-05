@@ -53,26 +53,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   set changeColOrder(changeColOrder: boolean) {
     this.cols = !changeColOrder ? ColumnsNormal : ColumnsReordered;
     }
-  
+
   @Input("refresh")
-  set refresh(_refresh: any){
-    console.log("ricaricaaaaa")
-    if(_refresh.name == "attivita")
-    console.log("ricaricabbbbbbb")
-    this.loadData(null)
-  }
-  @Input("cancellaNotifiche")
-  set cancellaNotifiche(_cancellaNotifiche: any){
-    console.log("ciao")
-    /* const response = this.attivitaService.delete();
-    response.then(res => {
-      const index = this.attivita.findIndex(element => element === attivita);
-      this.attivita.splice(index, 1);
-      this.messageService.add({ severity: "info", summary: "Eliminazione", detail: "Notifica eliminata con successo!" });
-    }).catch(err => {
-      this.messageService.add({ severity: "error", summary: "Eliminazione", detail: "Non è stato possibile eliminare la notifica. Contattare BabelCare" });
-      console.error("Messaggio errore: ", err);
-    }); */
+  set refresh(_refresh: any) {
+    if (_refresh.name === "attivita") {
+      this.loadData(null);
+    }
   }
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
@@ -109,7 +95,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnInit() {
     // imposto l'utente loggato nell'apposita variabile
-    
+
     const that = this;
     window.addEventListener("resize", function(event) {
       const bodyTable = document.getElementsByClassName("ui-table-scrollable-body")[0] as HTMLElement;

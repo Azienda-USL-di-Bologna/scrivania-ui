@@ -67,7 +67,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public hidePreview = false;
 
   public tabellaDaRefreshare: any = {name: ""};
-  public cancellaNotifiche: any = {};
 
   constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService,
     private confirmationService: ConfirmationService) {
@@ -471,7 +470,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       rejectLabel: "No",
       accept: () => {
           //this.msgs = [{severity:'info', summary:'Confirmed', detail:'You have accepted'}];
-          //this.cancellaNotifiche={};
           this.subscriptions.push(this.scrivaniaService.cancellaNotifiche().subscribe(data => {
             this.ricarica();
           }));
