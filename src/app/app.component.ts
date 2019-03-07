@@ -5,8 +5,10 @@ import { ActivatedRoute, Params, Router, RouterStateSnapshot } from "@angular/ro
 import { Utente } from "@bds/ng-internauta-model";
 import { GlobalService } from "./services/global.service";
 import { MenuItem, DialogService } from "primeng/api";
-import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.component";
+import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService } from "./intimus/intimus-client.service";
+import { ProfiloComponent } from "./header/profilo/profilo.component";
+//import { HeaderComponent, HeaderFeaturesComponent, CambioUtenteComponent} from "@bds/primeng-plugin";
 
 @Component({
   selector: "app-root",
@@ -18,6 +20,7 @@ export class AppComponent implements OnInit {
   title = "Babel-Internauta";
   private deletedImpersonatedUserQueryParams = false;
   public addToMenu: MenuItem[] = [];
+  public utenteConnesso: UtenteUtilities;
 
   constructor(
     private loginService: NtJwtLoginService,
@@ -30,6 +33,12 @@ export class AppComponent implements OnInit {
     console.log("inizio onInit() appComponent");
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
     this.loginService.setImpostazioniApplicazioniUrl(getInternautaUrl(BaseUrlType.ConfigurazioneImpostazioniApplicazioni));
+
+    this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
+      if (utente) {
+        this.utenteConnesso = utente;
+      }
+    });
 
     this.route.queryParams.subscribe((params: Params) => {
       console.log("dentro subscribe, ", params.hasOwnProperty("impersonatedUser"));
@@ -59,24 +68,25 @@ export class AppComponent implements OnInit {
    this.addToMenu.push({
     label: "Impostazioni",
     icon: "pi pi-fw pi-cog slide-icon",
-    command: () => { this.showSettings(); }
+    command: () => { this.showSettings(ImpostazioniComponent, "Impostazioni utente", "480px", "200px", null); }
+  });
+  this.addToMenu.push({
+    label: "Profilo utente",
+    icon: "pi pi-fw pi-user-plus",
+    command: () => { this.showSettings(ProfiloComponent, "Profilo utente", "1000px", null, this.utenteConnesso.getUtente()); }
   });
    this.addToMenu = Object.assign([], this.addToMenu);
    console.log("addTo menu: ", this.addToMenu);
   }
 
-  showSettings() {
-    const ref = this.dialogService.open(ImpostazioniComponent, {
-      header: "Impostazioni utente",
-      width: "480px",
+  showSettings(component, header, width, height, data) {
+    const ref = this.dialogService.open(component, {
+      data: data,
+      header: header,
+      width: width,
       styleClass: "dialog-class",
-      contentStyle: {"max-height": "350px", "overflow": "auto", "height": "200px"}
+      contentStyle: {"max-height": "450px", "min-height": "250px", "overflow": "auto", "height": height, }
     });
-    /* ref.onClose.subscribe((form: Impostazioni) => {
-      if (form) {
-        console.log("FORM = ", form);
-      }
-    }); */
   }
 
   // crea l'utente a partire dai dati "grezzi" UserInfo della risposta

@@ -286,6 +286,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   }
 
   handleItemClick(event) {
+    console.log("Link: ", event);
+    
     window.open(event);
   }
 

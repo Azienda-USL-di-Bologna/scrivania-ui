@@ -5,7 +5,7 @@ import { SCRIVANIA_ROUTE, BABELMAN_URL} from "../../environments/app-constants";
 import { NtJwtLoginService, LoginType, UtenteUtilities } from "@bds/nt-jwt-login";
 import { MenuItem, DialogService } from "primeng/api";
 import { HttpClient } from "@angular/common/http";
-import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
+import { ImpostazioniComponent } from "../impostazioni/impostazioni.component";
 import { ProfiloComponent } from "./profilo/profilo.component";
 
 

@@ -56,7 +56,7 @@ import {ConfirmationService} from 'primeng/api';
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
-import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.component";
+import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
 import { ProfiloComponent } from "./header/profilo/profilo.component";
 
