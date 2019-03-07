@@ -24,6 +24,18 @@
     */
 }
 
+.separator-class {
+    width: 0;
+    border-right: 1px solid #c8c8c8;
+    margin: auto 8px auto 2px;
+    height: 80%;
+    display: inline;
+}
+
+>>> .ui-fluid .ui-dialog-footer .ui-button {
+    width: 62px;
+}
+
 /* BUTTON STYLES */
 
 >>> .ui-fluid .ui-button {

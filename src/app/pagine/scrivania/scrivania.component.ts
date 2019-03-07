@@ -67,7 +67,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public hidePreview = false;
 
   public tabellaDaRefreshare: any = {name: ""};
-  public cancellaNotifiche: any = {};
 
   constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService,
     private confirmationService: ConfirmationService) {
@@ -466,14 +465,13 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   delNotifiche() {
     this.confirmationService.confirm({
-      message: "Stai per archiviare tutte le notifiche nello storico. Vuoi procedere?",
+      message: "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
       header: "Cancellazione notifiche",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Sì",
       rejectLabel: "No",
       accept: () => {
           //this.msgs = [{severity:'info', summary:'Confirmed', detail:'You have accepted'}];
-          //this.cancellaNotifiche={};
           this.subscriptions.push(this.scrivaniaService.cancellaNotifiche().subscribe(data => {
             this.ricarica();
           }));
