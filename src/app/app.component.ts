@@ -7,8 +7,7 @@ import { GlobalService } from "./services/global.service";
 import { MenuItem, DialogService } from "primeng/api";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService } from "./intimus/intimus-client.service";
-import { ProfiloComponent } from "./header/profilo/profilo.component";
-//import { HeaderComponent, HeaderFeaturesComponent, CambioUtenteComponent} from "@bds/primeng-plugin";
+import { HeaderFeaturesParams } from "@bds/nt-communicator";
 
 @Component({
   selector: "app-root",
@@ -21,16 +20,25 @@ export class AppComponent implements OnInit {
   private deletedImpersonatedUserQueryParams = false;
   public addToMenu: MenuItem[] = [];
   public utenteConnesso: UtenteUtilities;
+  public headerFeaturesParams: HeaderFeaturesParams;
 
   constructor(
     private loginService: NtJwtLoginService,
     private route: ActivatedRoute,
     private router: Router,
     public dialogService: DialogService,
-	private intimusClient: IntimusClientService) {}
+    private intimusClient: IntimusClientService) {}
 
   ngOnInit() {
     console.log("inizio onInit() appComponent");
+    this.headerFeaturesParams = {
+      showCambioUtente: true,
+      showLogOut: true,
+      showUserFullName: true,
+      showUserMenu: true,
+      showManuale: true,
+      showProfilo: true
+    };
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
     this.loginService.setImpostazioniApplicazioniUrl(getInternautaUrl(BaseUrlType.ConfigurazioneImpostazioniApplicazioni));
 
@@ -64,19 +72,13 @@ export class AppComponent implements OnInit {
       }
 
       // console.log("this.deletedImpersonatedUserQueryParams: ", this.deletedImpersonatedUserQueryParams);
-   });
-   this.addToMenu.push({
-    label: "Impostazioni",
-    icon: "pi pi-fw pi-cog slide-icon",
-    command: () => { this.showSettings(ImpostazioniComponent, "Impostazioni utente", "480px", "200px", null); }
-  });
-  this.addToMenu.push({
-    label: "Profilo utente",
-    icon: "pi pi-fw pi-user-plus",
-    command: () => { this.showSettings(ProfiloComponent, "Profilo utente", "1000px", null, this.utenteConnesso.getUtente()); }
-  });
-   this.addToMenu = Object.assign([], this.addToMenu);
-   console.log("addTo menu: ", this.addToMenu);
+    });
+    this.addToMenu.push({
+      label: "Impostazioni",
+      icon: "pi pi-fw pi-cog slide-icon",
+      command: () => { this.showSettings(ImpostazioniComponent, "Impostazioni utente", "480px", "200px", null); }
+    });
+    this.addToMenu = Object.assign([], this.addToMenu);
   }
 
   showSettings(component, header, width, height, data) {

@@ -21,7 +21,7 @@ import { LoadingComponent } from "./pagine/loading/loading.component";
 // import {  HeaderComponent as PPHeader,
 //           HeaderFeaturesComponent as PPHeaderFeaturesComponent,
 //           CambioUtenteComponent as PPCambioUtenteComponent } from "@bds/primeng-plugin";
-import { PrimengPluginModule } from "@bds/primeng-plugin";
+import { PrimengPluginModule, ProfiloComponent } from "@bds/primeng-plugin";
 
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
@@ -58,7 +58,6 @@ import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
-import { ProfiloComponent } from "./header/profilo/profilo.component";
 
 import { IntimusClientService } from "./intimus/intimus-client.service";
 
@@ -74,8 +73,7 @@ import { IntimusClientService } from "./intimus/intimus-client.service";
     AttivitaFatteComponent,
     DropdownAziendeComponent,
     LoadingComponent,
-    ImpostazioniComponent,
-    ProfiloComponent
+    ImpostazioniComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),

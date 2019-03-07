@@ -6,7 +6,7 @@ import { NtJwtLoginService, LoginType, UtenteUtilities } from "@bds/nt-jwt-login
 import { MenuItem, DialogService } from "primeng/api";
 import { HttpClient } from "@angular/common/http";
 import { ImpostazioniComponent } from "../impostazioni/impostazioni.component";
-import { ProfiloComponent } from "./profilo/profilo.component";
+// import { ProfiloComponent } from "./profilo/profilo.component";
 
 
 @Component({
@@ -90,11 +90,11 @@ export class HeaderComponent implements OnInit {
 
   buildMenu() {
     this.itemsMenu = [];
-    this.itemsMenu.push({
-      label: "Profilo utente",
-      icon: "pi pi-fw pi-user-plus",
-      command: () => { this.showSettings(ProfiloComponent, "Profilo utente", "1000px", null, this.utenteConnesso.getUtente()); }
-    });
+    // this.itemsMenu.push({
+    //   label: "Profilo utente",
+    //   icon: "pi pi-fw pi-user-plus",
+    //   command: () => { this.showSettings(ProfiloComponent, "Profilo utente", "1000px", null, this.utenteConnesso.getUtente()); }
+    // });
     this.itemsMenu.push({
       label: "Manuale",
       icon: "pi pi-fw pi-info-circle",
