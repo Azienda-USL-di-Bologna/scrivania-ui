@@ -33,7 +33,7 @@ export class IntimusClientService  {
     });
 
     primus.on("data", data => {
-      // console.log("**********Received a new message from the server*************", data);
+      console.log("**********Received a new message from the server*************", data);
       if (data.command === "registerClient") {
         // console.log("Received a new message from the server", data);
         this.registerClient(primus, utente);
