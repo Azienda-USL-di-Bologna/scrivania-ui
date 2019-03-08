@@ -202,6 +202,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   }
 
   public attivitaClicked(attivitaCliccata: Attivita) {
+    console.log("attivitaClicked", attivitaCliccata);
     this.clearAccordionDetailFields();
     this.attivitaSelezionata = attivitaCliccata;
     if (this.attivitaSelezionata) {
