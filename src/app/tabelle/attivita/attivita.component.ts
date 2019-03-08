@@ -114,11 +114,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private parseIntimusCommand(command: IntimusCommand) {
-    console.log("ricevuto comando in Attivita: ", command);
+    // console.log("ricevuto comando in Attivita: ", command);
     if (command.command === IntimusCommands.RefreshAttivita) {
       const idAttivitaToRefresh = command.params.id_attivita;
       const operation = command.params.operation;
-      console.log(operation + " attivita " + idAttivitaToRefresh);
+      // console.log(operation + " attivita " + idAttivitaToRefresh);
       switch (operation) {
         case "INSERT":
           this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, null, null, idAttivitaToRefresh)
@@ -137,6 +137,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
                 if (idAttivitaToReplace >= 0) {
                   this.setAttivitaIcon(data);
                   this.attivita[idAttivitaToReplace] = data;
+                  this.attivitaEmitter.emit(data);
               }
             }
           });
@@ -144,6 +145,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         case "DELETE":
           const idAttivitaToDelete = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
           this.attivita.splice(idAttivitaToDelete, 1);
+          this.attivitaEmitter.emit(null);
         break;
       }
 
