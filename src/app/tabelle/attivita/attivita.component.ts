@@ -137,7 +137,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
                 if (idAttivitaToReplace >= 0) {
                   this.setAttivitaIcon(data);
                   this.attivita[idAttivitaToReplace] = data;
+                  console.log("1 = ", this.attivita[idAttivitaToReplace].aperta);
                   this.attivitaEmitter.emit(data);
+                  console.log("2 = ", this.attivita[idAttivitaToReplace].aperta);
+                  this.dataTable.selection = this.attivita[this.selectedRowIndex];
+                  console.log("3 = ", this.attivita[idAttivitaToReplace].aperta);
+
               }
             }
           });
