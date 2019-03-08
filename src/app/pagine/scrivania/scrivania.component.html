@@ -10,18 +10,18 @@
             <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
 
             <!-- Firma -->
-            <button type="button" pButton pTooltip="Firma" tooltipPosition="bottom" icon="pi pi-pencil" [ngClass]="{'ui-button-secondary icon-style': true, 'pr-8':true, 'd-hidden': mostraStorico || urlFirmone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlFirmone)" aria-label="Firma">
+            <button type="button" pButton pTooltip="Firma" tooltipPosition="bottom" [ngClass]="{'ui-button-secondary': true, 'pr-8':true, 'd-hidden': mostraStorico || urlFirmone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlFirmone)" aria-label="Firma">
             </button>
 
-            <button #btn type="button" pButton pTooltip="Firma" tooltipPosition="bottom" [ngClass]="{'d-hidden': mostraStorico || alberoFirma.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary icon-style icon-custom" (click)="firmaMenu.toggle($event)" aria-label="Firma">
+            <button #btn type="button" pButton pTooltip="Firma" tooltipPosition="bottom" [ngClass]="{'d-hidden': mostraStorico || alberoFirma.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary icon-custom" (click)="firmaMenu.toggle($event)" aria-label="Firma">
                 <img src="assets/images/sign.svg" width="21px" alt="Firma">
             </button>
             <p-tieredMenu #firmaMenu [model]="alberoFirma" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
 
             <!-- Prendi -->
-            <button type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" icon="pi pi-folder-open" [ngClass]="{'ui-button-secondary icon-style': true, 'pr-8':true, 'd-hidden': mostraStorico || urlPrendone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlPrendone)" aria-label="Prendi">
+            <button type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" [ngClass]="{'ui-button-secondary': true, 'pr-8':true, 'd-hidden': mostraStorico || urlPrendone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlPrendone)" aria-label="Prendi">
             </button>
-            <button #btn type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" [ngClass]="{'d-hidden': mostraStorico || alberoPrendi.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary icon-style icon-custom" (click)="prendoneMenu.toggle($event)"aria-label="Prendi">
+            <button #btn type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" [ngClass]="{'d-hidden': mostraStorico || alberoPrendi.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary icon-custom" (click)="prendoneMenu.toggle($event)"aria-label="Prendi">
                 <img src="assets/images/hiring.svg" width="22px" alt="Prendi">
             </button>
             <p-tieredMenu #prendoneMenu [model]="alberoPrendi" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
