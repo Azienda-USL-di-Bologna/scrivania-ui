@@ -1,9 +1,13 @@
 import { Component, OnInit } from "@angular/core";
-import { NtJwtLoginService, LoginType, NtJwtLoginComponent } from "@bds/nt-jwt-login";
-import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE } from "src/environments/app-constants";
+import { NtJwtLoginService, LoginType, NtJwtLoginComponent, UtenteUtilities } from "@bds/nt-jwt-login";
+import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router, RouterStateSnapshot } from "@angular/router";
 import { Utente } from "@bds/ng-internauta-model";
 import { GlobalService } from "./services/global.service";
+import { MenuItem, DialogService } from "primeng/api";
+import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
+import { IntimusClientService } from "./intimus/intimus-client.service";
+import { HeaderFeaturesParams } from "@bds/nt-communicator";
 
 @Component({
   selector: "app-root",
@@ -14,16 +18,35 @@ export class AppComponent implements OnInit {
 
   title = "Babel-Internauta";
   private deletedImpersonatedUserQueryParams = false;
+  public addToMenu: MenuItem[] = [];
+  public utenteConnesso: UtenteUtilities;
+  public headerFeaturesParams: HeaderFeaturesParams;
 
   constructor(
     private loginService: NtJwtLoginService,
     private route: ActivatedRoute,
-    private router: Router) {}
+    private router: Router,
+    public dialogService: DialogService,
+    private intimusClient: IntimusClientService) {}
 
   ngOnInit() {
     console.log("inizio onInit() appComponent");
+    this.headerFeaturesParams = {
+      showCambioUtente: true,
+      showLogOut: true,
+      showUserFullName: true,
+      showUserMenu: true,
+      showManuale: true,
+      showProfilo: true
+    };
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
     this.loginService.setImpostazioniApplicazioniUrl(getInternautaUrl(BaseUrlType.ConfigurazioneImpostazioniApplicazioni));
+
+    this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
+      if (utente) {
+        this.utenteConnesso = utente;
+      }
+    });
 
     this.route.queryParams.subscribe((params: Params) => {
       console.log("dentro subscribe, ", params.hasOwnProperty("impersonatedUser"));
@@ -49,7 +72,23 @@ export class AppComponent implements OnInit {
       }
 
       // console.log("this.deletedImpersonatedUserQueryParams: ", this.deletedImpersonatedUserQueryParams);
-   });
+    });
+    this.addToMenu.push({
+      label: "Impostazioni",
+      icon: "pi pi-fw pi-cog slide-icon",
+      command: () => { this.showSettings(ImpostazioniComponent, "Impostazioni utente", "480px", "200px", null); }
+    });
+    this.addToMenu = Object.assign([], this.addToMenu);
+  }
+
+  showSettings(component, header, width, height, data) {
+    const ref = this.dialogService.open(component, {
+      data: data,
+      header: header,
+      width: width,
+      styleClass: "dialog-class",
+      contentStyle: {"max-height": "450px", "min-height": "250px", "overflow": "auto", "height": height, }
+    });
   }
 
   // crea l'utente a partire dai dati "grezzi" UserInfo della risposta
@@ -71,7 +110,7 @@ export class AppComponent implements OnInit {
     let purgedQueryParams: string = "";
     const queryParams: string = splittedUrl[1];
     const splittedQueryParams: string[] = queryParams.split("&");
-    for (let i = 0; i < splittedQueryParams.length; i ++) {
+    for (let i = 0; i < splittedQueryParams.length; i++) {
       const splittedQueryParam: string[] = splittedQueryParams[i].split("=");
       if (splittedQueryParam[0] !== paramToRemove) {
         purgedQueryParams += splittedQueryParams[i] + "&";
@@ -84,5 +123,4 @@ export class AppComponent implements OnInit {
       return splittedUrl[0];
     }
   }
-
 }

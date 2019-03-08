@@ -72,3 +72,13 @@
 >>> * {
     outline: none;
 }
+>>> body .ui-dialog .ui-dialog-titlebar, .titolo-popup {
+    background-color: #993366 !important;
+    color: white !important;
+}
+>>> body .ui-dialog .ui-dialog-titlebar {
+    border: none;
+}
+>>> body .ui-dialog{
+    min-width: 443px;
+}

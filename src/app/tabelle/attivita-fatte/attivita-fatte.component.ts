@@ -37,7 +37,11 @@ export class AttivitaFatteComponent implements OnInit {
     if ( !this.loggedUser ) { return; }
     this.loadData(null);
   }
-
+  @Input("refresh")
+  set refresh(_refresh: any){
+    if(_refresh.name == "attivita-fatte")
+    this.loadData(null)
+  }
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<AttivitaFatta> = new EventEmitter();
 
   public cols: any[] = [

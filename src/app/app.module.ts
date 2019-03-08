@@ -18,6 +18,11 @@ import { AttivitaFatteComponent } from "./tabelle/attivita-fatte/attivita-fatte.
 import { DropdownAziendeComponent } from "./components/dropdown-aziende/dropdown-aziende.component";
 import { LoadingComponent } from "./pagine/loading/loading.component";
 
+// import {  HeaderComponent as PPHeader,
+//           HeaderFeaturesComponent as PPHeaderFeaturesComponent,
+//           CambioUtenteComponent as PPCambioUtenteComponent } from "@bds/primeng-plugin";
+import { PrimengPluginModule, ProfiloComponent } from "@bds/primeng-plugin";
+
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
 import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
@@ -44,12 +49,17 @@ import { DialogModule } from "primeng/dialog";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { DatePipe } from "@angular/common";
 import { ToastModule } from "primeng/toast";
+import { CardModule } from 'primeng/card';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService} from 'primeng/api';
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
 import { loginModuleConfig } from "./config/module-config";
-import { ImpostazioniComponent } from "./header/impostazioni/impostazioni.component";
+import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
+
+import { IntimusClientService } from "./intimus/intimus-client.service";
 
 
 @NgModule({
@@ -91,10 +101,13 @@ import { ImpostazioniService } from "./services/impostazioni.service";
     SlideMenuModule,
     DynamicDialogModule,
     ContextMenuModule,
-    ToastModule
+    ToastModule,
+    CardModule,
+    ConfirmDialogModule,
+    PrimengPluginModule
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService],
+  providers: [IntimusClientService, AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService,ConfirmationService],
   bootstrap: [AppComponent],
-  entryComponents: [ImpostazioniComponent]
+  entryComponents: [ImpostazioniComponent, ProfiloComponent]
 })
 export class AppModule { }

@@ -9,6 +9,7 @@ import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STAT
 import { Subscription } from "rxjs";
 import { ApplicationCustiomization } from "src/environments/application_customization";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
+import { ConfirmationService } from "primeng/components/common/confirmationservice";
 
 @Component({
   selector: "app-scrivania",
@@ -31,7 +32,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public attivitaSelezionata: Attivita;
   public noAnteprimaImg: string = "assets/images/no_anteprima.png";
   public noAnteprima: boolean = true;
-  allegati: any[] = [];
+  allegati: any[];
   allegatoSelezionato: any;
 
   public oggetto: any = "Nessuna attivita selezionata.";
@@ -49,9 +50,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public impostazioniVisualizzazione: any;
   public alberoMenu: any[];
   public alberoFirma: any[] = [];
-  public aziendeMenu: any[];
+  public alberoPrendi: any[] = [];
+  // public aziendeMenu: any[];
   public urlFirmone: string = "#";
-  private arrayScrivaniaCompiledUrls: any[];
+  public urlPrendone: string = "#";
+  // private arrayScrivaniaCompiledUrls: any[];
 
   public showNote: boolean = false;
   public noteText: string = null;
@@ -63,7 +66,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public changeColOrder: boolean = false;
   public hidePreview = false;
 
-  constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService) {
+  public tabellaDaRefreshare: any = {name: ""};
+
+  constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService,
+    private confirmationService: ConfirmationService) {
    }
 
   ngOnInit() {
@@ -81,17 +87,27 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         // this.loadAziendeMenu();
       }
     }));
-    this.scrivaniaService.getUrlsFirmone().subscribe(data => {
+    this.subscriptions.push(this.scrivaniaService.getUrlsFirmone().subscribe(data => {
       if (data.size > 0) {
         if (data.size === 1) {
           this.urlFirmone = data.aziende[0].url;
         }
-        this.loadMenuFirma(data.aziende);
+        this.buildGenericMenu(data.aziende, this.alberoFirma);
       }
-    });
+    }));
+    this.subscriptions.push(this.scrivaniaService.getUrlsPrendone().subscribe(data => {
+      if (data.size > 0) {
+        if (data.size === 1) {
+          this.urlPrendone = data.aziende[0].url;
+        }
+        this.buildGenericMenu(data.aziende, this.alberoPrendi);
+      }
+    }));
     this.subscriptions.push(this.impostazioniService.settingsChangedNotifier$.subscribe(newSettings => {
       this.hidePreview = newSettings[ApplicationCustiomization.scrivania.hidePreview] === "true";
     }));
+    this.allegatiDropDown.disabled = true;
+    this.allegati = [{label: "Documenti non presenti", value: null}];
   }
 
   private setLook(): void {
@@ -269,6 +285,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   }
 
   handleItemClick(event) {
+    console.log("Link: ", event);
+    
     window.open(event);
   }
 
@@ -282,8 +300,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
     initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
     const lazyLoadFiltersAndSorts = new FiltersAndSorts();
-    this.arrayScrivaniaCompiledUrls = [];
-    this.aziendeMenu  = [];
+    // this.arrayScrivaniaCompiledUrls = [];
+    // this.aziendeMenu  = [];
     this.scrivaniaService.getData(PROJECTIONS.menu.customProjections.menuWithIdApplicazioneAndIdAziendaAndTransientFields, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
       .then(
         data => {
@@ -292,15 +310,15 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
             // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
             // tanto tutto il resto (azienda, idp, ecc...) è identico
             // VA RIFATTO!!!!!
-            if (elementArray.idApplicazione.id === "gedi") {
-              let command = elementArray.compiledUrl;
-              command = command.replace(COMMANDS.gedi_local, COMMANDS.open_prendone_local);
-              this.aziendeMenu.push(new TreeNode(
-                elementArray.idAzienda.nome,
-                null,
-                (onclick) => {this.handleItemClick(command); }
-              ));
-            }
+            // if (elementArray.idApplicazione.id === "gedi") {
+            //   let command = elementArray.compiledUrl;
+            //   command = command.replace(COMMANDS.gedi_local, COMMANDS.open_prendone_local);
+            //   this.aziendeMenu.push(new TreeNode(
+            //     elementArray.idAzienda.nome,
+            //     null,
+            //     (onclick) => {this.handleItemClick(command); }
+            //   ));
+            // }
             let found = false;
             for (const elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
               if (elementAlbero.label === elementArray.idApplicazione.nome) {
@@ -377,37 +395,37 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   }
 
-  public loadAziendeMenu() {
-    if (this.aziendeMenu) {
-      return;
-    }
-    this.aziendeMenu = [];
-    if (this.loggedUser.getUtente().aziende) {
-      this.loggedUser.getUtente().aziende.forEach(element => {
-        const command = this.getBabelCommandByAzienda(element.nome);
-        this.aziendeMenu.push(new TreeNode(
-          element.nome,
-          null,
-          (onclick) => {this.handleItemClick(command); }
-        ));
-      });
-    }
-  }
+  // public loadAziendeMenu() {
+  //   if (this.aziendeMenu) {
+  //     return;
+  //   }
+  //   this.aziendeMenu = [];
+  //   if (this.loggedUser.getUtente().aziende) {
+  //     this.loggedUser.getUtente().aziende.forEach(element => {
+  //       const command = this.getBabelCommandByAzienda(element.nome);
+  //       this.aziendeMenu.push(new TreeNode(
+  //         element.nome,
+  //         null,
+  //         (onclick) => {this.handleItemClick(command); }
+  //       ));
+  //     });
+  //   }
+  // }
 
-  private getBabelCommandByAzienda(aziendaLabel: string) {
-    this.arrayScrivaniaCompiledUrls.forEach(map => {
-      if (map.get(aziendaLabel)) {
-        console.log("ritorno questo command", map.get(aziendaLabel));
-        return map.get(aziendaLabel);
-      }
+  // private getBabelCommandByAzienda(aziendaLabel: string) {
+  //   this.arrayScrivaniaCompiledUrls.forEach(map => {
+  //     if (map.get(aziendaLabel)) {
+  //       console.log("ritorno questo command", map.get(aziendaLabel));
+  //       return map.get(aziendaLabel);
+  //     }
 
-    });
+  //   });
 
-  }
+  // }
 
-  public loadMenuFirma(aziende) {
+  public buildGenericMenu(aziende, albero) {
     aziende.forEach(element => {
-      this.alberoFirma.push(new TreeNode(
+      albero.push(new TreeNode(
         element.nome,
         null,
         (onClick) => {this.handleItemClick(element.url); }));
@@ -434,6 +452,34 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     if (event && event.originalEvent) {
       event.originalEvent.stopPropagation();
     }
+  }
+
+  ricarica() {
+
+    if (this.mostraStorico === true) {
+      this.tabellaDaRefreshare = Object.assign({}, {name: "attivita-fatte"});
+    } else{
+      this.tabellaDaRefreshare = Object.assign({}, {name: "attivita"});
+    }
+  }
+
+  delNotifiche() {
+    this.confirmationService.confirm({
+      message: "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
+      header: "Cancellazione notifiche",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: "Sì",
+      rejectLabel: "No",
+      accept: () => {
+          //this.msgs = [{severity:'info', summary:'Confirmed', detail:'You have accepted'}];
+          this.subscriptions.push(this.scrivaniaService.cancellaNotifiche().subscribe(data => {
+            this.ricarica();
+          }));
+      },
+      reject: () => {
+        console.log("Errore nel salvataggio");
+      }
+  });
   }
 }
 

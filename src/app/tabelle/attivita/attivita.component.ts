@@ -12,6 +12,8 @@ import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
+import { IntimusClientService } from "src/app/intimus/intimus-client.service";
+import { IntimusCommand, IntimusCommands } from "src/app/intimus/intimus-command";
 
 @Component({
   selector: "app-attivita",
@@ -52,6 +54,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     this.cols = !changeColOrder ? ColumnsNormal : ColumnsReordered;
     }
 
+  @Input("refresh")
+  set refresh(_refresh: any) {
+    if (_refresh.name === "attivita") {
+      this.loadData(null);
+    }
+  }
+
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
   @ViewChild("dt") private dataTable: Table;
@@ -62,23 +71,31 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private attivitaService: AttivitaService,
     private loginService: NtJwtLoginService,
     private renderer: Renderer2,
-    private messageService: MessageService
-  ) { }
+    private messageService: MessageService,
+    private intimusClientService: IntimusClientService
+  ) {
+
+    this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
+      if (u) {
+        // if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
+        //   this.loggedUser = u;
+        //   console.log("faccio loadData");
+        //   this.loadData(null);
+        // } else {
+        //   this.loggedUser = u;
+        // }
+        this.loggedUser = u;
+        this.subscriptions.push(this.intimusClientService.command$.subscribe((command: IntimusCommand) => {
+          this.parseIntimusCommand(command);
+        }));
+      }
+      // console.log("faccio il load data di nuovo");
+    }));
+   }
 
   ngOnInit() {
-      // imposto l'utente loggato nell'apposita variabile
-      this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
-        if (u) {
-          if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
-            this.loggedUser = u;
-            /* console.log("faccio loadData"); */
-            // this.loadData(null);
-          } else {
-            this.loggedUser = u;
-          }
-        }
-        // console.log("faccio il load data di nuovo");
-      }));
+    // imposto l'utente loggato nell'apposita variabile
+
     const that = this;
     window.addEventListener("resize", function(event) {
       const bodyTable = document.getElementsByClassName("ui-table-scrollable-body")[0] as HTMLElement;
@@ -95,6 +112,46 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this.columnClass = "column-class-o";
     }
   }
+
+  private parseIntimusCommand(command: IntimusCommand) {
+    console.log("ricevuto comando in Attivita: ", command);
+    if (command.command === IntimusCommands.RefreshAttivita) {
+      const idAttivitaToRefresh = command.params.id_attivita;
+      const operation = command.params.operation;
+      console.log(operation + " attivita " + idAttivitaToRefresh);
+      switch (operation) {
+        case "INSERT":
+          this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, null, null, idAttivitaToRefresh)
+          .then((data: Attivita) => {
+            if (data) {
+              this.setAttivitaIcon(data);
+              this.attivita.unshift(data);
+            }
+          });
+        break;
+        case "UPDATE":
+          this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, null, null, idAttivitaToRefresh)
+          .then((data: Attivita) => {
+              if (data) {
+                const idAttivitaToReplace = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
+                if (idAttivitaToReplace >= 0) {
+                  this.setAttivitaIcon(data);
+                  this.attivita[idAttivitaToReplace] = data;
+              }
+            }
+          });
+        break;
+        case "DELETE":
+          const idAttivitaToDelete = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
+          this.attivita.splice(idAttivitaToDelete, 1);
+        break;
+      }
+
+      // this.loadData(this.previousEvent);
+    }
+  }
+
+
 
   handleContextMenu(attivitaSelezionata: Attivita) {
     // this.messageService.add({ severity: "info", summary: "Car Selected", detail: attivitaSelezionata.oggetto });
@@ -174,6 +231,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("data", SORT_MODES.desc));
+    initialFiltersAndSorts.addSort(new SortDefinition("id", SORT_MODES.desc));
     const filterIdPersona: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
     initialFiltersAndSorts.addFilter(filterIdPersona);
     if (this._idAzienda !== -1) { // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
@@ -213,23 +271,26 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             /* console.log("ATTIVITA: ", this.attivita); */
             // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
             this.attivita.forEach(a => {
-              a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);
-
-              if (a.tipo === "notifica") {
-                a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
-              } else if (!a.priorita || a.priorita === 3) {
-                a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
-              } else if (a.priorita === 2) {
-                a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.2.svg";
-              } else if (a.priorita === 1) {
-                a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.1.svg";
-              }
+              this.setAttivitaIcon(a);
             });
           }
           this.loading = false;
         }
       );
 
+  }
+
+  private setAttivitaIcon(a: Attivita) {
+    a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);
+    if (a.tipo === "notifica") {
+      a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
+    } else if (!a.priorita || a.priorita === 3) {
+      a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
+    } else if (a.priorita === 2) {
+      a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.2.svg";
+    } else if (a.priorita === 1) {
+      a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.1.svg";
+    }
   }
 
   public apriAttivita(attivita: Attivita) {
@@ -300,7 +361,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   fillActionCol(attivita, td) {
     if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" &&
       (attivita.idApplicazione.nome === "Pico" || attivita.idApplicazione.nome === "Dete" || attivita.idApplicazione.nome === "Deli"))) {
-      td.innerHTML = `<a style="color: #993366; cursor: pointer"><b>Apri</b></a>`;
+      td.innerHTML = `<a style="color: #993366; cursor: pointer"><strong>Apri</strong></a>`;
       if (this.listeners[td.id]) {
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
         this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa

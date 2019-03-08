@@ -12,14 +12,14 @@
 <div aria-hidden="true" class="height64 center-vertically">
   <div class="p-col-12 p-grid"> <!--p-nogutter-->
       <div class="p-md-8 p-sm-12 header-left-style ">
-        <img class="logo" src="assets/images/logo2.png"/>
-        <span class="title-header padding-top-12">Babel Internauta</span>
+        <img class="logo" src="assets/images/logo.png" alt="logo"/>
+        <span role="heading" aria-level="1" class="title-header padding-top-12">Babel Internauta</span>
       </div>
       <div class="p-md-4 p-sm-12 icons-wrapper">
 
         <div class="d-inline-block float-right pr-8">
           <div class="box-nome-cognome text-center padding-top-12">
-            {{utenteConnesso? utenteConnesso.getUtente().idPersona.nome: ''}} {{utenteConnesso? utenteConnesso.getUtente().idPersona.cognome: ''}}
+            {{utenteConnesso ? utenteConnesso.getUtente().idPersona.nome + ' ' + utenteConnesso.getUtente().idPersona.cognome : ''}}
           </div>
         </div>
 

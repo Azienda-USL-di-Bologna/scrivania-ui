@@ -14,6 +14,7 @@ export const LOGIN_RELATIVE_URL: string = "/internauta-api/login";
 */
 
 export const LOCALHOST_PORT = "10005";
+export const INTIMUS_LOCALHOST_PORT = "1339";
 export const LOCALHOST_PDD_PORT = "8080";
 export const LOGIN_ROUTE: string = "/login";
 export const HOME_ROUTE: string = "/homepage";
@@ -21,6 +22,7 @@ export const SCRIVANIA_ROUTE: string = "/scrivania";
 export const ATTIVITA_ROUTE: string = "/attivita";
 export const MAX_CHARS_100 = 100;
 export const BABELMAN_URL = "https://babelman-auslbo.avec.emr.it/";
+export const APPLICATION = "scrivania";
 
 export enum BaseUrlType {
     Scrivania,
@@ -28,7 +30,8 @@ export enum BaseUrlType {
     Baborg,
     Configurazione,
     ConfigurazioneImpostazioniApplicazioni,
-    Login
+    Login,
+    Intimus
 }
 
 export const BaseUrls: Map<BaseUrlType, string> = new Map<BaseUrlType, string>([
@@ -37,7 +40,8 @@ export const BaseUrls: Map<BaseUrlType, string> = new Map<BaseUrlType, string>([
     [BaseUrlType.Baborg, "/internauta-api/resources/baborg"],
     [BaseUrlType.Configurazione, "/internauta-api/resources/configurazione"],
     [BaseUrlType.ConfigurazioneImpostazioniApplicazioni, "/internauta-api/resources/configurazione/custom/setImpostazioniApplicazioni"],
-    [BaseUrlType.Login, "/internauta-api/login"]
+    [BaseUrlType.Login, "/internauta-api/login"],
+    [BaseUrlType.Intimus, ""]
 ]);
 
 export function getInternautaUrl(type: BaseUrlType): string {
@@ -45,8 +49,23 @@ export function getInternautaUrl(type: BaseUrlType): string {
         throw new Error("Failed to obtain internauta url, type does not exists!");
     }
 
+    let port;
     const wl = window.location;
-    const out: string = wl.protocol + "//" + wl.hostname + (wl.hostname === "localhost" ? ":" + LOCALHOST_PORT : ":" + wl.port) + BaseUrls.get(type);
+    if (wl.hostname === "localhost" && type === BaseUrlType.Intimus) {
+        return "https://gdml.internal.ausl.bologna.it";
+    }
+        // if (type === BaseUrlType.Intimus) {
+        //     port = INTIMUS_LOCALHOST_PORT;
+        // } else {
+        //     port = LOCALHOST_PORT;
+        // }
+    if (wl.hostname === "localhost") {
+        port = LOCALHOST_PORT;
+    } else {
+        port = wl.port;
+    }
+
+    const out: string = wl.protocol + "//" + wl.hostname + ":" + port + BaseUrls.get(type);
 
     console.log(out);
 
@@ -63,7 +82,9 @@ export const ENTITIES = {
 };
 
 export const CONTROLLERS_ENDPOINT = {
-    FIRMONE_URLS: "/getFirmoneUrls"
+    FIRMONE_URLS: "/getFirmoneUrls",
+    PRENDONE_URLS: "/getPrendoneUrls",
+    CANCELLA_NOTIFICHE: "/cancellaNotifiche"
 };
 
 export const COMMANDS = {
@@ -167,4 +188,6 @@ export const AFFERENZA_STRUTTURA = {
 export const COMMON_PARAMETERS = {
     BABEL_APPLICATION: "BABEL_APPLICATION"
 };
+
+
 
