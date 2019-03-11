@@ -37,7 +37,8 @@ export class AppComponent implements OnInit {
       showUserFullName: true,
       showUserMenu: true,
       showManuale: true,
-      showProfilo: true
+      showProfilo: true,
+      logoutRoot: SCRIVANIA_ROUTE
     };
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
     this.loginService.setImpostazioniApplicazioniUrl(getInternautaUrl(BaseUrlType.ConfigurazioneImpostazioniApplicazioni));
