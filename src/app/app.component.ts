@@ -1,3 +1,4 @@
+import { MAX_CHARS_100 } from './../environments/app-constants';
 import { Component, OnInit } from "@angular/core";
 import { NtJwtLoginService, LoginType, NtJwtLoginComponent, UtenteUtilities } from "@bds/nt-jwt-login";
 import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
@@ -38,7 +39,7 @@ export class AppComponent implements OnInit {
       showUserMenu: true,
       showManuale: true,
       showProfilo: true,
-      logoutRoot: SCRIVANIA_ROUTE
+      logoutRedirectRoute: SCRIVANIA_ROUTE
     };
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
     this.loginService.setImpostazioniApplicazioniUrl(getInternautaUrl(BaseUrlType.ConfigurazioneImpostazioniApplicazioni));
