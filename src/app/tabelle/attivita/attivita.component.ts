@@ -40,7 +40,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public selectedRowIndex: number = -1;
   public columnClass = "column-class-f";
   public attivitaSelezionata: Attivita;
-  public contextMenuItems: MenuItem[];
+  public contextMenuAperte: MenuItem[];
+  public contextMenuNonAperte: MenuItem[];
 
   private _idAzienda: number = -1;
   @Input("idAzienda")
@@ -102,8 +103,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       bodyTable.style.paddingBottom = "1px";
       bodyTable.style.paddingBottom = "1px";
     });
-    this.contextMenuItems = [
+    this.contextMenuAperte = [
       { label: "Segna come da leggere", icon: "pi pi-eye-slash", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
+    ];
+    this.contextMenuNonAperte = [
+      { label: "Segna come letta", icon: "pi pi-eye", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
     ];
      const browser = Bowser.getParser(window.navigator.userAgent);
     const browserInfo = browser.getBrowser();
@@ -142,7 +146,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
                   console.log("2 = ", this.attivita[idAttivitaToReplace].aperta);
                   this.dataTable.selection = this.attivita[this.selectedRowIndex];
                   console.log("3 = ", this.attivita[idAttivitaToReplace].aperta);
-
               }
             }
           });
@@ -162,7 +165,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   handleContextMenu(attivitaSelezionata: Attivita) {
     // this.messageService.add({ severity: "info", summary: "Car Selected", detail: attivitaSelezionata.oggetto });
-    attivitaSelezionata.aperta = false;
+    attivitaSelezionata.aperta = !attivitaSelezionata.aperta;
     this.attivitaService.update(attivitaSelezionata);
   }
 
@@ -181,10 +184,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   public onKeydownHandlerArrowDown(event: KeyboardEvent) {
+    console.log("Scattato down");
     this.selectIndex(this.selectedRowIndex + 1);
   }
 
   public onKeydownHandlerArrowUp(event: KeyboardEvent) {
+    console.log("Scattato up");
     this.selectIndex(this.selectedRowIndex - 1);
   }
 
@@ -221,13 +226,17 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   public selectIndex(index: number) {
+    console.log("Index: ", index, "Table Index: ", this.selectedRowIndex);
+    
     if (index < 0 || index >= this.attivita.length) { return; }
-
+    console.log("Controllo supertao: ", this.attivita[index]);
     this.selectedRowIndex = index;
     this.dataTable.selection = this.attivita[this.selectedRowIndex];
     const attivitaSelezionata: Attivita = this.attivita[this.selectedRowIndex];
-    attivitaSelezionata.aperta = true;
-    this.attivitaService.update(attivitaSelezionata);
+    if (!attivitaSelezionata.aperta) { // se l'attivita non è letta la metto come letta
+      attivitaSelezionata.aperta = !attivitaSelezionata.aperta;
+      this.attivitaService.update(attivitaSelezionata);
+    }
     this.attivitaEmitter.emit(this.dataTable.selection);
   }
 
