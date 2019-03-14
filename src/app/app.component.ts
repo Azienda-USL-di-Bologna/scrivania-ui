@@ -1,4 +1,4 @@
-import { MAX_CHARS_100 } from './../environments/app-constants';
+import { MAX_CHARS_100 } from "./../environments/app-constants";
 import { Component, OnInit } from "@angular/core";
 import { NtJwtLoginService, LoginType, NtJwtLoginComponent, UtenteUtilities } from "@bds/nt-jwt-login";
 import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
@@ -8,7 +8,8 @@ import { GlobalService } from "./services/global.service";
 import { MenuItem, DialogService } from "primeng/api";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService } from "./intimus/intimus-client.service";
-import { HeaderFeaturesParams } from "@bds/nt-communicator";
+import { HeaderFeaturesConfig } from "@bds/primeng-plugin";
+
 
 @Component({
   selector: "app-root",
@@ -21,7 +22,7 @@ export class AppComponent implements OnInit {
   private deletedImpersonatedUserQueryParams = false;
   public addToMenu: MenuItem[] = [];
   public utenteConnesso: UtenteUtilities;
-  public headerFeaturesParams: HeaderFeaturesParams;
+  public headerFeaturesConfig: HeaderFeaturesConfig;
 
   constructor(
     private loginService: NtJwtLoginService,
@@ -32,15 +33,17 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     console.log("inizio onInit() appComponent");
-    this.headerFeaturesParams = {
-      showCambioUtente: true,
-      showLogOut: true,
-      showUserFullName: true,
-      showUserMenu: true,
-      showManuale: true,
-      showProfilo: true,
-      logoutRedirectRoute: SCRIVANIA_ROUTE
-    };
+
+    this.headerFeaturesConfig = new HeaderFeaturesConfig();
+    this.headerFeaturesConfig.showCambioUtente = true;
+    this.headerFeaturesConfig.showLogOut = true;
+    this.headerFeaturesConfig.showUserFullName = true;
+    this.headerFeaturesConfig.showUserMenu = true;
+    this.headerFeaturesConfig.showManuale = true;
+    this.headerFeaturesConfig.showProfilo = true;
+    this.headerFeaturesConfig.logoutRedirectRoute = SCRIVANIA_ROUTE;
+    this.headerFeaturesConfig.logoutIconPath = "assets/images/signout.svg";
+
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
     this.loginService.setImpostazioniApplicazioniUrl(getInternautaUrl(BaseUrlType.ConfigurazioneImpostazioniApplicazioni));
 
