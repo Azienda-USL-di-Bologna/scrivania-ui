@@ -26,6 +26,8 @@
     "@bds/nt-jwt-login": "0.0.32",
     "@bds/primeng-plugin": "0.0.10",
     "@nfa/next-sdr": "1.1.1-bds",
+    "@nfa/ref": "2.1.1",
+    "@nfa/core": "2.0.0",
     "bowser": "^2.1.0",
     "core-js": "^2.5.4",
     "primeflex": "^1.0.0-rc.1",
