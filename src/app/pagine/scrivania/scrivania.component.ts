@@ -35,7 +35,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   allegati: any[];
   allegatoSelezionato: any;
 
-  public oggetto: any = "Nessuna attivita selezionata.";
+  public oggetto: any = null;
 
   public mittente: string = null; // "Nessun mittente";
   public destinatari: string = null; // "Nessun destinatario";
@@ -198,63 +198,66 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     this.destinatariCC = null;
     this.datiDiFlusso = null;
     this.datiFlussoTooltip = null;
+    this.oggetto = null;
   }
 
   public attivitaClicked(attivitaCliccata: Attivita) {
+    console.log("attivitaClicked", attivitaCliccata);
     this.clearAccordionDetailFields();
     this.attivitaSelezionata = attivitaCliccata;
-    this.oggetto = this.attivitaSelezionata.oggetto;
-    const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
-    this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
-    let destinatariA, destinatariCC: string;
-    if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
-      const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
-      res.forEach(e => {
-        if (e.startsWith("A: ")) {
-          destinatariA = e.replace("A: ", "<b>A: </b>");
-        } else if (e.startsWith("CC: ")) {
-          destinatariCC = e.replace("CC: ", "<b>CC: </b>");
-        } else if (e.startsWith("Interni: ")) {
-          destinatariA = e.replace("Interni: ", "<b>Interni: </b>");
-        } else if (e.startsWith("Esterni: ")) {
-          destinatariCC = e.replace("Esterni: ", "<b>Esterni: </b>");
-        }
-      });
-    }
-    if (datiAggiuntiviAttivita.custom_app_4) {
-      this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
-      if (this.datiDiFlusso.length > MAX_CHARS_100) {
-        this.datiFlussoTooltip = this.datiDiFlusso;
-        this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
+    if (this.attivitaSelezionata) {
+      this.oggetto = this.attivitaSelezionata.oggetto;
+      const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
+      this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
+      let destinatariA, destinatariCC: string;
+      if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
+        const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
+        res.forEach(e => {
+          if (e.startsWith("A: ")) {
+            destinatariA = e.replace("A: ", "<b>A: </b>");
+          } else if (e.startsWith("CC: ")) {
+            destinatariCC = e.replace("CC: ", "<b>CC: </b>");
+          } else if (e.startsWith("Interni: ")) {
+            destinatariA = e.replace("Interni: ", "<b>Interni: </b>");
+          } else if (e.startsWith("Esterni: ")) {
+            destinatariCC = e.replace("Esterni: ", "<b>Esterni: </b>");
+          }
+        });
       }
-      this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
-      // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
+      if (datiAggiuntiviAttivita.custom_app_4) {
+        this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
+        if (this.datiDiFlusso.length > MAX_CHARS_100) {
+          this.datiFlussoTooltip = this.datiDiFlusso;
+          this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
+        }
+        this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
+        // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
+      }
+      this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
+      this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
+
+      this.allegati = [];
+      this.allegatiDropDown.clear(null);
+      const allegatiAttivita: any[] = JSON.parse(this.attivitaSelezionata.allegati);
+      if (allegatiAttivita) {
+        allegatiAttivita.sort((a: any, b: any) => { if (a.default) { return -1; } else if (a.default && b.default) { return 0; } else { return 1; }});
+        allegatiAttivita.forEach(element => {
+          this.allegati.push({label: this.shrinkFileName(element.nome_file), value: element});
+        });
+        this.allegatoSelected({value: this.allegati[0].value});
+      } else {
+        this.noAnteprima = true;
+      }
+
+
+      if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
+        this.allegati = [{label: "Documenti non presenti", value: null}];
+        this.allegatiDropDown.disabled = true;
+      }
+
+      // this.allegatiDropDown.updateDimensions();
+      // this.allegatiDropDown.show();
     }
-    this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
-    this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
-
-    this.allegati = [];
-    this.allegatiDropDown.clear(null);
-    const allegatiAttivita: any[] = JSON.parse(this.attivitaSelezionata.allegati);
-    if (allegatiAttivita) {
-      allegatiAttivita.sort((a: any, b: any) => { if (a.default) { return -1; } else if (a.default && b.default) { return 0; } else { return 1; }});
-      allegatiAttivita.forEach(element => {
-        this.allegati.push({label: this.shrinkFileName(element.nome_file), value: element});
-      });
-      this.allegatoSelected({value: this.allegati[0].value});
-    } else {
-      this.noAnteprima = true;
-    }
-
-
-    if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
-      this.allegati = [{label: "Documenti non presenti", value: null}];
-      this.allegatiDropDown.disabled = true;
-    }
-
-    // this.allegatiDropDown.updateDimensions();
-    // this.allegatiDropDown.show();
-
   }
 
   public allegatoSelected(event: any) {
@@ -286,7 +289,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   handleItemClick(event) {
     console.log("Link: ", event);
-    
     window.open(event);
   }
 
@@ -458,7 +460,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
     if (this.mostraStorico === true) {
       this.tabellaDaRefreshare = Object.assign({}, {name: "attivita-fatte"});
-    } else{
+    } else {
       this.tabellaDaRefreshare = Object.assign({}, {name: "attivita"});
     }
   }
@@ -471,7 +473,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       acceptLabel: "Sì",
       rejectLabel: "No",
       accept: () => {
-          //this.msgs = [{severity:'info', summary:'Confirmed', detail:'You have accepted'}];
+          // this.msgs = [{severity:'info', summary:'Confirmed', detail:'You have accepted'}];
           this.subscriptions.push(this.scrivaniaService.cancellaNotifiche().subscribe(data => {
             this.ricarica();
           }));

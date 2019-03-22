@@ -57,8 +57,11 @@
   <div class="p-md-5 p-sm-12 content-right" [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'" #rightSide>
 
     <div class="info-doc-wrapper">
-        <div class="div-info-doc">
+        <div *ngIf="oggetto" class="div-info-doc">
             <strong>{{oggetto}}</strong>
+        </div>
+        <div *ngIf="!oggetto" class="div-info-doc">
+            <strong>Nessuna attivita selezionata.</strong>
         </div>
         <p-accordion [multiple]="true" #accordionDetail>
             <p-accordionTab header="Dettagli documento">

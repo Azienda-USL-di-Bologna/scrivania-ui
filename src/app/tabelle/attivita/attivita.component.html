@@ -46,14 +46,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
-        <tr #selRow *ngIf="attivita.aperta"  class="row-class" [pSelectableRow]="rowData" [pContextMenuRow]="rowData" style="height:30px">
-            <ng-container *ngTemplateOutlet="rowColumns"></ng-container>
-        </tr>
-        <tr #selRow *ngIf="!attivita.aperta" class="row-class" [pSelectableRow]="rowData" style="height:30px">
-            <ng-container *ngTemplateOutlet="rowColumns"></ng-container>
-        </tr>
-
-        <ng-template #rowColumns>
+        <tr #selRow class="row-class" [pSelectableRow]="rowData" [pContextMenuRow]="rowData" style="height:30px">
             <td [style.width]="cols[0].width"  [style.minWidth]="cols[0].minWidth" [ngClass]="[columnClass, 'p0']">
                 <img [src]="attivita.iconaAttivita" alt="priorita" class="img-table" />
             </td>
@@ -75,8 +68,8 @@
                 <img *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="onNoteClick(attivita)" alt="note" class="img-table">
                 <img *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table">
             </td>
-        </ng-template>
+        </tr>
     </ng-template>
 
 </p-table>
-<p-contextMenu #cm [model]="contextMenuItems" [ngClass]="'clContextMenu'" [style]="{'margin': '-130px 0 0 -30px'}"></p-contextMenu>
+<p-contextMenu #cm [model]="attivitaSelezionata?.aperta ? contextMenuAperte : contextMenuNonAperte" [ngClass]="'clContextMenu'" [style]="{'margin': '-130px 0 0 -30px'}"></p-contextMenu>

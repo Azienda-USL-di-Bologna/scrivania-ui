@@ -23,7 +23,6 @@ export class IntimusClientService  {
   }
 
   private initializeIntimus(utente: Utente) {
-    console.log("gdm");
     const primusUrl = getInternautaUrl(BaseUrlType.Intimus);
     const primus = Primus.connect(primusUrl, {
       reconnect: {
@@ -42,11 +41,9 @@ export class IntimusClientService  {
         const cmd = data.command + "&params=" + JSON.stringify(data.params);
         const intimusCommand: IntimusCommand = new IntimusCommand(data.command, data.params);
         this.pushCommand(intimusCommand);
-        console.log("Received command from the server", cmd);
-        //
-        // var e = new IDEvent("cmd", "", null, RD3_Glb.EVENT_ACTIVE, cmd);
+         // console.log("Received command from the server", cmd);
       } else {
-        console.log(JSON.stringify(data));
+        // console.log(JSON.stringify(data));
       }
     });
 
