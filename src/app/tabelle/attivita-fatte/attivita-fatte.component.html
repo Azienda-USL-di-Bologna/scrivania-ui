@@ -1,7 +1,8 @@
 <p-table #dt
     [value]="attivitaFatte"
     [columns]="cols"
-    [paginator]="false"
+    [paginator]="true"
+    [rows]="15"
     [autoLayout]="false"
     [totalRecords]="totalRecords"
     selectionMode="single"
