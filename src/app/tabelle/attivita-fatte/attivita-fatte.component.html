@@ -1,8 +1,10 @@
 <p-table #dt
+    [lazy]="true"
+    (onLazyLoad)="loadData($event)"
     [value]="attivitaFatte"
     [columns]="cols"
     [paginator]="true"
-    [rows]="15"
+    [rows]="20"
     [autoLayout]="false"
     [totalRecords]="totalRecords"
     selectionMode="single"
