@@ -104,7 +104,7 @@ export class AttivitaFatteComponent implements OnInit {
     this.loadData(null);
   }
 
-  private loadData(event: LazyLoadEvent) {
+  public loadData(event: LazyLoadEvent) {
     this.loading = true;
     const functionName = "loadData";
 
