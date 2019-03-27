@@ -38,9 +38,10 @@ export class AttivitaFatteComponent implements OnInit {
     this.loadData(null);
   }
   @Input("refresh")
-  set refresh(_refresh: any){
-    if(_refresh.name == "attivita-fatte")
-    this.loadData(null)
+  set refresh(_refresh: any) {
+    if (_refresh.name === "attivita-fatte") {
+      this.loadData(null);
+    }
   }
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<AttivitaFatta> = new EventEmitter();
 
@@ -103,7 +104,7 @@ export class AttivitaFatteComponent implements OnInit {
     this.loadData(null);
   }
 
-  private loadData(event: LazyLoadEvent) {
+  public loadData(event: LazyLoadEvent) {
     this.loading = true;
     const functionName = "loadData";
 
@@ -150,7 +151,7 @@ export class AttivitaFatteComponent implements OnInit {
       const filterIdAzienda: FilterDefinition = new FilterDefinition("idAzienda.id", FILTER_TYPES.not_string.equals, this._idAzienda);
       initialFiltersAndSorts.addFilter(filterIdAzienda);
     }
-    initialFiltersAndSorts.rows = NO_LIMIT;
+    // initialFiltersAndSorts.rows = 20;
     return initialFiltersAndSorts;
   }
 
