@@ -28,6 +28,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private subscriptions: Subscription[] = [];
   private listeners = new Map();
+  private callCounter = 0;
 
   public attivita: Attivita[];
   public totalRecords: number;
@@ -227,7 +228,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   public selectIndex(index: number) {
     console.log("Index: ", index, "Table Index: ", this.selectedRowIndex);
-    
+
     if (index < 0 || index >= this.attivita.length) { return; }
     console.log("Controllo supertao: ", this.attivita[index]);
     this.selectedRowIndex = index;
@@ -254,7 +255,10 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       const filterIdAzienda: FilterDefinition = new FilterDefinition("idAzienda.id", FILTER_TYPES.not_string.equals, this._idAzienda);
       initialFiltersAndSorts.addFilter(filterIdAzienda);
     }
-    initialFiltersAndSorts.rows = NO_LIMIT;
+    if (this.callCounter < 2) {
+      initialFiltersAndSorts.rows = 10;
+      this.callCounter++;
+    }
     // console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
     return initialFiltersAndSorts;
   }
