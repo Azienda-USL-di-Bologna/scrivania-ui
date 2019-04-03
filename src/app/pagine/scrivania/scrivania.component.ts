@@ -62,7 +62,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   private MIN_X_LEFT_SIDE: number = 570;
   private MIN_X_RIGHT_SIDE: number = 225;
 
-  public idAzienda: number = -1;
+  public idAzienda: number = null;
   public changeColOrder: boolean = false;
   public hidePreview = false;
 
