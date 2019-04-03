@@ -30,6 +30,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private listeners = new Map();
   private callCounter = 0;
 
+  public LOADED_ROWS = 50;
   public attivita: Attivita[];
   public totalRecords: number;
   public localIt = LOCAL_IT;
@@ -44,12 +45,16 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public contextMenuAperte: MenuItem[];
   public contextMenuNonAperte: MenuItem[];
 
-  private _idAzienda: number = -1;
+  private _idAzienda: number = null;
   @Input("idAzienda")
   set idAzienda(idAzienda: number) {
     this._idAzienda = idAzienda;
-    if ( !this.loggedUser ) { return; }
-    this.loadData(null);
+    if (!this.loggedUser) { return; }
+    if (this._idAzienda) {
+      this.loadData(null);
+    } else {
+      this._idAzienda = -1;
+    }
   }
   @Input("changeColOrder")
   set changeColOrder(changeColOrder: boolean) {
@@ -222,7 +227,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   private lazyLoad(event: LazyLoadEvent) {
     const functionName = "lazyLoad";
-    // console.log(this.componentDescription, functionName, "event: ", event);
+    // console.log(functionName, "event: ", event);
     this.loadData(event);
   }
 
@@ -255,10 +260,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       const filterIdAzienda: FilterDefinition = new FilterDefinition("idAzienda.id", FILTER_TYPES.not_string.equals, this._idAzienda);
       initialFiltersAndSorts.addFilter(filterIdAzienda);
     }
-    if (this.callCounter < 2) {
-      initialFiltersAndSorts.rows = 10;
-      this.callCounter++;
-    }
+    initialFiltersAndSorts.rows = this.LOADED_ROWS;
     // console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
     return initialFiltersAndSorts;
   }
