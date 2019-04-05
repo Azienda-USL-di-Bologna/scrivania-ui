@@ -124,7 +124,7 @@
     align-items: center;
     overflow-y: auto;
 }
-.overlapDiv{
+.overlap-div {
     position: absolute;
     top: 0;
     bottom: 15px;
