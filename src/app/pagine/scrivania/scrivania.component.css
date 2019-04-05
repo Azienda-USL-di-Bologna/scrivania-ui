@@ -56,6 +56,12 @@
     width: 34.1px;
 }
 
+.images-pos {
+    position: absolute;
+    left: 15%;
+    width: 21px;
+}
+
 :host >>> .icon-style > span:first-child {
     font-size: 1.7em;
 }
@@ -304,7 +310,7 @@
 
 .crono-label {
     top: 0;
-    left: 46%;
+    left: 45.5%;
     position: absolute;
     margin: auto;
 }
