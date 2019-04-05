@@ -58,6 +58,7 @@
 
 .images-pos {
     position: absolute;
+    top: 15%;
     left: 15%;
     width: 21px;
 }
