@@ -56,6 +56,13 @@
     width: 34.1px;
 }
 
+.images-pos {
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 21px;
+}
+
 :host >>> .icon-style > span:first-child {
     font-size: 1.7em;
 }
@@ -300,4 +307,11 @@
 :host>>> .centerIconVertically{
     display: flex;
     align-items: center;
+}
+
+.crono-label {
+    top: 0;
+    left: 45.5%;
+    position: absolute;
+    margin: auto;
 }
