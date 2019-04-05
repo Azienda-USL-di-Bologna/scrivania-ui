@@ -1,7 +1,7 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, ElementRef, Renderer2 } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2 } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem } from "primeng/api";
-import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
+import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { PROJECTIONS } from "../../../environments/app-constants";
@@ -28,7 +28,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private subscriptions: Subscription[] = [];
   private listeners = new Map();
-  private callCounter = 0;
+
 
   public LOADED_ROWS = 50;
   public attivita: Attivita[];

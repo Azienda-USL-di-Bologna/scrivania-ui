@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
-import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
+import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaFatteService } from "./attivita-fatte.service";
 import { PROJECTIONS } from "../../../environments/app-constants";
@@ -34,8 +34,13 @@ export class AttivitaFatteComponent implements OnInit {
   @Input("idAzienda")
   set idAzienda(idAzienda: number) {
     this._idAzienda = idAzienda;
+    if (!this._idAzienda) {
+      this._idAzienda = -1;
+    }
     if ( !this.loggedUser ) { return; }
-    this.loadData(null);
+    if (this._idAzienda) {
+      this.loadData(null);
+    }
   }
   @Input("refresh")
   set refresh(_refresh: any) {
@@ -101,7 +106,7 @@ export class AttivitaFatteComponent implements OnInit {
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       this.loggedUser = u;
     }));
-    this.loadData(null);
+    // this.loadData(null);
   }
 
   public loadData(event: LazyLoadEvent) {

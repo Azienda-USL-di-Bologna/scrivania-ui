@@ -29,14 +29,15 @@
             <p-tieredMenu #prendoneMenu [model]="alberoPrendi" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
             <div class="separator-class"></div>
             <!-- Cronologia, Aggiorna, Elimina notifiche -->
-            <button *ngIf="!mostraStorico" type="button" pButton pTooltip="Cronologia" tooltipPosition="bottom" icon="pi pi-clock" iconPos="left" (click)="mostraStorico=!mostraStorico" class="ui-button-secondary icon-style" aria-label="Cronologia">
-            </button>
             <button *ngIf="mostraStorico" type="button" pButton pTooltip="Indietro" tooltipPosition="bottom" icon="pi pi-chevron-left" iconPos="left" (click)="mostraStorico=!mostraStorico" class="ui-button-secondary icon-style" aria-label="Indietro">
             </button>
             <button #btn type="button" pButton pTooltip="Aggiorna attività" tooltipPosition="bottom" (click)="ricarica()" iconPos="left" icon="pi pi-refresh" class="ui-button-secondary icon-style" aria-label="Aggiorna attività">
             </button>
+            <button *ngIf="!mostraStorico" type="button" pButton pTooltip="Cronologia" tooltipPosition="bottom" icon="pi pi-clock" iconPos="left" (click)="mostraStorico=!mostraStorico" class="ui-button-secondary icon-style" aria-label="Cronologia">
+            </button>
             <button #btn *ngIf="!mostraStorico" type="button" pButton pTooltip="Elimina notifiche" tooltipPosition="bottom" (click)="delNotifiche()" iconPos="left" icon="pi pi-trash" class="ui-button-secondary icon-style" aria-label="Elimina notifiche">
             </button>
+            <h3 *ngIf="mostraStorico" class="crono-label">Cronologia</h3>
         </div>
 
         <app-dropdown-aziende *ngIf="loggedUser.getUtente().aziende.length !== 1" (aziendaEmitter)="aziendaChanged($event)"></app-dropdown-aziende>

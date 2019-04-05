@@ -301,3 +301,10 @@
     display: flex;
     align-items: center;
 }
+
+.crono-label {
+    top: 0;
+    left: 46%;
+    position: absolute;
+    margin: auto;
+}
