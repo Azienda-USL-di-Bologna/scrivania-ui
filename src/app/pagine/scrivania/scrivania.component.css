@@ -203,9 +203,6 @@
     margin: 2px 0;
     float: right;
 }
-:host>>>.ui-tieredmenu li {
-    max-height: 40px;
-}
 :host>>>.ui-tieredmenu,
 :host>>>.ui-tieredmenu .ui-submenu-list {
     /* background-color:#737272; */
@@ -226,7 +223,7 @@
 :host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-submenu-icon {
     color: #ffffff;
     font-weight: bold;
-    font-size: 1.1em;
+    font-size: 101%;
 }
 
 .position-relative{
