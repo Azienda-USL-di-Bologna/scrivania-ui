@@ -13,6 +13,7 @@ export class AttivitaService extends HttpAbstractService {
   }
 
   update(elementToUpdate: Attivita): Promise<any> {
+    console.log("update(elementToUpdate: Attivita)", elementToUpdate)
     const functioName = "update";
     const temp = new Attivita();
     Object.assign(temp, elementToUpdate);

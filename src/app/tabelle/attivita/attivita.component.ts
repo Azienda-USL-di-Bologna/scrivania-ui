@@ -14,6 +14,7 @@ import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
 import { IntimusClientService } from "src/app/intimus/intimus-client.service";
 import { IntimusCommand, IntimusCommands } from "src/app/intimus/intimus-command";
+import { Dialog } from "primeng/dialog";
 
 @Component({
   selector: "app-attivita",
@@ -44,6 +45,10 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public contextMenuNonAperte: MenuItem[];
 
   private _idAzienda: number = -1;
+  public showNote: boolean;
+  public attivitaTemp: Attivita = new Attivita();
+  public _noteTemp: string;
+
   @Input("idAzienda")
   set idAzienda(idAzienda: number) {
     this._idAzienda = idAzienda;
@@ -60,7 +65,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     if (_refresh.name === "attivita") {
       this.loadData(null);
     }
-  }
+  }  
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
@@ -297,7 +302,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private setAttivitaIcon(a: Attivita) {
-    a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);
+    //a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);  // ?? perché questa stava qua? boh, comunque dava errore al click (l.s.)
     if (a.tipo === "notifica") {
       a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
     } else if (!a.priorita || a.priorita === 3) {
@@ -419,8 +424,52 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-  private onNoteClick(attivita: any) {
+  public onNoteClick(attivita: any) {
+    console.log("onNoteClick(attivita: any) ", attivita)
     this.onAttivitaNoteEmitter.emit(attivita);
+  }
+
+  public noteClicckato(attivita: Attivita){
+    if(attivita){
+      this.showNote = true;
+      this.attivitaTemp = attivita;
+      this._noteTemp = attivita.note;
+    }
+  }
+
+  salvaNote(){
+    console.log("this._noteTemp",this._noteTemp);
+    console.log("this.attivitaTemp.note",this.attivitaTemp.note);
+    if(this._noteTemp!==this.attivitaTemp.note){
+      console.log("Salvo momdifiche");
+    }
+    else
+      console.log("Non ci sono cambiamenti");
+    
+    this.showNote = false;
+  }
+
+  annullaNote(){
+    console.log("this._noteTemp",this._noteTemp);
+    console.log("this.attivitaTemp.note",this.attivitaTemp.note);
+    
+    if(this._noteTemp!==this.attivitaTemp.note){
+      console.log("Stai uscendo senza salvare");
+        
+    }
+    else{
+      console.log("Non ci sono cambiamenti");
+    }
+    this.attivitaTemp.note = this._noteTemp // reimposto il valore iniziale
+    this.showNote = false;
+  }
+
+  impostaPriorita(attivita: Attivita){
+    console.log("impostaPriorita(attivita)", attivita)
+    if(attivita.tipo==="attivita"){
+      (!attivita.priorita || attivita.priorita === 3 ? attivita.priorita = 1 : (attivita.priorita === 1 ? attivita.priorita = 2 : attivita.priorita = 3))
+      this.setAttivitaIcon(attivita);
+    }
   }
 
 
