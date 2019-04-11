@@ -1,6 +1,6 @@
 <p-table #dt
     [lazy]="true"
-    (onLazyLoad)="loadData($event)"
+    (onLazyLoad)="handleEvent('onLazyLoad', $event)"
     [value]="attivitaFatte"
     [columns]="cols"
     [paginator]="true"

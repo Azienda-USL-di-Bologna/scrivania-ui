@@ -1,7 +1,7 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, HostListener, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, ElementRef, Renderer2 } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2 } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem } from "primeng/api";
-import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition, NO_LIMIT } from "@bds/nt-communicator";
+import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { PROJECTIONS } from "../../../environments/app-constants";
@@ -30,6 +30,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private subscriptions: Subscription[] = [];
   private listeners = new Map();
 
+
+  public LOADED_ROWS = 50;
   public attivita: Attivita[];
   public totalRecords: number;
   public localIt = LOCAL_IT;
@@ -44,7 +46,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public contextMenuAperte: MenuItem[];
   public contextMenuNonAperte: MenuItem[];
 
-  private _idAzienda: number = -1;
+  private _idAzienda: number = null;
   public showNote: boolean;
   public attivitaTemp: Attivita = new Attivita();
   public _noteTemp: string;
@@ -52,8 +54,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   @Input("idAzienda")
   set idAzienda(idAzienda: number) {
     this._idAzienda = idAzienda;
-    if ( !this.loggedUser ) { return; }
-    this.loadData(null);
+    if (!this.loggedUser) { return; }
+    if (this._idAzienda) {
+      this.loadData(null);
+    } else {
+      this._idAzienda = -1;
+    }
   }
   @Input("changeColOrder")
   set changeColOrder(changeColOrder: boolean) {
@@ -226,13 +232,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   private lazyLoad(event: LazyLoadEvent) {
     const functionName = "lazyLoad";
-    // console.log(this.componentDescription, functionName, "event: ", event);
+    // console.log(functionName, "event: ", event);
     this.loadData(event);
   }
 
   public selectIndex(index: number) {
     console.log("Index: ", index, "Table Index: ", this.selectedRowIndex);
-    
+
     if (index < 0 || index >= this.attivita.length) { return; }
     console.log("Controllo supertao: ", this.attivita[index]);
     this.selectedRowIndex = index;
@@ -259,7 +265,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       const filterIdAzienda: FilterDefinition = new FilterDefinition("idAzienda.id", FILTER_TYPES.not_string.equals, this._idAzienda);
       initialFiltersAndSorts.addFilter(filterIdAzienda);
     }
-    initialFiltersAndSorts.rows = NO_LIMIT;
+    initialFiltersAndSorts.rows = this.LOADED_ROWS;
     // console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
     return initialFiltersAndSorts;
   }

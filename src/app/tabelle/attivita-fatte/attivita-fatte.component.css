@@ -13,6 +13,3 @@
 .p0{
     padding: 0 !important;
 }
-:host>>> .ui-table {
-    height: auto;
-}

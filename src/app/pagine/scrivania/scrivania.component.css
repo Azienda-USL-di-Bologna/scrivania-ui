@@ -56,6 +56,13 @@
     width: 34.1px;
 }
 
+.images-pos {
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 21px;
+}
+
 :host >>> .icon-style > span:first-child {
     font-size: 1.7em;
 }
@@ -88,6 +95,7 @@
     bottom: 0;
     left: 0;
     right: 0;
+    padding-bottom: 33px;
 }
 :host>>> .ui-table,
 :host>>> .ui-table-scrollable-wrapper,
@@ -116,7 +124,7 @@
     align-items: center;
     overflow-y: auto;
 }
-.overlapDiv{
+.overlap-div {
     position: absolute;
     top: 0;
     bottom: 15px;
@@ -168,6 +176,9 @@
 .text-centered {
     text-align: center;
 }
+
+/* Menu Apri */
+
 .clMenu {
     /* display: flex; */
     font-weight: bold;
@@ -192,23 +203,19 @@
     margin: 2px 0;
     float: right;
 }
-:host>>>.ui-tieredmenu {
-    /* background-color:#737272; */
-    /* background-color:#203244; */
-    background-color:  rgba(32, 50, 68, 0.980392) !important;
+:host>>>.ui-tieredmenu li {
+    max-height: 40px;
 }
+:host>>>.ui-tieredmenu,
 :host>>>.ui-tieredmenu .ui-submenu-list {
     /* background-color:#737272; */
     /* background-color:#203244; */
     background-color:  rgba(32, 50, 68, 0.980392) !important;
 }
-:host>>>.ui-tieredmenu .ui-menuitem-link .ui-menuitem-text {
-    /* color: #ffffff; */
-    color: #999;
-}
+:host>>>.ui-tieredmenu .ui-menuitem-link .ui-menuitem-text,
 :host>>>.ui-submenu-icon {
-    /* color: #ffffff; */
-    color: #999;
+    color: #f4f4f4;
+    /* color: #999; */
 }
 :host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link {
     /* background-color:#7e7e7e;#d3d3d3b0;    */
@@ -218,8 +225,9 @@
 :host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-menuitem-text,
 :host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-submenu-icon {
     color: #ffffff;
+    font-weight: bold;
+    font-size: 1.1em;
 }
-
 
 .position-relative{
     position: relative;
@@ -299,4 +307,11 @@
 :host>>> .centerIconVertically{
     display: flex;
     align-items: center;
+}
+
+.crono-label {
+    top: 0;
+    left: 45.5%;
+    position: absolute;
+    margin: auto;
 }
