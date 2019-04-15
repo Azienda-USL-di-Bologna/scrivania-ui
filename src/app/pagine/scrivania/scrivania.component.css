@@ -212,6 +212,7 @@
 :host>>>.ui-tieredmenu .ui-menuitem-link .ui-menuitem-text,
 :host>>>.ui-submenu-icon {
     color: #f4f4f4;
+    top: 21px !important;
     /* color: #999; */
 }
 :host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link {

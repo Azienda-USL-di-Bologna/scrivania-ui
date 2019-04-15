@@ -49,9 +49,9 @@ import { DialogModule } from "primeng/dialog";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { DatePipe } from "@angular/common";
 import { ToastModule } from "primeng/toast";
-import { CardModule } from 'primeng/card';
-import {ConfirmDialogModule} from 'primeng/confirmdialog';
-import {ConfirmationService} from 'primeng/api';
+import { CardModule } from "primeng/card";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { ConfirmationService } from "primeng/api";
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
