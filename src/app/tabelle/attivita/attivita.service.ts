@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { HttpAbstractService } from "@bds/nt-communicator"
+import { HttpAbstractService } from "@bds/nt-communicator";
 import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType } from "../../../environments/app-constants";
 import { Attivita } from "@bds/ng-internauta-model";
 
@@ -13,7 +13,7 @@ export class AttivitaService extends HttpAbstractService {
   }
 
   update(elementToUpdate: Attivita): Promise<any> {
-    console.log("update(elementToUpdate: Attivita)", elementToUpdate)
+    console.log("update(elementToUpdate: Attivita)", elementToUpdate);
     const functioName = "update";
     const temp = new Attivita();
     Object.assign(temp, elementToUpdate);
@@ -31,7 +31,7 @@ export class AttivitaService extends HttpAbstractService {
   delete(elementToDelete: Attivita): Promise<any> {
     const functioName = "delete";
     // console.log(this.classDescriptionLocal, functioName, "elementToDelete", elementToDelete);
-    elementToDelete.datiAggiuntivi = JSON.stringify(elementToDelete.datiAggiuntivi);
+    // elementToDelete.datiAggiuntivi = JSON.stringify(elementToDelete.datiAggiuntivi);
     return this.deleteHttpCall(elementToDelete.id);
   }
 }
