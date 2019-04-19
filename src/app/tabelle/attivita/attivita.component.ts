@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2 } from "@angular/core";
 import { DatePipe } from "@angular/common";
-import { LazyLoadEvent, MessageService, MenuItem } from "primeng/api";
+import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
 import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
@@ -14,6 +14,7 @@ import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
 import { IntimusClientService } from "src/app/intimus/intimus-client.service";
 import { IntimusCommand, IntimusCommands } from "src/app/intimus/intimus-command";
+import { Dialog } from "primeng/dialog";
 
 @Component({
   selector: "app-attivita",
@@ -47,6 +48,21 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public contextMenuNonAperte: MenuItem[];
 
   private _idAzienda: number = null;
+  public showNote: boolean;
+  public attivitaTemp: Attivita = new Attivita();
+  public _noteTemp: string;
+
+  private salvataggioNoteResultMessages = {
+    success: {
+      target: "clToast",
+      message: "Note attività aggiornate con successo"
+    },
+    error: {
+      target: "errorToast",
+      message: "Errore nel salvataggio delle note attività."
+    }
+  };
+
   @Input("idAzienda")
   set idAzienda(idAzienda: number) {
     this._idAzienda = idAzienda;
@@ -80,7 +96,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private loginService: NtJwtLoginService,
     private renderer: Renderer2,
     private messageService: MessageService,
-    private intimusClientService: IntimusClientService
+    private intimusClientService: IntimusClientService,
+    private confirmationService: ConfirmationService
   ) {
 
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
@@ -136,6 +153,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           .then((data: Attivita) => {
             if (data) {
               this.setAttivitaIcon(data);
+              data.datiAggiuntivi = JSON.parse(data.datiAggiuntivi);
               this.attivita.unshift(data);
             }
           });
@@ -144,6 +162,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, null, null, idAttivitaToRefresh)
           .then((data: Attivita) => {
               if (data) {
+                data.datiAggiuntivi = JSON.parse(data.datiAggiuntivi);
                 const idAttivitaToReplace = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
                 if (idAttivitaToReplace >= 0) {
                   this.setAttivitaIcon(data);
@@ -215,7 +234,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   public handleEvent(nome: string, event: any) {
     const functionName = "handleEvent";
-    // console.log(this.componentDescription, functionName, "nome:", nome, "event:", event);
     switch (nome) {
       case "onLazyLoad":
         this.lazyLoad(event);
@@ -295,6 +313,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
             this.attivita.forEach(a => {
               this.setAttivitaIcon(a);
+              // console.log("carica", a.datiAggiuntivi);
+              a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);  // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
             });
           }
           this.loading = false;
@@ -304,7 +324,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private setAttivitaIcon(a: Attivita) {
-    a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);
+    // a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);  // ?? perché questa stava qua? boh, comunque dava errore al click (l.s.)
     if (a.tipo === "notifica") {
       a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
     } else if (!a.priorita || a.priorita === 3) {
@@ -426,8 +446,88 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-  private onNoteClick(attivita: any) {
+  public onNoteClick(attivita: any) {
     this.onAttivitaNoteEmitter.emit(attivita);
+
+  }
+
+  public noteClicckato(attivita: Attivita, event: any) {
+    event.stopPropagation();
+    if (attivita) {
+      this.showNote = true;
+      this.attivitaTemp = attivita;
+      this._noteTemp = attivita.note;
+    }
+  }
+
+  closeAndBasta() {
+    this.showNote = false;
+  }
+
+  bottoneSalvaNote() {
+    this.showNote = true;
+    if (this._noteTemp !== this.attivitaTemp.note) {
+      this.chiediConfermaAndFaiCose("saveNotes",
+        "Vuoi salvare le modifiche apportate alle note dell'attività?",
+        () => { this.salvaNote(); }, // conferma: salvo
+        () => { this.showNote = true; return; }// non confermo: non faccio nulla
+      );
+    } else {
+      this.closeAndBasta();
+    }
+  }
+
+  salvaNote() {
+    this.attivitaService.update(this.attivitaTemp).then(
+      res => {
+        this.messageService.clear("clToast");
+        this.messageService.add({key: this.salvataggioNoteResultMessages.success.target, severity: "success", summary: "OK", detail: this.salvataggioNoteResultMessages.success.message});
+        this.closeAndBasta();
+      },
+      err => {
+        this.messageService.clear("errorToast");
+        this.messageService.add({ key: this.salvataggioNoteResultMessages.error.target, severity: "error", summary: "Errore", detail: this.salvataggioNoteResultMessages.error.message });
+      }
+    );
+  }
+
+  chiudiNote() {
+    if (this._noteTemp !== this.attivitaTemp.note) {
+      // domando se vuole davvero uscire senza salvare
+      this.chiediConfermaAndFaiCose("closeWithoutSaving",
+        "La finestra verrà chiusa senza salvare le modifiche: continuare?",
+        () => { // funzione di accept: reimposto il valore iniziale
+          this.attivitaTemp.note = this._noteTemp;
+          this.closeAndBasta();
+        },
+        () => { // funzione reject: ritorno senza uscire
+          this.showNote = true;
+          return;
+        }
+      );
+    } else {
+      // esco senza salvare tanto non ci sono cambiamenti.
+      this.attivitaTemp.note = this._noteTemp; // reimposto il valore iniziale
+      this.closeAndBasta();
+    }
+  }
+
+  impostaPriorita(attivita: Attivita, event: any) {
+    if (attivita.tipo === "attivita") {
+      (!attivita.priorita || attivita.priorita === 3 ? attivita.priorita = 1 : (attivita.priorita === 1 ? attivita.priorita = 2 : attivita.priorita = 3));
+      this.setAttivitaIcon(attivita);
+      this.attivitaService.update(attivita);
+      event.stopPropagation();
+    }
+  }
+
+  chiediConfermaAndFaiCose(_key: string, _message: string, _accept: any, _reject: any) {
+    this.confirmationService.confirm({
+      key: _key,
+      message: _message,
+      accept: () => {_accept(); },
+      reject: () => {_reject(); }
+    });
   }
 
 

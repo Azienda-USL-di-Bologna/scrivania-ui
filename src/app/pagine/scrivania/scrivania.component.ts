@@ -65,6 +65,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public idAzienda: number = null;
   public changeColOrder: boolean = false;
   public hidePreview = false;
+  public sliding = false;
 
   public tabellaDaRefreshare: any = {name: ""};
 
@@ -125,7 +126,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   private setResponsiveSlider(): void {
     const that = this;
-    this.slider.nativeElement.onmousedown = function(event: MouseEvent) {
+    this.slider.nativeElement.onmousedown = function (event: MouseEvent) {
+      that.sliding = true;
       event.preventDefault();
       const totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
       document.onmouseup = function() {
@@ -134,6 +136,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         that.impostazioniService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
         that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniService.getImpostazioniVisualizzazione());
         document.onmouseup = null;
+        that.sliding = false;
       };
       // that.slider.nativeElement.onmouseup = function() {
       //   console.log("that.slider.nativeElement.onmouseup");

@@ -1,4 +1,5 @@
-<p-toast styleClass="clToast"></p-toast>
+<p-toast key="clToast" styleClass="clToast"></p-toast>
+<p-toast key="errorToast" styleClass="errorToast" position="center" ></p-toast>
 <p-table #dt
     [lazy]="true"
     (onLazyLoad)="handleEvent('onLazyLoad', $event)"
@@ -49,7 +50,7 @@
     <ng-template pTemplate="body" let-rowData let-attivita>
         <tr #selRow class="row-class" [pSelectableRow]="rowData" [pContextMenuRow]="rowData" style="height:30px">
             <td [style.width]="cols[0].width"  [style.minWidth]="cols[0].minWidth" [ngClass]="[columnClass, 'p0']">
-                <img [src]="attivita.iconaAttivita" alt="priorita" class="img-table" />
+                <img [src]="attivita.iconaAttivita" alt="priorita" class="img-table" pTooltip="Imposta priorità" (click)="impostaPriorita(attivita, $event)"/>
             </td>
             <td [headers]="cols[1].header" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
             <td [headers]="cols[2].header" [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[2])}}</td>
@@ -66,11 +67,34 @@
                 <span *ngIf="attivita.tipo === 'notifica'"class="pi pi-trash" (click)="deleteAttivita($event, rowData)"></span>
             </td>
             <td [style.width]="cols[10].width" [style.minWidth]="cols[10].minWidth" class="p0">
-                <img *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="onNoteClick(attivita)" alt="note" class="img-table">
-                <img *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table">
+                <img *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="noteClicckato(attivita, $event)" alt="note" class="img-table" pTooltip="Leggi note">
+                <img *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="noteClicckato(attivita, $event)" alt="note" class="img-table" pTooltip="Inserisci note">
             </td>
         </tr>
     </ng-template>
-
 </p-table>
 <p-contextMenu #cm [model]="attivitaSelezionata?.aperta ? contextMenuAperte : contextMenuNonAperte" [ngClass]="'clContextMenu'" [style]="{'margin': '-130px 0 0 -30px'}"></p-contextMenu>
+
+ <!-- ****  LE NOTE  **** -->
+<p-dialog *ngIf="this.showNote && this.attivitaTemp" styleClass="dialogNote" #noteAttivita header="Note Attività" [(visible)]="this.showNote" [modal]="true" [responsive]="true" [minY]="70"
+    [maximizable]="true" appendTo="body">
+    <textarea pInputTextarea class="note" placeholder="Inserisci note" [(ngModel)]="this.attivitaTemp.note"></textarea>
+    <p-footer #footerNoteAttivita>
+        <button style="width: auto; min-width: 50px;" type="button" pButton icon="pi pi-check" (click)="bottoneSalvaNote()" pTooltip="Salva" tooltipPosition="bottom" appendTo="body"></button>
+        <button style="width: auto; min-width: 50px;" type="button" pButton icon="pi pi-times" (click)="chiudiNote()" pTooltip="Chiudi" tooltipPosition="bottom" appendTo="body"></button>
+    </p-footer>
+</p-dialog>
+<!-- richiesta di conferma di chiusura senza salvare  -->
+<p-confirmDialog #confermaUscita appendTo="body" header="Esci" icon="pi pi-exclamation-triangle" width="425" key="closeWithoutSaving">
+    <p-footer>
+        <button type="button" pButton icon="" label="Si" (click)="confermaUscita.accept()"></button>
+        <button type="button" pButton icon="" label="No" (click)="confermaUscita.reject()"></button>
+    </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog #confermaSalvataggio appendTo="body" header="Salva" icon="pi pi-exclamation-triangle" width="425" key="saveNotes">
+    <p-footer>
+        <button type="button" pButton icon="" label="Si" (click)="confermaSalvataggio.accept()"></button>
+        <button type="button" pButton icon="" label="No" (click)="confermaSalvataggio.reject()"></button>
+    </p-footer>
+</p-confirmDialog>
