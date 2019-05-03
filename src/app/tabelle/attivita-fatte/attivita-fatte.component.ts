@@ -121,35 +121,46 @@ export class AttivitaFatteComponent implements OnInit {
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
 
-    this.attivitaFatteService.getData(PROJECTIONS.attivitaFatta.customProjections.attivitaFattaWithIdApplicazioneAndIdAziendaAndTransientFields, this.initialFiltersAndSorts, this.lazyLoadFiltersAndSorts)
-      .then(
-        data => {
-          this.attivitaFatte = undefined;
-          this.totalRecords = 0;
-          if (data && data._embedded && data.page) {
-            this.attivitaFatte = <AttivitaFatta[]>data._embedded.attivitafatta;
-            this.totalRecords = data.page.totalElements;
-            this.attivitaFatte.forEach(a => {
-              if (a.tipo === "notifica") {
-                a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
-              } else if (!a.priorita || a.priorita === 3) {
-                a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
-              } else if (a.priorita === 2) {
-                a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.2.svg";
-              } else if (a.priorita === 1) {
-                a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.1.svg";
-              }
-            });
-          }
-          this.loading = false;
+    this.attivitaFatteService
+      .getData(
+        PROJECTIONS.attivitaFatta.customProjections
+          .attivitaFattaWithIdApplicazioneAndIdAziendaAndTransientFields,
+        this.initialFiltersAndSorts,
+        this.lazyLoadFiltersAndSorts
+      )
+      .then(data => {
+        this.attivitaFatte = undefined;
+        this.totalRecords = 0;
+        if (data && data._embedded && data.page) {
+          this.attivitaFatte = <AttivitaFatta[]>(
+            data._embedded.attivitafatta
+          );
+
+          this.totalRecords = data.page.totalElements;
+          this.attivitaFatte.forEach(a => {
+            if (a.tipo === "notifica") {
+              a["iconaAttivita"] =
+                "assets/images/baseline-notifications_none-24px.svg";
+            } else if (!a.priorita || a.priorita === 3) {
+              a["iconaAttivita"] =
+                "assets/images/baseline-outlined_flag-24px.3.svg";
+            } else if (a.priorita === 2) {
+              a["iconaAttivita"] =
+                "assets/images/baseline-outlined_flag-24px.2.svg";
+            } else if (a.priorita === 1) {
+              a["iconaAttivita"] =
+                "assets/images/baseline-outlined_flag-24px.1.svg";
+            }
+          });
         }
-      );
+        this.loading = false;
+      });
   }
 
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const functionName = "buildInitialFiltersAndSorts";
     const initialFiltersAndSorts = new FiltersAndSorts();
-    initialFiltersAndSorts.addSort(new SortDefinition("data", SORT_MODES.desc));
+    initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.desc));
     const filterIdPersona: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
     initialFiltersAndSorts.addFilter(filterIdPersona);
     if (this._idAzienda !== -1) { // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
