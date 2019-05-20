@@ -300,26 +300,29 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
 
-    this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, this.initialFiltersAndSorts, this.lazyLoadFiltersAndSorts)
-      .then(
-        data => {
-
-          this.attivita = undefined;
-          this.totalRecords = 0;
-          if (data && data._embedded && data.page) {
-            this.attivita = <Attivita[]>data._embedded.attivita;
-            this.totalRecords = data.page.totalElements;
-            /* console.log("ATTIVITA: ", this.attivita); */
-            // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
-            this.attivita.forEach(a => {
-              this.setAttivitaIcon(a);
-              // console.log("carica", a.datiAggiuntivi);
-              a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);  // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
-            });
-          }
-          this.loading = false;
+    this.attivitaService
+      .getData(
+        PROJECTIONS.attivita.customProjections
+          .attivitaWithIdApplicazioneAndIdAziendaAndTransientFields,
+        this.initialFiltersAndSorts,
+        this.lazyLoadFiltersAndSorts
+      )
+      .then(data => {
+        this.attivita = undefined;
+        this.totalRecords = 0;
+        if (data && data._embedded && data.page) {
+          this.attivita = <Attivita[]>data._embedded.attivita;
+          this.totalRecords = data.page.totalElements;
+          /* console.log("ATTIVITA: ", this.attivita); */
+          // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
+          this.attivita.forEach(a => {
+            this.setAttivitaIcon(a);
+            // console.log("carica", a.datiAggiuntivi);
+            a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
+          });
         }
-      );
+        this.loading = false;
+      });
 
   }
 

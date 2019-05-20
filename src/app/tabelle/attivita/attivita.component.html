@@ -50,7 +50,8 @@
     <ng-template pTemplate="body" let-rowData let-attivita>
         <tr #selRow class="row-class" [pSelectableRow]="rowData" [pContextMenuRow]="rowData" style="height:30px">
             <td [style.width]="cols[0].width"  [style.minWidth]="cols[0].minWidth" [ngClass]="[columnClass, 'p0']">
-                <img [src]="attivita.iconaAttivita" alt="priorita" class="img-table" pTooltip="Imposta priorità" (click)="impostaPriorita(attivita, $event)"/>
+                <img *ngIf="!(attivita.tipo === 'notifica')" [src]="attivita.iconaAttivita" alt="priorita" class="img-table" pTooltip="Imposta priorità" (click)="impostaPriorita(attivita, $event)"/>
+                <img *ngIf="attivita.tipo === 'notifica'" [src]="attivita.iconaAttivita" alt="priorita" class="img-table"  />
             </td>
             <td [headers]="cols[1].header" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
             <td [headers]="cols[2].header" [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[2])}}</td>
