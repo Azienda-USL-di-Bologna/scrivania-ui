@@ -4,7 +4,7 @@
     [lazy]="true"
     (onLazyLoad)="handleEvent('onLazyLoad', $event)"
     [value]="attivita"
-    [columns]="cols"
+    [columns]="doNotShowAziendaHeader(cols)"
     [paginator]="true"
     [rows]="LOADED_ROWS"
     [autoLayout]="true"
@@ -53,11 +53,13 @@
                 <img *ngIf="!(attivita.tipo === 'notifica')" [src]="attivita.iconaAttivita" alt="priorita" class="img-table" pTooltip="Imposta priorità" (click)="impostaPriorita(attivita, $event)"/>
                 <img *ngIf="attivita.tipo === 'notifica'" [src]="attivita.iconaAttivita" alt="priorita" class="img-table"  />
             </td>
-            <td [headers]="cols[1].header" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
+            <td *ngIf="(aziendeUser > 1) && !changedOrder" [headers]="cols[1].header" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
+            <td *ngIf="changedOrder" [headers]="cols[1].header" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
             <td [headers]="cols[2].header" [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[2])}}</td>
             <td [headers]="cols[3].header" [id]="attivita.id" #td3 [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[3], td3)}}</td>
             <td [headers]="cols[4].header" [style.width]="cols[4].width" [style.minWidth]="cols[4].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[4])}}</td>
-            <td [headers]="cols[5].header" [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
+            <td *ngIf="!changedOrder" [headers]="cols[5].header" [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
+            <td *ngIf="(aziendeUser > 1) && changedOrder" [headers]="cols[5].header" [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
             <td [headers]="cols[6].header" [style.width]="cols[6].width" [style.minWidth]="cols[6].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[6])}}</td>
             <td [headers]="cols[7].header" [id]="attivita.id" #td7 [style.width]="cols[7].width" [style.minWidth]="cols[7].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[7], td7)}}</td>
             <td [headers]="cols[8].header" [style.width]="cols[8].width" [style.minWidth]="cols[8].minWidth" class="p0">
