@@ -52,6 +52,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public attivitaTemp: Attivita = new Attivita();
   public _noteTemp: string;
 
+  public aziendeUser: number;
+  public changedOrder: boolean;
+
   private salvataggioNoteResultMessages = {
     success: {
       target: "clToast",
@@ -75,8 +78,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
   @Input("changeColOrder")
   set changeColOrder(changeColOrder: boolean) {
+    this.changedOrder = changeColOrder;
     this.cols = !changeColOrder ? ColumnsNormal : ColumnsReordered;
-    }
+  }
 
   @Input("refresh")
   set refresh(_refresh: any) {
@@ -109,6 +113,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         // } else {
         //   this.loggedUser = u;
         // }
+        this.aziendeUser = u.getUtente().aziende.length;
+
         this.loggedUser = u;
         this.subscriptions.push(this.intimusClientService.command$.subscribe((command: IntimusCommand) => {
           this.parseIntimusCommand(command);
@@ -116,7 +122,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       }
       // console.log("faccio il load data di nuovo");
     }));
-   }
+  }
 
   ngOnInit() {
     // imposto l'utente loggato nell'apposita variabile
@@ -133,7 +139,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     this.contextMenuNonAperte = [
       { label: "Segna come letta", icon: "pi pi-eye", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
     ];
-     const browser = Bowser.getParser(window.navigator.userAgent);
+    const browser = Bowser.getParser(window.navigator.userAgent);
     const browserInfo = browser.getBrowser();
     console.log("BROWSER = ", browserInfo);
     if (browserInfo.name !== "Firefox") {
@@ -187,7 +193,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-
+  doNotShowAziendaHeader( columns ) {
+    let filteredColumns = columns;
+    if (this.aziendeUser < 2) {
+      filteredColumns = columns.filter(obj => obj.field !== "idAzienda.nome");
+    }
+    return filteredColumns;
+  }
 
   handleContextMenu(attivitaSelezionata: Attivita) {
     // this.messageService.add({ severity: "info", summary: "Car Selected", detail: attivitaSelezionata.oggetto });
