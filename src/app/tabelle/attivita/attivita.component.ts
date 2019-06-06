@@ -1,8 +1,8 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2 } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
-import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from "@bds/nt-communicator";
-import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
+import { FILTER_TYPES, SORT_MODES, LOCAL_IT } from "@bds/nt-communicator";
+import { buildLazyEventFiltersAndSorts, buildPagingConf } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { PROJECTIONS } from "../../../environments/app-constants";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
@@ -15,6 +15,7 @@ import * as Bowser from "bowser";
 import { IntimusClientService } from "src/app/intimus/intimus-client.service";
 import { IntimusCommand, IntimusCommands } from "src/app/intimus/intimus-command";
 import { Dialog } from "primeng/dialog";
+import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
 
 @Component({
   selector: "app-attivita",
@@ -152,11 +153,14 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       const idAttivitaToRefresh = command.params.id_attivita;
       const operation = command.params.operation;
       // console.log(operation + " attivita " + idAttivitaToRefresh);
+      const filterById: FiltersAndSorts = new FiltersAndSorts();
+      filterById.addFilter(new FilterDefinition("id", FILTER_TYPES.not_string.equals, idAttivitaToRefresh));
       switch (operation) {
         case "INSERT":
-          this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, null, null, idAttivitaToRefresh)
-          .then((data: Attivita) => {
+          this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, filterById)
+          .subscribe((data: any) => {
             if (data) {
+              data = data.results[0];
               this.setAttivitaIcon(data);
               data.datiAggiuntivi = JSON.parse(data.datiAggiuntivi);
               this.attivita.unshift(data);
@@ -164,9 +168,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           });
         break;
         case "UPDATE":
-          this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, null, null, idAttivitaToRefresh)
-          .then((data: Attivita) => {
+          this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, filterById)
+          .subscribe((data: any) => {
               if (data) {
+                console.log("DATA", data);
+                data = data.results[0];
                 data.datiAggiuntivi = JSON.parse(data.datiAggiuntivi);
                 const idAttivitaToReplace = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
                 if (idAttivitaToReplace >= 0) {
@@ -290,7 +296,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       const filterIdAzienda: FilterDefinition = new FilterDefinition("idAzienda.id", FILTER_TYPES.not_string.equals, this._idAzienda);
       initialFiltersAndSorts.addFilter(filterIdAzienda);
     }
-    initialFiltersAndSorts.rows = this.LOADED_ROWS;
+    //initialFiltersAndSorts.rows = this.LOADED_ROWS;
     // console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
     return initialFiltersAndSorts;
   }
@@ -311,18 +317,21 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
 
+    const pageConfing: PagingConf = buildPagingConf(event);
+
     this.attivitaService
       .getData(
         PROJECTIONS.attivita.customProjections
           .attivitaWithIdApplicazioneAndIdAziendaAndTransientFields,
         this.initialFiltersAndSorts,
-        this.lazyLoadFiltersAndSorts
+        this.lazyLoadFiltersAndSorts,
+        pageConfing
       )
-      .then(data => {
+      .subscribe(data => {
         this.attivita = undefined;
         this.totalRecords = 0;
-        if (data && data._embedded && data.page) {
-          this.attivita = <Attivita[]>data._embedded.attivita;
+        if (data && data.results && data.page) {
+          this.attivita = <Attivita[]>data.results;
           this.totalRecords = data.page.totalElements;
           /* console.log("ATTIVITA: ", this.attivita); */
           // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
@@ -364,11 +373,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public deleteAttivita(event: MouseEvent, attivita: Attivita) {
     event.stopPropagation();
     const response = this.attivitaService.delete(attivita);
-    response.then(res => {
+    response.subscribe(res => {
       const index = this.attivita.findIndex(element => element === attivita);
       this.attivita.splice(index, 1);
       this.messageService.add({ severity: "info", summary: "Eliminazione", detail: "Notifica eliminata con successo!" });
-    }).catch(err => {
+    },err => {
       this.messageService.add({ severity: "error", summary: "Eliminazione", detail: "Non è stato possibile eliminare la notifica. Contattare BabelCare" });
       console.error("Messaggio errore: ", err);
     });
@@ -492,7 +501,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   salvaNote() {
-    this.attivitaService.update(this.attivitaTemp).then(
+    this.attivitaService.update(this.attivitaTemp).subscribe(
       res => {
         this.messageService.clear("clToast");
         this.messageService.add({key: this.salvataggioNoteResultMessages.success.target, severity: "success", summary: "OK", detail: this.salvataggioNoteResultMessages.success.message});

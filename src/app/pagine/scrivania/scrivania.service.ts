@@ -1,37 +1,38 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { DatePipe } from "@angular/common";
-import { Attivita } from "@bds/ng-internauta-model";
+import { Attivita, ENTITIES_STRUCTURE } from "@bds/ng-internauta-model";
 import { HttpAbstractService } from "@bds/nt-communicator";
 import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType, COMMANDS, CONTROLLERS_ENDPOINT } from "../../../environments/app-constants";
 import { Observable, Subscriber } from "rxjs";
 import { NtJwtLoginService } from "@bds/nt-jwt-login";
+import { NextSDREntityProvider } from "@nfa/next-sdr";
 
 @Injectable({
   providedIn: "root"
 })
-export class ScrivaniaService extends HttpAbstractService {
+export class ScrivaniaService extends NextSDREntityProvider {
 
   private getAnteprimaServlet: string = "getAnteprima";
   // private blobEmitter: BehaviorSubject<any> = new BehaviorSubject(new URL("http:// localhost:4200/assets/images/no_anteprima.png"));
 
   constructor(protected http: HttpClient, protected datepipe: DatePipe, private loginService: NtJwtLoginService) {
-    super(http, datepipe, ENTITIES_CONFIGURATION[ENTITIES.menu], getInternautaUrl(BaseUrlType.Scrivania));
+    super(http, datepipe, ENTITIES_STRUCTURE.scrivania.menu, getInternautaUrl(BaseUrlType.Scrivania));
   }
 
-  update(elementToUpdate: Attivita): Promise<any> {
+  update(elementToUpdate: Attivita): Observable<any> {
     const functioName = "update";
     // console.log(this.classDescriptionLocal, functioName, "id", elementToUpdate.id, "elmToUpdate", elementToUpdate);
     return this.patchHttpCall(elementToUpdate, elementToUpdate.id);
   }
 
-  insert(elementToInsert: Attivita, datepipe: DatePipe): Promise<any> {
+  insert(elementToInsert: Attivita, datepipe: DatePipe): Observable<any> {
     const functioName = "insert";
    //  console.log(this.classDescriptionLocal, functioName, "elementToInsert", elementToInsert);
     return this.postHttpCall(elementToInsert);
   }
 
-  delete(elementToDelete: Attivita): Promise<any> {
+  delete(elementToDelete: Attivita): Observable<any> {
     const functioName = "delete";
     // console.log(this.classDescriptionLocal, functioName, "elementToDelete", elementToDelete);
     return this.deleteHttpCall(elementToDelete.id);
