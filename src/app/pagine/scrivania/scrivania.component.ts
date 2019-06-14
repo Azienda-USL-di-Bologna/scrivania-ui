@@ -4,7 +4,8 @@ import { Attivita, Menu, ImpostazioniApplicazioni } from "@bds/ng-internauta-mod
 import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
-import { FiltersAndSorts, NO_LIMIT, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
+import { NO_LIMIT, SORT_MODES } from "@bds/nt-communicator";
+import { FiltersAndSorts, SortDefinition, FilterDefinition } from "@nfa/next-sdr";
 import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STATICHE_DESCRIPTION } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
 import { ApplicationCustiomization } from "src/environments/application_customization";
@@ -301,16 +302,16 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     }
     this.alberoMenu = [];
     const initialFiltersAndSorts = new FiltersAndSorts();
-    initialFiltersAndSorts.rows = NO_LIMIT;
+    //initialFiltersAndSorts.rows = NO_LIMIT;
     initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
     initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
     const lazyLoadFiltersAndSorts = new FiltersAndSorts();
     // this.arrayScrivaniaCompiledUrls = [];
     // this.aziendeMenu  = [];
     this.scrivaniaService.getData(PROJECTIONS.menu.customProjections.menuWithIdApplicazioneAndIdAziendaAndTransientFields, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
-      .then(
+      .subscribe(
         data => {
-          const arrayMenu: Menu[] = data._embedded.menu;
+          const arrayMenu: Menu[] = data.results;
           arrayMenu.forEach( elementArray => {
             // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
             // tanto tutto il resto (azienda, idp, ecc...) è identico

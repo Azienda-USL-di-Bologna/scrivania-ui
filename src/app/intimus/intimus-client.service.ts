@@ -57,7 +57,7 @@ export class IntimusClientService  {
       command: "registerClient",
       params: {
         user: utente.idPersona.id,
-        id_azienda: utente.idAzienda.id,
+        id_azienda: utente.aziendaLogin.id,
         application: APPLICATION,
         browserinfo: Bowser.getParser(window.navigator.userAgent),
         ip: null,

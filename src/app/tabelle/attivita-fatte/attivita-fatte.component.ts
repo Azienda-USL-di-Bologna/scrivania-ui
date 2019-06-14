@@ -1,13 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
-import { FILTER_TYPES, FiltersAndSorts, SortDefinition, SORT_MODES, LOCAL_IT, FilterDefinition } from "@bds/nt-communicator";
-import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
+import { FILTER_TYPES, SORT_MODES, LOCAL_IT } from "@bds/nt-communicator";
+import { buildLazyEventFiltersAndSorts, buildPagingConf } from "@bds/primeng-plugin";
 import { AttivitaFatteService } from "./attivita-fatte.service";
 import { PROJECTIONS } from "../../../environments/app-constants";
 import { AttivitaFatta } from "@bds/ng-internauta-model";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Subscription } from "rxjs";
+import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
 
 @Component({
   selector: "app-attivita-fatte",
@@ -121,19 +122,24 @@ export class AttivitaFatteComponent implements OnInit {
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
 
+    const pageConfing: PagingConf = buildPagingConf(event);
+
     this.attivitaFatteService
       .getData(
         PROJECTIONS.attivitaFatta.customProjections
           .attivitaFattaWithIdApplicazioneAndIdAziendaAndTransientFields,
         this.initialFiltersAndSorts,
-        this.lazyLoadFiltersAndSorts
+        this.lazyLoadFiltersAndSorts,
+        pageConfing
       )
-      .then(data => {
+      .subscribe(data => {
+        console.log("DATA FATTE", data);
+        
         this.attivitaFatte = undefined;
         this.totalRecords = 0;
-        if (data && data._embedded && data.page) {
+        if (data && data.results && data.page) {
           this.attivitaFatte = <AttivitaFatta[]>(
-            data._embedded.attivitafatta
+            data.results
           );
 
           this.totalRecords = data.page.totalElements;
