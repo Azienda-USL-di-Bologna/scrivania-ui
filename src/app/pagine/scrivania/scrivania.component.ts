@@ -5,7 +5,7 @@ import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { NO_LIMIT, SORT_MODES } from "@bds/nt-communicator";
-import { FiltersAndSorts, SortDefinition, FilterDefinition } from "@nfa/next-sdr";
+import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
 import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STATICHE_DESCRIPTION } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
 import { ApplicationCustiomization } from "src/environments/application_customization";
@@ -44,7 +44,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public datiDiFlusso: string = null;
   public datiFlussoTooltip: string = null;
 
-  public finestreApribili: any[] = [{label: "Elenco documenti", items: [{label: "AOSPBO", command: (onclick) => {this.handleItemClick("ciao"); }}, {label: "AUSLBO"}]}, {label: "Elenco determine"}, {label: "Elenco delibere"}];
+  public finestreApribili: any[] = [{ label: "Elenco documenti", items: [{ label: "AOSPBO", command: (onclick) => { this.handleItemClick("ciao"); } }, { label: "AUSLBO" }] }, { label: "Elenco determine" }, { label: "Elenco delibere" }];
   public finestraScelta: any;
 
   public loggedUser: UtenteUtilities;
@@ -68,11 +68,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public hidePreview = false;
   public sliding = false;
 
-  public tabellaDaRefreshare: any = {name: ""};
+  public tabellaDaRefreshare: any = { name: "" };
 
   constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService,
     private confirmationService: ConfirmationService) {
-   }
+  }
 
   ngOnInit() {
     console.log("scivania ngOnInit()");
@@ -109,7 +109,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       this.hidePreview = newSettings[ApplicationCustiomization.scrivania.hidePreview] === "true";
     }));
     this.allegatiDropDown.disabled = true;
-    this.allegati = [{label: "Documenti non presenti", value: null}];
+    this.allegati = [{ label: "Documenti non presenti", value: null }];
   }
 
   private setLook(): void {
@@ -131,7 +131,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       that.sliding = true;
       event.preventDefault();
       const totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
-      document.onmouseup = function() {
+      document.onmouseup = function () {
         document.onmousemove = null;
         console.log("that.slider.nativeElement.onmouseup");
         that.impostazioniService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
@@ -146,7 +146,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       //   // impostazioni.impostazioniVisualizzazione = JSON.stringify(that.impostazioniVisualizzazione);
       //   that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniVisualizzazione);
       // };
-      document.onmousemove = function(e: MouseEvent) {
+      document.onmousemove = function (e: MouseEvent) {
         e.preventDefault();
         const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia 32px che sfasano il conteggio
         if (!(e.clientX <= that.LIMIT_X_LEFT_SIDE)) {
@@ -244,18 +244,18 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       this.allegatiDropDown.clear(null);
       const allegatiAttivita: any[] = JSON.parse(this.attivitaSelezionata.allegati);
       if (allegatiAttivita) {
-        allegatiAttivita.sort((a: any, b: any) => { if (a.default) { return -1; } else if (a.default && b.default) { return 0; } else { return 1; }});
+        allegatiAttivita.sort((a: any, b: any) => { if (a.default) { return -1; } else if (a.default && b.default) { return 0; } else { return 1; } });
         allegatiAttivita.forEach(element => {
-          this.allegati.push({label: this.shrinkFileName(element.nome_file), value: element});
+          this.allegati.push({ label: this.shrinkFileName(element.nome_file), value: element });
         });
-        this.allegatoSelected({value: this.allegati[0].value});
+        this.allegatoSelected({ value: this.allegati[0].value });
       } else {
         this.noAnteprima = true;
       }
 
 
       if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
-        this.allegati = [{label: "Documenti non presenti", value: null}];
+        this.allegati = [{ label: "Documenti non presenti", value: null }];
         this.allegatiDropDown.disabled = true;
       }
 
@@ -276,12 +276,12 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public setAnteprimaUrl() {
     this.noAnteprima = false;
     this.scrivaniaService.getAnteprima(this.attivitaSelezionata, this.allegatoSelezionato).subscribe(
-          file => {
-            this.anteprima.nativeElement.src = file;
-          },
-          err => {
-            this.noAnteprima = true;
-          });
+      file => {
+        this.anteprima.nativeElement.src = file;
+      },
+      err => {
+        this.noAnteprima = true;
+      });
     // return this.domSanitizer.bypassSecurityTrustResourceUrl(this.anteprimaUrl);
   }
 
@@ -306,13 +306,20 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
     initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
     const lazyLoadFiltersAndSorts = new FiltersAndSorts();
+    const pageConfNoLimit: PagingConf = {
+      conf: {
+        page: 0,
+        size: 999999
+      },
+      mode: "PAGE"
+    };
     // this.arrayScrivaniaCompiledUrls = [];
     // this.aziendeMenu  = [];
-    this.scrivaniaService.getData(PROJECTIONS.menu.customProjections.menuWithIdApplicazioneAndIdAziendaAndTransientFields, initialFiltersAndSorts, lazyLoadFiltersAndSorts)
+    this.scrivaniaService.getData(PROJECTIONS.menu.customProjections.menuWithIdApplicazioneAndIdAziendaAndTransientFields, initialFiltersAndSorts, lazyLoadFiltersAndSorts, pageConfNoLimit)
       .subscribe(
         data => {
           const arrayMenu: Menu[] = data.results;
-          arrayMenu.forEach( elementArray => {
+          arrayMenu.forEach(elementArray => {
             // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
             // tanto tutto il resto (azienda, idp, ecc...) è identico
             // VA RIFATTO!!!!!
@@ -337,7 +344,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                       item.items.push(new TreeNode(
                         elementArray.idAzienda.nome,
                         null,
-                        (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
+                        (onclick) => { this.handleItemClick(elementArray.compiledUrl); }
                       ));
                       break;
                     }
@@ -351,16 +358,16 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                       [new TreeNode(
                         elementArray.idAzienda.nome,
                         null,
-                        (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
-                        )],
-                      (onclick) => {this.doNothingNodeClick(onclick); }
+                        (onclick) => { this.handleItemClick(elementArray.compiledUrl); }
+                      )],
+                      (onclick) => { this.doNothingNodeClick(onclick); }
                     ));
                     break;
                   } else {
                     elementAlbero.items.push(new TreeNode(
                       elementArray.descrizione,
                       null,
-                      (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
+                      (onclick) => { this.handleItemClick(elementArray.compiledUrl); }
                     ));
                     break;
                   }
@@ -376,11 +383,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                     [new TreeNode(
                       elementArray.idAzienda.nome,
                       null,
-                      (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
+                      (onclick) => { this.handleItemClick(elementArray.compiledUrl); }
                     )],
-                    (onclick) => {this.doNothingNodeClick(onclick); }
+                    (onclick) => { this.doNothingNodeClick(onclick); }
                   )],
-                  (onclick) => {this.doNothingNodeClick(onclick); }
+                  (onclick) => { this.doNothingNodeClick(onclick); }
                 ));
               } else {
                 this.alberoMenu.push(new TreeNode(
@@ -388,9 +395,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                   [new TreeNode(
                     elementArray.descrizione,
                     null,
-                    (onclick) => {this.handleItemClick(elementArray.compiledUrl); }
+                    (onclick) => { this.handleItemClick(elementArray.compiledUrl); }
                   )],
-                  (onclick) => {this.doNothingNodeClick(onclick); }
+                  (onclick) => { this.doNothingNodeClick(onclick); }
                 ));
               }
             }
@@ -434,7 +441,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       albero.push(new TreeNode(
         element.nome,
         null,
-        (onClick) => {this.handleItemClick(element.url); }));
+        (onClick) => { this.handleItemClick(element.url); }));
     });
   }
 
@@ -442,7 +449,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     this.idAzienda = event;
   }
 
-  public  onNoteClick(attivita: any) {
+  public onNoteClick(attivita: any) {
     this.showNote = ((this.noteText = attivita.note) !== null);
   }
 
@@ -463,9 +470,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   ricarica() {
 
     if (this.mostraStorico === true) {
-      this.tabellaDaRefreshare = Object.assign({}, {name: "attivita-fatte"});
+      this.tabellaDaRefreshare = Object.assign({}, { name: "attivita-fatte" });
     } else {
-      this.tabellaDaRefreshare = Object.assign({}, {name: "attivita"});
+      this.tabellaDaRefreshare = Object.assign({}, { name: "attivita" });
     }
   }
 
@@ -477,15 +484,15 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       acceptLabel: "Sì",
       rejectLabel: "No",
       accept: () => {
-          // this.msgs = [{severity:'info', summary:'Confirmed', detail:'You have accepted'}];
-          this.subscriptions.push(this.scrivaniaService.cancellaNotifiche().subscribe(data => {
-            this.ricarica();
-          }));
+        // this.msgs = [{severity:'info', summary:'Confirmed', detail:'You have accepted'}];
+        this.subscriptions.push(this.scrivaniaService.cancellaNotifiche().subscribe(data => {
+          this.ricarica();
+        }));
       },
       reject: () => {
         console.log("Errore nel salvataggio");
       }
-  });
+    });
   }
 }
 
