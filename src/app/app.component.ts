@@ -1,15 +1,12 @@
-import { MAX_CHARS_100 } from "./../environments/app-constants";
 import { Component, OnInit } from "@angular/core";
-import { NtJwtLoginService, LoginType, NtJwtLoginComponent, UtenteUtilities } from "@bds/nt-jwt-login";
-import { getInternautaUrl, BaseUrlType, HOME_ROUTE, SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
-import { ActivatedRoute, Params, Router, RouterStateSnapshot } from "@angular/router";
+import { NtJwtLoginService, UtenteUtilities, UtilityFunctions} from "@bds/nt-jwt-login";
+import { getInternautaUrl, BaseUrlType, SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { Utente } from "@bds/ng-internauta-model";
-import { GlobalService } from "./services/global.service";
 import { MenuItem, DialogService } from "primeng/api";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService } from "./intimus/intimus-client.service";
 import { HeaderFeaturesConfig } from "@bds/primeng-plugin";
-
 
 @Component({
   selector: "app-root",
@@ -58,6 +55,10 @@ export class AppComponent implements OnInit {
       console.log("chiamo login");
       console.log("impersonateUser: ", params["impersonatedUser"]);
 
+      if (params.hasOwnProperty("from")) {
+        this.loginService.from = params["from"].trim();
+      }
+
       // se nei params c'è la proprietà impersonatedUser, allora pulisci la sessione, setta nella sessionStorage l'utente impersonato
       // e cancellalo dai params
       if (params.hasOwnProperty("impersonatedUser")) {
@@ -66,8 +67,8 @@ export class AppComponent implements OnInit {
 
         // eliminazione dai query params di impersonatedUser
         // this.loginService.redirectTo = this.router.routerState.snapshot.url.replace(/(?<=&|\?)impersonatedUser(=[^&]*)?(&|$)/, "");
-        this.loginService.redirectTo = this.removeQueryParams(this.router.routerState.snapshot.url, "realUser");
-        this.loginService.redirectTo = this.removeQueryParams(this.loginService.redirectTo, "impersonatedUser");
+        this.loginService.redirectTo = UtilityFunctions.removeQueryParams(this.router.routerState.snapshot.url, "realUser");
+        this.loginService.redirectTo = UtilityFunctions.removeQueryParams(this.loginService.redirectTo, "impersonatedUser");
         // if (this.loginService.redirectTo.endsWith("?") || this.loginService.redirectTo.endsWith("&")) {
         //   this.loginService.redirectTo = this.loginService.redirectTo.substr(0, this.loginService.redirectTo.length - 1)
         // }
@@ -105,27 +106,5 @@ export class AppComponent implements OnInit {
       }
     }
     return loggedUser;
-  }
-
-  public removeQueryParams(url: string, paramToRemove: string): string {
-    const splittedUrl: string[] = url.split("?");
-    if (splittedUrl.length === 1) {
-      return url;
-    }
-    let purgedQueryParams: string = "";
-    const queryParams: string = splittedUrl[1];
-    const splittedQueryParams: string[] = queryParams.split("&");
-    for (let i = 0; i < splittedQueryParams.length; i++) {
-      const splittedQueryParam: string[] = splittedQueryParams[i].split("=");
-      if (splittedQueryParam[0] !== paramToRemove) {
-        purgedQueryParams += splittedQueryParams[i] + "&";
-      }
-    }
-
-    if (purgedQueryParams !== "") {
-      return splittedUrl[0] + "?" + purgedQueryParams.substr(0, purgedQueryParams.length - 1);
-    } else {
-      return splittedUrl[0];
-    }
   }
 }
