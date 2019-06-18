@@ -4,7 +4,7 @@
     <div class="option-bar">
         <div class="buttons-bar">
 
-            <button [ngClass]="mostraStorico?'d-hidden':'d-flex'" #btn type="button" pButton (click)="menu.toggle($event); menuToggled()" class="clMenu" iconPos="left" label="Apri">
+            <button [ngClass]="mostraStorico?'d-hidden':'d-flex'" #btn type="button" pButton (click)="menu.toggle($event)" class="clMenu" iconPos="left" label="Apri">
                 <img src="assets/images/baseline_dashboard_white_48dp.png" width="24px" alt="menu applicazioni">
             </button>
             <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)" role="menu" aria-label="lista con le applicazioni"></p-tieredMenu>
