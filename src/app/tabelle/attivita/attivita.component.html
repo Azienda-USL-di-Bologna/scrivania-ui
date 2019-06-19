@@ -17,28 +17,29 @@
     (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
     (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
     [(contextMenuSelection)]="attivitaSelezionata" [contextMenu]="cm"
+    summary="Tabella delle attivita"
     >
 
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th [id]="col.field" *ngFor="let col of columns" [style.width]="col.width" [style.minWidth]="col.minWidth" scope="colgroup">
-                <div *ngIf="col.field != undefined && col.field !== 'azione'" [pSortableColumn]="col.field">
+            <th [id]="col.field || 'none'" *ngFor="let col of columns" [style.width]="col.width" [style.minWidth]="col.minWidth" scope="colgroup">
+                <div *ngIf="col.field != undefined && col.field !== 'azione'" [pSortableColumn]="col.field" attr.aria-label="Sei sull' intestazione della Colonna {{col.header}}" id="{{col.header}}">
                     {{col.header}}
-                    <p-sortIcon [field]="col.field" ariaLabelAsc="Colonnna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonnna {{col.header}}, Ordinamento discendente">
+                    <p-sortIcon [field]="col.field" ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente">
                     </p-sortIcon>
                 </div>
             </th>
         </tr>
         <tr>
             <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget" class="filters-styles" [style.width]="col.width" [style.minWidth]="col.minWidth">
-                <div *ngIf="col.field != undefined && col.field !== 'azione'">
+                <div *ngIf="col.field   != undefined && col.field !== 'azione'">
                     <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." showButtonBar="true"
                         [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
                         (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
                         appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
                     </p-calendar>
                     <input *ngSwitchDefault pInputText
-                        attr.aria-label="Colonnna {{col.header}}, Cella filtro"
+                        attr.aria-label="Colonna {{col.header}}, Cella filtro"
                         type="text"
                         (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
                         #filterInputText>
@@ -48,30 +49,30 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
-        <tr #selRow class="row-class" [pSelectableRow]="rowData" [pContextMenuRow]="rowData" style="height:30px">
-            <td [style.width]="cols[0].width"  [style.minWidth]="cols[0].minWidth" [ngClass]="[columnClass, 'p0']">
-                <img *ngIf="!(attivita.tipo === 'notifica')" [src]="attivita.iconaAttivita" alt="priorita" class="img-table" pTooltip="Imposta priorità" (click)="impostaPriorita(attivita, $event)"/>
-                <img *ngIf="attivita.tipo === 'notifica'" [src]="attivita.iconaAttivita" alt="priorita" class="img-table"  />
+        <tr #selRow class="row-class" [pSelectableRow]="rowData" [pContextMenuRow]="rowData" style="height:30px" aria-label="riga">
+            <td tabindex="0" aria-label="Colonna tipo attività" [style.width]="cols[0].width"  [style.minWidth]="cols[0].minWidth" [ngClass]="[columnClass, 'p0']">
+                <img tabindex="0" *ngIf="!(attivita.tipo === 'notifica')" [src]="attivita.iconaAttivita" alt="priorità" class="img-table" pTooltip="Imposta priorità" (click)="impostaPriorita(attivita, $event)"/>
+                <img tabindex="0" *ngIf="attivita.tipo === 'notifica'" [src]="attivita.iconaAttivita" alt="notifica" class="img-table"  />
             </td>
-            <td *ngIf="(aziendeUser > 1) && !changedOrder" [headers]="cols[1].header" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
-            <td *ngIf="changedOrder" [headers]="cols[1].header" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
-            <td [headers]="cols[2].header" [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[2])}}</td>
-            <td [headers]="cols[3].header" [id]="attivita.id" #td3 [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[3], td3)}}</td>
-            <td [headers]="cols[4].header" [style.width]="cols[4].width" [style.minWidth]="cols[4].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[4])}}</td>
-            <td *ngIf="!changedOrder" [headers]="cols[5].header" [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
-            <td *ngIf="(aziendeUser > 1) && changedOrder" [headers]="cols[5].header" [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
-            <td [headers]="cols[6].header" [style.width]="cols[6].width" [style.minWidth]="cols[6].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[6])}}</td>
-            <td [headers]="cols[7].header" [id]="attivita.id" #td7 [style.width]="cols[7].width" [style.minWidth]="cols[7].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[7], td7)}}</td>
-            <td [headers]="cols[8].header" [style.width]="cols[8].width" [style.minWidth]="cols[8].minWidth" class="p0">
-                <img *ngIf="attivita.datiAggiuntivi.custom_app_3 === '0'" src="assets/images/baseline-not_interested-24px.svg" alt="prendi" class="img-table"
+            <td tabindex="0" attr.aria-label="Colonna Ente valore {{getColumnValue(attivita, cols[1])}}" *ngIf="(aziendeUser > 1) && !changedOrder" headers="idAzienda.nome" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
+            <td tabindex="0" attr.aria-label="Colonna Ente valore {{getColumnValue(attivita, cols[1])}}" *ngIf="changedOrder" headers="idAzienda.nome" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
+            <td tabindex="0" attr.aria-label="Colonna App valore {{getColumnValue(attivita, cols[2])}}" headers="idApplicazione.nome" [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[2])}}</td>
+            <td tabindex="0" attr.aria-label="Colonna Da valore {{getColumnValue(attivita, cols[3], td3)}}" headers="provenienza" [id]="attivita.id" #td3 [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[3], td3)}}</td>
+            <td tabindex="0" attr.aria-label="Colonna oggetto valore {{getColumnValue(attivita, cols[4])}}" headers="oggetto" [style.width]="cols[4].width" [style.minWidth]="cols[4].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[4])}}</td>
+            <td tabindex="0" attr.aria-label="Colonna Data valore {{getColumnValue(attivita, cols[5])}}" *ngIf="!changedOrder" headers="data" [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
+            <td tabindex="0" attr.aria-label="Colonna Data valore {{getColumnValue(attivita, cols[5])}}" *ngIf="(aziendeUser > 1) && changedOrder" headers="data" [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
+            <td tabindex="0" attr.aria-label="Colonna Tipo valore {{getColumnValue(attivita, cols[6])}}" headers="descrizione" [style.width]="cols[6].width" [style.minWidth]="cols[6].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[6])}}</td>
+            <td tabindex="0" aria-label="Colonna Azione pulsante Apri" headers="azione" [id]="attivita.id" #td7 [style.width]="cols[7].width" [style.minWidth]="cols[7].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[7], td7)}}</td>
+            <td tabindex="0" aria-label="Colonna check procedibilità" headers="cols[8].header" [style.width]="cols[8].width" [style.minWidth]="cols[8].minWidth" class="p0">
+                <img tabindex="0" *ngIf="attivita.datiAggiuntivi.custom_app_3 === '0'" src="assets/images/baseline-not_interested-24px.svg" alt="Sul documento mancano alcuni dati che devono essere inseriti prima di poter procedere." class="img-table"
                     pTooltip="Sul documento mancano alcuni dati che devono essere inseriti prima di poter procedere.">
             </td>
-            <td [style.width]="cols[9].width" [style.minWidth]="cols[9].minWidth" class="p0 columns-icon">
-                <span *ngIf="attivita.tipo === 'notifica'"class="pi pi-trash" (click)="deleteAttivita($event, rowData)"></span>
+            <td tabindex="0" [style.width]="cols[9].width" [style.minWidth]="cols[9].minWidth" class="p0 columns-icon">
+                <span tabindex="0" *ngIf="attivita.tipo === 'notifica'"class="pi pi-trash" (click)="deleteAttivita($event, rowData)"></span>
             </td>
-            <td [style.width]="cols[10].width" [style.minWidth]="cols[10].minWidth" class="p0">
-                <img *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="noteClicckato(attivita, $event)" alt="note" class="img-table" pTooltip="Leggi note">
-                <img *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="noteClicckato(attivita, $event)" alt="note" class="img-table" pTooltip="Inserisci note">
+            <td tabindex="0" aria-label="Colonna note" [style.width]="cols[10].width" [style.minWidth]="cols[10].minWidth" class="p0">
+                <img tabindex="0" *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="noteClicckato(attivita, $event)" alt="Leggi note" class="img-table" pTooltip="Leggi note">
+                <img tabindex="0" *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="noteClicckato(attivita, $event)" alt="Inserisci note" class="img-table" pTooltip="Inserisci note">
             </td>
         </tr>
     </ng-template>

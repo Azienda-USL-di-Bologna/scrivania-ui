@@ -63,6 +63,13 @@
     width: 21px;
 }
 
+.buttons-bar button:focus {
+    box-shadow: 0 0 0 0.2em #8dcdff ;
+    -webkit-box-shadow: 0 0 0 0.2em #8dcdff;
+    -moz-box-shadow: 0 0 0 0.2em #8dcdff;
+    -o-box-shadow: 0 0 0 0.2em #8dcdff;
+}
+
 :host >>> .icon-style > span:first-child {
     font-size: 1.7em;
 }

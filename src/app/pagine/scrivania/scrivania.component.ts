@@ -218,9 +218,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
         res.forEach(e => {
           if (e.startsWith("A: ")) {
-            destinatariA = e.replace("A: ", "<b>A: </b>");
+            destinatariA = e.replace("A: ", "<strong>A: </strong>");
           } else if (e.startsWith("CC: ")) {
-            destinatariCC = e.replace("CC: ", "<b>CC: </b>");
+            destinatariCC = e.replace("CC: ", "<strong>CC: </strong>");
           } else if (e.startsWith("Interni: ")) {
             destinatariA = e.replace("Interni: ", "<b>Interni: </b>");
           } else if (e.startsWith("Esterni: ")) {

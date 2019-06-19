@@ -14,3 +14,10 @@ body{
 body .ui-button:enabled:focus{
     box-shadow: none;
 }
+
+*:focus {
+    box-shadow: inset 0 0 0 0.2em #8dcdff ;
+    -webkit-box-shadow: inset 0 0 0 0.2em #8dcdff;
+    -moz-box-shadow: inset 0 0 0 0.2em #8dcdff;
+    -o-box-shadow: inset 0 0 0 0.2em #8dcdff;
+}
