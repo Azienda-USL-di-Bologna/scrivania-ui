@@ -293,7 +293,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   handleItemClick(event) {
     console.log("Link: ", event);
-    // bisogna eliminare la chiave "reloadLoggedUser" dal sessionStorage per far si che venga ricaricato l'utente nella nuova applicazione, altrimenti eredità i valori dalla scrivania
+    // bisogna eliminare la chiave "reloadLoggedUser" dal sessionStorage prima di aprire la finsestra per far si che venga ricaricato l'utente nella nuova applicazione, altrimenti eredità i valori dalla scrivania
     const value: string = sessionStorage.getItem("reloadLoggedUser");
     sessionStorage.removeItem("reloadLoggedUser");
     window.open(event);
