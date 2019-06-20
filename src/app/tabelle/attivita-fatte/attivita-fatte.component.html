@@ -18,9 +18,9 @@
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns"  [style.width]="col.width" [style.padding]="col.padding">
-                <div *ngIf="col.field != undefined" [pSortableColumn]="col.field">
+                <div *ngIf="col.field != undefined" [pSortableColumn]="col.field" attr.aria-label="Sei sull' intestazione della Colonna {{col.header}}" id="{{col.header}}">
                     {{col.header}}
-                    <p-sortIcon [field]="col.field" ariaLabelAsc="Colonnna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonnna {{col.header}}, Ordinamento discendente">
+                    <p-sortIcon [field]="col.field" ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente">
                     </p-sortIcon>
                 </div>
             </th>
@@ -33,7 +33,7 @@
                         (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
                         appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
                     </p-calendar>
-                    <input *ngSwitchDefault pInputText attr.aria-label="Colonnna {{col.header}}, Cella filtro" type="text" (input)="dt.filter($event.target.value, col.field, 'contains')"
+                    <input *ngSwitchDefault pInputText attr.aria-label="Colonna {{col.header}}, Cella filtro" type="text" (input)="dt.filter($event.target.value, col.field, 'contains')"
                         style="width:100%" #filterInputText>
                 </div>
             </td>
@@ -41,19 +41,19 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
-        <tr #selRow class="row-class" [pSelectableRow]="rowData" style="height:30px">
-            <td [style.width]="cols[0].width" class="column-class p0">
-                <img [src]="attivita.iconaAttivita" alt="priorita" class="img-table" />
+        <tr #selRow class="row-class" [pSelectableRow]="rowData" style="height:30px" aria-label="riga">
+            <td tabindex="0" [style.width]="cols[0].width" class="column-class p0">
+                <img [src]="attivita.iconaAttivita" alt="{{attivita.tipo === 'notifica' ? 'icona notifica' : 'icona priorità'}}" class="img-table" />
             </td>
-            <td [style.width]="cols[1].width" class="column-class">{{attivita.idAzienda.nome}}</td>
-            <td [style.width]="cols[2].width" class="column-class">{{attivita.idApplicazione.nome}}</td>
-            <td [style.width]="cols[3].width" class="column-class">{{attivita.provenienza}}</td>
-            <td class="column-class">{{attivita.oggetto}}</td>
-            <td [style.width]="cols[5].width" class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
-            <td [style.width]="cols[6].width" class="column-class">{{attivita.descrizione}}</td>
+            <td tabindex="0" attr.aria-label="Colonna Ente valore {{attivita.idAzienda.nome}}" [style.width]="cols[1].width" class="column-class">{{attivita.idAzienda.nome}}</td>
+            <td tabindex="0" attr.aria-label="Colonna App valore {{attivita.idApplicazione.nome}}" [style.width]="cols[2].width" class="column-class">{{attivita.idApplicazione.nome}}</td>
+            <td tabindex="0" attr.aria-label="Colonna Da valore {{attivita.provenienza}}" [style.width]="cols[3].width" class="column-class">{{attivita.provenienza}}</td>
+            <td tabindex="0" attr.aria-label="Colonna Oggetto valore {{attivita.oggetto}}" class="column-class">{{attivita.oggetto}}</td>
+            <td tabindex="0" attr.aria-label="Colonna Svolta il valore {{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}" [style.width]="cols[5].width" class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
+            <td tabindex="0" attr.aria-label="Colonna Tipo val  ore {{attivita.descrizione}}" [style.width]="cols[6].width" class="column-class">{{attivita.descrizione}}</td>
 
-            <td [style.width]="cols[7].width" class="p0">
-                <img *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="onNoteClick(attivita)" alt="note" class="img-table">
+            <td tabindex="0" aria-label="Colonna note" [style.width]="cols[7].width" class="p0">
+                <img tabindex="0" *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="onNoteClick(attivita)" alt="l'attività ha delle note" class="img-table">
                 <!-- <img *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table"> -->
             </td>
         </tr>

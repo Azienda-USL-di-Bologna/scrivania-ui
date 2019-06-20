@@ -40,7 +40,7 @@
             <h3 *ngIf="mostraStorico" class="crono-label">Cronologia</h3>
         </div>
 
-        <app-dropdown-aziende *ngIf="loggedUser.getUtente().aziende.length !== 1" (aziendaEmitter)="aziendaChanged($event)"></app-dropdown-aziende>
+        <app-dropdown-aziende *ngIf="loggedUser.getUtente().aziende.length !== 1" (aziendaEmitter)="aziendaChanged($event)" tabindex="0" aria-label="Ente delle attività"></app-dropdown-aziende>
     </div>
     <div class="table-wrapper">
         <div class="table-inner">
@@ -57,9 +57,9 @@
   <!-- Right side -->
   <div class="p-md-5 p-sm-12 content-right" [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'" #rightSide>
 
-    <div class="info-doc-wrapper">
-        <div *ngIf="oggetto" class="div-info-doc">
-            <strong>{{oggetto}}</strong>
+    <div tabindex="0" aria-label="Anteprima del documento" class="info-doc-wrapper">
+        <div *ngIf="oggetto" class="div-info-doc" tabindex="0" attr.aria-label="documento oggetto {{oggetto}}">
+            <strong >{{oggetto}}</strong>
         </div>
         <div *ngIf="!oggetto" class="div-info-doc">
             <strong>Nessuna attivita selezionata.</strong>
@@ -68,9 +68,9 @@
             <p-accordionTab header="Dettagli documento">
                 <div *ngIf="mittente || destinatari || destinatariCC">
                     <ul class="ul-info-doc">
-                        <li *ngIf="mittente"><span class="li-description">Da: </span><span class="li-content">{{mittente}}</span></li>
-                        <li *ngIf="destinatari"><span class="li-content" [innerHTML]="destinatari"></span></li>
-                        <li *ngIf="destinatariCC"><span class="li-content" [innerHTML]="destinatariCC"></span></li>
+                        <li tabindex="0" *ngIf="mittente"><span class="li-description">Da: </span><span class="li-content">{{mittente}}</span></li>
+                        <li tabindex="0" *ngIf="destinatari"><span class="li-content" [innerHTML]="destinatari"></span></li>
+                        <li tabindex="0" *ngIf="destinatariCC"><span class="li-content" [innerHTML]="destinatariCC"></span></li>
                     </ul>
                 </div>
                 <div *ngIf="!(mittente || destinatari || destinatariCC)" class="text-centered">
