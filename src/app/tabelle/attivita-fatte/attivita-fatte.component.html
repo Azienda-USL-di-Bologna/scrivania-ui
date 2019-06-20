@@ -17,7 +17,7 @@
 
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngFor="let col of columns"  [style.width]="col.width">
+            <th *ngFor="let col of columns"  [style.width]="col.width" [style.padding]="col.padding">
                 <div *ngIf="col.field != undefined" [pSortableColumn]="col.field">
                     {{col.header}}
                     <p-sortIcon [field]="col.field" ariaLabelAsc="Colonnna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonnna {{col.header}}, Ordinamento discendente">

@@ -54,7 +54,9 @@ export class AttivitaFatteComponent implements OnInit {
   public cols: any[] = [
     {
       // E' l'insieme di priorità e tipo attività
-      width: "30px"
+      field: "priorita",
+      width: "30px",
+      padding: 0
     },
     {
       field: "idAzienda.nome",
@@ -134,7 +136,7 @@ export class AttivitaFatteComponent implements OnInit {
       )
       .subscribe(data => {
         console.log("DATA FATTE", data);
-        
+
         this.attivitaFatte = undefined;
         this.totalRecords = 0;
         if (data && data.results && data.page) {
