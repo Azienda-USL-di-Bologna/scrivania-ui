@@ -60,6 +60,8 @@ import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
 
 import { IntimusClientService } from "./intimus/intimus-client.service";
+import { SessionManager } from "./services/session-manager.service";
+import { NgIdleKeepaliveModule } from "@ng-idle/keepalive";
 
 
 @NgModule({
@@ -104,9 +106,10 @@ import { IntimusClientService } from "./intimus/intimus-client.service";
     ToastModule,
     CardModule,
     ConfirmDialogModule,
-    PrimengPluginModule
+    PrimengPluginModule,
+    NgIdleKeepaliveModule.forRoot()
   ],
-  providers: [IntimusClientService, AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService],
+  providers: [IntimusClientService, AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService, SessionManager],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent, ProfiloComponent]
 })
