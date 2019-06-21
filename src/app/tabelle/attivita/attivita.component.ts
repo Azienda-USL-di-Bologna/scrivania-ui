@@ -297,7 +297,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       const filterIdAzienda: FilterDefinition = new FilterDefinition("idAzienda.id", FILTER_TYPES.not_string.equals, this._idAzienda);
       initialFiltersAndSorts.addFilter(filterIdAzienda);
     }
-    //initialFiltersAndSorts.rows = this.LOADED_ROWS;
+    // initialFiltersAndSorts.rows = this.LOADED_ROWS;
     // console.log(this.componentDescription, functionName, "initialFiltersAndSorts:", initialFiltersAndSorts);
     return initialFiltersAndSorts;
   }
@@ -378,7 +378,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       const index = this.attivita.findIndex(element => element === attivita);
       this.attivita.splice(index, 1);
       this.messageService.add({ severity: "info", summary: "Eliminazione", detail: "Notifica eliminata con successo!" });
-    },err => {
+    }, err => {
       this.messageService.add({ severity: "error", summary: "Eliminazione", detail: "Non è stato possibile eliminare la notifica. Contattare BabelCare" });
       console.error("Messaggio errore: ", err);
     });
@@ -540,7 +540,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     if (attivita.tipo === "attivita") {
       (!attivita.priorita || attivita.priorita === 3 ? attivita.priorita = 1 : (attivita.priorita === 1 ? attivita.priorita = 2 : attivita.priorita = 3));
       this.setAttivitaIcon(attivita);
-      this.attivitaService.update(attivita);
+      this.attivitaService.update(attivita).subscribe();
       event.stopPropagation();
     }
   }

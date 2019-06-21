@@ -3,8 +3,9 @@ import { FILTER_TYPES } from "@bds/nt-communicator";
 export const ColumnsNormal = [
   {
     // E' l'insieme di priorità e tipo attività
+    field: "priorita",
     width: "30px",
-    minWidth: "30px"
+    padding: 0
   },
   {
     field: "idAzienda.nome",
@@ -77,8 +78,9 @@ export const ColumnsNormal = [
 export const ColumnsReordered = [
   {
     // E' l'insieme di priorità e tipo attività
+    field: "priorita",
     width: "30px",
-    minWidth: "30px"
+    padding: 0
   },
   {
     field: "oggetto",
