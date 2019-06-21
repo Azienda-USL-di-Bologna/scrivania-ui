@@ -27,7 +27,7 @@
         </tr>
         <tr>
             <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget">
-                <div *ngIf="col.field != undefined">
+                <div *ngIf="col.field != undefined && col.field !== 'priorita'">
                     <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." showButtonBar="true"
                         [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
                         (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
