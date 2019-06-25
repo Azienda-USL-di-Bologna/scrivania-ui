@@ -4,6 +4,7 @@ import { ScrivaniaComponent } from "./pagine/scrivania/scrivania.component";
 import { NtJwtLoginComponent } from "@bds/nt-jwt-login";
 import { NoLoginGuard, LoginGuard, RefreshLoggedUserGuard } from "@bds/nt-jwt-login";
 import { LoadingComponent } from "./pagine/loading/loading.component";
+import { SetTimeoutGuard } from "./services/set-timeout-guard";
 /*
 import { NtJwtLoginComponent } from "@bds/nt-jwt-login";
 import { NoLoginGuard, LoginGuard, RefreshLoggedUserGuard } from "@bds/nt-jwt-login"

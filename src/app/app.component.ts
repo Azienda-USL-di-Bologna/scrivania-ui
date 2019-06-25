@@ -7,7 +7,6 @@ import { MenuItem, DialogService } from "primeng/api";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService } from "./intimus/intimus-client.service";
 import { HeaderFeaturesConfig } from "@bds/primeng-plugin";
-import { SessionManager } from "./services/session-manager.service";
 
 @Component({
   selector: "app-root",
@@ -28,7 +27,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     public dialogService: DialogService,
     private intimusClient: IntimusClientService,
-    private sessionManager: SessionManager) {}
+    ) {}
 
   ngOnInit() {
     console.log("inizio onInit() appComponent");
@@ -60,7 +59,6 @@ export class AppComponent implements OnInit {
     });
     this.addToMenu = Object.assign([], this.addToMenu);
 
-    // this.sessionManager.setExpireTokenOnIdle(10);
   }
 
   showSettings(component, header, width, height, data) {
