@@ -120,6 +120,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           this.subscriptions.push(this.intimusClientService.command$.subscribe((command: IntimusCommand) => {
             this.parseIntimusCommand(command);
           }));
+          this.intimusSubscribbed = true;
         }
       }
       // console.log("faccio il load data di nuovo");
