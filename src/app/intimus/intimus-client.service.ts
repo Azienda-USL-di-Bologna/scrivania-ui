@@ -12,12 +12,14 @@ import * as Bowser from "bowser";
 })
 export class IntimusClientService  {
 
+  private initialized = false;
   private _command$: Subject<IntimusCommand> = new Subject();
 
   constructor(private loginService: NtJwtLoginService) {
     this.loginService.loggedUser$.subscribe((utenteUtilities: UtenteUtilities) => {
-      if (utenteUtilities) {
+      if (!this.initialized && utenteUtilities) {
         this.initializeIntimus(utenteUtilities.getUtente());
+        this.initialized = true;
       }
     });
   }
