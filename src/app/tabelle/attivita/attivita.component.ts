@@ -30,7 +30,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private subscriptions: Subscription[] = [];
   private listeners = new Map();
-
+  private intimusSubscribbed = false;
 
   public LOADED_ROWS = 50;
   public attivita: Attivita[];
@@ -116,9 +116,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         this.aziendeUser = u.getUtente().aziende.length;
 
         this.loggedUser = u;
-        this.subscriptions.push(this.intimusClientService.command$.subscribe((command: IntimusCommand) => {
-          this.parseIntimusCommand(command);
-        }));
+        if (!this.intimusSubscribbed) {
+          this.subscriptions.push(this.intimusClientService.command$.subscribe((command: IntimusCommand) => {
+            this.parseIntimusCommand(command);
+          }));
+        }
       }
       // console.log("faccio il load data di nuovo");
     }));
@@ -574,5 +576,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         this.subscriptions.pop().unsubscribe();
       }
     }
+    this.intimusSubscribbed = false;
   }
 }
