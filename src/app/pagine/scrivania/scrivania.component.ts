@@ -264,6 +264,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     }
   }
 
+  public mostraSession() {
+    console.log("AHAH", localStorage.getItem("hehe"));
+  }
+
   public allegatoSelected(event: any) {
     if (event && event.value) {
       this.allegatoSelezionato = event.value;

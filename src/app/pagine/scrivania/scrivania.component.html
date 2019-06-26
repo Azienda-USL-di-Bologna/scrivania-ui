@@ -37,6 +37,8 @@
             </button>
             <button #btn *ngIf="!mostraStorico" type="button" pButton pTooltip="Elimina notifiche" tooltipPosition="bottom" (click)="delNotifiche()" iconPos="left" icon="pi pi-trash" class="ui-button-secondary icon-style" aria-label="Elimina notifiche">
             </button>
+            <button #btn type="button" pButton (click)="mostraSession()" iconPos="left" icon="pi pi-trash" class="ui-button-secondary icon-style" aria-label="Elimina notifiche">
+            </button>
             <h3 *ngIf="mostraStorico" class="crono-label">Cronologia</h3>
         </div>
 
