@@ -41,7 +41,7 @@ export const ColumnsNormal = [
     filterMatchMode: FILTER_TYPES.not_string.equals,
     fieldType: "DateTime",
     filterWidget: "Calendar",
-    ariaLabelDescription: "Colonna Inserimento, Cella filtro",
+    ariaLabelDescription: "Colonna Data, Cella filtro",
     width: "100px",
     minWidth: "100px"
   },
@@ -95,7 +95,7 @@ export const ColumnsReordered = [
     filterMatchMode: FILTER_TYPES.not_string.equals,
     fieldType: "DateTime",
     filterWidget: "Calendar",
-    ariaLabelDescription: "Colonna Inserimento, Cella filtro",
+    ariaLabelDescription: "Colonna Data, Cella filtro",
     width: "100px",
     minWidth: "100px"
   },
