@@ -87,7 +87,7 @@ export class AttivitaFatteComponent implements OnInit {
       filterMatchMode: FILTER_TYPES.not_string.equals,
       fieldType: "DateTime",
       filterWidget: "Calendar",
-      ariaLabelDescription: "Colonna Inserimento, Cella filtro",
+      ariaLabelDescription: "Colonna Data, Cella filtro",
       width: "100px"
     },
     {
