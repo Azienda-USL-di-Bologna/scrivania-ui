@@ -3,7 +3,7 @@ import { NtJwtLoginService, UtenteUtilities, UtilityFunctions, SessionManager} f
 import { getInternautaUrl, BaseUrlType, SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { Utente } from "@bds/ng-internauta-model";
-import { MenuItem, DialogService, MessageService } from "primeng/api";
+import { MenuItem, DialogService } from "primeng/api";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService } from "./intimus/intimus-client.service";
 import { HeaderFeaturesConfig } from "@bds/primeng-plugin";
@@ -22,18 +22,13 @@ export class AppComponent implements OnInit, OnDestroy {
   public utenteConnesso: UtenteUtilities;
   public headerFeaturesConfig: HeaderFeaturesConfig;
   private subscriptions: Subscription[] = [];
-  private onTimeOutWarningSubscribbed = false;
-  // private logoutCountdownMessageShowing = false;
-  private logoutCountdown: number;
 
   constructor(
     private loginService: NtJwtLoginService,
     private route: ActivatedRoute,
     private router: Router,
     public dialogService: DialogService,
-    public messageService: MessageService,
-    private intimusClient: IntimusClientService,
-    private sessionManager: SessionManager
+    private intimusClient: IntimusClientService
     ) {}
 
   ngOnInit() {
@@ -48,6 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.headerFeaturesConfig.showProfilo = true;
     this.headerFeaturesConfig.logoutRedirectRoute = SCRIVANIA_ROUTE;
     this.headerFeaturesConfig.logoutIconPath = "assets/images/signout.svg";
+    this.headerFeaturesConfig.logoutWarning = true;
 
     this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
     this.loginService.setImpostazioniApplicazioniUrl(getInternautaUrl(BaseUrlType.ConfigurazioneImpostazioniApplicazioni));
@@ -55,26 +51,26 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
       if (utente) {
         this.utenteConnesso = utente;
-        if (!this.onTimeOutWarningSubscribbed) {
-        this.subscriptions.push(this.sessionManager.onTimeOutWarning.subscribe(
-          (countdown: number) => {
-            this.logoutCountdown = countdown;
-            this.messageService.clear("logoutWarning");
-            this.messageService.add({
-              severity: "warn",
-              summary: "Attenzione",
-              detail: `Uscita tra ${this.logoutCountdown} secondi...`,
-              key: "logoutWarning",
-              sticky: true,
-              closable: true
-            });
-          }));
-          this.subscriptions.push(this.sessionManager.onIdleEnd.subscribe(
-            () => {
-              this.messageService.clear("logoutWarning");
-          }));
-          this.onTimeOutWarningSubscribbed = true;
-        }
+        // if (!this.onTimeOutWarningSubscribbed) {
+        // this.subscriptions.push(this.sessionManager.onTimeOutWarning.subscribe(
+        //   (countdown: number) => {
+        //     this.logoutCountdown = countdown;
+        //     this.messageService.clear("logoutWarning");
+        //     this.messageService.add({
+        //       severity: "warn",
+        //       summary: "Attenzione",
+        //       detail: `Uscita tra ${this.logoutCountdown} secondi...`,
+        //       key: "logoutWarning",
+        //       sticky: true,
+        //       closable: true
+        //     });
+        //   }));
+        //   this.subscriptions.push(this.sessionManager.onIdleEnd.subscribe(
+        //     () => {
+        //       this.messageService.clear("logoutWarning");
+        //   }));
+        //   this.onTimeOutWarningSubscribbed = true;
+        // }
       }
     }));
 
@@ -115,6 +111,5 @@ export class AppComponent implements OnInit, OnDestroy {
         this.subscriptions.pop().unsubscribe();
       }
     }
-    this.onTimeOutWarningSubscribbed = false;
   }
 }
