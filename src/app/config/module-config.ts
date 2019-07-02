@@ -8,6 +8,6 @@ export const loginModuleConfig: NTJWTModuleConfig = {
     localhostPort: LOCALHOST_PORT,
     applicazione: APPLICATION,
     logoutRedirectRoute: SCRIVANIA_ROUTE,
-    sessionExpireSeconds: 30, // 0 = distattivato
-    pingInterval: 5
+    sessionExpireSeconds: 1800, // 0 = distattivato
+    pingInterval: 900 // 0 disattivato
 };
