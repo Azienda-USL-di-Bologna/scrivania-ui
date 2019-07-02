@@ -357,7 +357,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                 }
                 if (!found) { // Il comando non è presente, lo aggiungo
                   found = true;
-                  if (this.loggedUser.getUtente().aziende && this.loggedUser.getUtente().aziende.length > 1) {
+                  if (this.loggedUser.getUtente().aziende && this.loggedUser.getUtente().aziende.length > 1 && elementArray.idAzienda) {
                     elementAlbero.items.push(new TreeNode(
                       elementArray.descrizione,
                       [new TreeNode(
