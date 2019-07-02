@@ -307,6 +307,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     this.alberoMenu = [];
     const initialFiltersAndSorts = new FiltersAndSorts();
     //initialFiltersAndSorts.rows = NO_LIMIT;
+    initialFiltersAndSorts.addSort(new SortDefinition("ordinale", SORT_MODES.asc));
     initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
     initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
     const lazyLoadFiltersAndSorts = new FiltersAndSorts();
@@ -379,7 +380,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
               }
             }
             if (!found) { // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
-              if (this.loggedUser.getUtente().aziende && this.loggedUser.getUtente().aziende.length > 1) {
+              if (this.loggedUser.getUtente().aziende && this.loggedUser.getUtente().aziende.length > 1 && elementArray.idAzienda) {
                 this.alberoMenu.push(new TreeNode(
                   elementArray.idApplicazione.nome,
                   [new TreeNode(
