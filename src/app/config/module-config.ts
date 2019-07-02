@@ -9,5 +9,5 @@ export const loginModuleConfig: NTJWTModuleConfig = {
     applicazione: APPLICATION,
     logoutRedirectRoute: SCRIVANIA_ROUTE,
     sessionExpireSeconds: 1800, // 0 = distattivato
-    pingInterval: 10 // 0 disattivato
+    pingInterval: 900 // 0 disattivato
 };
