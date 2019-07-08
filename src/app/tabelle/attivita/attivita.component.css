@@ -1,0 +1,82 @@
+.img-table{
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: auto;
+}
+
+.openTabLink{
+    color: #993366 !important;
+}
+
+.openTabLink:hover{
+    cursor: pointer;
+}
+.p0{
+    padding: 0 !important;
+}
+:host>>>table.ui-table-scrollable-body-table{
+    table-layout: auto;
+}
+:host>>>table.ui-table-scrollable-header-table{
+    table-layout: auto;
+}
+:host>>> .ui-table .ui-table-tbody > tr > td {
+    padding: 10px;
+}
+.column-class-f {
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+}
+.column-class-o {
+    word-break: break-word;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+
+.filters-styles {
+    border: #c8c8c8;
+    border-left-style: solid;
+    border-right-style: solid;
+    border-width: 1px;
+}
+:host>>> .ui-table .ui-table-tbody > tr.ui-contextmenu-selected {
+    background-color: #ffffff !important;
+    color: black !important;
+}
+:host>>> .clContextMenu .ui-contextmenu,
+:host>>> .clContextMenu .ui-menuitem-link{
+    background-color: #203244fa !important;
+}
+:host>>> .clContextMenu span{
+    color: #ffffff !important;
+}
+.columns-icon{
+    text-align: center;
+}
+.columns-icon > span{
+    font-size: 24px;
+}
+:host>>> .clToast .ui-toast-message-info{
+    background-color:#283948 !important;
+    color: #ffffff !important;
+}
+
+.note {
+    resize: none;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    scroll-behavior: auto
+}
+
+::ng-deep [role="dialog"].dialogNote{
+    width: 350px;
+    min-width: 200px;
+}
+::ng-deep [role="dialog"] .ui-dialog-content.ui-widget-content{
+    min-height: 250px;
+}

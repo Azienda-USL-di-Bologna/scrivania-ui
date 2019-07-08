@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TabellaAttivitaComponent } from './tabella-attivita.component';
+import { CambioUtenteComponent } from './cambio-utente.component';
 
-describe('TabellaAttivitaComponent', () => {
-  let component: TabellaAttivitaComponent;
-  let fixture: ComponentFixture<TabellaAttivitaComponent>;
+describe('CambioUtenteComponent', () => {
+  let component: CambioUtenteComponent;
+  let fixture: ComponentFixture<CambioUtenteComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TabellaAttivitaComponent ]
+      declarations: [ CambioUtenteComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TabellaAttivitaComponent);
+    fixture = TestBed.createComponent(CambioUtenteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

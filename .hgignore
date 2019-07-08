@@ -5,3 +5,7 @@ e2e
 yarn-error.log
 yarn.lock
 builda.sh
+node_modules
+.idea
+dist
+package-lock.json
