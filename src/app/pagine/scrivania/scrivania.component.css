@@ -215,16 +215,28 @@
     top: 21px !important;
     /* color: #999; */
 }
+
+:host>>>.ui-tieredmenu .ui-menuitem-link {
+    padding: 0.4em 0.85em;
+}
+
 :host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link {
     /* background-color:#7e7e7e;#d3d3d3b0;    */
-   background-color:  #203142;
+    background-color:  #f4f4f4;
 }
 
 :host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-menuitem-text,
 :host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-submenu-icon {
-    color: #ffffff;
+    color: #203142;
     font-weight: bold;
-    font-size: 101%;
+    /* font-size: 101%; */
+}
+:host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-submenu-icon {
+    padding-left: 9px;
+}
+
+:host>>>.ui-tieredmenu .ui-menuitem-link .ui-submenu-icon{
+    margin-top: -.8em;
 }
 
 .position-relative{
