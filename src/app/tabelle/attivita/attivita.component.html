@@ -51,7 +51,7 @@
         <tr #selRow class="row-class" [pSelectableRow]="rowData" [pContextMenuRow]="rowData" style="height:30px" aria-label="riga">
             <td tabindex="0" aria-label="Colonna tipo attività" [style.width]="cols[0].width"  [style.minWidth]="cols[0].minWidth" [ngClass]="[columnClass, 'p0']">
                 <img tabindex="0" *ngIf="!(attivita.tipo === 'notifica')" [src]="attivita.iconaAttivita" alt="icona priorità" class="img-table" pTooltip="Imposta priorità" (click)="impostaPriorita(attivita, $event)"/>
-                <img tabindex="0" *ngIf="attivita.tipo === 'notifica'" [src]="attivita.iconaAttivita" alt="icona notifica" class="img-table"  />
+                <img tabindex="0" *ngIf="attivita.tipo === 'notifica'" [src]="attivita.iconaAttivita" alt="icona notifica" class="img-table" pTooltip="Notifica"/>
             </td>
             <td tabindex="0" attr.aria-label="Colonna Ente valore {{getColumnValue(attivita, cols[1])}}" *ngIf="(aziendeUser > 1) && !changedOrder" headers="idAzienda.nome" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
             <td tabindex="0" attr.aria-label="Colonna Ente valore {{getColumnValue(attivita, cols[1])}}" *ngIf="changedOrder" headers="idAzienda.nome" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
@@ -67,7 +67,7 @@
                     pTooltip="Sul documento mancano alcuni dati che devono essere inseriti prima di poter procedere.">
             </td>
             <td tabindex="0" [style.width]="cols[9].width" [style.minWidth]="cols[9].minWidth" class="p0 columns-icon">
-                <span tabindex="0" *ngIf="attivita.tipo === 'notifica'"class="pi pi-trash" (click)="deleteAttivita($event, rowData)"></span>
+                <span tabindex="0" *ngIf="attivita.tipo === 'notifica'"class="pi pi-trash" pTooltip="Elimina notifica" (click)="deleteAttivita($event, rowData)"></span>
             </td>
             <td tabindex="0" aria-label="Colonna note" [style.width]="cols[10].width" [style.minWidth]="cols[10].minWidth" class="p0">
                 <img tabindex="0" *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="noteClicckato(attivita, $event)" alt="Leggi note" class="img-table" pTooltip="Leggi note">
