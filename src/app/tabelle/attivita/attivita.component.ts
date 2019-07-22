@@ -212,7 +212,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   handleContextMenu(attivitaSelezionata: Attivita) {
     // this.messageService.add({ severity: "info", summary: "Car Selected", detail: attivitaSelezionata.oggetto });
     attivitaSelezionata.aperta = !attivitaSelezionata.aperta;
-    this.attivitaService.update(attivitaSelezionata);
+    this.attivitaService.update(attivitaSelezionata).subscribe();
   }
 
   public attivitaEmitterHandler() {
@@ -280,7 +280,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const attivitaSelezionata: Attivita = this.attivita[this.selectedRowIndex];
     if (!attivitaSelezionata.aperta) { // se l'attivita non è letta la metto come letta
       attivitaSelezionata.aperta = !attivitaSelezionata.aperta;
-      this.attivitaService.update(attivitaSelezionata);
+      this.attivitaService.update(attivitaSelezionata).subscribe();
     }
     this.attivitaEmitter.emit(this.dataTable.selection);
   }
