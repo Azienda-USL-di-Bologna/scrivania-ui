@@ -366,9 +366,15 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
     this.selectIndex(this.attivita.indexOf(attivita));
     if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
+      // bisogna eliminare la chiave "reloadLoggedUser" dal sessionStorage prima di aprire la finsestra per far si che venga ricaricato l'utente nella nuova applicazione, altrimenti eredità i valori dalla scrivania
+      const value: string = sessionStorage.getItem("reloadLoggedUser");
+      sessionStorage.removeItem("reloadLoggedUser");
+
       /* abbiamo bisogno di un uuid diverso ad ogni entrata sull'ambiente,
          se no per un controllo anti-inde-sminchiamento onCommand ritorna e basta */
       window.open(compiledUrlsJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
+
+      sessionStorage.setItem("reloadLoggedUser", value);
     }
 
   }
