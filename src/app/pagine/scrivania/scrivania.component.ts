@@ -274,14 +274,21 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   }
 
   public setAnteprimaUrl() {
-    this.noAnteprima = false;
-    this.scrivaniaService.getAnteprima(this.attivitaSelezionata, this.allegatoSelezionato).subscribe(
-      file => {
-        this.anteprima.nativeElement.src = file;
-      },
-      err => {
-        this.noAnteprima = true;
-      });
+    if ( this.attivitaSelezionata.idApplicazione.id === "dete" && this.attivitaSelezionata.descrizione === "Bozza" ) {
+      this.noAnteprima = true;
+    } else {
+      this.noAnteprima = false;
+      this.scrivaniaService
+        .getAnteprima(this.attivitaSelezionata, this.allegatoSelezionato)
+        .subscribe(
+          file => {
+            this.anteprima.nativeElement.src = file;
+          },
+          err => {
+            this.noAnteprima = true;
+          }
+        );
+    }
     // return this.domSanitizer.bypassSecurityTrustResourceUrl(this.anteprimaUrl);
   }
 
@@ -306,7 +313,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     }
     this.alberoMenu = [];
     const initialFiltersAndSorts = new FiltersAndSorts();
-    //initialFiltersAndSorts.rows = NO_LIMIT;
+    // initialFiltersAndSorts.rows = NO_LIMIT;
     initialFiltersAndSorts.addSort(new SortDefinition("ordinale", SORT_MODES.asc));
     initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
     initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
