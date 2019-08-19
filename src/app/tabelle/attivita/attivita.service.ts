@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType } from "../../../environments/app-constants";
-import { Attivita, ENTITIES_STRUCTURE } from "@bds/ng-internauta-model";
+import { Attivita, ENTITIES_STRUCTURE, Azienda } from "@bds/ng-internauta-model";
 import { NextSDREntityProvider } from "@nfa/next-sdr";
 import { Observable } from "rxjs";
 
@@ -15,6 +15,7 @@ export class AttivitaService extends NextSDREntityProvider {
 
   update(elementToUpdate: Attivita): Observable<any> {
     console.log("update(elementToUpdate: Attivita)", elementToUpdate);
+    elementToUpdate.idAzienda = {id: elementToUpdate.idAzienda.id} as Azienda;
     const functioName = "update";
     const temp = new Attivita();
     Object.assign(temp, elementToUpdate);
