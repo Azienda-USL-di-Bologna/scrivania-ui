@@ -12,8 +12,7 @@ import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
-import { IntimusClientService } from "src/app/intimus/intimus-client.service";
-import { IntimusCommand, IntimusCommands } from "src/app/intimus/intimus-command";
+import { IntimusClientService, IntimusCommand, IntimusCommands } from "@bds/nt-communicator";
 import { Dialog } from "primeng/dialog";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
 

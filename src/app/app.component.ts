@@ -5,7 +5,7 @@ import { ActivatedRoute, Params, Router } from "@angular/router";
 import { Utente } from "@bds/ng-internauta-model";
 import { MenuItem, DialogService } from "primeng/api";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
-import { IntimusClientService } from "./intimus/intimus-client.service";
+import { IntimusClientService } from "@bds/nt-communicator";
 import { HeaderFeaturesConfig } from "@bds/primeng-plugin";
 import { Subscription } from "rxjs";
 
@@ -51,6 +51,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
       if (utente) {
         this.utenteConnesso = utente;
+        const intimusUrl = getInternautaUrl(BaseUrlType.Intimus);
+        this.intimusClient.start(intimusUrl, APPLICATION, this.utenteConnesso.getUtente().idPersona.id, this.utenteConnesso.getUtente().aziendaLogin.id);
         // if (!this.onTimeOutWarningSubscribbed) {
         // this.subscriptions.push(this.sessionManager.onTimeOutWarning.subscribe(
         //   (countdown: number) => {
