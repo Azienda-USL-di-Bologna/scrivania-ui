@@ -12,8 +12,7 @@ import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
-import { IntimusClientService } from "src/app/intimus/intimus-client.service";
-import { IntimusCommand, IntimusCommands } from "src/app/intimus/intimus-command";
+import { IntimusClientService, IntimusCommand, IntimusCommands } from "@bds/nt-communicator";
 import { Dialog } from "primeng/dialog";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
 
@@ -366,9 +365,15 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
     this.selectIndex(this.attivita.indexOf(attivita));
     if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
+      // bisogna eliminare la chiave "reloadLoggedUser" dal sessionStorage prima di aprire la finsestra per far si che venga ricaricato l'utente nella nuova applicazione, altrimenti eredità i valori dalla scrivania
+      const value: string = sessionStorage.getItem("reloadLoggedUser");
+      sessionStorage.removeItem("reloadLoggedUser");
+
       /* abbiamo bisogno di un uuid diverso ad ogni entrata sull'ambiente,
          se no per un controllo anti-inde-sminchiamento onCommand ritorna e basta */
       window.open(compiledUrlsJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
+
+      sessionStorage.setItem("reloadLoggedUser", value);
     }
 
   }
