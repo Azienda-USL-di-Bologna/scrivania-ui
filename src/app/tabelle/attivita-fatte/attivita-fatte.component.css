@@ -13,3 +13,10 @@
 .p0{
     padding: 0 !important;
 }
+
+.column-class {
+    word-break: break-word;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+}

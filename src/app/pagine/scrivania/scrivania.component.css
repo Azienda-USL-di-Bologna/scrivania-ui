@@ -145,9 +145,16 @@
 }
 
 .div-info-doc {
-    display: flex;
-    justify-content: space-between;
+    /* display: flex;
+    justify-content: space-between; */
     margin-bottom: 15px;
+    margin-bottom: 15px;
+    max-height: 12vh;
+    overflow: auto;
+    word-break: break-word;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
 }
 .px-16{
     padding: 0 16px;

@@ -59,8 +59,7 @@ import { loginModuleConfig } from "./config/module-config";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
 
-import { IntimusClientService } from "./intimus/intimus-client.service";
-
+import { NtCommunicatorModule } from "@bds/nt-communicator";
 
 @NgModule({
   declarations: [
@@ -104,9 +103,10 @@ import { IntimusClientService } from "./intimus/intimus-client.service";
     ToastModule,
     CardModule,
     ConfirmDialogModule,
-    PrimengPluginModule
+    PrimengPluginModule,
+    NtCommunicatorModule
   ],
-  providers: [IntimusClientService, AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent, ProfiloComponent]
 })
