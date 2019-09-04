@@ -24,7 +24,8 @@
             <th [id]="col.field || 'none'" *ngFor="let col of columns" [style.width]="col.width" [style.minWidth]="col.minWidth" [style.padding]="col.padding" scope="colgroup">
                 <div *ngIf="col.field != undefined && col.field !== 'azione'" [pSortableColumn]="col.field" attr.aria-label="Sei sull' intestazione della Colonna {{col.header}}" id="{{col.header}}">
                     {{col.header}}
-                    <p-sortIcon [field]="col.field" ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente">
+                    <p-sortIcon [field]="col.field">
+                            <!-- ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente" -->
                     </p-sortIcon>
                 </div>
             </th>
