@@ -7,6 +7,7 @@ import { MenuItem, DialogService } from "primeng/api";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService } from "@bds/nt-communicator";
 import { HeaderFeaturesConfig } from "@bds/primeng-plugin";
+import { PopupMessaggiService } from "@bds/common-components";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -28,7 +29,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     public dialogService: DialogService,
-    private intimusClient: IntimusClientService
+    private intimusClient: IntimusClientService,
+    private popupMessaggiService: PopupMessaggiService
     ) {}
 
   ngOnInit() {
