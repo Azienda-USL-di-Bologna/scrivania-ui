@@ -60,6 +60,7 @@ import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
 
 import { NtCommunicatorModule } from "@bds/nt-communicator";
+import { CommonComponentsModule } from "@bds/common-components";
 
 @NgModule({
   declarations: [
@@ -104,7 +105,8 @@ import { NtCommunicatorModule } from "@bds/nt-communicator";
     CardModule,
     ConfirmDialogModule,
     PrimengPluginModule,
-    NtCommunicatorModule
+    NtCommunicatorModule,
+    CommonComponentsModule
   ],
   providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService],
   bootstrap: [AppComponent],
