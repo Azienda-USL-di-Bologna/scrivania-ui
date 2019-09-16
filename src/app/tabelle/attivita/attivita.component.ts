@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2 } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
-import { FILTER_TYPES, SORT_MODES, LOCAL_IT } from "@bds/nt-communicator";
+import { FILTER_TYPES, SORT_MODES, LOCAL_IT, RefreshAttivitaParams } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts, buildPagingConf } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { PROJECTIONS } from "../../../environments/app-constants";
@@ -152,8 +152,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private parseIntimusCommand(command: IntimusCommand) {
     // console.log("ricevuto comando in Attivita: ", command);
     if (command.command === IntimusCommands.RefreshAttivita) {
-      const idAttivitaToRefresh = command.params.id_attivita;
-      const operation = command.params.operation;
+      const idAttivitaToRefresh = (command.params as RefreshAttivitaParams).id_attivita;
+      const operation = (command.params as RefreshAttivitaParams).operation;
       // console.log(operation + " attivita " + idAttivitaToRefresh);
       const filterById: FiltersAndSorts = new FiltersAndSorts();
       filterById.addFilter(new FilterDefinition("id", FILTER_TYPES.not_string.equals, idAttivitaToRefresh));
