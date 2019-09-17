@@ -21,7 +21,7 @@ export class CambioUtenteComponent implements OnInit {
   // cambioUtenteConfirmVisible: boolean = false;
   initialFilter: FiltersAndSorts;
 
-  @ViewChild("autoComplete") private autoComplete: AutoComplete;
+  @ViewChild("autoComplete", null) private autoComplete: AutoComplete;
   @Output("onUtenteSelectedEmitter") public onUtenteSelectedEmitter: EventEmitter<Utente> = new EventEmitter<Utente>();
 
   ngOnInit() {

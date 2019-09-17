@@ -21,12 +21,12 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   public mostraStorico: boolean = false;
 
-  @ViewChild("anteprima") private anteprima: ElementRef;
-  @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
+  @ViewChild("anteprima", null) private anteprima: ElementRef;
+  @ViewChild("allegatiDropDown", null) private allegatiDropDown: Dropdown;
 
-  @ViewChild("leftSide") private leftSide: ElementRef;
-  @ViewChild("rightSide") private rightSide: ElementRef;
-  @ViewChild("slider") private slider: ElementRef;
+  @ViewChild("leftSide", null) private leftSide: ElementRef;
+  @ViewChild("rightSide", null) private rightSide: ElementRef;
+  @ViewChild("slider", null) private slider: ElementRef;
 
   private subscriptions: Subscription[] = [];
 
