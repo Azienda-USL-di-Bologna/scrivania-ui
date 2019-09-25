@@ -11,5 +11,5 @@ export const loginModuleConfig: NTJWTModuleConfig = {
     // sessionExpireSeconds: 1800, // 0 = distattivato
     pingInterval: 10, // 0 disattivato, 900 parametro deciso per prod
     // logout type SSO sync oppure local
-    logoutType: LogoutType.SSO_SYNC
+    logoutType: LogoutType.LOCAL
 };
