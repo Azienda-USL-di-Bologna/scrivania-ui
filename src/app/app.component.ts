@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, NgZone } from "@angular/core";
 import { NtJwtLoginService, UtenteUtilities, UtilityFunctions, SessionManager} from "@bds/nt-jwt-login";
 import { getInternautaUrl, BaseUrlType, SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router } from "@angular/router";
@@ -34,7 +34,6 @@ export class AppComponent implements OnInit, OnDestroy {
     ) {}
 
   ngOnInit() {
-    console.log("inizio onInit() appComponent");
 
     this.headerFeaturesConfig = new HeaderFeaturesConfig();
     this.headerFeaturesConfig.showCambioUtente = true;

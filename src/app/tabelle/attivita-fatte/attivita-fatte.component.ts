@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList, ViewChild } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
 import { FILTER_TYPES, SORT_MODES, LOCAL_IT } from "@bds/nt-communicator";
@@ -9,6 +9,8 @@ import { AttivitaFatta } from "@bds/ng-internauta-model";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Subscription } from "rxjs";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
+import { Calendar } from "primeng/calendar";
+import { Table } from "primeng/table";
 
 @Component({
   selector: "app-attivita-fatte",
@@ -30,6 +32,9 @@ export class AttivitaFatteComponent implements OnInit {
   public loading: boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
   public selectedRowIndex: number = -1;
   private subscriptions: Subscription[];
+
+  @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
+  @ViewChild("dt", null) private dataTable: Table;
 
   private _idAzienda: number = -1;
   @Input("idAzienda")
@@ -82,7 +87,7 @@ export class AttivitaFatteComponent implements OnInit {
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
     },
     {
-      field: "data",
+      field: "dataInserimentoRiga",
       header: "Svolta il",
       filterMatchMode: FILTER_TYPES.not_string.equals,
       fieldType: "DateTime",
@@ -219,6 +224,35 @@ export class AttivitaFatteComponent implements OnInit {
 
   private onNoteClick(attivita: any) {
     this.onAttivitaNoteEmitter.emit(attivita);
+  }
+
+  public onCalendarAction(event: any, field: string, action: string) {
+    let calSel: Calendar = null;
+    switch (action) {
+      case "today":
+        calSel = this._calGen.find(e => e.inputId === "CalInput_" + field);
+        if (calSel) {
+          calSel.overlayVisible = false;
+        }
+      break;
+
+      case "clear":
+        this.dataTable.filter(null, field, null);
+      break;
+
+      case "select":
+        if (this._calGen) {
+          calSel = this._calGen.find(a => a.inputId === "CalInput_" + field);
+          if (calSel && this.dataRange && this.dataRange[field].length === 2
+            && this.dataRange[field][0] && this.dataRange[field][1]) {
+            calSel.overlayVisible = false;
+          }
+        }
+
+        const value = this.dataRange[field];
+        this.dataTable.filter(value, field, null);
+      break;
+    }
   }
 
   // public apriAttivita(attivita: any) {
