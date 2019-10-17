@@ -33,6 +33,8 @@ export class AttivitaFatteComponent implements OnInit {
   public selectedRowIndex: number = -1;
   private subscriptions: Subscription[];
 
+  public _rows = 20;
+
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
   @ViewChild("dt", null) private dataTable: Table;
 
@@ -129,7 +131,7 @@ export class AttivitaFatteComponent implements OnInit {
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
 
-    const pageConfing: PagingConf = buildPagingConf(event);
+    const pageConfing: PagingConf = this.buildPageConf(event);
 
     this.attivitaFatteService
       .getData(
@@ -168,6 +170,24 @@ export class AttivitaFatteComponent implements OnInit {
         }
         this.loading = false;
       });
+  }
+
+  // TODO: toglierla e usare quella in primeng-plugin dopo opportuno refactoring
+  private buildPageConf(event): PagingConf {
+    let page = 0;
+    let size = this._rows;
+    if (event) {
+      page = event.first / event.rows;
+      size = event.rows;
+    }
+    const pageConf: PagingConf = {
+      conf: {
+        page: page,
+        size: size
+      },
+      mode: "PAGE"
+    };
+    return pageConf;
   }
 
   private buildInitialFiltersAndSorts(): FiltersAndSorts {

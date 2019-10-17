@@ -303,6 +303,23 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     return initialFiltersAndSorts;
   }
 
+  // TODO: toglierla e usare quella in primeng-plugin dopo opportuno refactoring
+  private buildPageConf(event): PagingConf {
+    let page = 0;
+    let size = this.LOADED_ROWS;
+    if (event) {
+      page = event.first / event.rows;
+      size = event.rows;
+    }
+    const pageConf: PagingConf = {
+      conf: {
+        page: page,
+        size: size
+      },
+      mode: "PAGE"
+    };
+    return pageConf;
+  }
 
   private loadData(event: LazyLoadEvent) {
     /* console.log("TOKEN: ", this.loginService.token);
@@ -319,7 +336,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
 
-    const pageConfing: PagingConf = buildPagingConf(event);
+    const pageConfing: PagingConf = this.buildPageConf(event);
 
     this.attivitaService
       .getData(
