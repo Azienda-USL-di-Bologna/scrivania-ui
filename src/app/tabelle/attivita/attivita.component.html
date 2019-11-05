@@ -38,7 +38,7 @@
                         appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
                     </p-calendar>
                     <input *ngSwitchDefault pInputText
-                        attr.aria-label="Colonna {{col.header}}, Cella filtro"
+                        attr.aria-label="Colonna {{col.label}}, Cella filtro"
                         type="text"
                         (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
                         #filterInputText>
