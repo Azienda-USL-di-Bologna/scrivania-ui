@@ -3,6 +3,7 @@ import { LOGIN_ROUTE, HOME_ROUTE, LOCALHOST_PORT, APPLICATION, SCRIVANIA_ROUTE }
 
 export const loginModuleConfig: NTJWTModuleConfig = {
     loginURL: "" /*getInternautaUrl(BaseUrlType.Login)*/,
+    passTokenGeneratorURL: "",
     loginComponentRoute: LOGIN_ROUTE,
     homeComponentRoute: HOME_ROUTE,
     localhostPort: LOCALHOST_PORT,
