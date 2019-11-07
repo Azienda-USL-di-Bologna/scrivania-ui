@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList, OnDestroy, HostListener } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Attivita, Menu, ImpostazioniApplicazioni } from "@bds/ng-internauta-model";
+import { Attivita, Menu, ImpostazioniApplicazioni, UrlsGenerationStrategy } from "@bds/ng-internauta-model";
 import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
@@ -44,7 +44,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public datiDiFlusso: string = null;
   public datiFlussoTooltip: string = null;
 
-  public finestreApribili: any[] = [{ label: "Elenco documenti", items: [{ label: "AOSPBO", command: (onclick) => { this.handleItemClick("ciao"); } }, { label: "AUSLBO" }] }, { label: "Elenco determine" }, { label: "Elenco delibere" }];
+  public finestreApribili: any[] = [{ label: "Elenco documenti", items: [{ label: "AOSPBO", command: (onclick) => { this.handleItemClick("ciao", ""); } }, { label: "AUSLBO" }] }, { label: "Elenco determine" }, { label: "Elenco delibere" }];
   public finestraScelta: any;
 
   public loggedUser: UtenteUtilities;
@@ -298,9 +298,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     fullScreenFunction.call(iframeElement);
   }
 
-  handleItemClick(event) {
+  handleItemClick(event, urlGenerationStrategy: string) {
     console.log("Link: ", event);
-    this.loginService.buildInterAppUrl(event, true, true, true).subscribe((url: string) => {
+    const encodeParams = urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
+                          urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
+    this.loginService.buildInterAppUrl(event, encodeParams, true, true).subscribe((url: string) => {
       console.log("urlAperto:", url);
      });
   }
@@ -354,7 +356,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                       item.items.push(new TreeNode(
                         elementArray.idAzienda.nome,
                         null,
-                        (onclick) => { this.handleItemClick(elementArray.compiledUrl); }
+                        (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
                       ));
                       break;
                     }
@@ -368,7 +370,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                       [new TreeNode(
                         elementArray.idAzienda.nome,
                         null,
-                        (onclick) => { this.handleItemClick(elementArray.compiledUrl); }
+                        (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
                       )],
                       (onclick) => { this.doNothingNodeClick(onclick); }
                     ));
@@ -377,7 +379,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                     elementAlbero.items.push(new TreeNode(
                       elementArray.descrizione,
                       null,
-                      (onclick) => { this.handleItemClick(elementArray.compiledUrl); }
+                      (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
                     ));
                     break;
                   }
@@ -393,7 +395,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                     [new TreeNode(
                       elementArray.idAzienda.nome,
                       null,
-                      (onclick) => { this.handleItemClick(elementArray.compiledUrl); }
+                      (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
                     )],
                     (onclick) => { this.doNothingNodeClick(onclick); }
                   )],
@@ -405,7 +407,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                   [new TreeNode(
                     elementArray.descrizione,
                     null,
-                    (onclick) => { this.handleItemClick(elementArray.compiledUrl); }
+                    (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
                   )],
                   (onclick) => { this.doNothingNodeClick(onclick); }
                 ));
@@ -451,7 +453,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       albero.push(new TreeNode(
         element.nome,
         null,
-        (onClick) => { this.handleItemClick(element.url); }));
+        (onClick) => {
+          this.handleItemClick(element.url, element.urlGenerationStrategy);
+        }));
     });
   }
 

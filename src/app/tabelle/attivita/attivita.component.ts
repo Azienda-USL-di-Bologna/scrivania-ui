@@ -6,7 +6,7 @@ import { buildLazyEventFiltersAndSorts, buildPagingConf } from "@bds/primeng-plu
 import { AttivitaService } from "./attivita.service";
 import { PROJECTIONS } from "../../../environments/app-constants";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
-import { Attivita, Utente } from "@bds/ng-internauta-model";
+import { Attivita, Utente, Applicazione, UrlsGenerationStrategy } from "@bds/ng-internauta-model";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
@@ -384,8 +384,10 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
     this.selectIndex(this.attivita.indexOf(attivita));
     if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
-      this.loginService.buildInterAppUrl(compiledUrlsJsonArray[0].url, true, true, true).subscribe((url: string) => {
-       console.log("urlAperto:", url);
+      const encodeParams = attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
+                          attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
+      this.loginService.buildInterAppUrl(compiledUrlsJsonArray[0].url, encodeParams, true, true).subscribe((url: string) => {
+        console.log("urlAperto:", url);
       });
     }
 
