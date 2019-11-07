@@ -302,8 +302,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     console.log("Link: ", event);
     const encodeParams = urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
                           urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
-    const addRichiestaParam = encodeParams;
-    const addPassToken = encodeParams;
+    const addRichiestaParam = true;
+    const addPassToken = true;
     this.loginService.buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
       console.log("urlAperto:", url);
      });

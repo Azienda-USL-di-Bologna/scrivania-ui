@@ -386,8 +386,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
       const encodeParams = attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
                           attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
-      const addRichiestaParam = encodeParams;
-      const addPassToken = encodeParams;
+      const addRichiestaParam = true;
+      const addPassToken = true;
       this.loginService.buildInterAppUrl(compiledUrlsJsonArray[0].url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
         console.log("urlAperto:", url);
       });
