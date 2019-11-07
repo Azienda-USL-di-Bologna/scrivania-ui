@@ -53,8 +53,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public alberoFirma: any[] = [];
   public alberoPrendi: any[] = [];
   // public aziendeMenu: any[];
-  public urlFirmone: string = "#";
-  public urlPrendone: string = "#";
+  public urlFirmone: any = "#";
+  public urlPrendone: any = "#";
   // private arrayScrivaniaCompiledUrls: any[];
 
   public showNote: boolean = false;
@@ -92,7 +92,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.scrivaniaService.getUrlsFirmone().subscribe(data => {
       if (data.size > 0) {
         if (data.size === 1) {
-          this.urlFirmone = data.aziende[0].url;
+          this.urlFirmone = data.aziende[0];
         }
         this.buildGenericMenu(data.aziende, this.alberoFirma);
       }
@@ -100,7 +100,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.scrivaniaService.getUrlsPrendone().subscribe(data => {
       if (data.size > 0) {
         if (data.size === 1) {
-          this.urlPrendone = data.aziende[0].url;
+          this.urlPrendone = data.aziende[0];
         }
         this.buildGenericMenu(data.aziende, this.alberoPrendi);
       }
