@@ -384,7 +384,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
     this.selectIndex(this.attivita.indexOf(attivita));
     if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
-      this.loginService.buildInterAppUrl(compiledUrlsJsonArray[0].url, true, true).subscribe((url: string) => {
+      this.loginService.buildInterAppUrl(compiledUrlsJsonArray[0].url, true, true, true).subscribe((url: string) => {
        console.log("urlAperto:", url);
       });
     }

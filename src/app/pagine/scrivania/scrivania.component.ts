@@ -300,7 +300,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
   handleItemClick(event) {
     console.log("Link: ", event);
-    this.loginService.buildInterAppUrl(event, true, true).subscribe((url: string) => {
+    this.loginService.buildInterAppUrl(event, true, true, true).subscribe((url: string) => {
       console.log("urlAperto:", url);
      });
   }
