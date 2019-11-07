@@ -1,5 +1,5 @@
 <div class="p-grid attivita-wrapper position-relative">
-  <!-- Left side -->
+    <!-- Left side -->
     <div class="p-col content-left" #leftSide>
     <div class="option-bar">
         <div class="buttons-bar">
@@ -40,7 +40,7 @@
             <h3 *ngIf="mostraStorico" class="crono-label">Cronologia</h3>
         </div>
 
-        <app-dropdown-aziende *ngIf="loggedUser.getUtente().aziende.length !== 1" (aziendaEmitter)="aziendaChanged($event)" tabindex="0" aria-label="Ente delle attività"></app-dropdown-aziende>
+        <app-dropdown-aziende *ngIf="loggedUser.getUtente().aziende.length !== 1" (aziendaEmitter)="aziendaChanged($event)" aria-label="Ente delle attività"></app-dropdown-aziende>
     </div>
     <div class="table-wrapper">
         <div class="table-inner">
@@ -50,12 +50,12 @@
         </div>
     </div>
 
-  </div>
+    </div>
 
-  <div class="p-offset-7 d-inline-block slider" [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'" #slider><div></div></div>
+    <div class="p-offset-7 d-inline-block slider" [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'" #slider><div></div></div>
 
-  <!-- Right side -->
-  <div class="p-md-5 p-sm-12 content-right" [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'" #rightSide>
+    <!-- Right side -->
+    <div class="p-md-5 p-sm-12 content-right" [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'" #rightSide>
 
     <div tabindex="0" aria-label="Anteprima del documento" class="info-doc-wrapper">
         <div *ngIf="oggetto" class="div-info-doc" tabindex="0" attr.aria-label="documento oggetto {{oggetto}}">

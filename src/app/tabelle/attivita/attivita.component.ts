@@ -450,7 +450,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   fillActionCol(attivita, td) {
     if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" &&
       (attivita.idApplicazione.nome === "Pico" || attivita.idApplicazione.nome === "Dete" || attivita.idApplicazione.nome === "Deli"))) {
-      td.innerHTML = `<a style="color: #993366; cursor: pointer" aria-label="Apri attività"><strong>Apri</strong></a>`;
+      td.innerHTML = `<a style="color: #993366; cursor: pointer" aria-hidden="true"><strong>Apri</strong></a>`;
       if (this.listeners[td.id]) {
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
         this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa

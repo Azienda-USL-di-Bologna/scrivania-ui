@@ -18,15 +18,19 @@
     (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
     [(contextMenuSelection)]="attivitaSelezionata" [contextMenu]="cm"
     >
+    <ng-template pTemplate="summary">
+        Elenco delle attività del utente
+    </ng-template>
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th [id]="col.field || 'none'" *ngFor="let col of columns" [style.width]="col.width" [style.minWidth]="col.minWidth" [style.padding]="col.padding" scope="colgroup">
-                <div *ngIf="col.field != undefined && col.field !== 'azione'" [pSortableColumn]="col.field" attr.aria-label="Sei sull' intestazione della Colonna {{col.label}}" id="{{col.header}}">
+            <th tabindex="0" [id]="col.field || col.label" *ngFor="let col of columns" 
+                [style.width]="col.width" [style.minWidth]="col.minWidth" [style.padding]="col.padding" 
+                attr.aria-label="Colonna {{col.label}}"
+                [pSortableColumn]="col.field" scope="col">
                     {{col.header}}
-                    <p-sortIcon [field]="col.field">
-                            <!-- ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente" -->
-                    </p-sortIcon>
-                </div>
+                <p-sortIcon *ngIf="col.field != undefined && col.field !== 'azione'" [field]="col.field" attr.aria-label="Ordinare colonna {{col.label}}" arialabelasc="Ordinamento ascendente" arialabeldesc="Ordinamento discendente">
+                    <!-- ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente" -->
+                </p-sortIcon>
             </th>
         </tr>
         <tr>
@@ -38,7 +42,7 @@
                         appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
                     </p-calendar>
                     <input *ngSwitchDefault pInputText
-                        attr.aria-label="Colonna {{col.label}}, Cella filtro"
+                        attr.aria-label="Cella filtro per colonna {{col.label}}"
                         type="text"
                         (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
                         #filterInputText>
@@ -49,29 +53,29 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
         <tr #selRow class="row-class" [pSelectableRow]="rowData" [pContextMenuRow]="rowData" style="height:30px" aria-label="riga">
-            <td tabindex="0" aria-label="Colonna tipo attività" [style.width]="cols[0].width"  [style.minWidth]="cols[0].minWidth" [ngClass]="[columnClass, 'p0']">
-                <img tabindex="0" *ngIf="!(attivita.tipo === 'notifica')" [src]="attivita.iconaAttivita" alt="icona priorità {{attivita.priorita}}" class="img-table" pTooltip="Imposta priorità" (click)="impostaPriorita(attivita, $event)"/>
-                <img tabindex="0" *ngIf="attivita.tipo === 'notifica'" [src]="attivita.iconaAttivita" alt="icona notifica" class="img-table" pTooltip="Notifica"/>
+            <td  aria-label="Colonna tipo attività" [style.width]="cols[0].width"  [style.minWidth]="cols[0].minWidth" [ngClass]="[columnClass, 'p0']">
+                <img tabindex="0" role="button" *ngIf="!(attivita.tipo === 'notifica')" [src]="attivita.iconaAttivita" alt="icona priorità {{attivita.priorita}}" class="img-table" pTooltip="Imposta priorità" (click)="impostaPriorita(attivita, $event)"/>
+                <img *ngIf="attivita.tipo === 'notifica'" [src]="attivita.iconaAttivita" alt="icona notifica" class="img-table" pTooltip="Notifica"/>
             </td>
-            <td tabindex="0" attr.aria-label="Colonna Ente valore {{getColumnValue(attivita, cols[1])}}" *ngIf="(aziendeUser > 1) && !changedOrder" headers="idAzienda.nome" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
-            <td tabindex="0" attr.aria-label="Colonna Ente valore {{getColumnValue(attivita, cols[1])}}" *ngIf="changedOrder" headers="idAzienda.nome" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
-            <td tabindex="0" attr.aria-label="Colonna Applicazione valore {{getColumnValue(attivita, cols[2])}}" headers="idApplicazione.nome" [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[2])}}</td>
-            <td tabindex="0" attr.aria-label="Colonna provenienza valore {{getColumnValue(attivita, cols[3], td3)}}" headers="provenienza" [id]="attivita.id" #td3 [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[3], td3)}}</td>
-            <td tabindex="0" attr.aria-label="Colonna oggetto valore {{getColumnValue(attivita, cols[4])}}" headers="oggetto" [style.width]="cols[4].width" [style.minWidth]="cols[4].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[4])}}</td>
-            <td tabindex="0" attr.aria-label="Colonna Data valore {{getColumnValue(attivita, cols[5])}}" *ngIf="!changedOrder" headers="data" [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
-            <td tabindex="0" attr.aria-label="Colonna Data valore {{getColumnValue(attivita, cols[5])}}" *ngIf="(aziendeUser > 1) && changedOrder" headers="data" [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
-            <td tabindex="0" attr.aria-label="Colonna Tipo valore {{getColumnValue(attivita, cols[6])}}" headers="descrizione" [style.width]="cols[6].width" [style.minWidth]="cols[6].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[6])}}</td>
-            <td tabindex="0" aria-label="Colonna Azione" headers="azione" [id]="attivita.id" #td7 [style.width]="cols[7].width" [style.minWidth]="cols[7].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[7], td7)}}</td>
-            <td tabindex="0" aria-label="Colonna check procedibilità" [style.width]="cols[8].width" [style.minWidth]="cols[8].minWidth" class="p0">
+            <td aria-label="Colonna Ente" *ngIf="(aziendeUser > 1) && !changedOrder" headers="idAzienda.nome" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
+            <td aria-label="Colonna Ente" *ngIf="changedOrder" headers="idAzienda.nome" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[1])}}</td>
+            <td aria-label="Colonna Applicazione" headers="idApplicazione.nome" [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[2])}}</td>
+            <td aria-label="Colonna provenienza" headers="provenienza" [id]="attivita.id" #td3 [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[3], td3)}}</td>
+            <td aria-label="Colonna oggetto" headers="oggetto" [style.width]="cols[4].width" [style.minWidth]="cols[4].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[4])}}</td>
+            <td aria-label="Colonna Data" *ngIf="!changedOrder" headers="data" [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
+            <td aria-label="Colonna Data" *ngIf="(aziendeUser > 1) && changedOrder" headers="data" [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[5])}}</td>
+            <td attr.aria-label="Colonna Tipo" headers="descrizione" [style.width]="cols[6].width" [style.minWidth]="cols[6].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[6])}}</td>
+            <td aria-label="Colonna Azione" headers="azione" [id]="attivita.id" #td7 [style.width]="cols[7].width" [style.minWidth]="cols[7].minWidth" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: ''">{{getColumnValue(attivita, cols[7], td7)}}</td>
+            <td aria-label="Colonna check procedibilità" [style.width]="cols[8].width" [style.minWidth]="cols[8].minWidth" class="p0">
                 <img tabindex="0" *ngIf="attivita.datiAggiuntivi.custom_app_3 === '0'" src="assets/images/baseline-not_interested-24px.svg" alt="Sul documento mancano alcuni dati che devono essere inseriti prima di poter procedere." class="img-table"
                     pTooltip="Sul documento mancano alcuni dati che devono essere inseriti prima di poter procedere.">
             </td>
-            <td tabindex="0" aria-label="Colonna elimina notifica" [style.width]="cols[9].width" [style.minWidth]="cols[9].minWidth" class="p0 columns-icon">
-                <span tabindex="0" *ngIf="attivita.tipo === 'notifica'" class="pi pi-trash" pTooltip="Elimina notifica" aria-label="icona elimina" (click)="deleteAttivita($event, rowData)"></span>
+            <td aria-label="Colonna elimina notifica" [style.width]="cols[9].width" [style.minWidth]="cols[9].minWidth" class="p0 columns-icon">
+                <span role="button" tabindex="0" *ngIf="attivita.tipo === 'notifica'" class="pi pi-trash" pTooltip="Elimina notifica" aria-label="icona elimina" (click)="deleteAttivita($event, rowData)"></span>
             </td>
-            <td tabindex="0" aria-label="Colonna note" [style.width]="cols[10].width" [style.minWidth]="cols[10].minWidth" class="p0">
-                <img tabindex="0" *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="noteClicckato(attivita, $event)" alt="Leggi note" class="img-table" pTooltip="Leggi note">
-                <img tabindex="0" *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="noteClicckato(attivita, $event)" alt="Inserisci note" class="img-table" pTooltip="Inserisci note">
+            <td aria-label="Colonna note" [style.width]="cols[10].width" [style.minWidth]="cols[10].minWidth" class="p0">
+                <img tabindex="0" *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="noteClicckato(attivita, $event)" alt="Leggi note" role="button" class="img-table" pTooltip="Leggi note">
+                <img tabindex="0" *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="noteClicckato(attivita, $event)" alt="Inserisci note" role="button"  class="img-table" pTooltip="Inserisci note">
             </td>
         </tr>
     </ng-template>
@@ -81,23 +85,23 @@
  <!-- ****  LE NOTE  **** -->
 <p-dialog *ngIf="this.showNote && this.attivitaTemp" styleClass="dialogNote" #noteAttivita header="Note Attività" [(visible)]="this.showNote" [modal]="true" [responsive]="true" [minY]="70"
     [maximizable]="true" appendTo="body">
-    <textarea pInputTextarea class="note" placeholder="Inserisci note" [(ngModel)]="this.attivitaTemp.note"></textarea>
+    <textarea tabindex="0" pInputTextarea class="note" placeholder="Inserisci note" [(ngModel)]="this.attivitaTemp.note"></textarea>
     <p-footer #footerNoteAttivita>
-        <button style="width: auto; min-width: 50px;" type="button" pButton icon="pi pi-check" (click)="bottoneSalvaNote()" pTooltip="Salva" tooltipPosition="bottom" appendTo="body"></button>
-        <button style="width: auto; min-width: 50px;" type="button" pButton icon="pi pi-times" (click)="chiudiNote()" pTooltip="Chiudi" tooltipPosition="bottom" appendTo="body"></button>
+        <button tabindex="0" style="width: auto; min-width: 50px;" type="button" pButton icon="pi pi-check" label="Conferma" (click)="bottoneSalvaNote()" pTooltip="Salva" tooltipPosition="bottom" appendTo="body"></button>
+        <button tabindex="0" style="width: auto; min-width: 50px;" type="button" pButton icon="pi pi-times" label="Anulla" (click)="chiudiNote()" pTooltip="Chiudi" tooltipPosition="bottom" appendTo="body"></button>
     </p-footer>
 </p-dialog>
 <!-- richiesta di conferma di chiusura senza salvare  -->
 <p-confirmDialog #confermaUscita appendTo="body" header="Esci" icon="pi pi-exclamation-triangle" width="425" key="closeWithoutSaving">
     <p-footer>
-        <button type="button" pButton icon="" label="Si" (click)="confermaUscita.accept()"></button>
-        <button type="button" pButton icon="" label="No" (click)="confermaUscita.reject()"></button>
+        <button tabindex="0" type="button" pButton icon="" label="Si" (click)="confermaUscita.accept()"></button>
+        <button tabindex="0" type="button" pButton icon="" label="No" (click)="confermaUscita.reject()"></button>
     </p-footer>
 </p-confirmDialog>
 
 <p-confirmDialog #confermaSalvataggio appendTo="body" header="Salva" icon="pi pi-exclamation-triangle" width="425" key="saveNotes">
     <p-footer>
-        <button type="button" pButton icon="" label="Si" (click)="confermaSalvataggio.accept()"></button>
-        <button type="button" pButton icon="" label="No" (click)="confermaSalvataggio.reject()"></button>
+        <button tabindex="0" type="button" pButton icon="" label="Si" (click)="confermaSalvataggio.accept()"></button>
+        <button tabindex="0" type="button" pButton icon="" label="No" (click)="confermaSalvataggio.reject()"></button>
     </p-footer>
 </p-confirmDialog>
