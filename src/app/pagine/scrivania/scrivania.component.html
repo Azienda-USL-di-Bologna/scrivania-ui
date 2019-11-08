@@ -65,8 +65,8 @@
             <strong>Nessuna attivita selezionata.</strong>
         </div>
         <p-accordion [multiple]="true" #accordionDetail>
-            <p-accordionTab header="Dettagli documento">
-                <div *ngIf="mittente || destinatari || destinatariCC">
+            <p-accordionTab header="Dettagli documento" aria-controls="sect1">
+                <div *ngIf="mittente || destinatari || destinatariCC" id="sect1">
                     <ul class="ul-info-doc">
                         <li tabindex="0" *ngIf="mittente"><span class="li-description">Da: </span><span class="li-content">{{mittente}}</span></li>
                         <li tabindex="0" *ngIf="destinatari"><span class="li-content" [innerHTML]="destinatari"></span></li>
@@ -77,8 +77,8 @@
                     Non sono presenti dettagli da visualizzare.
                 </div>
             </p-accordionTab>
-            <p-accordionTab [selected]="datiDiFlusso" header="Dati di flusso">
-                <div *ngIf="datiDiFlusso" >
+            <p-accordionTab [selected]="datiDiFlusso" header="Dati di flusso" aria-controls="sect2">
+                <div *ngIf="datiDiFlusso" id="sect2">
                     <ul class="ul-info-doc">
                         <li><span pTooltip="{{datiFlussoTooltip}}" [innerHTML]="datiDiFlusso" class="li-content"></span></li>
                     </ul>

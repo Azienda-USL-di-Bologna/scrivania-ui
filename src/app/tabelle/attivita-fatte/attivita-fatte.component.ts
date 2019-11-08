@@ -63,30 +63,35 @@ export class AttivitaFatteComponent implements OnInit {
       // E' l'insieme di priorità e tipo attività
       field: "priorita",
       width: "30px",
-      padding: 0
+      padding: 0,
+      label: "priorità"
     },
     {
       field: "idAzienda.nome",
       header: "Ente",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "85px"
+      width: "85px",
+      label: "ente"
     },
     {
       field: "idApplicazione.nome",
       header: "App",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "80px"
+      width: "80px",
+      label: "applicazione"
     },
     {
       field: "provenienza",
       header: "Da",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "140px"
+      width: "140px",
+      label: "provenienza"
     },
     {
       field: "oggetto",
       header: "Oggetto",
-      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
+      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
+      label: "oggetto"
     },
     {
       field: "dataInserimentoRiga",
@@ -95,17 +100,20 @@ export class AttivitaFatteComponent implements OnInit {
       fieldType: "DateTime",
       filterWidget: "Calendar",
       ariaLabelDescription: "Colonna Data, Cella filtro",
-      width: "100px"
+      width: "100px",
+      label: "svolta il"
     },
     {
       field: "descrizione",
       header: "Tipo",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "120px"
+      width: "120px",
+      label: "tipo"
     },
     {
     // colonna note
-      width: "30px"
+      width: "30px",
+      label: "note"
     },
   ];
 
