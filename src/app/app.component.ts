@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, NgZone } from "@angular/core";
 import { NtJwtLoginService, UtenteUtilities, UtilityFunctions, SessionManager} from "@bds/nt-jwt-login";
-import { getInternautaUrl, BaseUrlType, SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
+import { SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { Utente } from "@bds/ng-internauta-model";
+import { Utente, getInternautaUrl, BaseUrlType } from "@bds/ng-internauta-model";
 import { MenuItem, DialogService } from "primeng/api";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService } from "@bds/nt-communicator";
@@ -46,7 +46,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.headerFeaturesConfig.logoutIconPath = "assets/images/signout.svg";
     this.headerFeaturesConfig.logoutWarning = true;
 
-    this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
+    this.loginService.setLoginUrl(getInternautaUrl(BaseUrlType.Login));
+    this.loginService.setPassTokenGeneratorURL(getInternautaUrl(BaseUrlType.PassTokenGenerator));
     this.loginService.setImpostazioniApplicazioniUrl(getInternautaUrl(BaseUrlType.ConfigurazioneImpostazioniApplicazioni));
 
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {

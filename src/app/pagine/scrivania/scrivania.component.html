@@ -1,5 +1,5 @@
 <div class="p-grid attivita-wrapper position-relative">
-  <!-- Left side -->
+    <!-- Left side -->
     <div class="p-col content-left" #leftSide>
     <div class="option-bar">
         <div class="buttons-bar">
@@ -7,26 +7,26 @@
             <button [ngClass]="mostraStorico?'d-hidden':'d-flex'" #btn type="button" pButton (click)="menu.toggle($event)" class="clMenu" iconPos="left" label="Apri">
                 <img src="assets/images/baseline_dashboard_white_48dp.png" width="24px" alt="menu applicazioni">
             </button>
-            <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)" role="menu" aria-label="lista con le applicazioni"></p-tieredMenu>
+            <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event, null)" role="menu" aria-label="lista con le applicazioni"></p-tieredMenu>
 
             <!-- Firma -->
-            <button type="button" pButton pTooltip="Firma" tooltipPosition="bottom" [ngClass]="{'ui-button-secondary icon-custom': true, 'pr-8':true, 'd-hidden': mostraStorico || urlFirmone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlFirmone)" aria-label="Firma">
+            <button type="button" pButton pTooltip="Firma" tooltipPosition="bottom" [ngClass]="{'ui-button-secondary icon-custom': true, 'pr-8':true, 'd-hidden': mostraStorico || urlFirmone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlFirmone.url, urlFirmone.urlGenerationStrategy)" aria-label="Firma">
                 <img src="assets/images/sign.svg" class="images-pos" alt="Firma">
             </button>
 
             <button #btn type="button" pButton pTooltip="Firma" tooltipPosition="bottom" [ngClass]="{'d-hidden': mostraStorico || alberoFirma.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary icon-custom" (click)="firmaMenu.toggle($event)" aria-label="Firma">
                 <img src="assets/images/sign.svg"  class="images-pos"  alt="Firma">
             </button>
-            <p-tieredMenu #firmaMenu [model]="alberoFirma" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
+            <p-tieredMenu #firmaMenu [model]="alberoFirma" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event, null)"></p-tieredMenu>
 
             <!-- Prendi -->
-            <button type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" [ngClass]="{'ui-button-secondary icon-custom': true, 'pr-8':true, 'd-hidden': mostraStorico || urlPrendone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlPrendone)" aria-label="Prendi il documento">
+            <button type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" [ngClass]="{'ui-button-secondary icon-custom': true, 'pr-8':true, 'd-hidden': mostraStorico || urlPrendone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlPrendone.url, urlPrendone.urlGenerationStrategy)" aria-label="Prendi il documento">
                 <img src="assets/images/hiring.svg" class="images-pos"  alt="Prendi">
             </button>
             <button #btn type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" [ngClass]="{'d-hidden': mostraStorico || alberoPrendi.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary icon-custom" (click)="prendoneMenu.toggle($event)"aria-label="Prendi il documento">
                 <img src="assets/images/hiring.svg" class="images-pos" alt="Prendi">
             </button>
-            <p-tieredMenu #prendoneMenu [model]="alberoPrendi" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event)"></p-tieredMenu>
+            <p-tieredMenu #prendoneMenu [model]="alberoPrendi" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event, null)"></p-tieredMenu>
             <div class="separator-class"></div>
             <!-- Cronologia, Aggiorna, Elimina notifiche -->
             <button *ngIf="mostraStorico" type="button" pButton pTooltip="Indietro" tooltipPosition="bottom" icon="pi pi-chevron-left" iconPos="left" (click)="mostraStorico=!mostraStorico" class="ui-button-secondary icon-style" aria-label="Indietro">
@@ -40,7 +40,7 @@
             <h3 *ngIf="mostraStorico" class="crono-label">Cronologia</h3>
         </div>
 
-        <app-dropdown-aziende *ngIf="loggedUser.getUtente().aziende.length !== 1" (aziendaEmitter)="aziendaChanged($event)" tabindex="0" aria-label="Ente delle attività"></app-dropdown-aziende>
+        <app-dropdown-aziende *ngIf="loggedUser.getUtente().aziende.length !== 1" (aziendaEmitter)="aziendaChanged($event)" aria-label="Ente delle attività"></app-dropdown-aziende>
     </div>
     <div class="table-wrapper">
         <div class="table-inner">
@@ -50,12 +50,12 @@
         </div>
     </div>
 
-  </div>
+    </div>
 
-  <div class="p-offset-7 d-inline-block slider" [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'" #slider><div></div></div>
+    <div class="p-offset-7 d-inline-block slider" [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'" #slider><div></div></div>
 
-  <!-- Right side -->
-  <div class="p-md-5 p-sm-12 content-right" [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'" #rightSide>
+    <!-- Right side -->
+    <div class="p-md-5 p-sm-12 content-right" [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'" #rightSide>
 
     <div tabindex="0" aria-label="Anteprima del documento" class="info-doc-wrapper">
         <div *ngIf="oggetto" class="div-info-doc" tabindex="0" attr.aria-label="documento oggetto {{oggetto}}">
@@ -65,8 +65,8 @@
             <strong>Nessuna attivita selezionata.</strong>
         </div>
         <p-accordion [multiple]="true" #accordionDetail>
-            <p-accordionTab header="Dettagli documento">
-                <div *ngIf="mittente || destinatari || destinatariCC">
+            <p-accordionTab header="Dettagli documento" aria-controls="sect1">
+                <div *ngIf="mittente || destinatari || destinatariCC" id="sect1">
                     <ul class="ul-info-doc">
                         <li tabindex="0" *ngIf="mittente"><span class="li-description">Da: </span><span class="li-content">{{mittente}}</span></li>
                         <li tabindex="0" *ngIf="destinatari"><span class="li-content" [innerHTML]="destinatari"></span></li>
@@ -77,8 +77,8 @@
                     Non sono presenti dettagli da visualizzare.
                 </div>
             </p-accordionTab>
-            <p-accordionTab [selected]="datiDiFlusso" header="Dati di flusso">
-                <div *ngIf="datiDiFlusso" >
+            <p-accordionTab [selected]="datiDiFlusso" header="Dati di flusso" aria-controls="sect2">
+                <div *ngIf="datiDiFlusso" id="sect2">
                     <ul class="ul-info-doc">
                         <li><span pTooltip="{{datiFlussoTooltip}}" [innerHTML]="datiDiFlusso" class="li-content"></span></li>
                     </ul>

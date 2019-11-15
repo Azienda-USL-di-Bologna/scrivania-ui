@@ -6,7 +6,7 @@ import { buildLazyEventFiltersAndSorts, buildPagingConf } from "@bds/primeng-plu
 import { AttivitaService } from "./attivita.service";
 import { PROJECTIONS } from "../../../environments/app-constants";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
-import { Attivita, Utente } from "@bds/ng-internauta-model";
+import { Attivita, Utente, Applicazione, UrlsGenerationStrategy } from "@bds/ng-internauta-model";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
@@ -15,6 +15,7 @@ import * as Bowser from "bowser";
 import { IntimusClientService, IntimusCommand, IntimusCommands } from "@bds/nt-communicator";
 import { Dialog } from "primeng/dialog";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-attivita",
@@ -100,7 +101,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private renderer: Renderer2,
     private messageService: MessageService,
     private intimusClientService: IntimusClientService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private httpClient: HttpClient
   ) {
 
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
@@ -382,15 +384,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
     this.selectIndex(this.attivita.indexOf(attivita));
     if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
-      // bisogna eliminare la chiave "reloadLoggedUser" dal sessionStorage prima di aprire la finsestra per far si che venga ricaricato l'utente nella nuova applicazione, altrimenti eredità i valori dalla scrivania
-      const value: string = sessionStorage.getItem("reloadLoggedUser");
-      sessionStorage.removeItem("reloadLoggedUser");
-
-      /* abbiamo bisogno di un uuid diverso ad ogni entrata sull'ambiente,
-         se no per un controllo anti-inde-sminchiamento onCommand ritorna e basta */
-      window.open(compiledUrlsJsonArray[0].url + encodeURIComponent("&richiesta=" + this.myRandomUUID()));
-
-      sessionStorage.setItem("reloadLoggedUser", value);
+      const encodeParams = attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
+                          attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
+      const addRichiestaParam = true;
+      const addPassToken = true;
+      this.loginService.buildInterAppUrl(compiledUrlsJsonArray[0].url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
+        console.log("urlAperto:", url);
+      });
     }
 
   }
@@ -452,7 +452,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   fillActionCol(attivita, td) {
     if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" &&
       (attivita.idApplicazione.nome === "Pico" || attivita.idApplicazione.nome === "Dete" || attivita.idApplicazione.nome === "Deli"))) {
-      td.innerHTML = `<a style="color: #993366; cursor: pointer"><strong>Apri</strong></a>`;
+      td.innerHTML = `<a style="color: #993366; cursor: pointer" aria-hidden="true"><strong>Apri</strong></a>`;
       if (this.listeners[td.id]) {
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
         this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa
@@ -576,21 +576,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       accept: () => {_accept(); },
       reject: () => {_reject(); }
     });
-  }
-
-
-  /**************************
-  ** SuperSaloRollsTheUUID **
-  **************************/
-  private myRandomUUID() {
-    // 8 - 4 - 4 - 4 - 16
-    return this.fourRandomChar() + this.fourRandomChar() +                      // 8
-       "-" + this.fourRandomChar() + "-" + this.fourRandomChar() + "-" +        // -4-4-4-
-       this.fourRandomChar() + this.fourRandomChar() + this.fourRandomChar() ;  // 16
-  }
-
-  private fourRandomChar() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   }
 
   ngOnDestroy(): void {
