@@ -18,9 +18,6 @@
     (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
     [(contextMenuSelection)]="attivitaSelezionata" [contextMenu]="cm"
     >
-    <ng-template pTemplate="summary">
-        Elenco delle attività del utente
-    </ng-template>
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th tabindex="0" [id]="col.field || col.label" *ngFor="let col of columns" 
