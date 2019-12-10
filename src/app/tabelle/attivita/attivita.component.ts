@@ -16,6 +16,9 @@ import { IntimusClientService, IntimusCommand, IntimusCommands } from "@bds/nt-c
 import { Dialog } from "primeng/dialog";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
 import { HttpClient } from "@angular/common/http";
+import { ImpostazioniService } from "src/app/services/impostazioni.service";
+import { ApplicationCustiomization } from "src/environments/application_customization";
+import { Logs } from "selenium-webdriver";
 
 @Component({
   selector: "app-attivita",
@@ -54,6 +57,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   public aziendeUser: number;
   public changedOrder: boolean;
+  public hidePreview: boolean = false;
 
   private salvataggioNoteResultMessages = {
     success: {
@@ -65,6 +69,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       message: "Errore nel salvataggio delle note attività."
     }
   };
+
 
   @Input("idAzienda")
   set idAzienda(idAzienda: number) {
@@ -91,6 +96,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
+  @Output("onMostraAnteprimaEmitter") private onMostraAnteprimaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @ViewChild("dt", null) private dataTable: Table;
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
 
@@ -102,6 +108,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private messageService: MessageService,
     private intimusClientService: IntimusClientService,
     private confirmationService: ConfirmationService,
+    private impostazioniService: ImpostazioniService,
     private httpClient: HttpClient
   ) {
 
@@ -149,6 +156,34 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     if (browserInfo.name !== "Firefox") {
       this.columnClass = "column-class-o";
     }
+
+    this.verifyAndSetAnteprimaColumns();
+
+    this.subscriptions.push(this.impostazioniService.settingsChangedNotifier$.subscribe(newSettings => {
+      this.verifyAndSetAnteprimaColumns();
+
+    }));
+
+  }
+
+  private verifyAndSetAnteprimaColumns() {
+    this.hidePreview = this.impostazioniService.getHidePreview() === "true";
+    console.log("Se hidePreview è true, 'anteprima' deve essere hidden = false;  se false, anteprima deve essere hidden = true ", this.hidePreview);
+
+    this.setVisibilityColumnAnteprima(!this.hidePreview);
+    console.log("!! this.cols", this.cols);
+
+  }
+
+  private setVisibilityColumnAnteprima(hidden: boolean) {
+    console.log("SETTO VISIBILITA COLONNA ANTEPRIMA", hidden);
+
+    this.cols.forEach(element => {
+      if (element.field === "anteprima") {
+        element.visibility = hidden ? "collpse" : "visible";
+        element.display = hidden ? "none" : "";
+      }
+    });
   }
 
   private parseIntimusCommand(command: IntimusCommand) {
@@ -360,6 +395,25 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             this.setAttivitaIcon(a);
             // console.log("carica", a.datiAggiuntivi);
             a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
+            // "forbidden" è un caso di smicnhiamento probabilmente
+            if (a.allegati && a.allegati !== "\"forbidden\"") {
+              console.log();
+              console.log("**************");
+              console.log("a.allegati === 'forbidden'", a.allegati === "forbidden") ;
+              console.log("a.allegati", a.allegati);
+              const jsonObject = JSON.parse(a.allegati);
+              console.log("jsonObject", jsonObject);
+              for (let i = 0; i < jsonObject.length; i++) {
+                console.log("elemento", i, jsonObject[i]);
+                if (jsonObject[i].tipologia === "STAMPA_UNICA") {
+                  a["allegatoDaMostrare"] = jsonObject[i];
+                }
+              }
+              console.log("ADESS a ", a);
+
+              console.log("**************");
+              console.log();
+            }
           });
         }
         this.loading = false;
@@ -506,6 +560,22 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this.attivitaTemp = attivita;
       this._noteTemp = attivita.note;
     }
+  }
+
+  public onClickSuApriAnteprima(attivita: Attivita, event: any) {
+    console.log("..........attivita", attivita);
+    console.log("..........event", event);
+    event.stopPropagation();
+    if (attivita["allegatoDaMostrare"]) {
+      this.apriAnteprima(attivita);
+    } else {
+      console.log("!!! NO STAMPA UNICA");
+    }
+  }
+
+  public apriAnteprima(attivita: Attivita) {
+    console.log("apriAnteprima(attivita: Attivita)");
+    this.onMostraAnteprimaEmitter.emit(attivita);
   }
 
   closeAndBasta() {

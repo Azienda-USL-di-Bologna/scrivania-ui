@@ -20,19 +20,19 @@
     >
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th tabindex="0" [id]="col.field || col.label" *ngFor="let col of columns" 
+            <th tabindex="0" [id]="col.field || col.label" *ngFor="let col of columns"  [style.display]="col.display"
                 [style.width]="col.width" [style.minWidth]="col.minWidth" [style.padding]="col.padding" 
                 attr.aria-label="Colonna {{col.label}}, {{col.header ? 'Ordinare colonna' : ''}}"
                 [pSortableColumn]="col.field" scope="colgroup">
                     {{col.header}}
-                <p-sortIcon *ngIf="col.field != undefined && col.field !== 'azione'" [field]="col.field" attr.aria-label="Ordinare colonna {{col.label}}" arialabelasc="Ordinamento ascendente" arialabeldesc="Ordinamento discendente">
+                <p-sortIcon *ngIf="col.field != undefined && col.field !== 'azione' && col.field !== 'anteprima'" [field]="col.field" attr.aria-label="Ordinare colonna {{col.label}}" arialabelasc="Ordinamento ascendente" arialabeldesc="Ordinamento discendente">
                     <!-- ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente" -->
                 </p-sortIcon>
             </th>
         </tr>
         <tr>
-            <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget" class="filters-styles" [style.width]="col.width" [style.minWidth]="col.minWidth">
-                <div *ngIf="col.field != undefined && col.field !== 'azione' && col.field !== 'priorita'">
+            <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget" class="filters-styles" [style.width]="col.width" [style.minWidth]="col.minWidth" [style.display]="col.display">
+                <div *ngIf="col.field != undefined && col.field !== 'azione' && col.field !== 'priorita' && col.field !== 'anteprima'">
                     <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." showButtonBar="true"
                         [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
                         (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
@@ -73,6 +73,11 @@
             <td aria-label="Colonna note" [style.width]="cols[10].width" [style.minWidth]="cols[10].minWidth" class="p0">
                 <img tabindex="0" *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="noteClicckato(attivita, $event)" alt="Leggi note" role="button" class="img-table" pTooltip="Leggi note">
                 <img tabindex="0" *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="noteClicckato(attivita, $event)" alt="Inserisci note" role="button"  class="img-table" pTooltip="Inserisci note">
+            </td>
+            <td *ngIf="cols[11].visibility==='visible'" aria-label="Colonna Apri Anteprima" headers="anteprima" [style.width]="cols[11].width" 
+                [style.cursor]="!attivita.allegatoDaMostrare ? 'auto' : 'pointer'"
+                [style.minWidth]="cols[11].minWidth" class="p0 columns-icon" (click)="onClickSuApriAnteprima(attivita, $event)">
+                <div *ngIf="attivita.allegatoDaMostrare">View</div>
             </td>
         </tr>
     </ng-template>
