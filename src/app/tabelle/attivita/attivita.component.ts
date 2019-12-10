@@ -19,6 +19,7 @@ import { HttpClient } from "@angular/common/http";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ApplicationCustiomization } from "src/environments/application_customization";
 import { Logs } from "selenium-webdriver";
+import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 
 @Component({
   selector: "app-attivita",
@@ -70,7 +71,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     }
   };
 
-
   @Input("idAzienda")
   set idAzienda(idAzienda: number) {
     this._idAzienda = idAzienda;
@@ -96,7 +96,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
-  @Output("onMostraAnteprimaEmitter") private onMostraAnteprimaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @ViewChild("dt", null) private dataTable: Table;
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
 
@@ -109,6 +108,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private intimusClientService: IntimusClientService,
     private confirmationService: ConfirmationService,
     private impostazioniService: ImpostazioniService,
+    private scrivaniaService: ScrivaniaService,
     private httpClient: HttpClient
   ) {
 
@@ -563,19 +563,41 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   public onClickSuApriAnteprima(attivita: Attivita, event: any) {
-    console.log("..........attivita", attivita);
-    console.log("..........event", event);
     event.stopPropagation();
     if (attivita["allegatoDaMostrare"]) {
       this.apriAnteprima(attivita);
     } else {
-      console.log("!!! NO STAMPA UNICA");
+      console.log("NESSUNA STAMPA UNICA DA MOSTRARE");
     }
   }
 
   public apriAnteprima(attivita: Attivita) {
-    console.log("apriAnteprima(attivita: Attivita)");
-    this.onMostraAnteprimaEmitter.emit(attivita);
+    console.log("apriAnteprima(attivita: Attivita)", attivita);
+    if (attivita["allegatoDaMostrare"]) {
+      this.scrivaniaService.getAnteprima(attivita, attivita["allegatoDaMostrare"])
+        .subscribe(
+          file => {
+            console.log("FILE", file);
+            console.log(typeof file);
+            let newWindow = null;
+            if (typeof file === "string") {
+              newWindow = window.open(file, "_blank");
+            } else  {
+              newWindow = window.open(file["url"], "_blank");
+            }
+           newWindow.focus();
+          },
+          err => {
+            console.log("ERRORE!!!", err);
+            this.messageService.clear("errorToast");
+            this.messageService.add({ key: "errorToast",
+              severity: "error", summary: "Errore",
+              detail: "Stampa Unica non trovata" });
+          }
+        );
+    } else {
+      console.log("NESSUNA STAMPA UNICA DA MOSTRARE");
+    }
   }
 
   closeAndBasta() {

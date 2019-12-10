@@ -470,34 +470,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     this.showNote = ((this.noteText = attivita.note) !== null);
   }
 
-  public onApriAnteprima(attivita: any) {
-    if (attivita.allegatoDaMostrare) {
-      this.scrivaniaService.getAnteprima(attivita, attivita.allegatoDaMostrare)
-        .subscribe(
-          file => {
-            console.log("FILE", file);
-            console.log(typeof file);
-            let newWindow = null;
-            if (typeof file === "string") {
-              newWindow = window.open(file, "_blank");
-            } else  {
-              newWindow = window.open(file["url"], "_blank");
-            }
-           newWindow.focus();
-          },
-          err => {
-            console.log("ERRORE!!!", err);
-          }
-        );
-    } else {
-      console.log("NESSUNA STAMPA UNICA DA MOSTRARE");
-
-    }
-
-
-  }
-
-
   ngOnDestroy(): void {
     if (this.subscriptions && this.subscriptions.length > 0) {
       while (this.subscriptions.length > 0) {
