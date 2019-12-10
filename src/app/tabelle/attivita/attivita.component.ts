@@ -396,7 +396,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             // console.log("carica", a.datiAggiuntivi);
             a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
             // "forbidden" è un caso di smicnhiamento probabilmente
-            if (a.allegati && a.allegati !== "\"forbidden\"") {
+            if (a.tipo === "attivita" && a.descrizione !== "Redazione" && a.descrizione !== "Bozza" && a.allegati && a.allegati !== "\"forbidden\"") {
               console.log();
               console.log("**************");
               console.log("a.allegati === 'forbidden'", a.allegati === "forbidden") ;
