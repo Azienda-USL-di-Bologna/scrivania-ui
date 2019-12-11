@@ -567,15 +567,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             console.log("FILE", file);
             console.log(typeof file);
             console.log(name); */
-            let newWindow: Window = new Window();
-            newWindow.document.title = name;  // BOH! Vorrei capire come fare
+            let newWindow;
             if (typeof file === "string") {
               newWindow = window.open(file, "_balank");
             } else  {
               newWindow = window.open(file["url"], "_balank");
             }
-
-            // newWindow.document.setNodeName = name;
+            newWindow.document.title = name;  // BOH! Vorrei capire come fare
             newWindow.focus();
             console.log("IL DOCUMENT", newWindow.document);
           },
