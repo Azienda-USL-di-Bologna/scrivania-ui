@@ -398,6 +398,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
                   a["allegatoDaMostrare"] = jsonObject[i];
                 }
               }
+            } else if (a.descrizione === "Redazione" || a.descrizione === "Bozza") {
+              a["antePrimaNonDisponibile"] = "Non disponibile";
             }
           });
         }
@@ -567,7 +569,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             console.log("FILE", file);
             console.log(typeof file);
             console.log(name); */
-            let newWindow;
+            let newWindow: Window;
             if (typeof file === "string") {
               newWindow = window.open(file, "_balank");
             } else  {
@@ -581,7 +583,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             console.log("ERRORE!!!", err);
             this.messageService.clear("errorToast");
             this.messageService.add({ key: "errorToast",
-              severity: "warning", summary: "Attenzione",
+              severity: "error", summary: "Attenzione",
               detail: "Stampa Unica non trovata" });
           }
         );
