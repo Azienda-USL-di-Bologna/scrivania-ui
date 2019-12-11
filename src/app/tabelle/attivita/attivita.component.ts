@@ -375,15 +375,10 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
     const pageConfing: PagingConf = this.buildPageConf(event);
 
-    this.attivitaService
-      .getData(
-        PROJECTIONS.attivita.customProjections
-          .attivitaWithIdApplicazioneAndIdAziendaAndTransientFields,
+    this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields,
         this.initialFiltersAndSorts,
         this.lazyLoadFiltersAndSorts,
-        pageConfing
-      )
-      .subscribe(data => {
+        pageConfing).subscribe(data => {
         this.attivita = undefined;
         this.totalRecords = 0;
         if (data && data.results && data.page) {
@@ -396,23 +391,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             // console.log("carica", a.datiAggiuntivi);
             a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
             // "forbidden" è un caso di smicnhiamento probabilmente
-            if (a.tipo === "attivita" && a.descrizione !== "Redazione" && a.descrizione !== "Bozza" && a.allegati && a.allegati !== "\"forbidden\"") {
-              console.log();
-              console.log("**************");
-              console.log("a.allegati === 'forbidden'", a.allegati === "forbidden") ;
-              console.log("a.allegati", a.allegati);
+            if (a.descrizione !== "Redazione" && a.descrizione !== "Bozza" && a.allegati && a.allegati !== "\"forbidden\"") {
               const jsonObject = JSON.parse(a.allegati);
-              console.log("jsonObject", jsonObject);
               for (let i = 0; i < jsonObject.length; i++) {
-                console.log("elemento", i, jsonObject[i]);
                 if (jsonObject[i].tipologia === "STAMPA_UNICA") {
                   a["allegatoDaMostrare"] = jsonObject[i];
                 }
               }
-              console.log("ADESS a ", a);
-
-              console.log("**************");
-              console.log();
             }
           });
         }
@@ -577,21 +562,28 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this.scrivaniaService.getAnteprima(attivita, attivita["allegatoDaMostrare"])
         .subscribe(
           file => {
+            const name = attivita.oggetto.substr(0, attivita.oggetto.indexOf(":"));
+            /* console.log(attivita);
             console.log("FILE", file);
             console.log(typeof file);
-            let newWindow = null;
+            console.log(name); */
+            let newWindow: Window = new Window();
+            newWindow.document.title = name;  // BOH! Vorrei capire come fare
             if (typeof file === "string") {
-              newWindow = window.open(file, "_blank");
+              newWindow = window.open(file, "_balank");
             } else  {
-              newWindow = window.open(file["url"], "_blank");
+              newWindow = window.open(file["url"], "_balank");
             }
-           newWindow.focus();
+
+            // newWindow.document.setNodeName = name;
+            newWindow.focus();
+            console.log("IL DOCUMENT", newWindow.document);
           },
           err => {
             console.log("ERRORE!!!", err);
             this.messageService.clear("errorToast");
             this.messageService.add({ key: "errorToast",
-              severity: "error", summary: "Errore",
+              severity: "warning", summary: "Attenzione",
               detail: "Stampa Unica non trovata" });
           }
         );

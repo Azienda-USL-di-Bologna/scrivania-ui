@@ -77,7 +77,9 @@
             <td *ngIf="cols[11].visibility==='visible'" aria-label="Colonna Apri Anteprima" headers="anteprima" [style.width]="cols[11].width" 
                 [style.cursor]="!attivita.allegatoDaMostrare ? 'auto' : 'pointer'"
                 [style.minWidth]="cols[11].minWidth" class="p0 columns-icon" (click)="onClickSuApriAnteprima(attivita, $event)">
-                <div *ngIf="attivita.allegatoDaMostrare">View</div>
+                <div *ngIf="attivita.allegatoDaMostrare">
+                    <a style="color: #993366; cursor: pointer" aria-hidden="true" title="Apri stampa unica in una nuova finestra"><strong>Vedi anteprima</strong></a>
+                </div>
             </td>
         </tr>
     </ng-template>
