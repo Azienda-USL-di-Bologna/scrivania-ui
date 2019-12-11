@@ -15,11 +15,13 @@ export class AttivitaService extends NextSDREntityProvider {
 
   update(elementToUpdate: Attivita): Observable<any> {
     console.log("update(elementToUpdate: Attivita)", elementToUpdate);
-    elementToUpdate.idAzienda = {id: elementToUpdate.idAzienda.id} as Azienda;
-    elementToUpdate.idApplicazione = {id: elementToUpdate.idApplicazione.id} as Applicazione;
+    // elementToUpdate.idAzienda = {id: elementToUpdate.idAzienda.id} as Azienda;
+    // elementToUpdate.idApplicazione = {id: elementToUpdate.idApplicazione.id} as Applicazione;
     const functioName = "update";
     const temp = new Attivita();
     Object.assign(temp, elementToUpdate);
+    temp.idAzienda = {id: elementToUpdate.idAzienda.id} as Azienda;
+    temp.idApplicazione = {id: elementToUpdate.idApplicazione.id} as Applicazione;
     temp.datiAggiuntivi = JSON.stringify(elementToUpdate.datiAggiuntivi);
     // console.log(this.classDescriptionLocal, functioName, "id", elementToUpdate.id, "elmToUpdate", elementToUpdate);
     return this.patchHttpCall(temp, temp.id);
