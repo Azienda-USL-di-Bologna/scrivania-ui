@@ -398,7 +398,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
                   a["allegatoDaMostrare"] = jsonObject[i];
                 }
               }
-            } else if (a.descrizione === "Redazione" || a.descrizione === "Bozza") {
+            } else if (a.allegati && a.allegati !== "\"forbidden\"" && (a.descrizione === "Redazione" || a.descrizione === "Bozza")) {
               a["antePrimaNonDisponibile"] = "Non disponibile";
             }
           });

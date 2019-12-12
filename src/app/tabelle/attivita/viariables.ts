@@ -87,8 +87,8 @@ export const ColumnsNormal = [
   {
     // colonna anteprima
     field: "anteprima",
-    width: "100px",
-    minWidth: "100px",
+    width: "32px",
+    minWidth: "32px",
     label: "anteprima",
     visibility: "visible",
     display: "",
@@ -182,8 +182,8 @@ export const ColumnsReordered = [
   {
     // colonna anteprima
     field: "anteprima",
-    width: "100px",
-    minWidth: "100px",
+    width: "32px",
+    minWidth: "32px",
     label: "anteprima",
     visibility: "visible",
     display: "none",
