@@ -11,6 +11,7 @@ import { Subscription } from "rxjs";
 import { ApplicationCustiomization } from "src/environments/application_customization";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ConfirmationService } from "primeng/components/common/confirmationservice";
+import { stringify } from "querystring";
 
 @Component({
   selector: "app-scrivania",
