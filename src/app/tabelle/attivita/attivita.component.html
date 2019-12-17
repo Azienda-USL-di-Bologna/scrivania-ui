@@ -49,7 +49,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
-        <tr #selRow class="row-class" [pSelectableRow]="rowData" [pContextMenuRow]="rowData" style="height:30px" aria-label="riga">
+        <tr #tableRows class="row-class" [pSelectableRow]="rowData" [pContextMenuRow]="rowData" style="height:30px" aria-label="riga">
             <td  aria-label="Colonna tipo attività" [style.width]="cols[0].width"  [style.minWidth]="cols[0].minWidth" [ngClass]="[columnClass, 'p0']">
                 <img tabindex="0" role="button" *ngIf="!(attivita.tipo === 'notifica')" [src]="attivita.iconaAttivita" alt="icona priorità {{attivita.priorita}}" class="img-table" pTooltip="Imposta priorità" (click)="impostaPriorita(attivita, $event)"/>
                 <img *ngIf="attivita.tipo === 'notifica'" [src]="attivita.iconaAttivita" alt="icona notifica" class="img-table" pTooltip="Notifica"/>
@@ -78,11 +78,11 @@
                 [style.cursor]="!attivita.allegatoDaMostrare ? 'auto' : 'pointer'" class="p0 columns-icon" [style.minWidth]="cols[11].minWidth">
                 <img tabindex="0" *ngIf="attivita.allegatoDaMostrare && attivita.descrizione !== 'Redazione' && attivita.descrizione !== 'Bozza'" src="assets/images/pdf-file.svg" 
                     style="cursor: pointer; width: 22px; height: 22px;" (click)="onClickSuApriAnteprima(attivita, $event)" 
-                    alt="Apri stampa unica in una nuova finestra" aria-hidden="true" role="button" class="img-table" pTooltip="Apri stampa unica in una nuova finestra">
+                    alt="Apri stampa unica in una nuova finestra" role="button" class="img-table" pTooltip="Apri stampa unica in una nuova finestra">
                 
                 <img tabindex="0" *ngIf="attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza')" src="assets/images/baseline-not_interested-24px.svg" 
                 style="cursor: auto; width: 22px; height: 22px;" (click)="onClickSuApriAnteprima(attivita, $event)" 
-                alt="Anteprima non disponibile" aria-hidden="true" role="button" class="img-table" pTooltip="Anteprima non disponibile">
+                alt="Anteprima non disponibile" role="button" class="img-table" pTooltip="Anteprima non disponibile">
             </td>
         </tr>
     </ng-template>
