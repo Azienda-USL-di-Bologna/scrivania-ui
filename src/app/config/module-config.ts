@@ -9,6 +9,7 @@ export const loginModuleConfig: NTJWTModuleConfig = {
     localhostPort: LOCALHOST_PORT,
     applicazione: APPLICATION,
     logoutRedirectRoute: SCRIVANIA_ROUTE,
+    loggedOutComponentRoute: null,
     // sessionExpireSeconds: 1800, // 0 = distattivato
     pingInterval: 10, // 0 disattivato, 900 parametro deciso per prod
     // logout type SSO sync oppure local
