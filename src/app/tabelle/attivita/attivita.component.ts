@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2 } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2, ElementRef } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
 import { FILTER_TYPES, SORT_MODES, LOCAL_IT, RefreshAttivitaParams } from "@bds/nt-communicator";
@@ -98,6 +98,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
   @ViewChild("dt", null) private dataTable: Table;
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
+  @ViewChildren("tableRows", null) tableRows: QueryList<ElementRef>;
+  private selectedTableRowIndex: number;
 
   constructor(
     private datepipe: DatePipe,
@@ -307,8 +309,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   public selectIndex(index: number) {
-    console.log("Index: ", index, "Table Index: ", this.selectedRowIndex);
-
+    console.log("Index of the row: ", index, "Table Index, selectexRowIndex: ", this.selectedRowIndex);
+    this.selectedTableRowIndex = index;
     if (index < 0 || index >= this.attivita.length) { return; }
     console.log("Controllo supertao: ", this.attivita[index]);
     this.selectedRowIndex = index;
@@ -442,6 +444,10 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     response.subscribe(res => {
       const index = this.attivita.findIndex(element => element === attivita);
       this.attivita.splice(index, 1);
+        setTimeout(() => { // this will make the execution after the above boolean has changed
+        const selectedRow = this.tableRows.toArray()[0];
+        selectedRow.nativeElement.focus();
+      }, 0);
       this.messageService.add({ severity: "info", summary: "Eliminazione", detail: "Notifica eliminata con successo!" });
     }, err => {
       this.messageService.add({ severity: "error", summary: "Eliminazione", detail: "Non è stato possibile eliminare la notifica. Contattare BabelCare" });
@@ -594,16 +600,29 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   closeAndBasta() {
     this.showNote = false;
+    setTimeout(() => { // this will make the execution after the above boolean has changed
+      const selectedRow = this.tableRows.toArray()[0];
+      selectedRow.nativeElement.focus();
+    }, 0);
   }
+
+  // bottoneSalvaNote() {
+  //   this.showNote = true;
+  //   if (this._noteTemp !== this.attivitaTemp.note) {
+  //     this.chiediConfermaAndFaiCose("saveNotes",
+  //       "Vuoi salvare le modifiche apportate alle note dell'attività?",
+  //       () => { this.salvaNote(); }, // conferma: salvo
+  //       () => { this.showNote = true; return; }// non confermo: non faccio nulla
+  //     );
+  //   } else {
+  //     this.closeAndBasta();
+  //   }
+  // }
 
   bottoneSalvaNote() {
     this.showNote = true;
     if (this._noteTemp !== this.attivitaTemp.note) {
-      this.chiediConfermaAndFaiCose("saveNotes",
-        "Vuoi salvare le modifiche apportate alle note dell'attività?",
-        () => { this.salvaNote(); }, // conferma: salvo
-        () => { this.showNote = true; return; }// non confermo: non faccio nulla
-      );
+      this.salvaNote();
     } else {
       this.closeAndBasta();
     }
@@ -623,20 +642,32 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     );
   }
 
+  // chiudiNote() {
+  //   if (this._noteTemp !== this.attivitaTemp.note) {
+  //     // domando se vuole davvero uscire senza salvare
+  //     this.chiediConfermaAndFaiCose("closeWithoutSaving",
+  //       "La finestra verrà chiusa senza salvare le modifiche: continuare?",
+  //       () => { // funzione di accept: reimposto il valore iniziale
+  //         this.attivitaTemp.note = this._noteTemp;
+  //         this.closeAndBasta();
+  //       },
+  //       () => { // funzione reject: ritorno senza uscire
+  //         this.showNote = true;
+  //         return;
+  //       }
+  //     );
+  //   } else {
+  //     // esco senza salvare tanto non ci sono cambiamenti.
+  //     this.attivitaTemp.note = this._noteTemp; // reimposto il valore iniziale
+  //     this.closeAndBasta();
+  //   }
+  // }
+
   chiudiNote() {
     if (this._noteTemp !== this.attivitaTemp.note) {
       // domando se vuole davvero uscire senza salvare
-      this.chiediConfermaAndFaiCose("closeWithoutSaving",
-        "La finestra verrà chiusa senza salvare le modifiche: continuare?",
-        () => { // funzione di accept: reimposto il valore iniziale
-          this.attivitaTemp.note = this._noteTemp;
-          this.closeAndBasta();
-        },
-        () => { // funzione reject: ritorno senza uscire
-          this.showNote = true;
-          return;
-        }
-      );
+      this.attivitaTemp.note = this._noteTemp;
+      this.closeAndBasta();
     } else {
       // esco senza salvare tanto non ci sono cambiamenti.
       this.attivitaTemp.note = this._noteTemp; // reimposto il valore iniziale
