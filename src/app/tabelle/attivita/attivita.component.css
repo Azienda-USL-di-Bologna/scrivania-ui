@@ -73,10 +73,22 @@
     scroll-behavior: auto
 }
 
-::ng-deep [role="dialog"].dialogNote{
+::ng-deep [role="dialog"].dialogNote {
     width: 350px;
     min-width: 200px;
 }
-::ng-deep .dialogNote .ui-dialog-content.ui-widget-content{
+::ng-deep .dialogNote .ui-dialog-content.ui-widget-content {
     min-height: 250px;
+}
+::ng-deep .td-pos-relative {
+    position: relative !important;
+    height: 100% !important;
+}
+::ng-deep .anteprima-non-disponibile {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
 }

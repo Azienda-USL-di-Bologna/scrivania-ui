@@ -75,14 +75,22 @@
                 <img tabindex="0" *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="noteClicckato(attivita, $event)" alt="Inserisci note" role="button"  class="img-table" pTooltip="Inserisci note">
             </td>
             <td *ngIf="cols[11].visibility==='visible'" aria-label="Colonna Apri Anteprima" headers="anteprima" [style.width]="cols[11].width" 
-                [style.cursor]="!attivita.allegatoDaMostrare ? 'auto' : 'pointer'" class="p0 columns-icon" [style.minWidth]="cols[11].minWidth">
+                [style.cursor]="!attivita.allegatoDaMostrare ? 'auto' : 'pointer'" class="p0 columns-icon" [style.minWidth]="cols[11].minWidth"
+                [ngClass]="{'td-pos-relative' : attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza')}"
+                >
                 <img tabindex="0" *ngIf="attivita.allegatoDaMostrare && attivita.descrizione !== 'Redazione' && attivita.descrizione !== 'Bozza'" src="assets/images/pdf-file.svg" 
                     style="cursor: pointer; width: 22px; height: 22px;" (click)="onClickSuApriAnteprima(attivita, $event)" 
                     alt="Apri stampa unica in una nuova finestra" role="button" class="img-table" pTooltip="Apri stampa unica in una nuova finestra">
                 
-                <img tabindex="0" *ngIf="attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza')" src="assets/images/baseline-not_interested-24px.svg" 
+                <!-- <img tabindex="0" *ngIf="attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza')" src="assets/images/baseline-not_interested-24px.svg" 
                 style="cursor: auto; width: 22px; height: 22px;" (click)="onClickSuApriAnteprima(attivita, $event)" 
-                alt="Anteprima non disponibile" role="button" class="img-table" pTooltip="Anteprima non disponibile">
+                alt="Anteprima non disponibile" role="button" class="img-table" pTooltip="Anteprima non disponibile"> -->
+
+                <div *ngIf="attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza')"
+                    class="anteprima-non-disponibile" 
+                    alt="Anteprima non disponibile" 
+                    pTooltip="Anteprima non disponibile">
+                </div>
             </td>
         </tr>
     </ng-template>
