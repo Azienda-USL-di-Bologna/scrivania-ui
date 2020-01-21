@@ -6,7 +6,7 @@ export const ColumnsNormal = [
     field: "priorita",
     width: "30px",
     padding: 0,
-    label: "tipo attività"
+    label: "tipo attività",
   },
   {
     field: "idAzienda.nome",
@@ -14,7 +14,7 @@ export const ColumnsNormal = [
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
     width: "85px",
     minWidth: "85px",
-    label: "ente"
+    label: "ente",
   },
   {
     field: "idApplicazione.nome",
@@ -22,7 +22,7 @@ export const ColumnsNormal = [
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
     width: "80px",
     minWidth: "80px",
-    label: "applicazione"
+    label: "applicazione",
   },
   {
     field: "provenienza",
@@ -30,7 +30,7 @@ export const ColumnsNormal = [
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
     width: "140px",
     minWidth: "140px",
-    label: "provenienza"
+    label: "provenienza",
   },
   {
     field: "oggetto",
@@ -38,7 +38,7 @@ export const ColumnsNormal = [
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
     width: "auto",
     minWidth: "200px",
-    label: "oggetto"
+    label: "oggetto",
   },
   {
     field: "data",
@@ -49,7 +49,7 @@ export const ColumnsNormal = [
     ariaLabelDescription: "Colonna Data, Cella filtro",
     width: "100px",
     minWidth: "100px",
-    label: "data"
+    label: "data",
   },
   {
     field: "descrizione",
@@ -57,33 +57,42 @@ export const ColumnsNormal = [
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
     width: "120px",
     minWidth: "120px",
-    label: "tipo"
+    label: "tipo",
   },
   {
     // colonna azione
     field: "azione",
     width: "60px",
     minWidth: "60px",
-    label: "azione"
+    label: "azione",
   },
   {
     // colonna posso procedere
     width: "30px",
     minWidth: "30px",
-    label: "check procedibilità"
+    label: "check procedibilità",
   },
   {
     // colonna trash
     width: "30px",
     minWidth: "30px",
-    label: "elimina"
+    label: "elimina",
   },
   {
     // colonna note
     width: "30px",
     minWidth: "30px",
-    label: "note"
-  }
+    label: "note",
+  },
+  {
+    // colonna anteprima
+    field: "anteprima",
+    width: "32px",
+    minWidth: "32px",
+    label: "anteprima",
+    visibility: "visible",
+    display: "",
+  },
 ];
 
 export const ColumnsReordered = [
@@ -92,7 +101,7 @@ export const ColumnsReordered = [
     field: "priorita",
     width: "30px",
     padding: 0,
-    label: "tipo attività"
+    label: "tipo attività",
   },
   {
     field: "oggetto",
@@ -100,7 +109,7 @@ export const ColumnsReordered = [
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
     width: "auto",
     minWidth: "200px",
-    label: "oggetto"
+    label: "oggetto",
   },
   {
     field: "data",
@@ -111,14 +120,14 @@ export const ColumnsReordered = [
     ariaLabelDescription: "Colonna Data, Cella filtro",
     width: "100px",
     minWidth: "100px",
-    label: "data"
+    label: "data",
   },
   {
     // colonna azione
     field: "azione",
     width: "60px",
     minWidth: "60px",
-    label: "azione"
+    label: "azione",
   },
   {
     field: "descrizione",
@@ -126,7 +135,7 @@ export const ColumnsReordered = [
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
     width: "120px",
     minWidth: "120px",
-    label: "tipo"
+    label: "tipo",
   },
   {
     field: "idAzienda.nome",
@@ -134,7 +143,7 @@ export const ColumnsReordered = [
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
     width: "85px",
     minWidth: "85px",
-    label: "ente"
+    label: "ente",
   },
   {
     field: "idApplicazione.nome",
@@ -142,7 +151,7 @@ export const ColumnsReordered = [
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
     width: "80px",
     minWidth: "80px",
-    label: "applicazione"
+    label: "applicazione",
   },
   {
     field: "provenienza",
@@ -150,24 +159,33 @@ export const ColumnsReordered = [
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
     width: "140px",
     minWidth: "140px",
-    label: "provenienza"
+    label: "provenienza",
   },
   {
     // colonna posso procedere
     width: "30px",
     minWidth: "30px",
-    label: "check procedibilità"
+    label: "check procedibilità",
   },
   {
     // colonna trash
     width: "30px",
     minWidth: "30px",
-    label: "elimina"
+    label: "elimina",
   },
   {
     // colonna note
     width: "30px",
     minWidth: "30px",
-    label: "note"
+    label: "note",
+  },
+  {
+    // colonna anteprima
+    field: "anteprima",
+    width: "32px",
+    minWidth: "32px",
+    label: "anteprima",
+    visibility: "visible",
+    display: "none",
   }
 ];

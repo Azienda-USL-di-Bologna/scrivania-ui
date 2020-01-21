@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2 } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2, ElementRef } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
 import { FILTER_TYPES, SORT_MODES, LOCAL_IT, RefreshAttivitaParams } from "@bds/nt-communicator";
@@ -16,6 +16,10 @@ import { IntimusClientService, IntimusCommand, IntimusCommands } from "@bds/nt-c
 import { Dialog } from "primeng/dialog";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
 import { HttpClient } from "@angular/common/http";
+import { ImpostazioniService } from "src/app/services/impostazioni.service";
+import { ApplicationCustiomization } from "src/environments/application_customization";
+import { Logs } from "selenium-webdriver";
+import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 
 @Component({
   selector: "app-attivita",
@@ -54,6 +58,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   public aziendeUser: number;
   public changedOrder: boolean;
+  public hidePreview: boolean = false;
 
   private salvataggioNoteResultMessages = {
     success: {
@@ -93,6 +98,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
   @ViewChild("dt", null) private dataTable: Table;
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
+  @ViewChildren("tableRows", null) tableRows: QueryList<ElementRef>;
+  private selectedTableRowIndex: number;
 
   constructor(
     private datepipe: DatePipe,
@@ -102,6 +109,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private messageService: MessageService,
     private intimusClientService: IntimusClientService,
     private confirmationService: ConfirmationService,
+    private impostazioniService: ImpostazioniService,
+    private scrivaniaService: ScrivaniaService,
     private httpClient: HttpClient
   ) {
 
@@ -149,6 +158,34 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     if (browserInfo.name !== "Firefox") {
       this.columnClass = "column-class-o";
     }
+
+    this.verifyAndSetAnteprimaColumns();
+
+    this.subscriptions.push(this.impostazioniService.settingsChangedNotifier$.subscribe(newSettings => {
+      this.verifyAndSetAnteprimaColumns();
+
+    }));
+
+  }
+
+  private verifyAndSetAnteprimaColumns() {
+    this.hidePreview = this.impostazioniService.getHidePreview() === "true";
+    console.log("Se hidePreview è true, 'anteprima' deve essere hidden = false;  se false, anteprima deve essere hidden = true ", this.hidePreview);
+
+    this.setVisibilityColumnAnteprima(!this.hidePreview);
+    console.log("!! this.cols", this.cols);
+
+  }
+
+  private setVisibilityColumnAnteprima(hidden: boolean) {
+    console.log("SETTO VISIBILITA COLONNA ANTEPRIMA", hidden);
+
+    this.cols.forEach(element => {
+      if (element.field === "anteprima") {
+        element.visibility = hidden ? "collpse" : "visible";
+        element.display = hidden ? "none" : "";
+      }
+    });
   }
 
   private parseIntimusCommand(command: IntimusCommand) {
@@ -272,8 +309,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   public selectIndex(index: number) {
-    console.log("Index: ", index, "Table Index: ", this.selectedRowIndex);
-
+    console.log("Index of the row: ", index, "Table Index, selectexRowIndex: ", this.selectedRowIndex);
+    this.selectedTableRowIndex = index;
     if (index < 0 || index >= this.attivita.length) { return; }
     console.log("Controllo supertao: ", this.attivita[index]);
     this.selectedRowIndex = index;
@@ -340,15 +377,10 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
     const pageConfing: PagingConf = this.buildPageConf(event);
 
-    this.attivitaService
-      .getData(
-        PROJECTIONS.attivita.customProjections
-          .attivitaWithIdApplicazioneAndIdAziendaAndTransientFields,
+    this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields,
         this.initialFiltersAndSorts,
         this.lazyLoadFiltersAndSorts,
-        pageConfing
-      )
-      .subscribe(data => {
+        pageConfing).subscribe(data => {
         this.attivita = undefined;
         this.totalRecords = 0;
         if (data && data.results && data.page) {
@@ -360,6 +392,17 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             this.setAttivitaIcon(a);
             // console.log("carica", a.datiAggiuntivi);
             a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
+            // "forbidden" è un caso di smicnhiamento probabilmente
+            if (a.descrizione !== "Redazione" && a.descrizione !== "Bozza" && a.allegati && a.allegati !== "\"forbidden\"") {
+              const jsonObject = JSON.parse(a.allegati);
+              for (let i = 0; i < jsonObject.length; i++) {
+                if (jsonObject[i].tipologia === "STAMPA_UNICA") {
+                  a["allegatoDaMostrare"] = jsonObject[i];
+                }
+              }
+            } else if (a.allegati && a.allegati !== "\"forbidden\"" && (a.descrizione === "Redazione" || a.descrizione === "Bozza")) {
+              a["antePrimaNonDisponibile"] = "Non disponibile";
+            }
           });
         }
         this.loading = false;
@@ -401,6 +444,10 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     response.subscribe(res => {
       const index = this.attivita.findIndex(element => element === attivita);
       this.attivita.splice(index, 1);
+        setTimeout(() => { // this will make the execution after the above boolean has changed
+        const selectedRow = this.tableRows.toArray()[0];
+        selectedRow.nativeElement.focus();
+      }, 0);
       this.messageService.add({ severity: "info", summary: "Eliminazione", detail: "Notifica eliminata con successo!" });
     }, err => {
       this.messageService.add({ severity: "error", summary: "Eliminazione", detail: "Non è stato possibile eliminare la notifica. Contattare BabelCare" });
@@ -508,18 +555,74 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
+  public onClickSuApriAnteprima(attivita: Attivita, event: any) {
+    event.stopPropagation();
+    if (attivita["allegatoDaMostrare"]) {
+      this.apriAnteprima(attivita);
+    } else {
+      console.log("NESSUNA STAMPA UNICA DA MOSTRARE");
+    }
+  }
+
+  public apriAnteprima(attivita: Attivita) {
+    console.log("apriAnteprima(attivita: Attivita)", attivita);
+    if (attivita["allegatoDaMostrare"]) {
+      this.scrivaniaService.getAnteprima(attivita, attivita["allegatoDaMostrare"])
+        .subscribe(
+          file => {
+            const name = attivita.oggetto.substr(0, attivita.oggetto.indexOf(":"));
+            /* console.log(attivita);
+            console.log("FILE", file);
+            console.log(typeof file);
+            console.log(name); */
+            let newWindow: Window;
+            if (typeof file === "string") {
+              newWindow = window.open(file, "_balank");
+            } else  {
+              newWindow = window.open(file["url"], "_balank");
+            }
+            newWindow.document.title = name;  // BOH! Vorrei capire come fare
+            newWindow.focus();
+            console.log("IL DOCUMENT", newWindow.document);
+          },
+          err => {
+            console.log("ERRORE!!!", err);
+            this.messageService.clear("errorToast");
+            this.messageService.add({ key: "errorToast",
+              severity: "error", summary: "Attenzione",
+              detail: "Stampa Unica non trovata" });
+          }
+        );
+    } else {
+      console.log("NESSUNA STAMPA UNICA DA MOSTRARE");
+    }
+  }
+
   closeAndBasta() {
     this.showNote = false;
+    setTimeout(() => { // this will make the execution after the above boolean has changed
+      const selectedRow = this.tableRows.toArray()[0];
+      selectedRow.nativeElement.focus();
+    }, 0);
   }
+
+  // bottoneSalvaNote() {
+  //   this.showNote = true;
+  //   if (this._noteTemp !== this.attivitaTemp.note) {
+  //     this.chiediConfermaAndFaiCose("saveNotes",
+  //       "Vuoi salvare le modifiche apportate alle note dell'attività?",
+  //       () => { this.salvaNote(); }, // conferma: salvo
+  //       () => { this.showNote = true; return; }// non confermo: non faccio nulla
+  //     );
+  //   } else {
+  //     this.closeAndBasta();
+  //   }
+  // }
 
   bottoneSalvaNote() {
     this.showNote = true;
     if (this._noteTemp !== this.attivitaTemp.note) {
-      this.chiediConfermaAndFaiCose("saveNotes",
-        "Vuoi salvare le modifiche apportate alle note dell'attività?",
-        () => { this.salvaNote(); }, // conferma: salvo
-        () => { this.showNote = true; return; }// non confermo: non faccio nulla
-      );
+      this.salvaNote();
     } else {
       this.closeAndBasta();
     }
@@ -539,20 +642,32 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     );
   }
 
+  // chiudiNote() {
+  //   if (this._noteTemp !== this.attivitaTemp.note) {
+  //     // domando se vuole davvero uscire senza salvare
+  //     this.chiediConfermaAndFaiCose("closeWithoutSaving",
+  //       "La finestra verrà chiusa senza salvare le modifiche: continuare?",
+  //       () => { // funzione di accept: reimposto il valore iniziale
+  //         this.attivitaTemp.note = this._noteTemp;
+  //         this.closeAndBasta();
+  //       },
+  //       () => { // funzione reject: ritorno senza uscire
+  //         this.showNote = true;
+  //         return;
+  //       }
+  //     );
+  //   } else {
+  //     // esco senza salvare tanto non ci sono cambiamenti.
+  //     this.attivitaTemp.note = this._noteTemp; // reimposto il valore iniziale
+  //     this.closeAndBasta();
+  //   }
+  // }
+
   chiudiNote() {
     if (this._noteTemp !== this.attivitaTemp.note) {
       // domando se vuole davvero uscire senza salvare
-      this.chiediConfermaAndFaiCose("closeWithoutSaving",
-        "La finestra verrà chiusa senza salvare le modifiche: continuare?",
-        () => { // funzione di accept: reimposto il valore iniziale
-          this.attivitaTemp.note = this._noteTemp;
-          this.closeAndBasta();
-        },
-        () => { // funzione reject: ritorno senza uscire
-          this.showNote = true;
-          return;
-        }
-      );
+      this.attivitaTemp.note = this._noteTemp;
+      this.closeAndBasta();
     } else {
       // esco senza salvare tanto non ci sono cambiamenti.
       this.attivitaTemp.note = this._noteTemp; // reimposto il valore iniziale
