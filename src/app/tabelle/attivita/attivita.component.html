@@ -21,7 +21,7 @@
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th tabindex="0" [id]="col.field || col.label" *ngFor="let col of columns"  [style.display]="col.display"
-                [style.width]="col.width" [style.minWidth]="col.minWidth" [style.padding]="col.padding" 
+                [style.width]="col.width" [style.minWidth]="col.minWidth" [style.padding]="col.padding"
                 attr.aria-label="Colonna {{col.label}}, {{col.header ? 'Ordinare colonna' : ''}}"
                 [pSortableColumn]="col.field" scope="colgroup">
                     {{col.header}}
@@ -74,21 +74,21 @@
                 <img tabindex="0" *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="noteClicckato(attivita, $event)" alt="Leggi note" role="button" class="img-table" pTooltip="Leggi note">
                 <img tabindex="0" *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="noteClicckato(attivita, $event)" alt="Inserisci note" role="button"  class="img-table" pTooltip="Inserisci note">
             </td>
-            <td *ngIf="cols[11].visibility==='visible'" aria-label="Colonna Apri Anteprima" headers="anteprima" [style.width]="cols[11].width" 
+            <td *ngIf="cols[11].visibility==='visible'" aria-label="Colonna Apri Anteprima" headers="anteprima" [style.width]="cols[11].width" [style.opacity]="!attivita.allegatoDaMostrare ? 0 : 100"
                 [style.cursor]="!attivita.allegatoDaMostrare ? 'auto' : 'pointer'" class="p0 columns-icon" [style.minWidth]="cols[11].minWidth"
                 [ngClass]="{'td-pos-relative' : attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza')}"
                 >
-                <img tabindex="0" *ngIf="attivita.allegatoDaMostrare && attivita.descrizione !== 'Redazione' && attivita.descrizione !== 'Bozza'" src="assets/images/pdf-file.svg" 
-                    style="cursor: pointer; width: 22px; height: 22px;" (click)="onClickSuApriAnteprima(attivita, $event)" 
+                <img tabindex="0" *ngIf="attivita.allegatoDaMostrare && attivita.descrizione !== 'Redazione' && attivita.descrizione !== 'Bozza'" src="assets/images/pdf-file.svg"
+                    style="cursor: pointer; width: 22px; height: 22px;" (click)="onClickSuApriAnteprima(attivita, $event)"
                     alt="Apri stampa unica in una nuova finestra" role="button" class="img-table" pTooltip="Apri stampa unica in una nuova finestra">
-                
-                <!-- <img tabindex="0" *ngIf="attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza')" src="assets/images/baseline-not_interested-24px.svg" 
-                style="cursor: auto; width: 22px; height: 22px;" (click)="onClickSuApriAnteprima(attivita, $event)" 
+
+                <!-- <img tabindex="0" *ngIf="attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza')" src="assets/images/baseline-not_interested-24px.svg"
+                style="cursor: auto; width: 22px; height: 22px;" (click)="onClickSuApriAnteprima(attivita, $event)"
                 alt="Anteprima non disponibile" role="button" class="img-table" pTooltip="Anteprima non disponibile"> -->
 
                 <div *ngIf="attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza')"
-                    class="anteprima-non-disponibile" 
-                    alt="Anteprima non disponibile" 
+                    class="anteprima-non-disponibile"
+                    alt="Anteprima non disponibile"
                     pTooltip="Anteprima non disponibile">
                 </div>
             </td>
