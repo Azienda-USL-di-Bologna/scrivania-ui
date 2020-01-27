@@ -34,11 +34,14 @@ export class LoadingComponent implements OnInit {
                   } else {
                       baseUrl = window.location.protocol + "//" + window.location.host;
                   }
-                  const babelUrl = baseUrl + babelApplication.baseUrl + "/" + babelApplication.indexPage + "CMD=scrivania_local";
+                  const babelUrl = baseUrl + babelApplication.baseUrl + "/" + babelApplication.indexPage +
+                    "?CMD=scrivania_local" +
+                    "&from=INTERNAUTA" +
+                    "&utenteImpersonato=" + utenteUtilities.getUtente().idPersona.codiceFiscale;
                   this.loginService.buildInterAppUrl(babelUrl, false, true, true, false, false).subscribe(
                     (url: string) => {
                       this.loginService.clearSession();
-                      window.location.assign(babelUrl);
+                      window.location.assign(url);
                   });
                 });
             } else {
