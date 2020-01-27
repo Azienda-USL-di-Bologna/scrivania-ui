@@ -41,7 +41,7 @@ export class LoadingComponent implements OnInit {
                   this.loginService.buildInterAppUrl(babelUrl, false, true, true, false, false).subscribe(
                     (url: string) => {
                       this.loginService.clearSession();
-                      window.location.assign(babelUrl);
+                      window.location.assign(url);
                   });
                 });
             } else {
