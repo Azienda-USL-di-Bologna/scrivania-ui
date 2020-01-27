@@ -34,7 +34,7 @@ export class LoadingComponent implements OnInit {
                   } else {
                       baseUrl = window.location.protocol + "//" + window.location.host;
                   }
-                  const babelUrl = baseUrl + babelApplication.baseUrl + "/" + babelApplication.indexPage + "CMD=scrivania_local";
+                  const babelUrl = baseUrl + babelApplication.baseUrl + "/" + babelApplication.indexPage + "?CMD=scrivania_local";
                   this.loginService.buildInterAppUrl(babelUrl, false, true, true, false, false).subscribe(
                     (url: string) => {
                       this.loginService.clearSession();
