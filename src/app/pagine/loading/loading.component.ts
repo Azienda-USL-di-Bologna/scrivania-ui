@@ -37,6 +37,7 @@ export class LoadingComponent implements OnInit {
                   const babelUrl = baseUrl + babelApplication.baseUrl + "/" + babelApplication.indexPage +
                     "?CMD=scrivania_local" +
                     "&from=INTERNAUTA" +
+                    "&redirect=true" +
                     "&utenteImpersonato=" + utenteUtilities.getUtente().idPersona.codiceFiscale;
                   this.loginService.buildInterAppUrl(babelUrl, false, true, true, false, false).subscribe(
                     (url: string) => {
