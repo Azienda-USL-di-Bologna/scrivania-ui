@@ -36,7 +36,7 @@ export class LoadingComponent implements OnInit {
                       baseUrl = utenteUtilities.getUtente().aziendaLogin["baseUrl"];
                   }
 
-                  const babelUrl = baseUrl +  + babelApplication.baseUrl + "/" + babelApplication.indexPage +
+                  const babelUrl = baseUrl + babelApplication.baseUrl + "/" + babelApplication.indexPage +
                     "?CMD=scrivania_local" +
                     "&from=INTERNAUTA" +
                     "&redirect=true" +
