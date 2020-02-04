@@ -32,8 +32,10 @@ export class LoadingComponent implements OnInit {
                   if (window.location.hostname === "localhost") {
                       baseUrl = window.location.protocol + "//" + "localhost:8080";
                   } else {
-                      baseUrl = window.location.protocol + "//" + window.location.host;
+                      // baseUrl = window.location.protocol + "//" + window.location.host;
+                      baseUrl = utenteUtilities.getUtente().aziendaLogin["baseUrl"];
                   }
+
                   const babelUrl = baseUrl + babelApplication.baseUrl + "/" + babelApplication.indexPage +
                     "?CMD=scrivania_local" +
                     "&from=INTERNAUTA" +
