@@ -509,7 +509,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this.listeners[td.id] = [this.renderer.listen(td, "click", () => {
         this.apriAttivita(attivita);
       }), td.cellIndex];
-      this.renderer.listen(td, "dblclick", () => { null; });
+      this.renderer.listen(td, "dblclick", (event) => { event.preventDefault(); });
       // console.log("listeners: ", this.listeners);
     } else {
       td.innerHTML = "";
