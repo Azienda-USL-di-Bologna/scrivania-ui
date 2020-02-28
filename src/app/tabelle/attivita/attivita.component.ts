@@ -455,8 +455,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     });
   }
 
-  getColumnValue(attivita, col, td?) {
+  getColumnValue(attivita, col, td?, link?) {
     let res = "";
+    // console.log("inside getColumnValue");
     if (attivita && col.field) {
       switch (col.field) {
         case "idAzienda.nome":
@@ -482,6 +483,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           if (td.classList.contains(this.columnClass)) {
             this.renderer.removeClass(td, this.columnClass);
           }
+
           this.fillActionCol(attivita, td);
           return;
 
@@ -499,7 +501,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   fillActionCol(attivita, td) {
     if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" &&
       (attivita.idApplicazione.nome === "Pico" || attivita.idApplicazione.nome === "Dete" || attivita.idApplicazione.nome === "Deli"))) {
-      td.innerHTML = `<a style="color: #993366; cursor: pointer" aria-hidden="true"><strong>Apri</strong></a>`;
+      td.innerHTML = `<a style="color: #993366; cursor: pointer" aria-hidden="true" (dblclick)="$event.preventDefault();"><strong>Apri</strong></a>`;
       if (this.listeners[td.id]) {
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
         this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa
@@ -507,6 +509,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this.listeners[td.id] = [this.renderer.listen(td, "click", () => {
         this.apriAttivita(attivita);
       }), td.cellIndex];
+      this.renderer.listen(td, "dblclick", () => { null; });
+      // console.log("listeners: ", this.listeners);
     } else {
       td.innerHTML = "";
     }
