@@ -55,7 +55,12 @@ export class AppComponent implements OnInit, OnDestroy {
       if (utente) {
         this.utenteConnesso = utente;
         const intimusUrl = getInternautaUrl(BaseUrlType.Intimus);
-        this.intimusClient.start(intimusUrl, APPLICATION, this.utenteConnesso.getUtente().idPersona.id, this.utenteConnesso.getUtente().aziendaLogin.id);
+        this.intimusClient.start(
+          intimusUrl,
+          APPLICATION,
+          this.utenteConnesso.getUtente().idPersona.id,
+          this.utenteConnesso.getUtente().aziendaLogin.id,
+          this.utenteConnesso.getUtente().aziende.map(a => a.id));
         // if (!this.onTimeOutWarningSubscribbed) {
         // this.subscriptions.push(this.sessionManager.onTimeOutWarning.subscribe(
         //   (countdown: number) => {
