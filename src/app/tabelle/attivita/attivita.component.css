@@ -97,6 +97,6 @@
     -moz-box-shadow:    inset 0 0 10px grey !important;
     -webkit-box-shadow: inset 0 0 10px grey !important;
     box-shadow:         inset 0 0 10px grey !important;
-    cursor: not-allowed !important;
+    /* cursor: not-allowed !important; */
     opacity: 0.4 !important;
 }
