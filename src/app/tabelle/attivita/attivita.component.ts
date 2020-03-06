@@ -455,8 +455,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     });
   }
 
-  getColumnValue(attivita, col, td?) {
+  getColumnValue(attivita, col, td?, link?) {
     let res = "";
+    // console.log("inside getColumnValue");
     if (attivita && col.field) {
       switch (col.field) {
         case "idAzienda.nome":
@@ -482,6 +483,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           if (td.classList.contains(this.columnClass)) {
             this.renderer.removeClass(td, this.columnClass);
           }
+          // console.log("getColumnValue td", td);
           this.fillActionCol(attivita, td);
           return;
 
@@ -499,14 +501,29 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   fillActionCol(attivita, td) {
     if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" &&
       (attivita.idApplicazione.nome === "Pico" || attivita.idApplicazione.nome === "Dete" || attivita.idApplicazione.nome === "Deli"))) {
-      td.innerHTML = `<a style="color: #993366; cursor: pointer" aria-hidden="true"><strong>Apri</strong></a>`;
+      td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>Apri</strong></a>`;
       if (this.listeners[td.id]) {
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
         this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa
       }
-      this.listeners[td.id] = [this.renderer.listen(td, "click", () => {
-        this.apriAttivita(attivita);
+      this.listeners[td.id] = [this.renderer.listen(td, "click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("fillActionCol td", td);
+        if (!td.classList.contains("disabled")) {
+          this.apriAttivita(attivita);
+
+          this.renderer.addClass(td, "disabled");
+          // this.renderer.setAttribute(td, "title", "disabilitato per un paio di secondi");
+
+          setTimeout(() => {
+            this.renderer.removeClass(td, "disabled");
+            // this.renderer.removeAttribute(td, "title");
+          }, 5000);
+        }
+
       }), td.cellIndex];
+
     } else {
       td.innerHTML = "";
     }
