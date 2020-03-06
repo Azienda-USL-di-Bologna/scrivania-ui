@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
+import { NtJwtLoginService, UtenteUtilities, UtilityFunctions } from "@bds/nt-jwt-login";
 import { GlobalService } from "src/app/services/global.service";
 import { ImpostazioniApplicazioni, Applicazione } from "@bds/ng-internauta-model";
 import { ApplicationCustiomization, ScrivaniaVersion } from "src/environments/application_customization";
@@ -32,11 +32,20 @@ export class LoadingComponent implements OnInit {
                   if (window.location.hostname === "localhost") {
                       baseUrl = window.location.protocol + "//" + "localhost:8080";
                   } else {
-                      baseUrl = window.location.protocol + "//" + window.location.host;
+                      // baseUrl = window.location.protocol + "//" + window.location.host;
+                      baseUrl = utenteUtilities.getUtente().aziendaLogin["baseUrl"];
                   }
-                  const babelUrl = baseUrl + babelApplication.baseUrl + "/" + babelApplication.indexPage;
-                  this.loginService.clearSession();
-                  window.location.assign(babelUrl);
+
+                  const babelUrl = baseUrl + babelApplication.baseUrl + "/" + babelApplication.indexPage +
+                    "?CMD=scrivania_local" +
+                    "&from=INTERNAUTA" +
+                    "&redirect=true" +
+                    "&utenteImpersonato=" + utenteUtilities.getUtente().idPersona.codiceFiscale;
+                  this.loginService.buildInterAppUrl(babelUrl, false, true, true, false, false).subscribe(
+                    (url: string) => {
+                      this.loginService.clearSession();
+                      window.location.assign(url);
+                  });
                 });
             } else {
               this.router.navigate([ATTIVITA_ROUTE]);
