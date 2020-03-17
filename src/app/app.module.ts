@@ -26,32 +26,32 @@ import { PrimengPluginModule, ProfiloComponent } from "@bds/primeng-plugin";
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
 import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
-import { MessageService, DialogService } from "primeng/api";
+import { MessageService, DialogService } from "primeng-lts/api";
 
 
 /* PrimeNG component */
-import { AccordionModule } from "primeng/accordion";
-import { LightboxModule } from "primeng/lightbox";
-import { PanelModule } from "primeng/panel";
-import { DropdownModule } from "primeng/dropdown";
-import { TableModule } from "primeng/table";
-import { CalendarModule } from "primeng/calendar";
-import { TooltipModule } from "primeng/tooltip";
-import { InputSwitchModule } from "primeng/inputswitch";
-import { MenubarModule } from "primeng/menubar";
-import { SlideMenuModule } from "primeng/slidemenu";
-import { DynamicDialogModule } from "primeng/dynamicdialog";
-import { ContextMenuModule } from "primeng/contextmenu";
-import { InputTextModule } from "primeng/inputtext";
-import { OverlayPanelModule } from "primeng/overlaypanel";
-import { TieredMenuModule } from "primeng/tieredmenu";
-import { DialogModule } from "primeng/dialog";
-import { AutoCompleteModule } from "primeng/autocomplete";
+import { AccordionModule } from "primeng-lts/accordion";
+import { LightboxModule } from "primeng-lts/lightbox";
+import { PanelModule } from "primeng-lts/panel";
+import { DropdownModule } from "primeng-lts/dropdown";
+import { TableModule } from "primeng-lts/table";
+import { CalendarModule } from "primeng-lts/calendar";
+import { TooltipModule } from "primeng-lts/tooltip";
+import { InputSwitchModule } from "primeng-lts/inputswitch";
+import { MenubarModule } from "primeng-lts/menubar";
+import { SlideMenuModule } from "primeng-lts/slidemenu";
+import { DynamicDialogModule } from "primeng-lts/dynamicdialog";
+import { ContextMenuModule } from "primeng-lts/contextmenu";
+import { InputTextModule } from "primeng-lts/inputtext";
+import { OverlayPanelModule } from "primeng-lts/overlaypanel";
+import { TieredMenuModule } from "primeng-lts/tieredmenu";
+import { DialogModule } from "primeng-lts/dialog";
+import { AutoCompleteModule } from "primeng-lts/autocomplete";
 import { DatePipe } from "@angular/common";
-import { ToastModule } from "primeng/toast";
-import { CardModule } from "primeng/card";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { ConfirmationService } from "primeng/api";
+import { ToastModule } from "primeng-lts/toast";
+import { CardModule } from "primeng-lts/card";
+import { ConfirmDialogModule } from "primeng-lts/confirmdialog";
+import { ConfirmationService } from "primeng-lts/api";
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
