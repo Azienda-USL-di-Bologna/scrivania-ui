@@ -3,7 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import {Router, ActivatedRoute} from "@angular/router";
 import { SCRIVANIA_ROUTE, BABELMAN_URL} from "../../environments/app-constants";
 import { NtJwtLoginService, LoginType, UtenteUtilities } from "@bds/nt-jwt-login";
-import { MenuItem, DialogService } from "primeng/api";
+import { MenuItem, DialogService } from "primeng-lts/api";
 import { HttpClient } from "@angular/common/http";
 import { ImpostazioniComponent } from "../impostazioni/impostazioni.component";
 // import { ProfiloComponent } from "./profilo/profilo.component";

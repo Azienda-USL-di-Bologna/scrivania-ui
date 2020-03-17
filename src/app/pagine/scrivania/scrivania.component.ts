@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList, OnDestroy, HostListener } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Attivita, Menu, ImpostazioniApplicazioni, UrlsGenerationStrategy } from "@bds/ng-internauta-model";
-import { Dropdown } from "primeng/dropdown";
+import { Dropdown } from "primeng-lts/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { NO_LIMIT, SORT_MODES } from "@bds/nt-communicator";
@@ -10,7 +10,7 @@ import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STAT
 import { Subscription } from "rxjs";
 import { ApplicationCustiomization } from "src/environments/application_customization";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
-import { ConfirmationService } from "primeng/components/common/confirmationservice";
+import { ConfirmationService } from "primeng-lts/components/common/confirmationservice";
 import { stringify } from "querystring";
 
 @Component({
