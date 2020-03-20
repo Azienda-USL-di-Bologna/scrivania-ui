@@ -41,6 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.headerFeaturesConfig.showUserFullName = true;
     this.headerFeaturesConfig.showUserMenu = true;
     this.headerFeaturesConfig.showManuale = true;
+    this.headerFeaturesConfig.showDownloadFirmaJR = true;
     this.headerFeaturesConfig.showProfilo = true;
     this.headerFeaturesConfig.logoutRedirectRoute = SCRIVANIA_ROUTE;
     this.headerFeaturesConfig.logoutIconPath = "assets/images/signout.svg";
