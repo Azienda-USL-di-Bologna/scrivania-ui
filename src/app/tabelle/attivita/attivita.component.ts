@@ -56,7 +56,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public attivitaTemp: Attivita = new Attivita();
   public _noteTemp: string;
 
-  public aziendeUser: number;
   public changedOrder: boolean;
   public hidePreview: boolean = false;
 
@@ -123,9 +122,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         // } else {
         //   this.loggedUser = u;
         // }
-        this.aziendeUser = u.getUtente().aziende.length;
 
         this.loggedUser = u;
+
+        // tslint:disable-next-line:max-line-length
+        // let a = (( (!!this.loggedUser.getUtente().utenteReale || this.loggedUser.isSD() ) && this.loggedUser.getUtente().aziende.length > 1) || (!!!this.loggedUser.getUtente().utenteReale && this.loggedUser.getUtente().aziendeAttive.length > 1) );
+
         if (!this.intimusSubscribbed) {
           this.subscriptions.push(this.intimusClientService.command$.subscribe((command: IntimusCommand) => {
             this.parseIntimusCommand(command);
@@ -241,7 +243,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   doNotShowAziendaHeader( columns ) {
     let filteredColumns = columns;
-    if (this.aziendeUser < 2) {
+    if (( (!!this.loggedUser.getUtente().utenteReale || this.loggedUser.isSD()) && this.loggedUser.getUtente().aziende.length < 2) ||
+        (!!!this.loggedUser.getUtente().utenteReale && !this.loggedUser.isSD() && this.loggedUser.getUtente().aziendeAttive.length < 2)) {
       filteredColumns = columns.filter(obj => obj.field !== "idAzienda.nome");
     }
     return filteredColumns;

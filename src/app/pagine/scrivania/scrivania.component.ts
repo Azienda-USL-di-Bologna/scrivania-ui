@@ -367,7 +367,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
                 }
                 if (!found) { // Il comando non è presente, lo aggiungo
                   found = true;
-                  if (this.loggedUser.getUtente().aziende && this.loggedUser.getUtente().aziende.length > 1 && elementArray.idAzienda) {
+                  if (this.loggedUser.getUtente().aziendeAttive &&
+                      this.loggedUser.getUtente().aziendeAttive.length > 1 &&
+                      elementArray.idAzienda &&
+                      !!this.loggedUser.getUtente().aziendeAttive.find(a => a.id === elementArray.idAzienda.id)) {
                     elementAlbero.items.push(new TreeNode(
                       elementArray.descrizione,
                       [new TreeNode(
@@ -390,7 +393,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
               }
             }
             if (!found) { // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
-              if (this.loggedUser.getUtente().aziende && this.loggedUser.getUtente().aziende.length > 1 && elementArray.idAzienda) {
+              if (this.loggedUser.getUtente().aziendeAttive &&
+                  this.loggedUser.getUtente().aziendeAttive.length > 1 &&
+                  elementArray.idAzienda &&
+                  !!this.loggedUser.getUtente().aziendeAttive.find(a => a.id === elementArray.idAzienda.id)) {
                 this.alberoMenu.push(new TreeNode(
                   elementArray.idApplicazione.nome,
                   [new TreeNode(

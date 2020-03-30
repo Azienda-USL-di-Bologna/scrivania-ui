@@ -40,7 +40,7 @@
             <h3 *ngIf="mostraStorico" class="crono-label">Cronologia</h3>
         </div>
 
-        <app-dropdown-aziende *ngIf="loggedUser.getUtente().aziende.length !== 1" (aziendaEmitter)="aziendaChanged($event)" aria-label="Ente delle attività"></app-dropdown-aziende>
+        <app-dropdown-aziende *ngIf="(( (!!this.loggedUser.getUtente().utenteReale || this.loggedUser.isSD() ) && this.loggedUser.getUtente().aziende.length > 1) || (!!!this.loggedUser.getUtente().utenteReale && this.loggedUser.getUtente().aziendeAttive.length > 1) )" (aziendaEmitter)="aziendaChanged($event)" aria-label="Ente delle attività"></app-dropdown-aziende>
     </div>
     <div class="table-wrapper">
         <div class="table-inner">
