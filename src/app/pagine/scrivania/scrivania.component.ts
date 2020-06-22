@@ -243,7 +243,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
 
       this.allegati = [];
       this.allegatiDropDown.clear(null);
-      const allegatiAttivita: any[] = JSON.parse(this.attivitaSelezionata.allegati);
+      let allegatiAttivita: any[] = null;
+      if (this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
+        allegatiAttivita = JSON.parse(this.attivitaSelezionata.allegati);
+      }
       if (allegatiAttivita) {
         allegatiAttivita.sort((a: any, b: any) => { if (a.default) { return -1; } else if (a.default && b.default) { return 0; } else { return 1; } });
         allegatiAttivita.forEach(element => {
