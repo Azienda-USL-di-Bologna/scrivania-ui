@@ -23,9 +23,9 @@
             <th tabindex="0" [id]="col.field || col.label" *ngFor="let col of columns"  [style.display]="col.display"
                 [style.width]="col.width" [style.minWidth]="col.minWidth" [style.padding]="col.padding"
                 attr.aria-label="Colonna {{col.label}}, {{col.header ? 'Ordinare colonna' : ''}}"
-                [pSortableColumn]="col.field" scope="colgroup">
+                [pSortableColumn]="col.field === 'azione' ? null: col.field" scope="colgroup">
                     {{col.header}}
-                <p-sortIcon *ngIf="col.field != undefined && col.field !== 'azione' && col.field !== 'anteprima'" [field]="col.field" attr.aria-label="Ordinare colonna {{col.label}}" arialabelasc="Ordinamento ascendente" arialabeldesc="Ordinamento discendente">
+                <p-sortIcon *ngIf="col.field != undefined && col.field != 'azione' && col.field !== 'anteprima'" [field]="col.field" attr.aria-label="Ordinare colonna {{col.label}}" arialabelasc="Ordinamento ascendente" arialabeldesc="Ordinamento discendente">
                     <!-- ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente" -->
                 </p-sortIcon>
             </th>
