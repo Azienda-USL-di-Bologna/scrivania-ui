@@ -105,7 +105,7 @@ export class HeaderComponent implements OnInit {
       icon: "pi pi-fw pi-cog",
       command: () => { this.showSettings(ImpostazioniComponent, "Impostazioni utente", "480px", "200px", null); }
     });
-    if (this.utenteConnesso.getUtente().isDemiurgo() || this.utenteConnesso.getUtente().hasPermessoDelega) {
+    if (this.utenteConnesso.isSD() || this.utenteConnesso.getUtente().hasPermessoAvatar) {
       this.itemsMenu.push({
         label: "Cambia utente",
         icon: "pi pi-fw pi-sign-in",
