@@ -70,6 +70,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public sliding = false;
 
   public tabellaDaRefreshare: any = { name: "" };
+  public displayDialogBolloVirtuale: boolean = false;
 
   constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService,
     private confirmationService: ConfirmationService) {
@@ -521,6 +522,39 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
         console.log("Errore nel salvataggio");
       }
     });
+  }
+
+  public handleBolliButtonClick() {
+    console.log('%c handleBolliButtonClick clicked', 'background-color:violet;color: black;');
+  //   this.confirmationService.confirm({
+  //     message: 'Are you sure that you want to perform this action?',
+  //     header: "Seleziona l'azienda per quale vuoi vedere i dati di bollo",
+  //     acceptLabel: "Apri",
+  //     rejectLabel: "Chiudi",
+  //     accept: () => {
+  //       //Actual logic to perform a confirmation
+  //       console.log('%c accept','background-color: green;')
+  //     },
+  //     reject: () => {
+  //       console.log('%c reject','background-color: red;')
+  //     }
+  // });
+    this.displayDialogBolloVirtuale = true;
+  }
+
+  public handleSelezionaAziendaPerVedereBolliVirtuali() {
+    console.log('%c accept', 'background-color: green;')
+    this.handleCloseDialogSelezionaAziendaPerVedereBolliVirtuali();
+  }
+
+  public handleCloseDialogSelezionaAziendaPerVedereBolliVirtuali() {
+    console.log('%c reject', 'background-color: red;')
+    this.displayDialogBolloVirtuale = false;
+  }
+
+  handleSelectedAziendaEmit(event, azienda: string) {
+    console.log('%c azienda', 'background-color: yellow;color:black;', event);
+    this.handleCloseDialogSelezionaAziendaPerVedereBolliVirtuali();
   }
 }
 

@@ -27,6 +27,17 @@
                 <img src="assets/images/hiring.svg" class="images-pos" alt="Prendi">
             </button>
             <p-tieredMenu #prendoneMenu [model]="alberoPrendi" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event, null)"></p-tieredMenu>
+            <button #btn *ngIf="!mostraStorico" 
+                type="button"
+                pButton 
+                pTooltip="Apri Tabella dei Bolli Virtuali" 
+                tooltipPosition="bottom" 
+                (click)="handleBolliButtonClick()" 
+                iconPos="left" 
+                icon="pi pi-money-bill" 
+                class="ui-button-secondary icon-style" 
+                aria-label="Apri Tabella dei Bolli Virtuali">
+            </button>
             <div class="separator-class"></div>
             <!-- Cronologia, Aggiorna, Elimina notifiche -->
             <button *ngIf="mostraStorico" type="button" pButton pTooltip="Indietro" tooltipPosition="bottom" icon="pi pi-chevron-left" iconPos="left" (click)="mostraStorico=!mostraStorico" class="ui-button-secondary icon-style" aria-label="Indietro">
@@ -110,3 +121,17 @@
 </p-dialog>
 
 <p-confirmDialog id="dialog" [style]="{width: '30vw'}"></p-confirmDialog>
+
+<p-dialog [(visible)]="displayDialogBolloVirtuale"
+    header="Seleziona l'azienda per quale vuoi vedere i dati di bollo"
+    [modal]="true">
+    <lib-aziende-autocomplete
+        [azienda]="_azienda"
+        (aziendaChange)="handleSelectedAziendaEmit($event, 'Azienda')"
+        filterByRole="true">
+    </lib-aziende-autocomplete>
+    <p-footer #footerNoteAttivita>
+        <button style="width: auto; min-width: 50px;" type="button" pButton icon="pi pi-check" label="Conferma" (click)="handleSelezionaAziendaPerVedereBolliVirtuali()" pTooltip="Conferma" tooltipPosition="bottom" appendTo="body"></button>
+        <button style="width: auto; min-width: 50px;" type="button" pButton icon="pi pi-times" label="Anulla" (click)="handleCloseDialogSelezionaAziendaPerVedereBolliVirtuali()" pTooltip="Annulla e chiudi" tooltipPosition="bottom" appendTo="body"></button>
+    </p-footer>
+</p-dialog>
