@@ -61,6 +61,7 @@ import { ImpostazioniService } from "./services/impostazioni.service";
 
 import { NtCommunicatorModule } from "@bds/nt-communicator";
 import { CommonComponentsModule } from "@bds/common-components";
+import { DatiBolloVirtualeComponent } from './tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { CommonComponentsModule } from "@bds/common-components";
     AttivitaFatteComponent,
     DropdownAziendeComponent,
     LoadingComponent,
-    ImpostazioniComponent
+    ImpostazioniComponent,
+    DatiBolloVirtualeComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
