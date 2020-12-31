@@ -62,6 +62,11 @@ import { ImpostazioniService } from "./services/impostazioni.service";
 import { NtCommunicatorModule } from "@bds/nt-communicator";
 import { CommonComponentsModule } from "@bds/common-components";
 
+/* Angular Material Module */
+import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -106,7 +111,9 @@ import { CommonComponentsModule } from "@bds/common-components";
     ConfirmDialogModule,
     PrimengPluginModule,
     NtCommunicatorModule,
-    CommonComponentsModule
+    CommonComponentsModule,
+    MatMenuModule,
+    MatIconModule
   ],
   providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService],
   bootstrap: [AppComponent],
