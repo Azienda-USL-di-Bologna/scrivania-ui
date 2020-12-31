@@ -62,6 +62,7 @@ import { ImpostazioniService } from "./services/impostazioni.service";
 import { NtCommunicatorModule } from "@bds/nt-communicator";
 import { CommonComponentsModule } from "@bds/common-components";
 import { DatiBolloVirtualeComponent } from './tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component';
+import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtuale.service";
 
 @NgModule({
   declarations: [
@@ -110,7 +111,7 @@ import { DatiBolloVirtualeComponent } from './tabelle/dati-bollo-virtuale/dati-b
     NtCommunicatorModule,
     CommonComponentsModule
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService, BolloVirtualeService],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent, ProfiloComponent]
 })
