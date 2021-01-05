@@ -52,6 +52,7 @@ import { ToastModule } from "primeng-lts/toast";
 import { CardModule } from "primeng-lts/card";
 import { ConfirmDialogModule } from "primeng-lts/confirmdialog";
 import { ConfirmationService } from "primeng-lts/api";
+import { ProgressSpinnerModule } from "primeng-lts/progressspinner";
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
@@ -61,6 +62,8 @@ import { ImpostazioniService } from "./services/impostazioni.service";
 
 import { NtCommunicatorModule } from "@bds/nt-communicator";
 import { CommonComponentsModule } from "@bds/common-components";
+import { DatiBolloVirtualeComponent } from './tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component';
+import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtuale.service";
 
 /* Angular Material Module */
 import {MatMenuModule} from '@angular/material/menu';
@@ -78,7 +81,8 @@ import {MatIconModule} from '@angular/material/icon';
     AttivitaFatteComponent,
     DropdownAziendeComponent,
     LoadingComponent,
-    ImpostazioniComponent
+    ImpostazioniComponent,
+    DatiBolloVirtualeComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
@@ -112,10 +116,11 @@ import {MatIconModule} from '@angular/material/icon';
     PrimengPluginModule,
     NtCommunicatorModule,
     CommonComponentsModule,
+    ProgressSpinnerModule,
     MatMenuModule,
     MatIconModule
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService, BolloVirtualeService],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent, ProfiloComponent]
 })

@@ -85,7 +85,8 @@ export const CONTROLLERS_ENDPOINT = {
     FIRMONE_URLS: "/getFirmoneUrls",
     PRENDONE_URLS: "/getPrendoneUrls",
     CANCELLA_NOTIFICHE: "/cancellaNotifiche",
-    GET_MENU_SCRIVANIA: "/getMenuScrivania"
+    GET_MENU_SCRIVANIA: "/getMenuScrivania",
+    GET_DATI_BOLLO_AZIENDA: "/getDatiBolloByAzienda"
 };
 
 export const COMMANDS = {
