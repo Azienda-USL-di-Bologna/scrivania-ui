@@ -8,6 +8,8 @@ import { Subscription } from 'rxjs';
 import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
 import { HttpResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import { Table } from 'primeng-lts/table';
+import { CsvExtractor } from '@bds/primeng-plugin';
 
 @Component({
   selector: 'app-dati-bollo-virtuale',
@@ -28,6 +30,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
   public _rows = 20;
   private subscriptions: Subscription[]=[];
   public loggedUser: UtenteUtilities;
+  public exportCsvInProgress: boolean = false;
 
   public cols: any[] = [
     {
@@ -175,6 +178,27 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
 
   onKeydownHandlerArrowUp(event) {
     console.log("onKeydownHandlerArrowUp", event);
+  }
+
+  exportToCsv(table: Table) {
+    console.log("exportToCsv: ", table);
+    this.exportCsvInProgress = true;
+    const tableTemp = {} as Table;
+    Object.assign(tableTemp, table);
+
+    try {
+      const exportColumns = this.cols.map(col => { return ({...col, title: col.header, dataKey: col.field }) });
+      tableTemp.columns = exportColumns;
+      tableTemp.value = this.datiBolliVirtuali;
+
+      const extractor = new CsvExtractor();
+      extractor.exportCsv(tableTemp);
+      this.exportCsvInProgress = false;
+    } catch (e) {
+      console.log("exportToCsv error: ", e);
+      this.exportCsvInProgress = false;
+    }
+    
   }
 
   ngOnDestroy(): void {

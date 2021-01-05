@@ -52,6 +52,7 @@ import { ToastModule } from "primeng-lts/toast";
 import { CardModule } from "primeng-lts/card";
 import { ConfirmDialogModule } from "primeng-lts/confirmdialog";
 import { ConfirmationService } from "primeng-lts/api";
+import { ProgressSpinnerModule } from "primeng-lts/progressspinner";
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
@@ -109,7 +110,8 @@ import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtua
     ConfirmDialogModule,
     PrimengPluginModule,
     NtCommunicatorModule,
-    CommonComponentsModule
+    CommonComponentsModule,
+    ProgressSpinnerModule
   ],
   providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService, BolloVirtualeService],
   bootstrap: [AppComponent],

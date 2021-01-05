@@ -28,14 +28,23 @@
             
             <button type="button" 
               pButton 
-              pTooltip="Scarica CSV" 
-              tooltipPosition="bottom" 
+              pTooltip="Esporta in CSV tutti i dati" 
+              tooltipPosition="bottom"
+              (click)="exportToCsv(tableBolliVirtuali)" 
               iconPos="left" 
               icon="pi pi-download" 
               class="ui-button-secondary icon-style" 
-              aria-label="Elimina notifiche">
+              aria-label="Esporta in CSV tutti i dati">
             </button>
             <span>Righe: {{totalRecords}}</span>
+            <span *ngIf="exportCsvInProgress">
+              <p-progressSpinner 
+                  [style]="{width: '2em', height: '2em', marginRight: '7px'}"
+                  strokeWidth="5" 
+                  fill="#FFFFFF" 
+                  animationDuration=".5s">
+              </p-progressSpinner>
+            </span>
             <h3 class="crono-label">Bollo Virtuale</h3>
       </div>
       <div>
@@ -50,7 +59,7 @@
     <div class="table-wrapper">
       <div class="table-inner">
           
-          <p-table #dt
+          <p-table #tableBolliVirtuali
             [value]="datiBolliVirtuali"
             [columns]="cols"
             [rows]="_rows"
@@ -59,9 +68,12 @@
             selectionMode="single"
             (onRowSelect)="handleEvent('onRowSelect', $event)"
             [scrollable]="true"
+            [paginator]="true"
             [loading]="loading"
             (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
-            (keydown.arrowup)="onKeydownHandlerArrowUp($event)">
+            (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
+            csvSeparator=";"
+            exportFilename="dati-bolli-virtuali">
   
             <ng-template pTemplate="header" let-columns>
                 <tr>
