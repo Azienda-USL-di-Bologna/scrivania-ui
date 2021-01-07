@@ -32,11 +32,6 @@
 }
 
 /* BUTTON STYLES */
-
->>> .ui-fluid .ui-button {
-  width: 80px; /* Senza dava problemi su firefox */
-}
-
 .buttons-bar{
   display: flex;
   flex-direction: row;
