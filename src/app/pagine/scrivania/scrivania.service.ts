@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { DatePipe } from "@angular/common";
-import { Attivita, ENTITIES_STRUCTURE } from "@bds/ng-internauta-model";
+import { Attivita, ENTITIES_STRUCTURE, ItemMenu } from "@bds/ng-internauta-model";
 import { HttpAbstractService } from "@bds/nt-communicator";
 import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType, COMMANDS, CONTROLLERS_ENDPOINT } from "../../../environments/app-constants";
 import { Observable, Subscriber } from "rxjs";
@@ -89,5 +89,10 @@ export class ScrivaniaService extends NextSDREntityProvider {
   public cancellaNotifiche(): Observable<any> {
     const url: string = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.CANCELLA_NOTIFICHE;
     return this.http.get(url);
+  }
+
+  public getMenuScrivania(): Observable<ItemMenu[]> {
+    const url: string = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.GET_MENU_SCRIVANIA;
+    return this.http.get(url) as Observable<ItemMenu[]>;
   }
 }

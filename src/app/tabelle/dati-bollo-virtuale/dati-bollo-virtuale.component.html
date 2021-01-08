@@ -1,0 +1,128 @@
+<div class="p-grid attivita-wrapper position-relative">
+
+  <div class="p-col content-left" #leftSide>
+    <div class="option-bar">
+      <div class="buttons-bar">
+            <button type="button" 
+              pButton 
+              pTooltip="Indietro" 
+              tooltipPosition="bottom" 
+              icon="pi pi-chevron-left" 
+              iconPos="left" 
+              [routerLink]="'/attivita'" 
+              class="ui-button-secondary icon-style" 
+              aria-label="Indietro">
+            </button>
+            <div class="separator-class"></div>
+            
+            <button type="button" 
+              pButton 
+              pTooltip="Aggiorna tabella" 
+              tooltipPosition="bottom"
+              (click)="onTableRefresh()"  
+              iconPos="left" 
+              icon="pi pi-refresh" 
+              class="ui-button-secondary icon-style" 
+              aria-label="Aggiorna le attività">
+            </button>
+            
+            <button type="button" 
+              pButton 
+              pTooltip="Esporta in CSV tutti i dati" 
+              tooltipPosition="bottom"
+              (click)="exportToCsv(tableBolliVirtuali)" 
+              iconPos="left" 
+              icon="pi pi-download" 
+              class="ui-button-secondary icon-style" 
+              aria-label="Esporta in CSV tutti i dati">
+            </button>
+            <span>Righe: {{totalRecords}}</span>
+            <span *ngIf="exportCsvInProgress">
+              <p-progressSpinner 
+                  [style]="{width: '2em', height: '2em', marginRight: '7px'}"
+                  strokeWidth="5" 
+                  fill="#FFFFFF" 
+                  animationDuration=".5s">
+              </p-progressSpinner>
+            </span>
+            <h3 class="crono-label">Bollo Virtuale</h3>
+      </div>
+      <div>
+        <lib-aziende-autocomplete
+          [azienda]="_azienda"
+          (aziendaChange)="handleSelectedAziendaEmit($event, 'Azienda')"
+          filterByRole="true">
+        </lib-aziende-autocomplete>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <div class="table-inner">
+          
+          <p-table #tableBolliVirtuali
+            [value]="datiBolliVirtuali"
+            [columns]="cols"
+            [rows]="_rows"
+            [autoLayout]="false"
+            [totalRecords]="totalRecords"
+            selectionMode="single"
+            (onRowSelect)="handleEvent('onRowSelect', $event)"
+            [scrollable]="true"
+            [paginator]="true"
+            [loading]="loading"
+            (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
+            (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
+            csvSeparator=";"
+            exportFilename="dati-bolli-virtuali">
+  
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns"  
+                        [style.width]="col.width" 
+                        [style.padding]="col.padding" 
+                        [pSortableColumn]="col.field"
+                        [pTooltip]="col.label" 
+                        attr.aria-label="Colonna {{col.label}}, {{col.header ? 'Ordinare colonna' : ''}}">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field" *ngIf="col.field != undefined" attr.aria-label="Ordinare colonna {{col.label}}" arialabelasc="Ordinamento ascendente" arialabeldesc="Ordinamento discendente">
+                                <!-- ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente" -->
+                        </p-sortIcon>
+                    </th>
+                </tr>
+                <!-- <tr>
+                    <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget">
+                        <div *ngIf="col.field != undefined && col.field !== 'priorita'">
+                            <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." showButtonBar="true"
+                                [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
+                                (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
+                                appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
+                            </p-calendar>
+                            <input *ngSwitchDefault pInputText 
+                                attr.aria-label="Cella filtro per Colonna {{col.label}}" 
+                                type="text" 
+                                (input)="dt.filter($event.target.value.trim(), col.field, col.filterMatchMode)"
+                                style="width:100%" 
+                                #filterInputText>
+                        </div>
+                    </td>
+                </tr> -->
+            </ng-template>
+            <ng-template pTemplate="body" let-rowBollo let-columns="columns">
+              <tr class="row-class">
+                <td *ngFor="let col of columns" 
+                  class="column-class" 
+                  [style.width]="col.width" 
+                  [style.textAlign]="col.textAlign" 
+                  [pTooltip]="col.label">
+                  {{rowBollo[col.field]}}
+                </td>
+              </tr>
+            </ng-template>
+
+        </p-table>
+      </div>
+    </div>
+
+  </div>
+
+</div>

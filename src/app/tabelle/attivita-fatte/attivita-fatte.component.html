@@ -38,7 +38,7 @@
                     <input *ngSwitchDefault pInputText 
                         attr.aria-label="Cella filtro per Colonna {{col.label}}" 
                         type="text" 
-                        (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
+                        (input)="dt.filter($event.target.value.trim(), col.field, col.filterMatchMode)"
                         style="width:100%" 
                         #filterInputText>
                 </div>
