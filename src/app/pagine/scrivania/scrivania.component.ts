@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList, OnDestroy, HostListener } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Attivita, Menu, ImpostazioniApplicazioni, UrlsGenerationStrategy } from "@bds/ng-internauta-model";
+import { Attivita, Menu, ImpostazioniApplicazioni, UrlsGenerationStrategy, ItemMenu, CommandType } from "@bds/ng-internauta-model";
 import { Dropdown } from "primeng-lts/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
@@ -51,6 +51,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public loggedUser: UtenteUtilities;
   public impostazioniVisualizzazione: any;
   public alberoMenu: any[];
+  public menuItems: ItemMenu[];
   public alberoFirma: any[] = [];
   public alberoPrendi: any[] = [];
   // public aziendeMenu: any[];
@@ -109,8 +110,22 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.impostazioniService.settingsChangedNotifier$.subscribe(newSettings => {
       this.hidePreview = newSettings[ApplicationCustiomization.scrivania.hidePreview] === "true";
     }));
+    this.subscriptions.push(this.scrivaniaService.getMenuScrivania().subscribe((items: ItemMenu[]) => {
+      console.log("items", items)
+      this.menuItems = items;
+    }));
     this.allegatiDropDown.disabled = true;
     this.allegati = [{ label: "Documenti non presenti", value: null }];
+  }
+
+  public openMenuUrl: (value: ItemMenu) => void = (item: ItemMenu): void => {
+    if (item.commandType != null) {
+      switch (item.commandType) {
+        case CommandType.URL:
+          this.handleItemClick(item.openCommand, item.urlGenerationStrategy);
+          break;
+      }
+    }
   }
 
   private setLook(): void {
@@ -522,6 +537,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       }
     });
   }
+
 }
 
 class TreeNode {
