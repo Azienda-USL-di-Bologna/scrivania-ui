@@ -85,7 +85,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding-bottom: 33px;
+  padding-bottom: 15px;
 }
 :host>>> .ui-table,
 :host>>> .ui-table-scrollable-wrapper,
@@ -221,8 +221,8 @@
 }
 
 .crono-label {
-  top: 0;
+  /* top: 0;
   left: 45.5%;
-  position: absolute;
+  position: absolute; */
   margin: auto;
 }
