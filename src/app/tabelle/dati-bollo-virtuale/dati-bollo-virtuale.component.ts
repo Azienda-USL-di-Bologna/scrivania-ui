@@ -170,10 +170,13 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       console.log("data inizio",this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'));
       console.log("data fine", this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'));
 
+      this.resetTotalFields();
+
       this.subscriptions.push(
         this.bolloVirtualeService.getDatiBolliVirtuali(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'))
           .subscribe((res: HttpResponse<BolloVirtuale[]>) => {
             this.loading = false;
+            
             this.datiBolliVirtuali = res.body.map(bollo => { return ({ ...bollo, date: (this.datePipe.transform(bollo.dataNumeroDoc, 'dd/MM/yyyy')) } as BolloVirtuale) });
             this.calculateTotal(this.datiBolliVirtuali);
             // console.log("bolloVirtualeService.getDatiBolliVirtuali", res);
@@ -207,6 +210,18 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
     this.updateCount(totalFacciateBollo, this.totalFacciateBolloRef);
     this.updateCount(totalAltriImportiBollo, this.totalAltriImportiBolloRef);
     this.updateCount(totalImportoAltriBollo, this.totalImportoAltriBolloRef);
+  }
+
+  private resetTotalFields() {
+    this.setInnerTextZero(this.totalRecordsRef);
+    this.setInnerTextZero(this.totalFacciateBolloRef);
+    this.setInnerTextZero(this.totalRigheBolloRef);
+    this.setInnerTextZero(this.totalAltriImportiBolloRef);
+    this.setInnerTextZero(this.totalImportoAltriBolloRef);
+  }
+
+  private setInnerTextZero(element: ElementRef<HTMLElement>) {
+    element.nativeElement.innerText = '0';
   }
 
   private updateCount(total: number, element: ElementRef<HTMLElement>) {
