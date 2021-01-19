@@ -15,7 +15,7 @@ export class BolloVirtualeService  {
 
   constructor(protected http: HttpClient, protected datepipe: DatePipe) {}
 
-  public getDatiBolliVirtuali(aziendaCodice: string): Observable<HttpResponse<BolloVirtuale[]>> {
+  public getDatiBolliVirtuali(aziendaCodice: string, dataInizio: string, dataFine: string): Observable<HttpResponse<BolloVirtuale[]>> {
     // const options= {
     //   headers?: HttpHeaders | {[header: string]: string | string[]},
     //   observe?: 'body' | 'events' | 'response',
@@ -24,7 +24,7 @@ export class BolloVirtualeService  {
     //   responseType?: 'arraybuffer'|'blob'|'json'|'text',
     //   withCredentials?: boolean,
     // }
-    const url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.GET_DATI_BOLLO_AZIENDA + "?codiceAzienda=" + aziendaCodice;
+    const url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.GET_DATI_BOLLO_AZIENDA + "?codiceAzienda=" + aziendaCodice+"&from="+dataInizio+"&to="+dataFine;
     return this.http.get<BolloVirtuale[]>(url, {responseType: "json", observe: 'response'});
   }
 

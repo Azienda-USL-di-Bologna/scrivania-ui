@@ -3,57 +3,110 @@
   <div class="p-col content-left" #leftSide>
     <div class="option-bar">
       <div class="buttons-bar">
-            <button type="button" 
-              pButton 
-              pTooltip="Indietro" 
-              tooltipPosition="bottom" 
-              icon="pi pi-chevron-left" 
-              iconPos="left" 
-              [routerLink]="'/attivita'" 
-              class="ui-button-secondary icon-style" 
-              aria-label="Indietro">
-            </button>
-            <div class="separator-class"></div>
-            
-            <button type="button" 
-              pButton 
-              pTooltip="Aggiorna tabella" 
-              tooltipPosition="bottom"
-              (click)="onTableRefresh()"  
-              iconPos="left" 
-              icon="pi pi-refresh" 
-              class="ui-button-secondary icon-style" 
-              aria-label="Aggiorna le attività">
-            </button>
-            
-            <button type="button" 
-              pButton 
-              pTooltip="Esporta in CSV tutti i dati" 
-              tooltipPosition="bottom"
-              (click)="exportToCsv(tableBolliVirtuali)" 
-              iconPos="left" 
-              icon="pi pi-download" 
-              class="ui-button-secondary icon-style" 
-              aria-label="Esporta in CSV tutti i dati">
-            </button>
-            <span>Righe: {{totalRecords}}</span>
-            <span *ngIf="exportCsvInProgress">
-              <p-progressSpinner 
-                  [style]="{width: '2em', height: '2em', marginRight: '7px'}"
-                  strokeWidth="5" 
-                  fill="#FFFFFF" 
-                  animationDuration=".5s">
-              </p-progressSpinner>
-            </span>
-            <h3 class="crono-label">Bollo Virtuale</h3>
+        <button type="button" 
+          pButton 
+          pTooltip="Indietro" 
+          tooltipPosition="bottom" 
+          icon="pi pi-chevron-left" 
+          iconPos="left" 
+          [routerLink]="'/attivita'" 
+          class="ui-button-secondary icon-style" 
+          aria-label="Vai alla tabella delle attivita">
+        </button>
+        <div class="separator-class"></div>
+        
+        <button type="button" 
+          pButton 
+          pTooltip="Aggiorna tabella" 
+          tooltipPosition="bottom"
+          (click)="onTableRefresh()"  
+          iconPos="left" 
+          icon="pi pi-refresh" 
+          class="ui-button-secondary icon-style" 
+          aria-label="Aggiorna le attività">
+        </button>
+        
+        <button type="button" 
+          pButton 
+          pTooltip="Esporta in CSV tutti i dati" 
+          tooltipPosition="bottom"
+          (click)="exportToCsv(tableBolliVirtuali)" 
+          iconPos="left" 
+          icon="pi pi-download" 
+          class="ui-button-secondary icon-style" 
+          aria-label="Esporta in CSV tutti i dati">
+        </button>
+        <span>Righe: </span>
+        <span #totalRecordsRef>{{totalRecords}}</span>
+        <span *ngIf="exportCsvInProgress">
+          <p-progressSpinner 
+              [style]="{width: '2em', height: '2em', marginRight: '7px'}"
+              strokeWidth="5" 
+              fill="#FFFFFF" 
+              animationDuration=".5s">
+          </p-progressSpinner>
+        </span>
       </div>
-      <div>
+      
+      <h3 class="crono-label">Bollo Virtuale</h3>
+      
+      <div class="p-grid p-align-center p-nogutter">
         <lib-aziende-autocomplete
           [azienda]="_azienda"
           (aziendaChange)="handleSelectedAziendaEmit($event, 'Azienda')"
           filterByRole="true">
         </lib-aziende-autocomplete>
+        <span>Da:</span>
+        <p-calendar
+          [showIcon]="true"
+          [monthNavigator]="true"
+          [yearNavigator]="true"
+          showButtonBar="true"
+          yearRange="1000:4000"
+          [locale]="it"
+          required="true"
+          dateFormat="dd/mm/yy"
+          hideOnDateTimeSelect="true"
+          [(ngModel)]="dataInizio"
+          [maxDate]="dataFine"
+          [disabled]="!!!_azienda.codice"
+          [inputStyle]="{'width':'87px'}"
+          appendTo="body"
+          placeholder="Data di inizio"
+          pTooltip="Dati bolli virtuali a partire dal">
+        </p-calendar>
+       <span>A:</span>
+        <p-calendar
+          [showIcon]="true"
+          [monthNavigator]="true"
+          [yearNavigator]="true"
+          showButtonBar="true"
+          yearRange="1000:4000"
+          [locale]="it"
+          dateFormat="dd/mm/yy"
+          hideOnDateTimeSelect="true"
+          [(ngModel)]="dataFine"
+          [disabled]="false"
+          [minDate]="dataInizio"
+          [inputStyle]="{'width':'87px'}"
+          appendTo="body"
+          placeholder="Data di fine"
+          pTooltip="Dati bolli virtuali fino al">
+        </p-calendar>
+        
+        <button type="button" 
+          pButton 
+          pTooltip="Estrai" 
+          tooltipPosition="bottom"
+          style="margin-left: 6px"
+          (click)="onLoadDatiBolliVirtuali()" 
+          iconPos="left" 
+          icon="pi pi-check-circle" 
+          class="ui-button-secondary icon-style" 
+          aria-label="Estrai">
+        </button>
       </div>
+
     </div>
 
     <div class="table-wrapper">
@@ -68,12 +121,12 @@
             selectionMode="single"
             (onRowSelect)="handleEvent('onRowSelect', $event)"
             [scrollable]="true"
-            [paginator]="true"
+            
             [loading]="loading"
             (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
             (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
             csvSeparator=";"
-            exportFilename="dati-bolli-virtuali">
+            [exportFilename]="dataInizio ? 'dati-bolli-virtuali_'+ dataInizio.toDateString()+'_'+dataFine.toDateString() : 'dati-bolli-virtuali_'">
   
             <ng-template pTemplate="header" let-columns>
                 <tr>
@@ -122,6 +175,14 @@
         </p-table>
       </div>
     </div>
+    
+    <footer class="p-grid" style="margin-right: 17px; flex-wrap: nowrap; overflow-x: auto; font-weight: bold;">
+      <div class="p-col" style="text-align: center; min-width: 600px;">Totale</div>
+      <div #totalFacciateBolloRef class="p-col-fixed" style="width: 109px; text-align: center;">0</div>
+      <div #totalRigheBolloRef class="p-col-fixed" style="width: 90px; text-align: center;">0</div>
+      <div #totalAltriImportiBolloRef class="p-col-fixed" style="width: 104px; text-align: center;">0</div>
+      <div #totalImportoAltriBolloRef class="p-col-fixed" style="width: 104px; text-align: center;">0</div>
+    </footer>
 
   </div>
 
