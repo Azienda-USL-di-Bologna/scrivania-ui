@@ -5,7 +5,7 @@
       <div class="buttons-bar">
         <button type="button" 
           pButton 
-          pTooltip="Indietro" 
+          pTooltip="Vai alla tabella delle attivita" 
           tooltipPosition="bottom" 
           icon="pi pi-chevron-left" 
           iconPos="left" 
@@ -23,7 +23,7 @@
           iconPos="left" 
           icon="pi pi-refresh" 
           class="ui-button-secondary icon-style" 
-          aria-label="Aggiorna le attività">
+          aria-label="Aggiorna la tabella dei bolli virtuali">
         </button>
         
         <button type="button" 
@@ -75,7 +75,8 @@
           placeholder="Data di inizio"
           pTooltip="Dati bolli virtuali a partire dal">
         </p-calendar>
-       <span>A:</span>
+        <span style="width: 4px;" aria-hidden="true"></span>
+        <span> A:</span>
         <p-calendar
           [showIcon]="true"
           [monthNavigator]="true"
@@ -178,10 +179,10 @@
     
     <footer class="p-grid" style="margin-right: 17px; flex-wrap: nowrap; overflow-x: auto; font-weight: bold;">
       <div class="p-col" style="text-align: center; min-width: 600px;">Totale</div>
-      <div #totalFacciateBolloRef class="p-col-fixed" style="width: 109px; text-align: center;">0</div>
-      <div #totalRigheBolloRef class="p-col-fixed" style="width: 90px; text-align: center;">0</div>
-      <div #totalAltriImportiBolloRef class="p-col-fixed" style="width: 104px; text-align: center;">0</div>
-      <div #totalImportoAltriBolloRef class="p-col-fixed" style="width: 104px; text-align: center;">0</div>
+      <div #totalFacciateBolloRef class="p-col-fixed" style="width: 109px; text-align: center;">{{totalFacciateBollo}}</div>
+      <div #totalRigheBolloRef class="p-col-fixed" style="width: 90px; text-align: center;">{{totalRigheBollo}}</div>
+      <div #totalAltriImportiBolloRef class="p-col-fixed" style="width: 105px; text-align: center;">{{totalAltriImportiBollo}}</div>
+      <div #totalImportoAltriBolloRef class="p-col-fixed" style="width: 104px; text-align: center;">{{totalImportoAltriBollo}}</div>
     </footer>
 
   </div>
