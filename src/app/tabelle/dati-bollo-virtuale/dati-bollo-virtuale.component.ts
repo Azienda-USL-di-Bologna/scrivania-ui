@@ -27,16 +27,22 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
 
   public datiBolliVirtuali: BolloVirtuale[]=[];
   public loading: boolean = false;
-  public totalRecords: number = 0;
   public _rows = 20;
   private subscriptions: Subscription[]=[];
   public loggedUser: UtenteUtilities;
   public exportCsvInProgress: boolean = false;
+  
+  public totalRecords: number = 0;
+  public totalFacciateBollo: number = 0;
+  public totalRigheBollo: number = 0;
+  public totalAltriImportiBollo: number = 0;
+  public totalImportoAltriBollo: number = 0;
 
   public it = LOCAL_IT;
   public dataOggi: Date = new Date();
   public dataInizio: Date = null;
   public dataFine: Date = new Date(this.dataOggi.toDateString());
+
   @ViewChild('totalRecordsRef', { static: false }) totalRecordsRef?: ElementRef<HTMLElement>; 
   @ViewChild('totalFacciateBolloRef', { static: false }) totalFacciateBolloRef?: ElementRef<HTMLElement>; 
   @ViewChild('totalRigheBolloRef', { static: false }) totalRigheBolloRef?: ElementRef<HTMLElement>; 
@@ -112,7 +118,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       field: "noBolliAltriImporti",
       header: "Altri Importi",
       filterMatchMode: FILTER_TYPES.not_string.equals,
-      width: "104px",
+      width: "105px",
       label: "numero bolli altri importi",
       textAlign:"center"
     },
@@ -158,19 +164,18 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
 
 
   onLoadDatiBolliVirtuali() {
-    console.log("call to service to load dati virtuali", event);
     this.datiBolliVirtuali = [];
     this.totalRecords = 0;
+    this.resetTotalFields();
+
     if (!!this._azienda && !!this.dataInizio && this.dataInizio instanceof Date) {
       this.loading = true;
       if (!(!!this.dataFine && this.dataInizio instanceof Date)) {
         this.dataFine = new Date(this.dataOggi.toDateString());
       }
 
-      console.log("data inizio",this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'));
-      console.log("data fine", this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'));
-
-      this.resetTotalFields();
+      // console.log("data inizio",this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'));
+      // console.log("data fine", this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'));
 
       this.subscriptions.push(
         this.bolloVirtualeService.getDatiBolliVirtuali(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'))
@@ -199,17 +204,17 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
     
     if (!!bolli && Array.isArray(bolli) && bolli.length > 0) {
       this.totalRecords = this.datiBolliVirtuali.length;
-      totalRigheBollo = bolli.map(bollo => bollo.noRigheBollo).reduce(this.sum);
-      totalFacciateBollo = bolli.map(bollo => bollo.noFacciateBollo).reduce(this.sum);
-      totalAltriImportiBollo = bolli.map(bollo => bollo.noBolliAltriImporti).reduce(this.sum);
-      totalImportoAltriBollo = bolli.map(bollo => bollo.importoBolliAltriImporti).reduce(this.sum);
+      this.totalRigheBollo = bolli.map(bollo => bollo.noRigheBollo).reduce(this.sum);
+      this.totalFacciateBollo = bolli.map(bollo => bollo.noFacciateBollo).reduce(this.sum);
+      this.totalAltriImportiBollo = bolli.map(bollo => bollo.noBolliAltriImporti).reduce(this.sum);
+      this.totalImportoAltriBollo = bolli.map(bollo => bollo.importoBolliAltriImporti).reduce(this.sum);
     } 
 
     this.updateCount(this.totalRecords, this.totalRecordsRef);
-    this.updateCount(totalRigheBollo, this.totalRigheBolloRef);
-    this.updateCount(totalFacciateBollo, this.totalFacciateBolloRef);
-    this.updateCount(totalAltriImportiBollo, this.totalAltriImportiBolloRef);
-    this.updateCount(totalImportoAltriBollo, this.totalImportoAltriBolloRef);
+    this.updateCount(this.totalRigheBollo, this.totalRigheBolloRef);
+    this.updateCount(this.totalFacciateBollo, this.totalFacciateBolloRef);
+    this.updateCount(this.totalAltriImportiBollo, this.totalAltriImportiBolloRef);
+    this.updateCount(this.totalImportoAltriBollo, this.totalImportoAltriBolloRef);
   }
 
   private resetTotalFields() {
