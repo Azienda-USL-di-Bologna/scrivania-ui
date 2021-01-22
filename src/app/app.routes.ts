@@ -6,6 +6,7 @@ import { NoLoginGuard, LoginGuard, RefreshLoggedUserGuard } from "@bds/nt-jwt-lo
 import { LoadingComponent } from "./pagine/loading/loading.component";
 import { SmartWorkingComponent } from "@bds/primeng-plugin";
 import { DatiBolloVirtualeComponent } from "./tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component";
+import { CODICI_RUOLO } from "@bds/ng-internauta-model";
 /*
 import { NtJwtLoginComponent } from "@bds/nt-jwt-login";
 import { NoLoginGuard, LoginGuard, RefreshLoggedUserGuard } from "@bds/nt-jwt-login"
@@ -16,7 +17,7 @@ export const rootRouterConfig: Routes = [
     {path: "login", component: NtJwtLoginComponent, canActivate: [NoLoginGuard], data: {}},
     {path: "scrivania", component: LoadingComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard]},
     {path: "attivita", component: ScrivaniaComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard]},
-    {path: "bollo", component: DatiBolloVirtualeComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard]},
+    {path: "bollo", component: DatiBolloVirtualeComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard], data: { roles: [CODICI_RUOLO.CA] }},
     {path: "homepage", component: HomepageComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard]},
     {path: "smart-working", component: SmartWorkingComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard]}
     /*{path: "login", component: NtJwtLoginComponent, canActivate: [NoLoginGuard], data: {}},*/

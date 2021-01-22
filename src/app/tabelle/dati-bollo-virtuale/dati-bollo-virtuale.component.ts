@@ -116,7 +116,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
     },
     {
       field: "noBolliAltriImporti",
-      header: "Altri Importi",
+      header: "no. Altri Importi",
       filterMatchMode: FILTER_TYPES.not_string.equals,
       width: "105px",
       label: "numero bolli altri importi",
@@ -124,10 +124,10 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
     },
     {
       field: "importoBolliAltriImporti",
-      header: "Importo Altri",
+      header: "€ Importo Altri",
       filterMatchMode: FILTER_TYPES.not_string.equals,
       width: "104px",
-      label: "importo bolli altri importi",
+      label: "importo bolli altri importi in euro",
       textAlign:"center"
     }
   ];

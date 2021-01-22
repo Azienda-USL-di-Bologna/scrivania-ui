@@ -182,7 +182,10 @@
       <div #totalFacciateBolloRef class="p-col-fixed" style="width: 109px; text-align: center;">{{totalFacciateBollo}}</div>
       <div #totalRigheBolloRef class="p-col-fixed" style="width: 90px; text-align: center;">{{totalRigheBollo}}</div>
       <div #totalAltriImportiBolloRef class="p-col-fixed" style="width: 105px; text-align: center;">{{totalAltriImportiBollo}}</div>
-      <div #totalImportoAltriBolloRef class="p-col-fixed" style="width: 104px; text-align: center;">{{totalImportoAltriBollo}}</div>
+      <div  class="p-col-fixed" style="width: 104px; text-align: center;">
+        <span>€</span>
+        <span #totalImportoAltriBolloRef>{{totalImportoAltriBollo}}</span>
+      </div>
     </footer>
 
   </div>
