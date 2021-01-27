@@ -83,7 +83,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       if (u) {
         if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
           this.loggedUser = u;
-          this.loadMenu();
+          // this.loadMenu();
           this.setLook();
         } else {
           this.loggedUser = u;
