@@ -83,7 +83,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       if (u) {
         if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
           this.loggedUser = u;
-          this.loadMenu();
+          // this.loadMenu(); // not used
           this.setLook();
         } else {
           this.loggedUser = u;
@@ -328,126 +328,126 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
      });
   }
 
-  private loadMenu() {
-    if (this.alberoMenu) {
-      return;
-    }
-    this.alberoMenu = [];
-    const initialFiltersAndSorts = new FiltersAndSorts();
-    // initialFiltersAndSorts.rows = NO_LIMIT;
-    initialFiltersAndSorts.addSort(new SortDefinition("ordinale", SORT_MODES.asc));
-    initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
-    initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
-    const lazyLoadFiltersAndSorts = new FiltersAndSorts();
-    const pageConfNoLimit: PagingConf = {
-      conf: {
-        page: 0,
-        size: 999999
-      },
-      mode: "PAGE"
-    };
-    // this.arrayScrivaniaCompiledUrls = [];
-    // this.aziendeMenu  = [];
-    this.scrivaniaService.getData(PROJECTIONS.menu.customProjections.menuWithIdApplicazioneAndIdAziendaAndTransientFields, initialFiltersAndSorts, lazyLoadFiltersAndSorts, pageConfNoLimit)
-      .subscribe(
-        data => {
-          const arrayMenu: Menu[] = data.results;
-          arrayMenu.forEach(elementArray => {
-            // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
-            // tanto tutto il resto (azienda, idp, ecc...) è identico
-            // VA RIFATTO!!!!!
-            // if (elementArray.idApplicazione.id === "gedi") {
-            //   let command = elementArray.compiledUrl;
-            //   command = command.replace(COMMANDS.gedi_local, COMMANDS.open_prendone_local);
-            //   this.aziendeMenu.push(new TreeNode(
-            //     elementArray.idAzienda.nome,
-            //     null,
-            //     (onclick) => {this.handleItemClick(command); }
-            //   ));
-            // }
-            let found = false;
-            for (const elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
-              if (elementAlbero.label === elementArray.idApplicazione.nome) {
-                if (elementAlbero.items) { // nell'applicazione è presente almeno un comando
-                  for (const item of elementAlbero.items) {
-                    if (item.label === elementArray.descrizione) { // vedo se un comado simile è gia stato aggiunto
-                      // comando presente quindi aggiungo solo l'azienda TODO
-                      found = true;
-                      if (!item.items) {
-                        item.items = [];
-                      }
-                      item.items.push(new TreeNode(
-                        elementArray.idAzienda.nome,
-                        null,
-                        (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
-                      ));
-                      break;
-                    }
-                  }
-                }
-                if (!found) { // Il comando non è presente, lo aggiungo
-                  found = true;
-                  if (this.loggedUser.getUtente().aziendeAttive &&
-                      this.loggedUser.getUtente().aziendeAttive.length > 1 &&
-                      elementArray.idAzienda &&
-                      !!this.loggedUser.getUtente().aziendeAttive.find(a => a.id === elementArray.idAzienda.id)) {
-                    elementAlbero.items.push(new TreeNode(
-                      elementArray.descrizione,
-                      [new TreeNode(
-                        elementArray.idAzienda.nome,
-                        null,
-                        (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
-                      )],
-                      (onclick) => { this.doNothingNodeClick(onclick); }
-                    ));
-                    break;
-                  } else {
-                    elementAlbero.items.push(new TreeNode(
-                      elementArray.descrizione,
-                      null,
-                      (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
-                    ));
-                    break;
-                  }
-                }
-              }
-            }
-            if (!found) { // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
-              if (this.loggedUser.getUtente().aziendeAttive &&
-                  this.loggedUser.getUtente().aziendeAttive.length > 1 &&
-                  elementArray.idAzienda &&
-                  !!this.loggedUser.getUtente().aziendeAttive.find(a => a.id === elementArray.idAzienda.id)) {
-                this.alberoMenu.push(new TreeNode(
-                  elementArray.idApplicazione.nome,
-                  [new TreeNode(
-                    elementArray.descrizione,
-                    [new TreeNode(
-                      elementArray.idAzienda.nome,
-                      null,
-                      (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
-                    )],
-                    (onclick) => { this.doNothingNodeClick(onclick); }
-                  )],
-                  (onclick) => { this.doNothingNodeClick(onclick); }
-                ));
-              } else {
-                this.alberoMenu.push(new TreeNode(
-                  elementArray.idApplicazione.nome,
-                  [new TreeNode(
-                    elementArray.descrizione,
-                    null,
-                    (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
-                  )],
-                  (onclick) => { this.doNothingNodeClick(onclick); }
-                ));
-              }
-            }
-          });
-          // this.loadAziendeMenu();
-        }
-      );
+  // private loadMenu() {
+  //   if (this.alberoMenu) {
+  //     return;
+  //   }
+  //   this.alberoMenu = [];
+  //   const initialFiltersAndSorts = new FiltersAndSorts();
+  //   // initialFiltersAndSorts.rows = NO_LIMIT;
+  //   initialFiltersAndSorts.addSort(new SortDefinition("ordinale", SORT_MODES.asc));
+  //   initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
+  //   initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
+  //   const lazyLoadFiltersAndSorts = new FiltersAndSorts();
+  //   const pageConfNoLimit: PagingConf = {
+  //     conf: {
+  //       page: 0,
+  //       size: 999999
+  //     },
+  //     mode: "PAGE"
+  //   };
+  //   // this.arrayScrivaniaCompiledUrls = [];
+  //   // this.aziendeMenu  = [];
+  //   this.scrivaniaService.getData(PROJECTIONS.menu.customProjections.menuWithIdApplicazioneAndIdAziendaAndTransientFields, initialFiltersAndSorts, lazyLoadFiltersAndSorts, pageConfNoLimit)
+  //     .subscribe(
+  //       data => {
+  //         const arrayMenu: Menu[] = data.results;
+  //         arrayMenu.forEach(elementArray => {
+  //           // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
+  //           // tanto tutto il resto (azienda, idp, ecc...) è identico
+  //           // VA RIFATTO!!!!!
+  //           // if (elementArray.idApplicazione.id === "gedi") {
+  //           //   let command = elementArray.compiledUrl;
+  //           //   command = command.replace(COMMANDS.gedi_local, COMMANDS.open_prendone_local);
+  //           //   this.aziendeMenu.push(new TreeNode(
+  //           //     elementArray.idAzienda.nome,
+  //           //     null,
+  //           //     (onclick) => {this.handleItemClick(command); }
+  //           //   ));
+  //           // }
+  //           let found = false;
+  //           for (const elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
+  //             if (elementAlbero.label === elementArray.idApplicazione.nome) {
+  //               if (elementAlbero.items) { // nell'applicazione è presente almeno un comando
+  //                 for (const item of elementAlbero.items) {
+  //                   if (item.label === elementArray.descrizione) { // vedo se un comado simile è gia stato aggiunto
+  //                     // comando presente quindi aggiungo solo l'azienda TODO
+  //                     found = true;
+  //                     if (!item.items) {
+  //                       item.items = [];
+  //                     }
+  //                     item.items.push(new TreeNode(
+  //                       elementArray.idAzienda.nome,
+  //                       null,
+  //                       (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
+  //                     ));
+  //                     break;
+  //                   }
+  //                 }
+  //               }
+  //               if (!found) { // Il comando non è presente, lo aggiungo
+  //                 found = true;
+  //                 if (this.loggedUser.getUtente().aziendeAttive &&
+  //                     this.loggedUser.getUtente().aziendeAttive.length > 1 &&
+  //                     elementArray.idAzienda &&
+  //                     !!this.loggedUser.getUtente().aziendeAttive.find(a => a.id === elementArray.idAzienda.id)) {
+  //                   elementAlbero.items.push(new TreeNode(
+  //                     elementArray.descrizione,
+  //                     [new TreeNode(
+  //                       elementArray.idAzienda.nome,
+  //                       null,
+  //                       (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
+  //                     )],
+  //                     (onclick) => { this.doNothingNodeClick(onclick); }
+  //                   ));
+  //                   break;
+  //                 } else {
+  //                   elementAlbero.items.push(new TreeNode(
+  //                     elementArray.descrizione,
+  //                     null,
+  //                     (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
+  //                   ));
+  //                   break;
+  //                 }
+  //               }
+  //             }
+  //           }
+  //           if (!found) { // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
+  //             if (this.loggedUser.getUtente().aziendeAttive &&
+  //                 this.loggedUser.getUtente().aziendeAttive.length > 1 &&
+  //                 elementArray.idAzienda &&
+  //                 !!this.loggedUser.getUtente().aziendeAttive.find(a => a.id === elementArray.idAzienda.id)) {
+  //               this.alberoMenu.push(new TreeNode(
+  //                 elementArray.idApplicazione.nome,
+  //                 [new TreeNode(
+  //                   elementArray.descrizione,
+  //                   [new TreeNode(
+  //                     elementArray.idAzienda.nome,
+  //                     null,
+  //                     (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
+  //                   )],
+  //                   (onclick) => { this.doNothingNodeClick(onclick); }
+  //                 )],
+  //                 (onclick) => { this.doNothingNodeClick(onclick); }
+  //               ));
+  //             } else {
+  //               this.alberoMenu.push(new TreeNode(
+  //                 elementArray.idApplicazione.nome,
+  //                 [new TreeNode(
+  //                   elementArray.descrizione,
+  //                   null,
+  //                   (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
+  //                 )],
+  //                 (onclick) => { this.doNothingNodeClick(onclick); }
+  //               ));
+  //             }
+  //           }
+  //         });
+  //         // this.loadAziendeMenu();
+  //       }
+  //     );
 
-  }
+  // }
 
   // public loadAziendeMenu() {
   //   if (this.aziendeMenu) {
