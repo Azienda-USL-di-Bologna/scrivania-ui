@@ -30,17 +30,17 @@
                 <img src="assets/images/hiring.svg" class="images-pos" alt="Prendi">
             </button>
             <p-tieredMenu #prendoneMenu [model]="alberoPrendi" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event, null)"></p-tieredMenu>
-            <!-- <button #btn *ngIf="!mostraStorico && loggedUser.isCA()" 
+            <button #btn *ngIf="!mostraStorico && loggedUser.isCA()" 
                 type="button"
                 pButton 
-                pTooltip="Apri Tabella dei Bolli Virtuali" 
+                pTooltip="Vai a Tabella dei Bolli Virtuali" 
                 tooltipPosition="bottom" 
                 [routerLink]="'/bollo'"
                 iconPos="left" 
                 icon="pi pi-money-bill" 
                 class="ui-button-secondary icon-style" 
                 aria-label="Vai a Tabella dei Bolli Virtuali">
-            </button> -->
+            </button>
             <div class="separator-class"></div>
             <!-- Cronologia, Aggiorna, Elimina notifiche -->
             <button *ngIf="mostraStorico" type="button" pButton pTooltip="Indietro" tooltipPosition="bottom" icon="pi pi-chevron-left" iconPos="left" (click)="mostraStorico=!mostraStorico" class="ui-button-secondary icon-style" aria-label="Indietro">
