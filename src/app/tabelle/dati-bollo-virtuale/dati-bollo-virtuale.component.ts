@@ -184,8 +184,8 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
             
             this.datiBolliVirtuali = res.body.map(bollo => { return ({ ...bollo, date: (this.datePipe.transform(bollo.dataNumeroDoc, 'dd/MM/yyyy')) } as BolloVirtuale) });
             this.calculateTotal(this.datiBolliVirtuali);
-            // console.log("bolloVirtualeService.getDatiBolliVirtuali", res);
-            // console.log("datiBolliVirtuali", this.datiBolliVirtuali);
+            console.log("bolloVirtualeService.getDatiBolliVirtuali", res);
+            console.log("datiBolliVirtuali", this.datiBolliVirtuali);
           }, error => {
             console.log("error bolloVirtualeService.getDatiBolliVirtuali", error);
             this.loading = false;
@@ -197,10 +197,10 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
 
   private calculateTotal(bolli: BolloVirtuale[]) {
     this.totalRecords = 0;
-    let totalRigheBollo: number = 0;
-    let totalFacciateBollo: number = 0;
-    let totalAltriImportiBollo: number = 0;
-    let totalImportoAltriBollo: number = 0;
+    this.totalRigheBollo = 0;
+    this.totalFacciateBollo = 0;
+    this.totalAltriImportiBollo  = 0;
+    this.totalImportoAltriBollo = 0;
     
     if (!!bolli && Array.isArray(bolli) && bolli.length > 0) {
       this.totalRecords = this.datiBolliVirtuali.length;
@@ -240,8 +240,11 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
         timeout = 1;
       }
       const count = +element.nativeElement.innerText;
+      if (duration == 0) {
+        duration = 1;
+      }
       const inc = total / duration;
-      if (count < total) {
+      if (count <= total) {
         element.nativeElement.innerText = Math.ceil(this.sum(count, inc)).toString();
         setTimeout(()=> this.updateCount(total,element),timeout);
       } else {
