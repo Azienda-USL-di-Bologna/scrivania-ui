@@ -184,8 +184,8 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
             
             this.datiBolliVirtuali = res.body.map(bollo => { return ({ ...bollo, date: (this.datePipe.transform(bollo.dataNumeroDoc, 'dd/MM/yyyy')) } as BolloVirtuale) });
             this.calculateTotal(this.datiBolliVirtuali);
-            console.log("bolloVirtualeService.getDatiBolliVirtuali", res);
-            console.log("datiBolliVirtuali", this.datiBolliVirtuali);
+            //console.log("bolloVirtualeService.getDatiBolliVirtuali", res);
+            //console.log("datiBolliVirtuali", this.datiBolliVirtuali);
           }, error => {
             console.log("error bolloVirtualeService.getDatiBolliVirtuali", error);
             this.loading = false;
