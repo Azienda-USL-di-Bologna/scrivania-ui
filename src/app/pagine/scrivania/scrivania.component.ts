@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList, OnDestroy, HostListener } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Attivita, Menu, ImpostazioniApplicazioni, UrlsGenerationStrategy, ItemMenu, CommandType } from "@bds/ng-internauta-model";
+import { Attivita, Menu, ImpostazioniApplicazioni, UrlsGenerationStrategy, ItemMenu, CommandType, BaseUrls } from "@bds/ng-internauta-model";
 import { Dropdown } from "primeng-lts/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
@@ -12,6 +12,10 @@ import { ApplicationCustiomization } from "src/environments/application_customiz
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ConfirmationService } from "primeng-lts/components/common/confirmationservice";
 import { stringify } from "querystring";
+import { BaseUrlType, ParametroAziende } from "@bds/ng-internauta-model";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs/internal/Observable";
+import { ConfigurazioneService} from "@bds/ng-internauta-model";
 
 @Component({
   selector: "app-scrivania",
@@ -19,7 +23,6 @@ import { stringify } from "querystring";
   styleUrls: ["./scrivania.component.css"]
 })
 export class ScrivaniaComponent implements OnInit, OnDestroy {
-
   public mostraStorico: boolean = false;
 
   @ViewChild("anteprima", null) private anteprima: ElementRef;
@@ -69,11 +72,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public changeColOrder: boolean = false;
   public hidePreview = false;
   public sliding = false;
-
+  public showBolli: boolean = false;
   public tabellaDaRefreshare: any = { name: "" };
-
   constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService,
-    private confirmationService: ConfirmationService) {
+    private confirmationService: ConfirmationService, private configurazioneService: ConfigurazioneService) {
   }
 
   ngOnInit() {
@@ -89,6 +91,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
           this.loggedUser = u;
         }
         // this.loadAziendeMenu();
+        
       }
     }));
     this.subscriptions.push(this.scrivaniaService.getUrlsFirmone().subscribe(data => {
@@ -116,6 +119,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     }));
     this.allegatiDropDown.disabled = true;
     this.allegati = [{ label: "Documenti non presenti", value: null }];
+    this.setVisibilitàPulsanteBolli();
+
+
+
   }
 
   public openMenuUrl: (value: ItemMenu) => void = (item: ItemMenu): void => {
@@ -488,6 +495,22 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     });
   }
 
+  public setVisibilitàPulsanteBolli(): void {
+    //let aziendaArray = this.loggedUser.getUtente().aziende;
+    let idAziendaArray: number[] = [];
+    this.loggedUser.getUtente().aziende.forEach(elem => {
+      idAziendaArray.push(elem.id);
+    });
+    console.log(idAziendaArray);
+    this.configurazioneService.getParametriAziende("visibilitaBollo", null, idAziendaArray)
+      .subscribe((parametriAziende: ParametroAziende[]) => {
+        console.log(parametriAziende[0].valore);
+        this.showBolli = JSON.parse(parametriAziende[0].valore || false);
+        console.log(this.showBolli);
+      });
+  }
+
+
   public aziendaChanged(event) {
     this.idAzienda = event;
   }
@@ -509,6 +532,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       event.originalEvent.stopPropagation();
     }
   }
+
 
   ricarica() {
 
