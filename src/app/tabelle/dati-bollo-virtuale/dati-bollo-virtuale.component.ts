@@ -183,9 +183,8 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
             this.loading = false;
             
             this.datiBolliVirtuali = res.body.map(bollo => { return ({ ...bollo, date: (this.datePipe.transform(bollo.dataNumeroDoc, 'dd/MM/yyyy')) } as BolloVirtuale) });
+            this.sanatoriaBolli();
             this.calculateTotal(this.datiBolliVirtuali);
-            //console.log("bolloVirtualeService.getDatiBolliVirtuali", res);
-            //console.log("datiBolliVirtuali", this.datiBolliVirtuali);
           }, error => {
             console.log("error bolloVirtualeService.getDatiBolliVirtuali", error);
             this.loading = false;
@@ -193,6 +192,24 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
         )
       )
     }
+  }
+
+  private rigaNulla(v: BolloVirtuale): boolean {
+    if(v.noFacciateBollo != 0 || v.importoBolliAltriImporti != 0 || v.noRigheBollo != 0 || v.noBolliAltriImporti != 0 )
+      return false;
+    else
+      return true;  
+  }
+
+  private sanatoriaBolli() {
+    let nuoviBolli: BolloVirtuale[] = this.datiBolliVirtuali;
+    nuoviBolli.forEach((value,index)=>{
+      if(this.rigaNulla(value)) {
+        nuoviBolli.splice(index,1);
+      }
+    });
+
+    this.datiBolliVirtuali = nuoviBolli;  
   }
 
   private calculateTotal(bolli: BolloVirtuale[]) {
