@@ -24,7 +24,7 @@ export class BolloVirtualeService  {
     //   responseType?: 'arraybuffer'|'blob'|'json'|'text',
     //   withCredentials?: boolean,
     // }
-    const url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.GET_DATI_BOLLO_AZIENDA + "?codiceAzienda=" + aziendaCodice+"&from="+dataInizio+"&to="+dataFine;
+    let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.GET_DATI_BOLLO_AZIENDA + "?codiceAzienda=" + aziendaCodice+"&from="+dataInizio+"&to="+dataFine;
     return this.http.get<BolloVirtuale[]>(url, {responseType: "json", observe: 'response'});
   }
 
