@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList, OnDestroy, HostListener } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Attivita, Menu, ImpostazioniApplicazioni, UrlsGenerationStrategy, ItemMenu, CommandType } from "@bds/ng-internauta-model";
+import { Attivita, Menu, ImpostazioniApplicazioni, UrlsGenerationStrategy, ItemMenu, CommandType, BaseUrls } from "@bds/ng-internauta-model";
 import { Dropdown } from "primeng-lts/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
@@ -12,6 +12,10 @@ import { ApplicationCustiomization } from "src/environments/application_customiz
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ConfirmationService } from "primeng-lts/components/common/confirmationservice";
 import { stringify } from "querystring";
+import { BaseUrlType, ParametroAziende } from "@bds/ng-internauta-model";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs/internal/Observable";
+import { ConfigurazioneService} from "@bds/ng-internauta-model";
 
 @Component({
   selector: "app-scrivania",
@@ -19,7 +23,6 @@ import { stringify } from "querystring";
   styleUrls: ["./scrivania.component.css"]
 })
 export class ScrivaniaComponent implements OnInit, OnDestroy {
-
   public mostraStorico: boolean = false;
 
   @ViewChild("anteprima", null) private anteprima: ElementRef;
@@ -69,11 +72,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   public changeColOrder: boolean = false;
   public hidePreview = false;
   public sliding = false;
-
+  public showBolli: boolean = false;
   public tabellaDaRefreshare: any = { name: "" };
-
   constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService,
-    private confirmationService: ConfirmationService) {
+    private confirmationService: ConfirmationService, private configurazioneService: ConfigurazioneService) {
   }
 
   ngOnInit() {
@@ -83,12 +85,13 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       if (u) {
         if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
           this.loggedUser = u;
-          this.loadMenu();
+          // this.loadMenu(); // not used
           this.setLook();
         } else {
           this.loggedUser = u;
         }
         // this.loadAziendeMenu();
+        
       }
     }));
     this.subscriptions.push(this.scrivaniaService.getUrlsFirmone().subscribe(data => {
@@ -116,6 +119,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     }));
     this.allegatiDropDown.disabled = true;
     this.allegati = [{ label: "Documenti non presenti", value: null }];
+    this.setVisibilitàPulsanteBolli();
+
+
+
   }
 
   public openMenuUrl: (value: ItemMenu) => void = (item: ItemMenu): void => {
@@ -328,126 +335,126 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
      });
   }
 
-  private loadMenu() {
-    if (this.alberoMenu) {
-      return;
-    }
-    this.alberoMenu = [];
-    const initialFiltersAndSorts = new FiltersAndSorts();
-    // initialFiltersAndSorts.rows = NO_LIMIT;
-    initialFiltersAndSorts.addSort(new SortDefinition("ordinale", SORT_MODES.asc));
-    initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
-    initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
-    const lazyLoadFiltersAndSorts = new FiltersAndSorts();
-    const pageConfNoLimit: PagingConf = {
-      conf: {
-        page: 0,
-        size: 999999
-      },
-      mode: "PAGE"
-    };
-    // this.arrayScrivaniaCompiledUrls = [];
-    // this.aziendeMenu  = [];
-    this.scrivaniaService.getData(PROJECTIONS.menu.customProjections.menuWithIdApplicazioneAndIdAziendaAndTransientFields, initialFiltersAndSorts, lazyLoadFiltersAndSorts, pageConfNoLimit)
-      .subscribe(
-        data => {
-          const arrayMenu: Menu[] = data.results;
-          arrayMenu.forEach(elementArray => {
-            // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
-            // tanto tutto il resto (azienda, idp, ecc...) è identico
-            // VA RIFATTO!!!!!
-            // if (elementArray.idApplicazione.id === "gedi") {
-            //   let command = elementArray.compiledUrl;
-            //   command = command.replace(COMMANDS.gedi_local, COMMANDS.open_prendone_local);
-            //   this.aziendeMenu.push(new TreeNode(
-            //     elementArray.idAzienda.nome,
-            //     null,
-            //     (onclick) => {this.handleItemClick(command); }
-            //   ));
-            // }
-            let found = false;
-            for (const elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
-              if (elementAlbero.label === elementArray.idApplicazione.nome) {
-                if (elementAlbero.items) { // nell'applicazione è presente almeno un comando
-                  for (const item of elementAlbero.items) {
-                    if (item.label === elementArray.descrizione) { // vedo se un comado simile è gia stato aggiunto
-                      // comando presente quindi aggiungo solo l'azienda TODO
-                      found = true;
-                      if (!item.items) {
-                        item.items = [];
-                      }
-                      item.items.push(new TreeNode(
-                        elementArray.idAzienda.nome,
-                        null,
-                        (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
-                      ));
-                      break;
-                    }
-                  }
-                }
-                if (!found) { // Il comando non è presente, lo aggiungo
-                  found = true;
-                  if (this.loggedUser.getUtente().aziendeAttive &&
-                      this.loggedUser.getUtente().aziendeAttive.length > 1 &&
-                      elementArray.idAzienda &&
-                      !!this.loggedUser.getUtente().aziendeAttive.find(a => a.id === elementArray.idAzienda.id)) {
-                    elementAlbero.items.push(new TreeNode(
-                      elementArray.descrizione,
-                      [new TreeNode(
-                        elementArray.idAzienda.nome,
-                        null,
-                        (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
-                      )],
-                      (onclick) => { this.doNothingNodeClick(onclick); }
-                    ));
-                    break;
-                  } else {
-                    elementAlbero.items.push(new TreeNode(
-                      elementArray.descrizione,
-                      null,
-                      (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
-                    ));
-                    break;
-                  }
-                }
-              }
-            }
-            if (!found) { // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
-              if (this.loggedUser.getUtente().aziendeAttive &&
-                  this.loggedUser.getUtente().aziendeAttive.length > 1 &&
-                  elementArray.idAzienda &&
-                  !!this.loggedUser.getUtente().aziendeAttive.find(a => a.id === elementArray.idAzienda.id)) {
-                this.alberoMenu.push(new TreeNode(
-                  elementArray.idApplicazione.nome,
-                  [new TreeNode(
-                    elementArray.descrizione,
-                    [new TreeNode(
-                      elementArray.idAzienda.nome,
-                      null,
-                      (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
-                    )],
-                    (onclick) => { this.doNothingNodeClick(onclick); }
-                  )],
-                  (onclick) => { this.doNothingNodeClick(onclick); }
-                ));
-              } else {
-                this.alberoMenu.push(new TreeNode(
-                  elementArray.idApplicazione.nome,
-                  [new TreeNode(
-                    elementArray.descrizione,
-                    null,
-                    (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
-                  )],
-                  (onclick) => { this.doNothingNodeClick(onclick); }
-                ));
-              }
-            }
-          });
-          // this.loadAziendeMenu();
-        }
-      );
+  // private loadMenu() {
+  //   if (this.alberoMenu) {
+  //     return;
+  //   }
+  //   this.alberoMenu = [];
+  //   const initialFiltersAndSorts = new FiltersAndSorts();
+  //   // initialFiltersAndSorts.rows = NO_LIMIT;
+  //   initialFiltersAndSorts.addSort(new SortDefinition("ordinale", SORT_MODES.asc));
+  //   initialFiltersAndSorts.addSort(new SortDefinition("idAzienda.nome", SORT_MODES.asc));
+  //   initialFiltersAndSorts.addSort(new SortDefinition("idApplicazione.nome", SORT_MODES.asc));
+  //   const lazyLoadFiltersAndSorts = new FiltersAndSorts();
+  //   const pageConfNoLimit: PagingConf = {
+  //     conf: {
+  //       page: 0,
+  //       size: 999999
+  //     },
+  //     mode: "PAGE"
+  //   };
+  //   // this.arrayScrivaniaCompiledUrls = [];
+  //   // this.aziendeMenu  = [];
+  //   this.scrivaniaService.getData(PROJECTIONS.menu.customProjections.menuWithIdApplicazioneAndIdAziendaAndTransientFields, initialFiltersAndSorts, lazyLoadFiltersAndSorts, pageConfNoLimit)
+  //     .subscribe(
+  //       data => {
+  //         const arrayMenu: Menu[] = data.results;
+  //         arrayMenu.forEach(elementArray => {
+  //           // qui se intercetto l'attività statica di scrivania mi calcolo il comando per aprire il prendone
+  //           // tanto tutto il resto (azienda, idp, ecc...) è identico
+  //           // VA RIFATTO!!!!!
+  //           // if (elementArray.idApplicazione.id === "gedi") {
+  //           //   let command = elementArray.compiledUrl;
+  //           //   command = command.replace(COMMANDS.gedi_local, COMMANDS.open_prendone_local);
+  //           //   this.aziendeMenu.push(new TreeNode(
+  //           //     elementArray.idAzienda.nome,
+  //           //     null,
+  //           //     (onclick) => {this.handleItemClick(command); }
+  //           //   ));
+  //           // }
+  //           let found = false;
+  //           for (const elementAlbero of this.alberoMenu) { // ciclo la lista tornata e controllo che sia presente l'applicazione
+  //             if (elementAlbero.label === elementArray.idApplicazione.nome) {
+  //               if (elementAlbero.items) { // nell'applicazione è presente almeno un comando
+  //                 for (const item of elementAlbero.items) {
+  //                   if (item.label === elementArray.descrizione) { // vedo se un comado simile è gia stato aggiunto
+  //                     // comando presente quindi aggiungo solo l'azienda TODO
+  //                     found = true;
+  //                     if (!item.items) {
+  //                       item.items = [];
+  //                     }
+  //                     item.items.push(new TreeNode(
+  //                       elementArray.idAzienda.nome,
+  //                       null,
+  //                       (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
+  //                     ));
+  //                     break;
+  //                   }
+  //                 }
+  //               }
+  //               if (!found) { // Il comando non è presente, lo aggiungo
+  //                 found = true;
+  //                 if (this.loggedUser.getUtente().aziendeAttive &&
+  //                     this.loggedUser.getUtente().aziendeAttive.length > 1 &&
+  //                     elementArray.idAzienda &&
+  //                     !!this.loggedUser.getUtente().aziendeAttive.find(a => a.id === elementArray.idAzienda.id)) {
+  //                   elementAlbero.items.push(new TreeNode(
+  //                     elementArray.descrizione,
+  //                     [new TreeNode(
+  //                       elementArray.idAzienda.nome,
+  //                       null,
+  //                       (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
+  //                     )],
+  //                     (onclick) => { this.doNothingNodeClick(onclick); }
+  //                   ));
+  //                   break;
+  //                 } else {
+  //                   elementAlbero.items.push(new TreeNode(
+  //                     elementArray.descrizione,
+  //                     null,
+  //                     (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
+  //                   ));
+  //                   break;
+  //                 }
+  //               }
+  //             }
+  //           }
+  //           if (!found) { // l'app del comando non è stata trovata la aggiungo e aggiungo anche il comando
+  //             if (this.loggedUser.getUtente().aziendeAttive &&
+  //                 this.loggedUser.getUtente().aziendeAttive.length > 1 &&
+  //                 elementArray.idAzienda &&
+  //                 !!this.loggedUser.getUtente().aziendeAttive.find(a => a.id === elementArray.idAzienda.id)) {
+  //               this.alberoMenu.push(new TreeNode(
+  //                 elementArray.idApplicazione.nome,
+  //                 [new TreeNode(
+  //                   elementArray.descrizione,
+  //                   [new TreeNode(
+  //                     elementArray.idAzienda.nome,
+  //                     null,
+  //                     (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
+  //                   )],
+  //                   (onclick) => { this.doNothingNodeClick(onclick); }
+  //                 )],
+  //                 (onclick) => { this.doNothingNodeClick(onclick); }
+  //               ));
+  //             } else {
+  //               this.alberoMenu.push(new TreeNode(
+  //                 elementArray.idApplicazione.nome,
+  //                 [new TreeNode(
+  //                   elementArray.descrizione,
+  //                   null,
+  //                   (onclick) => { this.handleItemClick(elementArray.compiledUrl, elementArray.idApplicazione.urlGenerationStrategy); }
+  //                 )],
+  //                 (onclick) => { this.doNothingNodeClick(onclick); }
+  //               ));
+  //             }
+  //           }
+  //         });
+  //         // this.loadAziendeMenu();
+  //       }
+  //     );
 
-  }
+  // }
 
   // public loadAziendeMenu() {
   //   if (this.aziendeMenu) {
@@ -488,6 +495,22 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
     });
   }
 
+  public setVisibilitàPulsanteBolli(): void {
+    //let aziendaArray = this.loggedUser.getUtente().aziende;
+    let idAziendaArray: number[] = [];
+    this.loggedUser.getUtente().aziende.forEach(elem => {
+      idAziendaArray.push(elem.id);
+    });
+    console.log(idAziendaArray);
+    this.configurazioneService.getParametriAziende("visibilitaBollo", null, idAziendaArray)
+      .subscribe((parametriAziende: ParametroAziende[]) => {
+        console.log(parametriAziende[0].valore);
+        this.showBolli = JSON.parse(parametriAziende[0].valore || false);
+        console.log(this.showBolli);
+      });
+  }
+
+
   public aziendaChanged(event) {
     this.idAzienda = event;
   }
@@ -509,6 +532,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       event.originalEvent.stopPropagation();
     }
   }
+
 
   ricarica() {
 

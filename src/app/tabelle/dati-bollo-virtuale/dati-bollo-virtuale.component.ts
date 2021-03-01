@@ -183,9 +183,8 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
             this.loading = false;
             
             this.datiBolliVirtuali = res.body.map(bollo => { return ({ ...bollo, date: (this.datePipe.transform(bollo.dataNumeroDoc, 'dd/MM/yyyy')) } as BolloVirtuale) });
+            this.sanatoriaBolli();
             this.calculateTotal(this.datiBolliVirtuali);
-            // console.log("bolloVirtualeService.getDatiBolliVirtuali", res);
-            // console.log("datiBolliVirtuali", this.datiBolliVirtuali);
           }, error => {
             console.log("error bolloVirtualeService.getDatiBolliVirtuali", error);
             this.loading = false;
@@ -195,12 +194,30 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
     }
   }
 
+  private rigaNulla(v: BolloVirtuale): boolean {
+    if(v.noFacciateBollo != 0 || v.importoBolliAltriImporti != 0 || v.noRigheBollo != 0 || v.noBolliAltriImporti != 0 )
+      return false;
+    else
+      return true;  
+  }
+
+  private sanatoriaBolli() {
+    let nuoviBolli: BolloVirtuale[] = this.datiBolliVirtuali;
+    nuoviBolli.forEach((value,index)=>{
+      if(this.rigaNulla(value)) {
+        nuoviBolli.splice(index,1);
+      }
+    });
+
+    this.datiBolliVirtuali = nuoviBolli;  
+  }
+
   private calculateTotal(bolli: BolloVirtuale[]) {
     this.totalRecords = 0;
-    let totalRigheBollo: number = 0;
-    let totalFacciateBollo: number = 0;
-    let totalAltriImportiBollo: number = 0;
-    let totalImportoAltriBollo: number = 0;
+    this.totalRigheBollo = 0;
+    this.totalFacciateBollo = 0;
+    this.totalAltriImportiBollo  = 0;
+    this.totalImportoAltriBollo = 0;
     
     if (!!bolli && Array.isArray(bolli) && bolli.length > 0) {
       this.totalRecords = this.datiBolliVirtuali.length;
@@ -240,8 +257,11 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
         timeout = 1;
       }
       const count = +element.nativeElement.innerText;
+      if (duration == 0) {
+        duration = 1;
+      }
       const inc = total / duration;
-      if (count < total) {
+      if (count <= total) {
         element.nativeElement.innerText = Math.ceil(this.sum(count, inc)).toString();
         setTimeout(()=> this.updateCount(total,element),timeout);
       } else {
