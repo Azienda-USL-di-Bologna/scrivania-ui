@@ -4,7 +4,7 @@ export const ColumnsNormal = [
   {
     // E' l'insieme di priorità e tipo attività
     field: "priorita",
-    width: "30px",
+    width: "37px",
     padding: 0,
     label: "tipo attività",
   },
@@ -12,8 +12,8 @@ export const ColumnsNormal = [
     field: "idAzienda.nome",
     header: "Ente",
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-    width: "85px",
-    minWidth: "85px",
+    width: "95px",
+    minWidth: "95px",
     label: "ente",
   },
   {
@@ -99,7 +99,7 @@ export const ColumnsReordered = [
   {
     // E' l'insieme di priorità e tipo attività
     field: "priorita",
-    width: "30px",
+    width: "37px",
     padding: 0,
     label: "tipo attività",
   },

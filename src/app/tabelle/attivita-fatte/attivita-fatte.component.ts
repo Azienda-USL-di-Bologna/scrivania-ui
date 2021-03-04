@@ -62,7 +62,7 @@ export class AttivitaFatteComponent implements OnInit {
     {
       // E' l'insieme di priorità e tipo attività
       field: "priorita",
-      width: "30px",
+      width: "37px",
       padding: 0,
       label: "priorità"
     },
@@ -70,14 +70,14 @@ export class AttivitaFatteComponent implements OnInit {
       field: "idAzienda.nome",
       header: "Ente",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "85px",
+      width: "95px",
       label: "ente"
     },
     {
       field: "idApplicazione.nome",
       header: "App",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "80px",
+      width: "93px",
       label: "applicazione"
     },
     {
@@ -100,7 +100,7 @@ export class AttivitaFatteComponent implements OnInit {
       fieldType: "DateTime",
       filterWidget: "Calendar",
       ariaLabelDescription: "Colonna Data, Cella filtro",
-      width: "100px",
+      width: "122px",
       label: "svolta il"
     },
     {

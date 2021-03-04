@@ -53,7 +53,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
     {
       field: "codiceRegistroDoc",
       header: "Registro",
-      width: "85px",
+      width: "98px",
       padding: 0,
       label: "codice registro",
       textAlign: "center",

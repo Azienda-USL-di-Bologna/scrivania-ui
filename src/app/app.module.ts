@@ -26,8 +26,8 @@ import { PrimengPluginModule, ProfiloComponent } from "@bds/primeng-plugin";
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
 import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
-import { MessageService, DialogService } from "primeng-lts/api";
-
+import { MessageService } from "primeng-lts/api";
+import { DialogService } from "primeng-lts/dynamicdialog";
 
 /* PrimeNG component */
 import { AccordionModule } from "primeng-lts/accordion";
@@ -53,6 +53,7 @@ import { CardModule } from "primeng-lts/card";
 import { ConfirmDialogModule } from "primeng-lts/confirmdialog";
 import { ConfirmationService } from "primeng-lts/api";
 import { ProgressSpinnerModule } from "primeng-lts/progressspinner";
+
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
