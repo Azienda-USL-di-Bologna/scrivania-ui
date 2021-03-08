@@ -250,10 +250,10 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       let duration = total;
       let timeout = 10;
       if (total > 10000 && total < 10000000 ) {
-        duration = 200;
+        duration = 5;
         timeout = 1;
       } else if (total > 10000000) {
-        duration = 20;
+        duration = 10;
         timeout = 1;
       }
       const count = +element.nativeElement.innerText;
@@ -263,7 +263,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       const inc = total / duration;
       if (count <= total) {
         element.nativeElement.innerText = Math.ceil(this.sum(count, inc)).toString();
-        setTimeout(()=> this.updateCount(total,element),timeout);
+        this.updateCount(total,element);
       } else {
         element.nativeElement.innerText = total.toString();
       }
