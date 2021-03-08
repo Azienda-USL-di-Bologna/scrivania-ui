@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { DynamicDialogRef } from "primeng-lts/api";
+//import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Impostazioni } from "./impostazioni";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
@@ -18,7 +18,7 @@ export class ImpostazioniComponent implements OnInit, OnDestroy {
   loggedUser: UtenteUtilities;
   private subscription: Subscription;
 
-  constructor(public ref: DynamicDialogRef, private loginService: NtJwtLoginService, private impostazioniService: ImpostazioniService) { }
+  constructor(/* public ref: DynamicDialogRef, */ private loginService: NtJwtLoginService, private impostazioniService: ImpostazioniService) { }
 
   ngOnInit() {
     this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
@@ -50,7 +50,7 @@ export class ImpostazioniComponent implements OnInit, OnDestroy {
     }
 
   onClose() {
-    this.ref.close();
+   /*  this.ref.close(); */
   }
 
   ngOnDestroy() {

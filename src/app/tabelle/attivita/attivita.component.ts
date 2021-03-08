@@ -476,7 +476,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           if (td && !td.classList.contains(this.columnClass)) {
             this.renderer.addClass(td, this.columnClass);
             td.innerHTML = attivita[col.field];
-            return;
+            res = undefined;
           } else {
             res = attivita[col.field];
           }
@@ -488,8 +488,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           }
           // console.log("getColumnValue td", td);
           this.fillActionCol(attivita, td);
-          return;
-
+          res = undefined;
+          break;
         default:
           if (td && !td.classList.contains(this.columnClass)) {
             this.renderer.addClass(td, this.columnClass);

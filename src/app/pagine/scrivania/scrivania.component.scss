@@ -32,13 +32,13 @@
     display: inline;
 }
 
->>> .ui-fluid .ui-dialog-footer .ui-button {
+>>> .p-fluid .p-dialog-footer .p-button {
     width: 62px;
 }
 
 /* BUTTON STYLES */
 
->>> .ui-fluid .ui-button {
+>>> .p-fluid .p-button {
     width: 80px; /* Senza dava problemi su firefox */
 }
 
@@ -46,8 +46,11 @@
     display: flex;
     flex-direction: row;
 }
-.buttons-bar > button{
+.buttons-bar > button {
     margin: 0 6px 0 0;
+    border: 1px solid #d2d2d2 !important;
+    color: #333333 !important;
+    background-color: #f4f4f4 !important;
 }
 
 .icon-custom {
@@ -70,11 +73,14 @@
    fill: #333333 !important;
 }
 
-:host >>> .ui-button.ui-state-default.ui-button-secondary:enabled:focus, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default:enabled:focus {
+:host >>> .p-button.p-state-default.p-button-secondary:enabled:focus, body .p-buttonset.p-button-secondary > .p-button.p-state-default:enabled:focus {
     box-shadow: 0 0 0 1px #9E9E9E;
 }
-:host >>> .ui-button.ui-state-default.ui-button-secondary, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default {
-    border: 1px solid #d2d2d2;
+:host >>> .p-button.p-state-default.p-button-secondary, 
+body .p-buttonset.p-button-secondary > .p-button.p-state-default {
+    border: 1px solid #d2d2d2 !important;
+    color: #333333 !important;
+    background-color: #f4f4f4 !important;
 }
 /* :host>>> .button-indietro{
     background-color: #e2e2e2;
@@ -95,18 +101,18 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding-bottom: 33px;
+    //padding-bottom: 33px;
 }
-:host>>> .ui-table,
-:host>>> .ui-table-scrollable-wrapper,
-:host>>> .ui-table-scrollable-view{
+:host>>> .p-table,
+:host>>> .p-table-scrollable-wrapper,
+:host>>> .p-table-scrollable-view{
     height: 100%;
 }
-:host>>> .ui-table-scrollable-view{
+:host>>> .p-table-scrollable-view{
     display: flex;
     flex-direction: column;
 }
-:host>>> .ui-table-scrollable-body{
+:host>>> .p-table-scrollable-body{
     flex: 1;
 }
 /* .preview-wrapper{
@@ -171,7 +177,7 @@
     margin-top: 16px;
 }
 
-.ui-fluid .ui-dropdown {
+.p-fluid .p-dropdown {
     width: 600px !important;
 }
 
@@ -191,8 +197,8 @@
     font-weight: bold;
     padding: 4px 8px;
 }
-:host>>>.clMenuPosition > .ui-tieredmenu{
-    top: 43px !important;
+:host>>>.clMenuPosition > .p-tieredmenu{
+    //top: 43px !important;
 }
 .clMenu:enabled{
     background-color: #993366 !important; /* #909090  #848484*/
@@ -210,39 +216,39 @@
     margin: 2px 0;
     float: right;
 }
-:host>>>.ui-tieredmenu,
-:host>>>.ui-tieredmenu .ui-submenu-list {
+:host>>>.p-tieredmenu,
+:host>>>.p-tieredmenu .p-submenu-list {
     /* background-color:#737272; */
     /* background-color:#203244; */
     background-color:  rgba(32, 50, 68, 0.980392) !important;
 }
-:host>>>.ui-tieredmenu .ui-menuitem-link .ui-menuitem-text,
-:host>>>.ui-submenu-icon {
+:host>>>.p-tieredmenu .p-menuitem-link .p-menuitem-text,
+:host>>>.p-submenu-icon {
     color: #f4f4f4;
     top: 21px !important;
     /* color: #999; */
 }
 
-:host>>>.ui-tieredmenu .ui-menuitem-link {
+:host>>>.p-tieredmenu .p-menuitem-link {
     padding: 0.4em 0.85em;
 }
 
-:host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link {
+:host>>>.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link {
     /* background-color:#7e7e7e;#d3d3d3b0;    */
     background-color:  #f4f4f4;
 }
 
-:host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-menuitem-text,
-:host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-submenu-icon {
+:host>>>.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text,
+:host>>>.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
     color: #203142;
     font-weight: bold;
     /* font-size: 101%; */
 }
-:host>>>.ui-tieredmenu .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-submenu-icon {
+:host>>>.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
     padding-left: 9px;
 }
 
-:host>>>.ui-tieredmenu .ui-menuitem-link .ui-submenu-icon{
+:host>>>.p-tieredmenu .p-menuitem-link .p-submenu-icon{
     margin-top: -.8em;
 }
 
@@ -318,7 +324,7 @@
     flex: 50%;
 }
 
-::ng-deep .ui-tooltip {
+::ng-deep .p-tooltip {
     max-width: 20.5em;
 }
 :host>>> .centerIconVertically{
