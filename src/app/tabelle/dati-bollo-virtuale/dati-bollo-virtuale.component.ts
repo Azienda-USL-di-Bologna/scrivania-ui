@@ -63,7 +63,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       field: "numeroDoc",
       header: "No.Doc.",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "106px",
+      width: "122px",
       label: "numero documento",
       textAlign:"center"
     },
@@ -71,7 +71,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       field: "annoNumeroDoc",
       header: "Anno",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "88px",
+      width: "102px",
       label: "anno della numerazione del doc",
       textAlign:"center"
     },
@@ -102,7 +102,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       field: "noFacciateBollo",
       header: "Facciate",
       filterMatchMode: FILTER_TYPES.not_string.equals,
-      width: "109px",
+      width: "122px",
       label: "numero facciate bollo",
       textAlign:"center"
     },
@@ -110,7 +110,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       field: "noRigheBollo",
       header: "Righe",
       filterMatchMode: FILTER_TYPES.not_string.equals,
-      width: "90px",
+      width: "105px",
       label: "numero righe di bollo",
       textAlign:"center"
     },
@@ -118,7 +118,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       field: "noBolliAltriImporti",
       header: "no. Altri Importi",
       filterMatchMode: FILTER_TYPES.not_string.equals,
-      width: "105px",
+      width: "119px",
       label: "numero bolli altri importi",
       textAlign:"center"
     },
@@ -126,7 +126,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       field: "importoBolliAltriImporti",
       header: "€ Importo Altri",
       filterMatchMode: FILTER_TYPES.not_string.equals,
-      width: "104px",
+      width: "105px",
       label: "importo bolli altri importi in euro",
       textAlign:"center"
     }
