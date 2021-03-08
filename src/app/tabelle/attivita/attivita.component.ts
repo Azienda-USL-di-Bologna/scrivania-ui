@@ -95,9 +95,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
-  @ViewChild("dt", null) private dataTable: Table;
+  @ViewChild("dt") private dataTable: Table;
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
-  @ViewChildren("tableRows", null) tableRows: QueryList<ElementRef>;
+  @ViewChildren("tableRows") tableRows: QueryList<ElementRef>;
   private selectedTableRowIndex: number;
 
   constructor(

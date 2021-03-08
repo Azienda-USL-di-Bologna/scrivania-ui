@@ -25,12 +25,12 @@ import { ConfigurazioneService} from "@bds/ng-internauta-model";
 export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public mostraStorico: boolean = false;
 
-  @ViewChild("anteprima", null) private anteprima: ElementRef;
-  @ViewChild("allegatiDropDown", null) private allegatiDropDown: Dropdown;
+  @ViewChild("anteprima") private anteprima: ElementRef;
+  @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
 
-  @ViewChild("leftSide", null) private leftSide: ElementRef;
-  @ViewChild("rightSide", null) private rightSide: ElementRef;
-  @ViewChild("slider", null) private slider: ElementRef;
+  @ViewChild("leftSide") private leftSide: ElementRef;
+  @ViewChild("rightSide") private rightSide: ElementRef;
+  @ViewChild("slider") private slider: ElementRef;
 
   private subscriptions: Subscription[] = [];
 

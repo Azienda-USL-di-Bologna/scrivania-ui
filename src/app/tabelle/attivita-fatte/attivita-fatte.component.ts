@@ -36,7 +36,7 @@ export class AttivitaFatteComponent implements OnInit {
   public _rows = 20;
 
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
-  @ViewChild("dt", null) private dataTable: Table;
+  @ViewChild("dt") private dataTable: Table;
 
   private _idAzienda: number = -1;
   @Input("idAzienda")
