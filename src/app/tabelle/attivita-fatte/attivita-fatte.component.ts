@@ -242,15 +242,15 @@ export class AttivitaFatteComponent implements OnInit {
     this.loadData(event);
   }
 
-  public onKeydownHandlerArrowDown(event: KeyboardEvent) {
+  public onKeydownHandlerArrowDown(event: Event) {
     // this.selectIndex(this.selectedRowIndex + 1);
   }
 
-  public onKeydownHandlerArrowUp(event: KeyboardEvent) {
+  public onKeydownHandlerArrowUp(event: Event) {
     // this.selectIndex(this.selectedRowIndex - 1);
   }
 
-  private onNoteClick(attivita: any) {
+  public onNoteClick(attivita: any) {
     this.onAttivitaNoteEmitter.emit(attivita);
   }
 

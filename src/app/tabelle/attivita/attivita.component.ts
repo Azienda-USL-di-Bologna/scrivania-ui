@@ -270,12 +270,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     });
   }
 
-  public onKeydownHandlerArrowDown(event: KeyboardEvent) {
+  public onKeydownHandlerArrowDown(event: Event) {
     console.log("Scattato down");
     this.selectIndex(this.selectedRowIndex + 1);
   }
 
-  public onKeydownHandlerArrowUp(event: KeyboardEvent) {
+  public onKeydownHandlerArrowUp(event: Event) {
     console.log("Scattato up");
     this.selectIndex(this.selectedRowIndex - 1);
   }

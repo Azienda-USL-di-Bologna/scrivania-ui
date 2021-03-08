@@ -30,15 +30,15 @@
         <tr>
             <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget">
                 <div *ngIf="col.field != undefined && col.field !== 'priorita'">
-                    <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." showButtonBar="true"
+                    <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." [showButtonBar]="true"
                         [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
                         (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
-                        appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
+                        appendTo="body" selectionMode="range" [readonlyInput]="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
                     </p-calendar>
                     <input *ngSwitchDefault pInputText 
                         attr.aria-label="Cella filtro per Colonna {{col.label}}" 
                         type="text" 
-                        (input)="dt.filter($event.target.value.trim(), col.field, col.filterMatchMode)"
+                        (input)="dt.filter($event.target['value'].trim(), col.field, col.filterMatchMode)"
                         style="width:100%" 
                         #filterInputText>
                 </div>

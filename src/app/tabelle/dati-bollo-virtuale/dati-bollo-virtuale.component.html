@@ -54,19 +54,19 @@
         <lib-aziende-autocomplete
           [azienda]="_azienda"
           (aziendaChange)="handleSelectedAziendaEmit($event, 'Azienda')"
-          filterByRole="true">
+          [filterByRole]="true">
         </lib-aziende-autocomplete>
         <span>Da:</span>
         <p-calendar
           [showIcon]="true"
           [monthNavigator]="true"
           [yearNavigator]="true"
-          showButtonBar="true"
+          [showButtonBar]="true"
           yearRange="1000:4000"
           [locale]="it"
-          required="true"
+          [required]="true"
           dateFormat="dd/mm/yy"
-          hideOnDateTimeSelect="true"
+          [hideOnDateTimeSelect]="true"
           [(ngModel)]="dataInizio"
           [maxDate]="dataFine"
           [disabled]="!!!_azienda.codice"
@@ -81,11 +81,11 @@
           [showIcon]="true"
           [monthNavigator]="true"
           [yearNavigator]="true"
-          showButtonBar="true"
+          [showButtonBar]="true"
           yearRange="1000:4000"
           [locale]="it"
           dateFormat="dd/mm/yy"
-          hideOnDateTimeSelect="true"
+          [hideOnDateTimeSelect]="true"
           [(ngModel)]="dataFine"
           [disabled]="false"
           [minDate]="dataInizio"
@@ -146,7 +146,7 @@
                 <!-- <tr>
                     <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget">
                         <div *ngIf="col.field != undefined && col.field !== 'priorita'">
-                            <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." showButtonBar="true"
+                            <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." [showButtonBar]="true"
                                 [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
                                 (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
                                 appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
