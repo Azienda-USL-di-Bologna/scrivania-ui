@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ElementRef, ViewChild, ViewChildren, QueryList  } from '@angular/core';
 import { Azienda } from '@bds/ng-internauta-model';
 import { BolloVirtuale } from './bollo.model';
 import { BolloVirtualeService } from './bollo-virtuale.service';
@@ -11,6 +11,8 @@ import { DatePipe } from '@angular/common';
 import { Table } from 'primeng-lts/table';
 import { CsvExtractor } from '@bds/primeng-plugin';
 import { LOCAL_IT } from '@bds/nt-communicator';
+import { Calendar } from 'primeng-lts/calendar';
+import { FilterUtils } from "primeng-lts/utils";
 
 @Component({
   selector: 'app-dati-bollo-virtuale',
@@ -24,6 +26,8 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       this._azienda = aziendaValue;
     }
   }
+
+  public dataRange: Date[] = [];
 
   public datiBolliVirtuali: BolloVirtuale[]=[];
   public loading: boolean = false;
@@ -49,6 +53,9 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
   @ViewChild('totalAltriImportiBolloRef', { static: false }) totalAltriImportiBolloRef?: ElementRef<HTMLElement>; 
   @ViewChild('totalImportoAltriBolloRef', { static: false }) totalImportoAltriBolloRef?: ElementRef<HTMLElement>; 
 
+  @ViewChild("tableBolliVirtuali") private dataTable: Table;
+  @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
+
   public cols: any[] = [
     {
       field: "codiceRegistroDoc",
@@ -57,12 +64,12 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       padding: 0,
       label: "codice registro",
       textAlign: "center",
-      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
+      filterMatchMode: FILTER_TYPES.string.contains
     },
     {
       field: "numeroDoc",
       header: "No.Doc.",
-      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
+      filterMatchMode: FILTER_TYPES.string.contains,
       width: "124px",
       label: "numero documento",
       textAlign:"center"
@@ -70,15 +77,15 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
     {
       field: "annoNumeroDoc",
       header: "Anno",
-      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
+      filterMatchMode: FILTER_TYPES.string.contains,
       width: "104px",
       label: "anno della numerazione del doc",
       textAlign:"center"
     },
     {
-      field: "date",
+      field: "dataNumeroDoc",
       header: "Data",
-      filterMatchMode: FILTER_TYPES.not_string.equals,
+      filterMatchMode: '',
       width: "100px",
       label: "data della numerazione del doc",
       fieldType: "DateTime",
@@ -87,16 +94,24 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
     {
       field: "oggettoDoc",
       header: "Oggetto",
-      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      label: "oggetto"
+      filterMatchMode: FILTER_TYPES.string.contains,
+      label: "oggetto",
     },
     {
       field: "redattoreDoc",
       header: "Redattore",
-      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
+      filterMatchMode: FILTER_TYPES.string.contains,
       ariaLabelDescription: "Colonna Data, Cella filtro",
       width: "200px",
       label: "redattore del documento"
+    },
+    {
+      field: "nomeStruttura",
+      header: "Struttura del documento",
+      filterMatchMode: FILTER_TYPES.string.contains,
+      ariaLabelDescription: "Colonna Data, Cella filtro",
+      width: "200px",
+      label: "Struttura del documento"
     },
     {
       field: "noFacciateBollo",
@@ -140,6 +155,22 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       this.azienda = u.getUtente().aziendaLogin;
       console.log("Azienda: ",u.getUtente());
     }));
+    FilterUtils['dateRangeFilter'] = (value: Date, filter: [Date, Date]): boolean => {
+      var v = new Date(value);
+      // get the from/start value
+      var s = filter[0].getTime();
+      var e;
+      // the to/end value might not be set
+      // use the from/start date and add 1 day
+      // or the to/end date and add 1 day
+      if ( filter[1]) {
+        e =  filter[1].getTime() + 86400000;
+      } else {
+        e = s + 86400000;
+      }
+      // compare it to the actual values
+      return v.getTime() >= s && v.getTime() <= e;
+    }
   }
 
   handleSelectedAziendaEmit(event: Azienda, type: string) {
@@ -182,7 +213,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
           .subscribe((res: HttpResponse<BolloVirtuale[]>) => {
             this.loading = false;
             
-            this.datiBolliVirtuali = res.body.map(bollo => { return ({ ...bollo, date: (this.datePipe.transform(bollo.dataNumeroDoc, 'dd/MM/yyyy')) } as BolloVirtuale) });
+            this.datiBolliVirtuali = res.body.map(bollo => { return ({ ...bollo } as BolloVirtuale) });
             this.sanatoriaBolli();
             this.calculateTotal(this.datiBolliVirtuali);
           }, error => {
@@ -247,26 +278,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
   }
 
   private updateCount(total: number, element: ElementRef<HTMLElement>) {
-      let duration = total;
-      let timeout = 10;
-      if (total > 10000 && total < 10000000 ) {
-        duration = 5;
-        timeout = 1;
-      } else if (total > 10000000) {
-        duration = 10;
-        timeout = 1;
-      }
-      const count = +element.nativeElement.innerText;
-      if (duration == 0) {
-        duration = 1;
-      }
-      const inc = total / duration;
-      if (count <= total) {
-        element.nativeElement.innerText = Math.ceil(this.sum(count, inc)).toString();
-        this.updateCount(total,element);
-      } else {
-        element.nativeElement.innerText = total.toString();
-      }
+      element.nativeElement.innerText = total.toString();
   }
 
   private sum = (a: number, b: number) => {
@@ -308,6 +320,47 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
         this.exportCsvInProgress = false;
       }
     }
+  }
+
+  public onCalendarAction(event: any, field: string, action: string) {
+    let calSel: Calendar = null;
+    switch (action) {
+      case "today":
+        calSel = this._calGen.find(e => e.inputId === "CalInput_" + field);
+        if (calSel) {
+          calSel.overlayVisible = false;
+        }
+      break;
+
+      case "clear":
+        this.dataTable.filter(null, field, 'CalendarRange');
+      break;
+
+      case "select":
+        if (this._calGen) {
+          calSel = this._calGen.find(a => a.inputId === "CalInput_" + field);
+          if (calSel && this.dataRange && this.dataRange[field].length === 2
+            && this.dataRange[field][0] && this.dataRange[field][1]) {
+            calSel.overlayVisible = false;
+          }
+        }
+        const value = this.dataRange[field];
+        this.dataTable.filter(value, field, 'dateRangeFilter');
+      break;
+    }
+  }
+
+  calendarTooltip(field: string) {
+    let tooltip: string = "";
+    if (this.dataRange && this.dataRange[field]) {
+      if (this.dataRange[field][0]) {
+        tooltip += this.datePipe.transform(this.dataRange[field][0], "dd/MM/yyyy");
+      }
+      if (this.dataRange[field][1]) {
+        tooltip += " - " + this.datePipe.transform(this.dataRange[field][1], "dd/MM/yyyy");
+      }
+    }
+    return tooltip;
   }
 
   ngOnDestroy(): void {

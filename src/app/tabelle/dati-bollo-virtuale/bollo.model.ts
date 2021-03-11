@@ -7,6 +7,7 @@ export class BolloVirtuale {
 	public dataNumeroDoc: Date;
 	public oggettoDoc: string;
 	public redattoreDoc: string;
+	public nomeStruttura: string;
 	public noFacciateBollo: number;
 	public noRigheBollo: number;
 	public noBolliAltriImporti: number;

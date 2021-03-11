@@ -122,7 +122,6 @@
             selectionMode="single"
             (onRowSelect)="handleEvent('onRowSelect', $event)"
             [scrollable]="true"
-            
             [loading]="loading"
             (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
             (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
@@ -143,23 +142,34 @@
                         </p-sortIcon>
                     </th>
                 </tr>
-                <!-- <tr>
-                    <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget">
+                <tr>
+                    <td *ngFor="let col of columns" [ngSwitch]="col.fieldType" [style.width]="col.width" >
                         <div *ngIf="col.field != undefined && col.field !== 'priorita'">
-                            <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." [showButtonBar]="true"
-                                [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
-                                (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
-                                appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
+                            <p-calendar #calGen 
+                              *ngSwitchCase="'DateTime'"
+                              [(ngModel)]="dataRange[col.field]"
+                              placeholder="Scegli..."
+                              [showButtonBar]="true"
+                              [locale]="it"
+                              [showIcon]="false"
+                              dateFormat="dd/mm/yy"
+                              (onSelect)="onCalendarAction($event, col.field, 'select')"
+                              (onClearClick)="onCalendarAction($event, col.field, 'clear')" 
+                              (onTodayClick)="onCalendarAction($event, col.field, 'today')"
+                              appendTo="body" 
+                              selectionMode="range" 
+                              readonlyInput="true" 
+                              [pTooltip]="calendarTooltip(col.field)" 
+                              inputId="CalInput_{{col.field}}"> 
                             </p-calendar>
                             <input *ngSwitchDefault pInputText 
                                 attr.aria-label="Cella filtro per Colonna {{col.label}}" 
                                 type="text" 
-                                (input)="dt.filter($event.target.value.trim(), col.field, col.filterMatchMode)"
-                                style="width:100%" 
+                                (input)="tableBolliVirtuali.filter($event.target['value'].trim(), col.field, col.filterMatchMode)"
                                 #filterInputText>
                         </div>
                     </td>
-                </tr> -->
+                </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowBollo let-columns="columns">
               <tr class="row-class">
@@ -168,7 +178,7 @@
                   [style.width]="col.width" 
                   [style.textAlign]="col.textAlign" 
                   [pTooltip]="col.label">
-                  {{rowBollo[col.field]}}
+                  {{ col.field != "dataNumeroDoc" ? rowBollo[col.field] : rowBollo[col.field] | date: 'dd/MM/yyyy'}}
                 </td>
               </tr>
             </ng-template>
