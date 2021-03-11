@@ -70,7 +70,7 @@ export class AttivitaFatteComponent implements OnInit {
       field: "idAzienda.nome",
       header: "Ente",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "95px",
+      width: "100px",
       label: "ente"
     },
     {
@@ -100,7 +100,7 @@ export class AttivitaFatteComponent implements OnInit {
       fieldType: "DateTime",
       filterWidget: "Calendar",
       ariaLabelDescription: "Colonna Data, Cella filtro",
-      width: "122px",
+      width: "128px",
       label: "svolta il"
     },
     {

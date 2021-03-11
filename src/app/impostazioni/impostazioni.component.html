@@ -2,10 +2,12 @@
   <form #form="ngForm">
     <div>
       <ul class="settings-items">
-        <li>
+        <li class="item">
           <label for="hidePreview">Nascondi anteprima</label>
-          <p-inputSwitch id="hidePreview" [(ngModel)]="model.hidePreview" styleClass="switch-class" name="hidePreview"></p-inputSwitch>
-          <span class="span-position">{{ model.hidePreview ? 'Sì': 'No' }}</span>
+          <div class="right">
+            <p-inputSwitch id="hidePreview" [(ngModel)]="model.hidePreview" styleClass="switch-class" name="hidePreview"></p-inputSwitch>
+            <span class="si-no">{{ model.hidePreview ? 'Sì': 'No' }}</span>
+          </div>
         </li>
       </ul>
     </div>

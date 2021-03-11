@@ -12,8 +12,8 @@ export const ColumnsNormal = [
     field: "idAzienda.nome",
     header: "Ente",
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-    width: "95px",
-    minWidth: "95px",
+    width: "98px",
+    minWidth: "98px",
     label: "ente",
   },
   {
