@@ -4,7 +4,7 @@ export const ColumnsNormal = [
   {
     // E' l'insieme di priorità e tipo attività
     field: "priorita",
-    width: "30px",
+    width: "37px",
     padding: 0,
     label: "tipo attività",
   },
@@ -12,16 +12,16 @@ export const ColumnsNormal = [
     field: "idAzienda.nome",
     header: "Ente",
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-    width: "85px",
-    minWidth: "85px",
+    width: "98px",
+    minWidth: "98px",
     label: "ente",
   },
   {
     field: "idApplicazione.nome",
     header: "App",
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-    width: "80px",
-    minWidth: "80px",
+    width: "93px",
+    minWidth: "93px",
     label: "applicazione",
   },
   {
@@ -47,8 +47,8 @@ export const ColumnsNormal = [
     fieldType: "DateTime",
     filterWidget: "Calendar",
     ariaLabelDescription: "Colonna Data, Cella filtro",
-    width: "100px",
-    minWidth: "100px",
+    width: "117px",
+    minWidth: "117px",
     label: "data",
   },
   {
@@ -99,7 +99,7 @@ export const ColumnsReordered = [
   {
     // E' l'insieme di priorità e tipo attività
     field: "priorita",
-    width: "30px",
+    width: "37px",
     padding: 0,
     label: "tipo attività",
   },
@@ -118,8 +118,8 @@ export const ColumnsReordered = [
     fieldType: "DateTime",
     filterWidget: "Calendar",
     ariaLabelDescription: "Colonna Data, Cella filtro",
-    width: "100px",
-    minWidth: "100px",
+    width: "117px",
+    minWidth: "117px",
     label: "data",
   },
   {

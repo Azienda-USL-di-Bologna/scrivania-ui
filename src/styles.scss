@@ -1,9 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
-@import '../node_modules/primeng-lts/resources/themes/nova-light/theme.css'; 
+@import '../node_modules/primeng-lts/resources/themes/nova/theme.css'; 
 @import '../node_modules/primeng-lts/resources/primeng.min.css';
 @import '../node_modules/primeicons/primeicons.css';
 @import '../node_modules/primeflex/primeflex.css';
-
+@import '../node_modules/@bds/common-components/assets/bds-styles/primeng.scss';
+@import '../node_modules/@bds/common-components/assets/bds-styles/material-icons.scss';
+@import '../node_modules/@bds/common-components/assets/bds-styles/custom-classes.scss';
+@import '../node_modules/@bds/common-components/assets/bds-styles/basic.scss';
 html,
 body{
     min-height: 100%;

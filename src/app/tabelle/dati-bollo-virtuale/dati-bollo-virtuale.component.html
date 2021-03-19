@@ -54,19 +54,19 @@
         <lib-aziende-autocomplete
           [azienda]="_azienda"
           (aziendaChange)="handleSelectedAziendaEmit($event, 'Azienda')"
-          filterByRole="true">
+          [filterByRole]="true">
         </lib-aziende-autocomplete>
         <span>Da:</span>
         <p-calendar
           [showIcon]="true"
           [monthNavigator]="true"
           [yearNavigator]="true"
-          showButtonBar="true"
+          [showButtonBar]="true"
           yearRange="1000:4000"
           [locale]="it"
-          required="true"
+          [required]="true"
           dateFormat="dd/mm/yy"
-          hideOnDateTimeSelect="true"
+          [hideOnDateTimeSelect]="true"
           [(ngModel)]="dataInizio"
           [maxDate]="dataFine"
           [disabled]="!!!_azienda.codice"
@@ -81,11 +81,11 @@
           [showIcon]="true"
           [monthNavigator]="true"
           [yearNavigator]="true"
-          showButtonBar="true"
+          [showButtonBar]="true"
           yearRange="1000:4000"
           [locale]="it"
           dateFormat="dd/mm/yy"
-          hideOnDateTimeSelect="true"
+          [hideOnDateTimeSelect]="true"
           [(ngModel)]="dataFine"
           [disabled]="false"
           [minDate]="dataInizio"
@@ -122,7 +122,6 @@
             selectionMode="single"
             (onRowSelect)="handleEvent('onRowSelect', $event)"
             [scrollable]="true"
-            
             [loading]="loading"
             (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
             (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
@@ -143,23 +142,34 @@
                         </p-sortIcon>
                     </th>
                 </tr>
-                <!-- <tr>
-                    <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget">
+                <tr>
+                    <td *ngFor="let col of columns" [ngSwitch]="col.fieldType" [style.width]="col.width" >
                         <div *ngIf="col.field != undefined && col.field !== 'priorita'">
-                            <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." showButtonBar="true"
-                                [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
-                                (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
-                                appendTo="body" selectionMode="range" readonlyInput="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
+                            <p-calendar #calGen 
+                              *ngSwitchCase="'DateTime'"
+                              [(ngModel)]="dataRange[col.field]"
+                              placeholder="Scegli..."
+                              [showButtonBar]="true"
+                              [locale]="it"
+                              [showIcon]="false"
+                              dateFormat="dd/mm/yy"
+                              (onSelect)="onCalendarAction($event, col.field, 'select')"
+                              (onClearClick)="onCalendarAction($event, col.field, 'clear')" 
+                              (onTodayClick)="onCalendarAction($event, col.field, 'today')"
+                              appendTo="body" 
+                              selectionMode="range" 
+                              readonlyInput="true" 
+                              [pTooltip]="calendarTooltip(col.field)" 
+                              inputId="CalInput_{{col.field}}"> 
                             </p-calendar>
                             <input *ngSwitchDefault pInputText 
                                 attr.aria-label="Cella filtro per Colonna {{col.label}}" 
                                 type="text" 
-                                (input)="dt.filter($event.target.value.trim(), col.field, col.filterMatchMode)"
-                                style="width:100%" 
+                                (input)="tableBolliVirtuali.filter($event.target['value'].trim(), col.field, col.filterMatchMode)"
                                 #filterInputText>
                         </div>
                     </td>
-                </tr> -->
+                </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowBollo let-columns="columns">
               <tr class="row-class">
@@ -168,7 +178,7 @@
                   [style.width]="col.width" 
                   [style.textAlign]="col.textAlign" 
                   [pTooltip]="col.label">
-                  {{rowBollo[col.field]}}
+                  {{ col.field != "dataNumeroDoc" ? rowBollo[col.field] : rowBollo[col.field] | date: 'dd/MM/yyyy'}}
                 </td>
               </tr>
             </ng-template>
@@ -178,11 +188,11 @@
     </div>
     
     <footer class="p-grid" style="margin-right: 17px; flex-wrap: nowrap; overflow-x: auto; font-weight: bold;">
-      <div class="p-col" style="text-align: center; min-width: 600px;">Totale</div>
-      <div #totalFacciateBolloRef class="p-col-fixed" style="width: 109px; text-align: center;">{{totalFacciateBollo}}</div>
-      <div #totalRigheBolloRef class="p-col-fixed" style="width: 90px; text-align: center;">{{totalRigheBollo}}</div>
-      <div #totalAltriImportiBolloRef class="p-col-fixed" style="width: 105px; text-align: center;">{{totalAltriImportiBollo}}</div>
-      <div  class="p-col-fixed" style="width: 104px; text-align: center;">
+      <div class="p-col" style="text-align: center; min-width: 568px;">Totale</div>
+      <div #totalFacciateBolloRef class="p-col-fixed" style="width: 122px; text-align: center;">{{totalFacciateBollo}}</div>
+      <div #totalRigheBolloRef class="p-col-fixed" style="width: 105px; text-align: center;">{{totalRigheBollo}}</div>
+      <div #totalAltriImportiBolloRef class="p-col-fixed" style="width: 119px; text-align: center;">{{totalAltriImportiBollo}}</div>
+      <div  class="p-col-fixed" style="width: 105px; text-align: center;">
         <span>€</span>
         <span #totalImportoAltriBolloRef>{{totalImportoAltriBollo}}</span>
       </div>

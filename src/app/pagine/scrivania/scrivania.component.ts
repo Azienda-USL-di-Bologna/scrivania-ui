@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList, OnDestroy, HostListener } from "@angular/core";
+import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList, OnDestroy, HostListener, AfterViewInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Attivita, Menu, ImpostazioniApplicazioni, UrlsGenerationStrategy, ItemMenu, CommandType, BaseUrls } from "@bds/ng-internauta-model";
 import { Dropdown } from "primeng-lts/dropdown";
@@ -10,7 +10,7 @@ import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STAT
 import { Subscription } from "rxjs";
 import { ApplicationCustiomization } from "src/environments/application_customization";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
-import { ConfirmationService } from "primeng-lts/components/common/confirmationservice";
+import { ConfirmationService } from "primeng-lts/api";
 import { stringify } from "querystring";
 import { BaseUrlType, ParametroAziende } from "@bds/ng-internauta-model";
 import { HttpClient } from "@angular/common/http";
@@ -20,17 +20,17 @@ import { ConfigurazioneService} from "@bds/ng-internauta-model";
 @Component({
   selector: "app-scrivania",
   templateUrl: "./scrivania.component.html",
-  styleUrls: ["./scrivania.component.css"]
+  styleUrls: ["./scrivania.component.scss"]
 })
-export class ScrivaniaComponent implements OnInit, OnDestroy {
+export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public mostraStorico: boolean = false;
 
-  @ViewChild("anteprima", null) private anteprima: ElementRef;
-  @ViewChild("allegatiDropDown", null) private allegatiDropDown: Dropdown;
+  @ViewChild("anteprima") private anteprima: ElementRef;
+  @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
 
-  @ViewChild("leftSide", null) private leftSide: ElementRef;
-  @ViewChild("rightSide", null) private rightSide: ElementRef;
-  @ViewChild("slider", null) private slider: ElementRef;
+  @ViewChild("leftSide") private leftSide: ElementRef;
+  @ViewChild("rightSide") private rightSide: ElementRef;
+  @ViewChild("slider") private slider: ElementRef;
 
   private subscriptions: Subscription[] = [];
 
@@ -81,19 +81,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.log("scivania ngOnInit()");
     // imposto l'utente loggato nell'apposita variabile
-    this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
-      if (u) {
-        if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
-          this.loggedUser = u;
-          // this.loadMenu(); // not used
-          this.setLook();
-        } else {
-          this.loggedUser = u;
-        }
-        // this.loadAziendeMenu();
-        
-      }
-    }));
+    
     this.subscriptions.push(this.scrivaniaService.getUrlsFirmone().subscribe(data => {
       if (data.size > 0) {
         if (data.size === 1) {
@@ -117,12 +105,27 @@ export class ScrivaniaComponent implements OnInit, OnDestroy {
       console.log("items", items)
       this.menuItems = items;
     }));
-    this.allegatiDropDown.disabled = true;
+    
     this.allegati = [{ label: "Documenti non presenti", value: null }];
-    this.setVisibilitàPulsanteBolli();
+    
+  }
 
-
-
+  ngAfterViewInit() {
+    this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
+      if (u) {
+        if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
+          this.loggedUser = u;
+          // this.loadMenu(); // not used
+          this.setLook();
+        } else {
+          this.loggedUser = u;
+        }
+        // this.loadAziendeMenu();
+        this.setVisibilitàPulsanteBolli();
+      }
+    }));
+    
+    this.allegatiDropDown.disabled = true;
   }
 
   public openMenuUrl: (value: ItemMenu) => void = (item: ItemMenu): void => {

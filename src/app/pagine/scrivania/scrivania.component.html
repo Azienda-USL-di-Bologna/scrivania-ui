@@ -4,7 +4,7 @@
     <div class="option-bar">
         <div class="buttons-bar">
 
-            <bds-menu [items]="menuItems" [executeAction]="openMenuUrl"></bds-menu>
+            <bds-menu *ngIf="menuItems" [items]="menuItems" [executeAction]="openMenuUrl"></bds-menu>
             <span style="margin-right: 10px;"> </span>
 <!-- 
             <button [ngClass]="mostraStorico?'d-hidden':'d-flex'" #btn type="button" pButton (click)="menu.toggle($event)" class="clMenu" iconPos="left" label="Apri">
@@ -13,24 +13,53 @@
             <p-tieredMenu #menu [model]="alberoMenu" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event, null)" role="menu" aria-label="lista con le applicazioni"></p-tieredMenu> -->
 
             <!-- Firma -->
-            <button type="button" pButton pTooltip="Firma" tooltipPosition="bottom" [ngClass]="{'ui-button-secondary icon-custom': true, 'pr-8':true, 'd-hidden': mostraStorico || urlFirmone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlFirmone.url, urlFirmone.urlGenerationStrategy)" aria-label="Firma">
+            <button 
+                type="button" 
+                pButton 
+                pTooltip="Firma" 
+                tooltipPosition="bottom" 
+                [ngClass]="{'ui-button-secondary icon-custom': true, 'pr-8':true, 'd-hidden': mostraStorico || urlFirmone === '#', 'd-flex': !mostraStorico}" 
+                class="p-button-icon-only" 
+                (click)="handleItemClick(urlFirmone.url, urlFirmone.urlGenerationStrategy)" 
+                aria-label="Firma">
                 <img src="assets/images/sign.svg" class="images-pos" alt="Firma">
             </button>
 
-            <button #btn type="button" pButton pTooltip="Firma" tooltipPosition="bottom" [ngClass]="{'d-hidden': mostraStorico || alberoFirma.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary icon-custom" (click)="firmaMenu.toggle($event)" aria-label="Firma">
+            <button 
+                #btn 
+                type="button" 
+                pButton 
+                pTooltip="Firma" 
+                tooltipPosition="bottom" 
+                [ngClass]="{'d-hidden': mostraStorico || alberoFirma.length < 2, 'd-flex': !mostraStorico}" 
+                class="ui-button-secondary icon-custom p-button-icon-only" 
+                (click)="firmaMenu.toggle($event)" 
+                aria-label="Firma">
                 <img src="assets/images/sign.svg"  class="images-pos"  alt="Firma">
             </button>
-            <p-tieredMenu #firmaMenu [model]="alberoFirma" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event, null)"></p-tieredMenu>
+            <p-tieredMenu 
+                appendTo="body"
+                #firmaMenu 
+                [model]="alberoFirma" 
+                [popup]="true" 
+                (itemClick)="handleItemClick($event, null)">
+            </p-tieredMenu>
 
             <!-- Prendi -->
-            <button type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" [ngClass]="{'ui-button-secondary icon-custom': true, 'pr-8':true, 'd-hidden': mostraStorico || urlPrendone === '#', 'd-flex': !mostraStorico}" (click)="handleItemClick(urlPrendone.url, urlPrendone.urlGenerationStrategy)" aria-label="Prendi il documento">
+            <button type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" [ngClass]="{'ui-button-secondary icon-custom': true, 'pr-8':true, 'd-hidden': mostraStorico || urlPrendone === '#', 'd-flex': !mostraStorico}" class="p-button-icon-only" (click)="handleItemClick(urlPrendone.url, urlPrendone.urlGenerationStrategy)" aria-label="Prendi il documento">
                 <img src="assets/images/hiring.svg" class="images-pos"  alt="Prendi">
             </button>
-            <button #btn type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" [ngClass]="{'d-hidden': mostraStorico || alberoPrendi.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary icon-custom" (click)="prendoneMenu.toggle($event)"aria-label="Prendi il documento">
+            <button #btn type="button" pButton pTooltip="Prendi i tuoi assegnamenti" tooltipPosition="bottom" [ngClass]="{'d-hidden': mostraStorico || alberoPrendi.length < 2, 'd-flex': !mostraStorico}" class="ui-button-secondary icon-custom p-button-icon-only" (click)="prendoneMenu.toggle($event)"aria-label="Prendi il documento">
                 <img src="assets/images/hiring.svg" class="images-pos" alt="Prendi">
             </button>
-            <p-tieredMenu #prendoneMenu [model]="alberoPrendi" [popup]="true" class="clMenuPosition" (itemClick)="handleItemClick($event, null)"></p-tieredMenu>
-            <button #btn *ngIf="!mostraStorico && loggedUser.isCA() && showBolli" 
+            <p-tieredMenu 
+                appendTo="body"
+                #prendoneMenu 
+                [model]="alberoPrendi" 
+                [popup]="true"
+                (itemClick)="handleItemClick($event, null)">
+            </p-tieredMenu>
+            <button #btn *ngIf="!mostraStorico && loggedUser?.isCA() && showBolli" 
                 type="button"
                 pButton 
                 pTooltip="Vai al riepilogo Bollo Virtuale" 
@@ -54,7 +83,7 @@
             <h3 *ngIf="mostraStorico" class="crono-label">Cronologia</h3>
         </div>
 
-        <app-dropdown-aziende *ngIf="(( (!!this.loggedUser.getUtente().utenteReale || this.loggedUser.isSD() ) && this.loggedUser.getUtente().aziende.length > 1) || (!!!this.loggedUser.getUtente().utenteReale && this.loggedUser.getUtente().aziendeAttive.length > 1) )" (aziendaEmitter)="aziendaChanged($event)" aria-label="Ente delle attività"></app-dropdown-aziende>
+        <app-dropdown-aziende *ngIf="(( (!!this.loggedUser?.getUtente().utenteReale || this.loggedUser?.isSD() ) && this.loggedUser?.getUtente().aziende.length > 1) || (!!!this.loggedUser?.getUtente().utenteReale && this.loggedUser?.getUtente().aziendeAttive.length > 1) )" (aziendaEmitter)="aziendaChanged($event)" aria-label="Ente delle attività"></app-dropdown-aziende>
     </div>
     <div class="table-wrapper">
         <div class="table-inner">
@@ -118,9 +147,9 @@
     </div>
 </div>
 
-<p-dialog header="Note Attività" [(visible)]="this.showNote" [modal]="true" [responsive]="true" [width]="350" [minWidth]="200" [minY]="70"
+<p-dialog header="Note Attività" [(visible)]="this.showNote" [modal]="true" [responsive]="true"  [minY]="70"
         [maximizable]="true" [baseZIndex]="10000">
         {{ this.noteText }}
-</p-dialog>
+</p-dialog><!-- [width]="350" [minWidth]="200" -->
 
 <p-confirmDialog id="dialog" [style]="{width: '30vw'}"></p-confirmDialog>

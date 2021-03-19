@@ -36,7 +36,7 @@ export class AttivitaFatteComponent implements OnInit {
   public _rows = 20;
 
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
-  @ViewChild("dt", null) private dataTable: Table;
+  @ViewChild("dt") private dataTable: Table;
 
   private _idAzienda: number = -1;
   @Input("idAzienda")
@@ -62,7 +62,7 @@ export class AttivitaFatteComponent implements OnInit {
     {
       // E' l'insieme di priorità e tipo attività
       field: "priorita",
-      width: "30px",
+      width: "37px",
       padding: 0,
       label: "priorità"
     },
@@ -70,14 +70,14 @@ export class AttivitaFatteComponent implements OnInit {
       field: "idAzienda.nome",
       header: "Ente",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "85px",
+      width: "100px",
       label: "ente"
     },
     {
       field: "idApplicazione.nome",
       header: "App",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "80px",
+      width: "93px",
       label: "applicazione"
     },
     {
@@ -100,7 +100,7 @@ export class AttivitaFatteComponent implements OnInit {
       fieldType: "DateTime",
       filterWidget: "Calendar",
       ariaLabelDescription: "Colonna Data, Cella filtro",
-      width: "100px",
+      width: "128px",
       label: "svolta il"
     },
     {
@@ -242,15 +242,15 @@ export class AttivitaFatteComponent implements OnInit {
     this.loadData(event);
   }
 
-  public onKeydownHandlerArrowDown(event: KeyboardEvent) {
+  public onKeydownHandlerArrowDown(event: Event) {
     // this.selectIndex(this.selectedRowIndex + 1);
   }
 
-  public onKeydownHandlerArrowUp(event: KeyboardEvent) {
+  public onKeydownHandlerArrowUp(event: Event) {
     // this.selectIndex(this.selectedRowIndex - 1);
   }
 
-  private onNoteClick(attivita: any) {
+  public onNoteClick(attivita: any) {
     this.onAttivitaNoteEmitter.emit(attivita);
   }
 
