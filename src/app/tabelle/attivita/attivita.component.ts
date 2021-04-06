@@ -95,9 +95,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
-  @ViewChild("dt", null) private dataTable: Table;
+  @ViewChild("dt") private dataTable: Table;
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
-  @ViewChildren("tableRows", null) tableRows: QueryList<ElementRef>;
+  @ViewChildren("tableRows") tableRows: QueryList<ElementRef>;
   private selectedTableRowIndex: number;
 
   constructor(
@@ -270,12 +270,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     });
   }
 
-  public onKeydownHandlerArrowDown(event: KeyboardEvent) {
+  public onKeydownHandlerArrowDown(event: Event) {
     console.log("Scattato down");
     this.selectIndex(this.selectedRowIndex + 1);
   }
 
-  public onKeydownHandlerArrowUp(event: KeyboardEvent) {
+  public onKeydownHandlerArrowUp(event: Event) {
     console.log("Scattato up");
     this.selectIndex(this.selectedRowIndex - 1);
   }
@@ -476,7 +476,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           if (td && !td.classList.contains(this.columnClass)) {
             this.renderer.addClass(td, this.columnClass);
             td.innerHTML = attivita[col.field];
-            return;
+            res = undefined;
           } else {
             res = attivita[col.field];
           }
@@ -488,8 +488,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           }
           // console.log("getColumnValue td", td);
           this.fillActionCol(attivita, td);
-          return;
-
+          res = undefined;
+          break;
         default:
           if (td && !td.classList.contains(this.columnClass)) {
             this.renderer.addClass(td, this.columnClass);
