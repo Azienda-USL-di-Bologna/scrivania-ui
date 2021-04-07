@@ -20,3 +20,7 @@
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
 }
+
+::ng-deep app-attivita-fatte .p-datatable table {
+    table-layout: unset;
+}

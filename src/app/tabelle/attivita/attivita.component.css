@@ -4,7 +4,9 @@
     height: 24px;
     margin: auto;
 }
-
+::ng-deep app-attivita .p-datatable table {
+    table-layout: unset;
+}
 .openTabLink{
     color: #993366 !important;
 }

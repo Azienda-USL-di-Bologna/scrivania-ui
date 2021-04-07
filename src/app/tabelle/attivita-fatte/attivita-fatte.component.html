@@ -18,7 +18,9 @@
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns"  
-                [style.width]="col.width" [style.padding]="col.padding" 
+                [style.width]="col.width" 
+                [style.minWidth]="col.minWidth" 
+                [style.padding]="col.padding" 
                 [pSortableColumn]="col.field" 
                 attr.aria-label="Colonna {{col.label}}, {{col.header ? 'Ordinare colonna' : ''}}">
                 {{col.header}}
@@ -28,7 +30,7 @@
             </th>
         </tr>
         <tr>
-            <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget">
+            <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget" [style.minWidth]="col.minWidth">
                 <div *ngIf="col.field != undefined && col.field !== 'priorita'">
                     <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." [showButtonBar]="true"
                         [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
@@ -48,17 +50,17 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
         <tr #selRow class="row-class" [pSelectableRow]="rowData" style="height:30px" aria-label="riga">
-            <td [style.width]="cols[0].width" class="column-class p0">
+            <td [style.width]="cols[0].width" [style.minWidth]="cols[0].minWidth" class="column-class p0">
                 <img [src]="attivita.iconaAttivita" alt="{{attivita.tipo === 'notifica' ? 'icona notifica' : 'icona priorità'}}" class="img-table" />
             </td>
-            <td aria-label="Colonna Ente" [style.width]="cols[1].width" class="column-class">{{attivita.idAzienda.nome}}</td>
-            <td aria-label="Colonna Applicazione" [style.width]="cols[2].width" class="column-class">{{attivita.idApplicazione.nome}}</td>
-            <td aria-label="Colonna Provenienza" [style.width]="cols[3].width" class="column-class">{{attivita.provenienza}}</td>
-            <td aria-label="Colonna Oggetto" class="column-class">{{attivita.oggetto}}</td>
-            <td aria-label="Colonna Svolta il" [style.width]="cols[5].width" class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
-            <td aria-label="Colonna Tipo" [style.width]="cols[6].width" class="column-class">{{attivita.descrizione}}</td>
+            <td aria-label="Colonna Ente" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" class="column-class">{{attivita.idAzienda.nome}}</td>
+            <td aria-label="Colonna Applicazione" [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" class="column-class">{{attivita.idApplicazione.nome}}</td>
+            <td aria-label="Colonna Provenienza" [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" class="column-class">{{attivita.provenienza}}</td>
+            <td aria-label="Colonna Oggetto" class="column-class" [style.minWidth]="cols[4].minWidth">{{attivita.oggetto}}</td>
+            <td aria-label="Colonna Svolta il" [style.width]="cols[5].width" [style.minWidth]="cols[5].minWidth" class="column-class">{{attivita.dataInserimentoRiga | date:'dd/MM/yyyy'}}</td>
+            <td aria-label="Colonna Tipo" [style.width]="cols[6].width" [style.minWidth]="cols[6].minWidth" class="column-class">{{attivita.descrizione}}</td>
 
-            <td aria-label="Colonna note" [style.width]="cols[7].width" class="p0">
+            <td aria-label="Colonna note" [style.width]="cols[7].width" [style.minWidth]="cols[7].minWidth" class="p0">
                 <img tabindex="0" role="button" *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="onNoteClick(attivita)" alt="l'attività ha delle note" class="img-table">
                 <!-- <img *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table"> -->
             </td>
