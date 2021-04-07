@@ -7,6 +7,7 @@ export const ColumnsNormal = [
     width: "37px",
     padding: 0,
     label: "tipo attività",
+    minWidth: "37px",
   },
   {
     field: "idAzienda.nome",
@@ -102,6 +103,7 @@ export const ColumnsReordered = [
     width: "37px",
     padding: 0,
     label: "tipo attività",
+    minWidth: "37px",
   },
   {
     field: "oggetto",
@@ -141,16 +143,16 @@ export const ColumnsReordered = [
     field: "idAzienda.nome",
     header: "Ente",
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-    width: "85px",
-    minWidth: "85px",
+    width: "98px",
+    minWidth: "98px",
     label: "ente",
   },
   {
     field: "idApplicazione.nome",
     header: "App",
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-    width: "80px",
-    minWidth: "80px",
+    width: "93px",
+    minWidth: "93px",
     label: "applicazione",
   },
   {

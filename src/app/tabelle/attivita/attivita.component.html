@@ -7,8 +7,7 @@
     [columns]="doNotShowAziendaHeader(cols)"
     [paginator]="true"
     [rows]="LOADED_ROWS"
-    [autoLayout]="true"
-    [responsive]="true"
+    
     [totalRecords]="totalRecords"
     selectionMode="single"
     (onRowSelect)="handleEvent('onRowSelect', $event)"
@@ -18,11 +17,17 @@
     (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
     (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
     [(contextMenuSelection)]="attivitaSelezionata" [contextMenu]="cm"
-    >
+    ><!-- [autoLayout]="true"
+    [responsive]="true" -->
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th tabindex="0" [id]="col.field || col.label" *ngFor="let col of columns"  [style.display]="col.display"
-                [style.width]="col.width" [style.minWidth]="col.minWidth" [style.padding]="col.padding"
+            <th  *ngFor="let col of columns"
+                tabindex="0" 
+                [id]="col.field || col.label"  
+                [style.display]="col.display"
+                [style.width]="col.width" 
+                [style.minWidth]="col.minWidth" 
+                [style.padding]="col.padding"
                 attr.aria-label="Colonna {{col.label}}, {{col.header ? 'Ordinare colonna' : ''}}"
                 [pSortableColumn]="col.field === 'azione' ? null: col.field" scope="colgroup">
                     {{col.header}}
@@ -30,6 +35,7 @@
                     <!-- ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente" -->
                 </p-sortIcon>
             </th>
+            <th *ngIf="cols[11].visibility==='visible'" aria-label="Colonna Apri Anteprima"></th>
         </tr>
         <tr>
             <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget" class="filters-styles" [style.width]="col.width" [style.minWidth]="col.minWidth" [style.display]="col.display">
@@ -46,7 +52,7 @@
                         #filterInputText>
                 </div>
             </td>
-
+            <td *ngIf="cols[11].visibility==='visible'" aria-label="Colonna Apri Anteprima"></td>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
@@ -55,7 +61,16 @@
                 <img tabindex="0" role="button" *ngIf="!(attivita.tipo === 'notifica')" [src]="attivita.iconaAttivita" alt="icona priorità {{attivita.priorita}}" class="img-table" pTooltip="Imposta priorità" (click)="impostaPriorita(attivita, $event)"/>
                 <img *ngIf="attivita.tipo === 'notifica'" [src]="attivita.iconaAttivita" alt="icona notifica" class="img-table" pTooltip="Notifica"/>
             </td>
-            <td aria-label="Colonna Ente" *ngIf="(( (!!this.loggedUser.getUtente().utenteReale || this.loggedUser.isSD()) && this.loggedUser.getUtente().aziende.length > 1) || (!!!this.loggedUser.getUtente().utenteReale && this.loggedUser.getUtente().aziendeAttive.length > 1)) && !changedOrder" headers="idAzienda.nome" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: {}">{{getColumnValue(attivita, cols[1])}}</td>
+            <td 
+                aria-label="Colonna Ente" 
+                *ngIf="(( (!!this.loggedUser.getUtente().utenteReale || this.loggedUser.isSD()) && this.loggedUser.getUtente().aziende.length > 1) || (!!!this.loggedUser.getUtente().utenteReale && this.loggedUser.getUtente().aziendeAttive.length > 1)) && !changedOrder" 
+                headers="idAzienda.nome" 
+                [style.width]="cols[1].width" 
+                [style.minWidth]="cols[1].minWidth" 
+                [ngClass]="columnClass" 
+                [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: {}">
+                {{getColumnValue(attivita, cols[1])}}
+            </td>
             <td aria-label="Colonna Ente" *ngIf="changedOrder" headers="idAzienda.nome" [style.width]="cols[1].width" [style.minWidth]="cols[1].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: {}">{{getColumnValue(attivita, cols[1])}}</td>
             <td aria-label="Colonna Applicazione" headers="idApplicazione.nome" [style.width]="cols[2].width" [style.minWidth]="cols[2].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: {}">{{getColumnValue(attivita, cols[2])}}</td>
             <td aria-label="Colonna provenienza" headers="provenienza" [id]="attivita.id" #td3 [style.width]="cols[3].width" [style.minWidth]="cols[3].minWidth" [ngClass]="columnClass" [ngStyle]="!attivita.aperta ? {'font-weight':'bold'}: {}">{{getColumnValue(attivita, cols[3], td3)}}</td>

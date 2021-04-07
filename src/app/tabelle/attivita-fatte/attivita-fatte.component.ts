@@ -64,34 +64,39 @@ export class AttivitaFatteComponent implements OnInit {
       field: "priorita",
       width: "37px",
       padding: 0,
-      label: "priorità"
+      label: "priorità",
+      minWidth: "37px"
     },
     {
       field: "idAzienda.nome",
       header: "Ente",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "100px",
-      label: "ente"
+      label: "ente",
+      minWidth: "100px"
     },
     {
       field: "idApplicazione.nome",
       header: "App",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "93px",
-      label: "applicazione"
+      label: "applicazione",
+      minWidth: "93px"
     },
     {
       field: "provenienza",
       header: "Da",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "140px",
-      label: "provenienza"
+      label: "provenienza",
+      minWidth: "140px"
     },
     {
       field: "oggetto",
       header: "Oggetto",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      label: "oggetto"
+      label: "oggetto",
+      minWidth: "200px"
     },
     {
       field: "dataInserimentoRiga",
@@ -101,19 +106,22 @@ export class AttivitaFatteComponent implements OnInit {
       filterWidget: "Calendar",
       ariaLabelDescription: "Colonna Data, Cella filtro",
       width: "128px",
-      label: "svolta il"
+      label: "svolta il",
+      minWidth: "128px"
     },
     {
       field: "descrizione",
       header: "Tipo",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "120px",
-      label: "tipo"
+      label: "tipo",
+      minWidth: "120px"
     },
     {
     // colonna note
       width: "30px",
-      label: "note"
+      label: "note",
+      minWidth: "30px"
     },
   ];
 
