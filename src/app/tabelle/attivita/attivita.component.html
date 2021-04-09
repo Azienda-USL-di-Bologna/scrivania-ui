@@ -35,10 +35,15 @@
                     <!-- ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente" -->
                 </p-sortIcon>
             </th>
-            <th *ngIf="cols[11].visibility==='visible'" aria-label="Colonna Apri Anteprima"></th>
+            <th *ngIf="cols[11].visibility==='visible' && !!!hidePreview" aria-label="Colonna Apri Anteprima"></th>
         </tr>
         <tr>
-            <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget" class="filters-styles" [style.width]="col.width" [style.minWidth]="col.minWidth" [style.display]="col.display">
+            <td *ngFor="let col of columns" 
+                [ngSwitch]="col.filterWidget" 
+                class="filters-styles" 
+                [style.width]="col.width" 
+                [style.minWidth]="col.minWidth" 
+                [style.display]="col.display">
                 <div *ngIf="col.field != undefined && col.field !== 'azione' && col.field !== 'priorita' && col.field !== 'anteprima'">
                     <p-calendar #calGen *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." [showButtonBar]="true"
                         [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
@@ -52,7 +57,7 @@
                         #filterInputText>
                 </div>
             </td>
-            <td *ngIf="cols[11].visibility==='visible'" aria-label="Colonna Apri Anteprima"></td>
+            <td *ngIf="cols[11].visibility==='visible' && !!!hidePreview" aria-label="Colonna Apri Anteprima"></td>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
@@ -90,8 +95,14 @@
                 <img tabindex="0" *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="noteClicckato(attivita, $event)" alt="Leggi note" role="button" class="img-table" pTooltip="Leggi note">
                 <img tabindex="0" *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="noteClicckato(attivita, $event)" alt="Inserisci note" role="button"  class="img-table" pTooltip="Inserisci note">
             </td>
-            <td *ngIf="cols[11].visibility==='visible'" aria-label="Colonna Apri Anteprima" headers="anteprima" [style.width]="cols[11].width" [style.opacity]="!attivita.allegatoDaMostrare ? 0 : 100"
-                [style.cursor]="!attivita.allegatoDaMostrare ? 'auto' : 'pointer'" class="p0 columns-icon" [style.minWidth]="cols[11].minWidth"
+            <td *ngIf="cols[11].visibility==='visible'" 
+                aria-label="Colonna Apri Anteprima" 
+                headers="anteprima" 
+                [style.width]="cols[11].width" 
+                [style.opacity]="!attivita.allegatoDaMostrare ? 0 : 100"
+                [style.cursor]="!attivita.allegatoDaMostrare ? 'auto' : 'pointer'" 
+                class="p0 columns-icon" 
+                [style.minWidth]="cols[11].minWidth"
                 [ngClass]="{'td-pos-relative' : attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza')}"
                 >
                 <img tabindex="0" *ngIf="attivita.allegatoDaMostrare && attivita.descrizione !== 'Redazione' && attivita.descrizione !== 'Bozza'" src="assets/images/pdf-file.svg"
