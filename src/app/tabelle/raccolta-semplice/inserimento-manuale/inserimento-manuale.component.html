@@ -1,0 +1,86 @@
+<h3 class="crono-label">Creazione Raccolta Semplice</h3>
+<body>
+    <strong>Dati</strong>
+    <form action="/upload">
+        <label for="name">Nome</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="applicazione">Applicazione:</label>
+        <input type="text" id="applicazione" name="applicazione"><br><br>
+        <label for="tipo_doc">Tipo Documento:</label>
+        <input type="text" id="tipo_doc" name="tipo_doc"><br><br>
+      </form>
+      <p></p>
+
+
+      <form method="post" name="uploadform" enctype="multipart/form-data">
+      </form>
+
+      <input type="file" id="upfiles" name="upfiles">
+
+      <script>
+
+        document.getElementById('upfiles').addEventListener('change', handle_files, false);
+      
+        function handle_files(evt) {
+      
+          var ff = document.forms['uploadform'];
+          var files  = evt.target.files;
+      
+          for ( var i = 0, file; file = files[i]; i++ ) {
+      
+            var reader = new FileReader();
+      
+            reader.onload = (function(file) {
+              return function (ufile) {
+                var upp = document.createElement('input');
+                upp['name'] = ufile.files.name;
+                upp['type'] =  ufile.files.type;
+                upp.value = ufile.target.result;
+                ff.appendChild(upp);
+              }
+            }(file));
+      
+            reader.readAsDataURL(file);
+          }
+        }
+      </script>
+
+
+      <br>
+      <br>
+
+        <strong>Collega documento Babel</strong>
+        <br><br>
+        <div>
+            <form action="loadAutocomplete()">
+            <label for="registro">Seleziona il codice registro:</label>
+            <select id="registri" name="registri">
+              <option value="PG">PG</option>
+              <option value="PICO">PICO</option>
+              <option value="DETE">DETE</option>
+              <option value="DELI">DELI</option>
+            </select>
+            <br>
+            <br>
+            <div class="autocomplete" style="width:300px;">
+              <input id="documento" type="text" name="documento" placeholder="Numerazione">
+            </div>
+            <input type="submit">
+          </form>
+        </div>
+      
+        
+        <p-fileUpload #fileUpload
+          name="demo[]" 
+          accept=".csv, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf, .txt" 
+          (uploadHandler)="onUpload($event)"
+          multiple = true
+          maxFileSize=1000000
+          chooseLabel="Sfoglia"
+          uploadLabel="Carica"
+          cancelLabel="Cancella">
+        </p-fileUpload>
+
+
+        
+</body>

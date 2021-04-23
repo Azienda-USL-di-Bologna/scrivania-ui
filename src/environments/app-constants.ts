@@ -86,7 +86,8 @@ export const CONTROLLERS_ENDPOINT = {
     PRENDONE_URLS: "/getPrendoneUrls",
     CANCELLA_NOTIFICHE: "/cancellaNotifiche",
     GET_MENU_SCRIVANIA: "/getMenuScrivania",
-    GET_DATI_BOLLO_AZIENDA: "/getDatiBolloByAzienda"
+    GET_DATI_BOLLO_AZIENDA: "/getDatiBolloByAzienda",
+    GET_DATI_RACCOLTA_SEMPLICE: "/getRaccoltaSemplice"
 };
 
 export const COMMANDS = {
@@ -191,5 +192,10 @@ export const COMMON_PARAMETERS = {
     BABEL_APPLICATION: "BABEL_APPLICATION"
 };
 
+export const CUSTOM_SERVER_METHODS = {
+    saveAllegato: "saveAllegato",
+    downloadAttachment: "downloadAttachment",
+    downloadAllAttachments: "downloadAllAttachments"
+  };
 
 

@@ -223,6 +223,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
         )
       )
     }
+
   }
 
   private rigaNulla(v: BolloVirtuale): boolean {

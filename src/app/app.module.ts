@@ -53,7 +53,7 @@ import { CardModule } from "primeng-lts/card";
 import { ConfirmDialogModule } from "primeng-lts/confirmdialog";
 import { ConfirmationService } from "primeng-lts/api";
 import { ProgressSpinnerModule } from "primeng-lts/progressspinner";
-
+import { FileUploadModule } from 'primeng-lts/fileupload';
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
@@ -65,10 +65,14 @@ import { NtCommunicatorModule } from "@bds/nt-communicator";
 import { CommonComponentsModule } from "@bds/common-components";
 import { DatiBolloVirtualeComponent } from './tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component';
 import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtuale.service";
+import { RaccoltaSempliceComponent } from './tabelle/raccolta-semplice/raccolta-semplice.component';
+import { RaccoltaSempliceService } from './tabelle/raccolta-semplice/raccolta-semplice.service';
 
 /* Angular Material Module */
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
+import { InserimentoManualeComponent } from './tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component';
+
 
 
 @NgModule({
@@ -83,7 +87,9 @@ import {MatIconModule} from '@angular/material/icon';
     DropdownAziendeComponent,
     LoadingComponent,
     ImpostazioniComponent,
-    DatiBolloVirtualeComponent
+    DatiBolloVirtualeComponent,
+    RaccoltaSempliceComponent,
+    InserimentoManualeComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
@@ -112,6 +118,7 @@ import {MatIconModule} from '@angular/material/icon';
     DynamicDialogModule,
     ContextMenuModule,
     ToastModule,
+    FileUploadModule,
     CardModule,
     ConfirmDialogModule,
     PrimengPluginModule,
@@ -121,7 +128,7 @@ import {MatIconModule} from '@angular/material/icon';
     MatMenuModule,
     MatIconModule
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService, BolloVirtualeService],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService, BolloVirtualeService, RaccoltaSempliceService],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent, ProfiloComponent]
 })
