@@ -28,6 +28,9 @@ import { AttivitaService } from "./tabelle/attivita/attivita.service";
 import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
 import { MessageService } from "primeng-lts/api";
 import { DialogService } from "primeng-lts/dynamicdialog";
+import { RaccoltaSempliceService } from './tabelle/raccolta-semplice/raccolta-semplice.service';
+import { ExtendedAllegatoService } from "./tabelle/raccolta-semplice/inserimento-manuale/extended-allegato.service";
+import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtuale.service";
 
 /* PrimeNG component */
 import { AccordionModule } from "primeng-lts/accordion";
@@ -64,14 +67,17 @@ import { ImpostazioniService } from "./services/impostazioni.service";
 import { NtCommunicatorModule } from "@bds/nt-communicator";
 import { CommonComponentsModule } from "@bds/common-components";
 import { DatiBolloVirtualeComponent } from './tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component';
-import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtuale.service";
 import { RaccoltaSempliceComponent } from './tabelle/raccolta-semplice/raccolta-semplice.component';
-import { RaccoltaSempliceService } from './tabelle/raccolta-semplice/raccolta-semplice.service';
+import { InserimentoManualeComponent } from './tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component';
+
 
 /* Angular Material Module */
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
-import { InserimentoManualeComponent } from './tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component';
+import { ModalModule } from "ng2-modal";
+import { ModalComponent } from './tabelle/raccolta-semplice/dettaglio-annullamento/modal/modal.component';
+import { ModalService } from '../app/tabelle/raccolta-semplice/dettaglio-annullamento/modal/modal-service';
+
 
 
 
@@ -89,7 +95,9 @@ import { InserimentoManualeComponent } from './tabelle/raccolta-semplice/inserim
     ImpostazioniComponent,
     DatiBolloVirtualeComponent,
     RaccoltaSempliceComponent,
-    InserimentoManualeComponent
+    InserimentoManualeComponent,
+    ModalComponent
+
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
@@ -126,9 +134,14 @@ import { InserimentoManualeComponent } from './tabelle/raccolta-semplice/inserim
     CommonComponentsModule,
     ProgressSpinnerModule,
     MatMenuModule,
-    MatIconModule
+    MatIconModule,
+    ModalModule
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService, BolloVirtualeService, RaccoltaSempliceService],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService,
+    ImpostazioniService, DialogService, ConfirmationService,
+    BolloVirtualeService, RaccoltaSempliceService, ExtendedAllegatoService
+    //, ModalService
+  ],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent, ProfiloComponent]
 })

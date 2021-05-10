@@ -87,7 +87,9 @@ export const CONTROLLERS_ENDPOINT = {
     CANCELLA_NOTIFICHE: "/cancellaNotifiche",
     GET_MENU_SCRIVANIA: "/getMenuScrivania",
     GET_DATI_BOLLO_AZIENDA: "/getDatiBolloByAzienda",
-    GET_DATI_RACCOLTA_SEMPLICE: "/getRaccoltaSemplice"
+    GET_DATI_RACCOLTA_SEMPLICE: "/getRaccoltaSemplice",
+    GET_STORICO: "/storico",
+    ANNULLAMENTO_URL: "/annullamento"
 };
 
 export const COMMANDS = {

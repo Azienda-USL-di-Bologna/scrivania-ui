@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { HttpResponse } from '@angular/common/http';
-import { Component, Input, OnInit, QueryList, ViewChild,  ViewChildren } from '@angular/core';
+import { Component, Inject, Input, OnInit, QueryList, ViewChild,  ViewChildren } from '@angular/core';
 import { Azienda } from '@bds/ng-internauta-model';
 import { LOCAL_IT } from '@bds/nt-communicator';
 import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
@@ -12,6 +12,8 @@ import { Table } from 'primeng-lts/table';
 import { CsvExtractor } from '@bds/primeng-plugin';
 import { Calendar } from 'primeng-lts/calendar';
 import { FilterUtils } from "primeng-lts/utils";
+import { ModalService } from './dettaglio-annullamento/modal/modal-service';
+import { Storico } from './dettaglio-annullamento/modal/storico';
 
 @Component({
   selector: 'app-raccolta-semplice',
@@ -19,7 +21,7 @@ import { FilterUtils } from "primeng-lts/utils";
   styleUrls: ['./raccolta-semplice.component.css']
 })
 export class RaccoltaSempliceComponent implements OnInit {
-
+//@Inject(ModalService) private modalService: ModalService
   constructor(private raccoltaSempliceService: RaccoltaSempliceService, private loginService: NtJwtLoginService, private datePipe: DatePipe) { }
 
   _azienda: Azienda;
@@ -29,6 +31,8 @@ export class RaccoltaSempliceComponent implements OnInit {
     }
   }
 
+  public storici: Storico[] = [];  
+  public display = false;
   public mostra = false;
   public dataRange: Date[] = [];
   public datiDocumenti: Document[] = [];
@@ -62,21 +66,22 @@ export class RaccoltaSempliceComponent implements OnInit {
       width: "100px",
       label: "Numero Raccolta Semplice",
       textAlign: "center",
-      filterMatchMode: FILTER_TYPES.string.contains
+      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
     },
     {
       field: "createTime",
       header: "Registrazione",
-      filterMatchMode: '',
       width: "122px",
+      filterMatchMode: FILTER_TYPES.not_string.equals,
       label: "Data registrazione",
+      filterWidget: "Calendar",
       fieldType: "DateTime",
       textAlign:"center"
     },
     {
       field: "applicazioneChiamante",
       header: "Applicazione",
-      filterMatchMode: FILTER_TYPES.string.contains,
+      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "200px",
       label: "Applicazione del documento",
       textAlign:"center"
@@ -84,7 +89,7 @@ export class RaccoltaSempliceComponent implements OnInit {
     {
       field: "tipoDocumento",
       header: "Tipo documento",
-      filterMatchMode: FILTER_TYPES.string.contains,
+      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "150px",
       label: "Tipo del documento",
       textAlign:"center"
@@ -92,7 +97,7 @@ export class RaccoltaSempliceComponent implements OnInit {
     {
       field: "oggetto",
       header: "Oggetto",
-      filterMatchMode: FILTER_TYPES.string.contains,
+      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       label: "Oggetto del documento",
       width: "150px",
       textAlign:"center"
@@ -101,7 +106,7 @@ export class RaccoltaSempliceComponent implements OnInit {
       field: "fascicoli",
       header: "Fascicoli",
       label: "Fascicoli associati al documento",
-      filterMatchMode: FILTER_TYPES.string.contains,
+      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "200px",
       height: "100%",
       textAlign:"center"
@@ -109,7 +114,7 @@ export class RaccoltaSempliceComponent implements OnInit {
     {
       field: "documentoBabel",
       header: "Documento Babel",
-      filterMatchMode: FILTER_TYPES.string.contains,
+      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "200px",
       label: "Documento Babel",
       textAlign:"center"
@@ -117,7 +122,7 @@ export class RaccoltaSempliceComponent implements OnInit {
     {
       field: "creatore",
       header: "Creatore",
-      filterMatchMode: FILTER_TYPES.string.contains,
+      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "200px",
       label: "Creatore del documento ",
       textAlign:"center"
@@ -125,7 +130,7 @@ export class RaccoltaSempliceComponent implements OnInit {
     {
       field: "descrizioneStruttura",
       header: "Struttura ",
-      filterMatchMode: FILTER_TYPES.string.contains,
+      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "200px",
       label: "Struttura del creatore ",
       textAlign:"center"
@@ -133,7 +138,7 @@ export class RaccoltaSempliceComponent implements OnInit {
     {
       field: "stato",
       header: "Azione",
-      filterMatchMode: FILTER_TYPES.string.contains,
+      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "122px",
       label: "Azione",
       textAlign:"center"
@@ -147,7 +152,6 @@ export class RaccoltaSempliceComponent implements OnInit {
       if (!(!!this.dataFine && this.dataInizio instanceof Date)) {
         this.dataFine = new Date(this.dataOggi.toDateString());
       }
-      let prova : Document[] = [];
       this.subscriptions.push(
         this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'))
           .subscribe((res: HttpResponse<Document[]>) => {
@@ -156,11 +160,10 @@ export class RaccoltaSempliceComponent implements OnInit {
             console.log("Coinvolti: ", this.datiDocumenti[0].coinvolti); 
           }, error => {
             console.log("error raccoltaSempliceService.getRaccoltaSemplice", error);
-            this.loading = false;
+            this.loading = false;     
           }
         )
       )
-
     }
 
     this.mostra = true;
@@ -242,6 +245,23 @@ export class RaccoltaSempliceComponent implements OnInit {
       }
     }
     return tooltip;
+  }
+
+  openModal(id: string) {
+    console.log("Dentro open, id: "+ id);
+    
+    this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
+      this.loggedUser = u;
+      this.azienda = u.getUtente().aziendaLogin;
+      console.log("Azienda: ",u.getUtente()); 
+      this.raccoltaSempliceService.getStorico(id, this.azienda.codice).subscribe(
+        (res: HttpResponse<Storico[]>) => {
+            this.storici = res.body.map(storico => { return ({ ...storico } as Storico) });
+        }, error => {
+            console.log("error raccoltaSempliceService.getStorico", error);
+        })
+    })); 
+      this.display = true;
   }
 
   ngOnDestroy(): void {

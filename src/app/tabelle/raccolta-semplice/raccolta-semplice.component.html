@@ -57,6 +57,9 @@
           <!-- Header tabellla-->
           <ng-template pTemplate="header" let-columns>
             <tr>
+              <th>
+
+              </th>
               <th *ngFor="let col of columns" [style.width]="col.width" [style.padding]="col.padding"
                 [pSortableColumn]="col.field" [pTooltip]="col.label"
                 attr.aria-label="Colonna {{col.label}}, {{col.header ? 'Ordinare colonna' : ''}}">
@@ -68,6 +71,24 @@
               </th>
             </tr>
           </ng-template>
+
+          <tr>
+            <td *ngFor="let col of columns" 
+                [ngSwitch]="col.filterWidget" 
+                class="filters-styles" 
+                [style.width]="col.width" 
+                [style.minWidth]="col.minWidth" 
+                [style.display]="col.display">
+                <!-- <div *ngIf="col.field != undefined"> -->
+                    
+                    <input pInputText
+                        attr.aria-label="Cella filtro per colonna {{col.label}}"
+                        type="text"
+                        (input)="dt.filter($event.target['value'].trim(), col.field, col.filterMatchMode)"
+                        #filterInputText>
+                <!-- </div> -->
+            </td>
+          </tr>
           <!--Body tabella-->
           <ng-template pTemplate="body" let-rowRS let-columns="columns">
             <tr class="row-class">
@@ -78,6 +99,9 @@
               </td>
               <td *ngFor="let col of columns" class="column-class" [style.width]="col.width"
                 [style.textAlign]="col.textAlign" [pTooltip]="col.label" [style.overflow]="auto">
+                <div *ngIf= "col.field == 'stato'">
+                  <button type="button" (click)="openModal(rowRS.id)" label="Mostra annullamento"></button>
+                </div>
                 {{rowRS[col.field]}}
               </td>
             </tr>
@@ -153,3 +177,49 @@
     </div>
   </div>
 </div>
+
+
+<p-dialog header="Dettaglio stato documento" [(visible)]="display">
+  <h1>Sezione annullamento</h1>
+      <form action="inviaAnnullamento()">
+        <p>
+          Stato documento:
+          <input type="radio" id="attivo" name="stato" value="ATTIVO">
+          <label for="attivo">Attiva</label><br>
+          <input type="radio" id="annullato" name="stato" value="ANNULLATO">
+          <label for="annullato">Annulla</label><br>
+        </p>
+  
+        <p>
+          Motivazione:
+          <input type="text" id="motivazione" name="motivazione">
+        </p>
+  
+        <input type="submit" id="submit" name="subit" value="Invia">
+      </form>
+      
+
+        <div class="table-wrapper">
+            <div class="table-inner">
+                <p-table #tableStorico [value]="storici" [scrollable]="true">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th> Utente annullante </th>
+                            <th> Motivazione </th>
+                            <th> Stato </th>
+                            <th> Data</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-storico>
+                        <tr>
+                            <td>{{storico.utente}}</td>
+                            <td>{{storico.motivazione}}</td>
+                            <td>{{storico.stato}}</td>
+                            <td>{{storico.data}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+</p-dialog>
+

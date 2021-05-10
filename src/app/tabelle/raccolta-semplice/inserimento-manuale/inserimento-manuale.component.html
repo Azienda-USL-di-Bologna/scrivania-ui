@@ -1,4 +1,11 @@
-<h3 class="crono-label">Creazione Raccolta Semplice</h3>
+<h3 class="crono-label">
+  
+  <button type="button" pButton pTooltip="Torna alla Raccolta Semplice" tooltipPosition="bottom"
+  icon="pi pi-table" [routerLink]="'/raccoltasemplice'" class="ui-button-secondary icon-style"
+  aria-label="Caricamento manuale documento" style="height:20px;width:20px"></button>
+  Inserimento manuale Raccolta Semplice
+</h3>
+
 <body>
     <strong>Dati</strong>
     <form action="/upload">
@@ -69,10 +76,18 @@
           </form>
         </div>
       
-        
+
         <p-fileUpload #fileUpload
           name="demo[]" 
-          accept=".csv, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf, .txt" 
+          accept=".rtf, .odp, .ods, .odt, .xhtml,
+           .xml, .dtd, .xlst, .gif,
+          .jpg, .png, .tiff, .dwg,
+          .bmp, .eml, .p7m, .html, .mp3,
+          .odb, .mdb, .avi, .mp4, .wav,
+          .msg, .opus, .ogg, .m4a,
+          .fdf, .csv, .doc, .docx,
+          .xls, .xlsx, .ppt,
+          .pptx, .pdf, .txt" 
           (uploadHandler)="onUpload($event)"
           multiple = true
           maxFileSize=1000000
@@ -80,7 +95,58 @@
           uploadLabel="Carica"
           cancelLabel="Cancella">
         </p-fileUpload>
-
-
-        
+        <p-table
+          [value]="_doc?.allegati" 
+          selectionMode="single" 
+          [(selection)]="selectedAllegato" 
+          dataKey="id"
+          (onRowSelect)="onRowSelect($event)"
+          (onRowUnselect)="onRowUnselect()">
+          <ng-template pTemplate="caption" >
+            <p-button 
+              *ngIf="_doc?.allegati && _doc?.allegati.length > 1"
+              label="Scarica allegati su zip"
+              icon="pi pi-download" 
+              (click)="downloadAllAttachments()">
+            </p-button>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr class="row">
+              <th class="colonna-principale"></th>
+              <th class="colonna-nome">Nome</th>
+              <th class="colonna-estensione">Estensione</th>
+              <th class="colonna-download"></th>
+              <th class="colonna-elimina"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-allegato let-rowIndex="rowIndex">
+            <tr class="row">
+              <td class="colonna-principale">
+                <p-tableRadioButton 
+                  [value]="allegato" 
+                  ariaLabel="Setta l'allegato come principale">
+                </p-tableRadioButton>
+              </td>
+              <td class="colonna-nome">{{getDettaglioByTipoDettaglioAllegato(allegato,"ORIGINALE").nome}}</td>
+              <td class="colonna-estensione">{{getDettaglioByTipoDettaglioAllegato(allegato,"ORIGINALE").estensione}}</td>
+              <td class="colonna-download">
+                <i class="pi pi-download bds-icon-btn"
+                  ariaLabel="Download allegato"
+                  pTooltip="Download" 
+                  tooltipPosition="top"
+                  (click)="onDownloadAttachment(allegato)">
+                </i>
+              </td>
+              <td class="colonna-elimina">
+                <i class="material-icons-outlined bds-icon-btn"
+                  ariaLabel="Elimina allegato"
+                  pTooltip="Elimina" 
+                  tooltipPosition="top" 
+                  (click)="onDeleteAttachment(allegato, rowIndex)">
+                  Cancella
+                </i>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
 </body>

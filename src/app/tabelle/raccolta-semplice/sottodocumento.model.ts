@@ -1,5 +1,3 @@
-import { LoginGuard } from "@bds/nt-jwt-login";
-
 export class Sottodocumento {
 
     public id: number;
