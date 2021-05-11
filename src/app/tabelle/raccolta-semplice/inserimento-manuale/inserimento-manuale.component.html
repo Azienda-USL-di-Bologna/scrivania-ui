@@ -1,3 +1,18 @@
+<div class="first-row">
+  <span class="ui-float-label">
+    <input pInputText type="text" formControlName="descrizione" />
+    <label for="float-input">Descrizione del gruppo</label>
+  </span>
+  <div class="submit">
+    <button type="button" (click)="onCancel()">Annulla</button>
+  </div>
+  <div class="submit">
+    <button type="submit" 
+      [disabled]="groupForm.invalid" 
+      [ngClass]="groupForm.invalid ? 'disabled' : ''">Salva</button>
+  </div>
+</div>
+
 <h3 class="crono-label">
   
   <button type="button" pButton pTooltip="Torna alla Raccolta Semplice" tooltipPosition="bottom"
