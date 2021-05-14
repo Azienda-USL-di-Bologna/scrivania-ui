@@ -509,7 +509,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
         this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa
       }
-      this.listeners[td.id] = [this.renderer.listen(td, "click", (e) => {
+      this.listeners[td.id] = [this.renderer.listen(td, "mousedown", (e) => {
         e.preventDefault();
         e.stopPropagation();
         console.log("fillActionCol td", td);
