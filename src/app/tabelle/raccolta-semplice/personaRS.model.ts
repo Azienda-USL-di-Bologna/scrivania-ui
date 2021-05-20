@@ -18,6 +18,4 @@ export class PersonaRS {
     public telefono: string;
     public tipo: string;
     public via: string;
-
-
 }

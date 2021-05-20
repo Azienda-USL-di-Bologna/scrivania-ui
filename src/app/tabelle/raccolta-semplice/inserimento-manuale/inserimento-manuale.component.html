@@ -1,4 +1,154 @@
-<div class="first-row">
+<div class="p-grid">
+  <div class="p-col-6 p-shadow-1">
+    DATI
+    <div class="p-fluid">
+      <div class="p-field p-grid">
+          <label for="oggetto" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Oggetto</label>
+          <div class="p-col-12 p-md-10">
+              <input id="oggetto" type="text" pInputText [(ngModel)]="oggetto" required minlength="5"> 
+          </div>
+      </div>
+      <div class="p-field p-grid">
+          <label for="struttura-responsabile" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Struttura Responsabile</label>
+          <div class="p-col-12 p-md-10">
+            <!-- autocomplete delle struttura internauta -->
+            <lib-structures-autocomplete
+              [enabled]="true" 
+              [azienda]="azienda" 
+              [clearEnabled]="true" 
+              (strutturaSelezionataEmit)="strutturaSelezionata($event)">
+            </lib-structures-autocomplete> 
+          </div>
+      </div>
+      <div class="p-field p-grid">
+        <label for="applicazione" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Applicazione</label>
+        <div class="p-col-12 p-md-10">
+          <input id="applicazioneId" type="text" pInputText [disabled]="true" [(ngModel)]="applicazione" />
+        </div>
+      </div>
+      <div class="p-field p-grid">
+        <label for="tipo-documento" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Tipo Documento</label>
+        <div class="p-col-12 p-md-10">
+          <p-dropdown [options]="tipiDocumento" [(ngModel)]="selectedTipo" placeholder="Scegli tipo documento..." optionLabel="name" [showClear]="true"></p-dropdown>
+        </div>
+      </div>
+  </div>
+  </div>
+  <div class="p-col-6 p-shadow-1">
+    FASCICOLAZIONI
+
+    <p-autoComplete id="fascicoli"  #autocompleteFascicoli
+      ariaLabel="fascicoli"
+      [(ngModel)]="selectedFascicolo"
+      (onSelect)="saveFascicolo($event)"
+      [suggestions]="filteredFascicoli"
+      (completeMethod)="searchFascicolo($event)"
+      field="nomeFascicolo"
+      appendTo="body"
+      class="p-col"
+      dropdown=true
+      placeholder="Cerca fascicolo..."
+      emptyMessage="Nessun riferimento trovato">
+      <ng-template let-fascicolo pTemplate="item">
+        <div>[{{fascicolo.numerazioneGerarchica}}] {{fascicolo.nomeFascicolo}}</div>
+      </ng-template>
+    </p-autoComplete>
+
+    <p-table [value]="selectedFascicoli">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Fascicolo selezionato</th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-selectedFascicoli let-i="rowIndex">
+        <tr>
+            <td>[{{selectedFascicoli.numerazioneGerarchica}}] {{selectedFascicoli.nomeFascicolo}}</td>
+            <td>
+                <button pButton icon="pi pi-trash" class="p-button" (click)="deleteFascicolo(i)"></button>
+            </td>
+        </tr>
+    </ng-template>
+    </p-table>
+    
+  </div>
+  <div class="p-col-12 flex p-shadow-1">
+    <h5>Documenti</h5>
+<div class="p-grid">
+    <div class="p-col">
+      <p-radioButton name="doc_babel" value="Documento Babel" (onClick)="blocca('doc')" [(ngModel)]="selectedValue"></p-radioButton>
+      <label for="doc_babel">Documento Babel</label>
+      <p-blockUI [target]="pnl" [blocked]="blockedPanelDoc">
+        <i class="pi pi-lock" style="font-size: 3rem"></i>
+    </p-blockUI>
+    <p-panel #pnl [header]="titoloHeader" styleClass="p-mt-4">
+      <input id="disabled-input-codice-registro" type="text" pInputText [disabled]="true" [(ngModel)]="selectedCodiceRegistro.descrizione" />
+      <p-autoComplete id="docbabel"  #autocompletedocbabel
+      ariaLabel="docbabel"
+      [(ngModel)]="selectedDoc"
+      (onSelect)="saveDocBabel($event)"
+      [suggestions]="filteredDocs"
+      (completeMethod)="searchDocBabel($event)"
+      field="codiceBabel"
+      appendTo="body"
+      class="p-col"
+      dropdown=true
+      (onClear)="onClear()"
+      type="search"
+      placeholder="Cerca documento..."
+      emptyMessage="Nessun riferimento trovato">
+      <ng-template let-documento pTemplate="item">
+        <div>[{{documento.numero}}/{{documento.anno}}] {{documento.oggetto}}</div>
+      </ng-template>
+    </p-autoComplete>
+    </p-panel>
+        
+    </div>
+    <div class="p-col">
+      <p-radioButton name="doc_babel" value="Caricamento File" (onClick)="blocca('file')" [(ngModel)]="selectedValue"></p-radioButton>
+      <label for="upload_file">Caricamento File</label>
+      <p-blockUI [target]="pnlup" [blocked]="blockedPanelUpload">
+        <i class="pi pi-lock" style="font-size: 3rem"></i>
+      </p-blockUI>
+    <p-panel #pnlup header="Carica file" styleClass="p-mt-4">
+      <form>
+        <div class="form-group">
+          <p-fileUpload #fileInput name="file" multiple="multiple" [showUploadButton]="false"
+            [showCancelButton]="false" maxFileSize="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf"
+            (onSelect)="onSelect($event)" (onRemove)="onRemove($event)">
+            <ng-template pTemplate="content">
+              <div class="ui-fileupload-row" *ngFor="let file of attachments; let i = index;">
+                <div>
+                  <img [src]="file.objectURL" *ngIf="uploadService.isImage(file)" />
+                </div>
+                <div class="uploaded-file" (click)="uploadService.downloadFile(attachments, i)">
+                  {{file.uploadname}}
+                </div>
+                <div>
+                 <button type="button" class="btn-xs btn-danger confirm-btn" (click)="deleteFile(attachments, i)">Delete</button>
+                </div>
+              </div>
+            </ng-template>
+          </p-fileUpload>
+          
+        </div>
+      </form>
+    </p-panel>
+      
+    </div>
+</div>
+  
+  </div>
+  <div class="p-col-12 p-shadow-1">
+    PERSONA/AZIENDA
+    <p-button label="Submit"(click)="onSubmit()" ></p-button>
+
+  </div>
+</div>
+
+
+
+<!-- <div class="first-row">
   <span class="ui-float-label">
     <input pInputText type="text" formControlName="descrizione" />
     <label for="float-input">Descrizione del gruppo</label>
@@ -164,4 +314,4 @@
             </tr>
           </ng-template>
         </p-table>
-</body>
+</body> -->

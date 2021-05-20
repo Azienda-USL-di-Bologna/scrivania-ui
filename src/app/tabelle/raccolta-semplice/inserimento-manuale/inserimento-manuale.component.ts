@@ -6,11 +6,27 @@ import { DettaglioAllegato } from './dettaglio-allegato';
 import { FileUpload } from 'primeng-lts/fileupload';
 import { MessageService } from 'primeng-lts/api';
 import { ExtendedAllegatoService } from './extended-allegato.service';
-import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { UtilityFunctions } from '@bds/nt-communicator';
 import { BatchOperation, BatchOperationTypes, FilterDefinition, FiltersAndSorts, FILTER_TYPES, NextSdrEntity, SortDefinition, SORT_MODES } from '@nfa/next-sdr';
-import { BaseUrls, BaseUrlType, ENTITIES_STRUCTURE } from '@bds/ng-internauta-model';
+import { Azienda, BaseUrls, BaseUrlType, ENTITIES_STRUCTURE, Struttura } from '@bds/ng-internauta-model';
+import { FascicoloArgo } from '../fascicolo.model';
+import { RaccoltaSempliceService } from '../raccolta-semplice.service';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {switchMap, debounceTime, tap, finalize} from 'rxjs/operators';
+import { DocumentoArgo } from '../DocumentoArgo.model';
 
+
+
+interface TipoDocumento {
+  name: string,
+  code: string
+}
+
+interface Registro {
+  descrizione: string,
+  tipo: string
+}
 
 @Component({
   selector: 'app-inserimento-manuale',
@@ -18,44 +34,195 @@ import { BaseUrls, BaseUrlType, ENTITIES_STRUCTURE } from '@bds/ng-internauta-mo
   styleUrls: ['./inserimento-manuale.component.css']
 })
 export class InserimentoManualeComponent implements OnInit {
-
+  @ViewChild('fileInput') fileInput: FileUpload;
   private subscriptions: Subscription[] = [];
   private actualPrincipale: Allegato;
 
+  public tipiDocumento: TipoDocumento[];
+  public codiciRegistriAmmessi: Registro[];
+
+  public selectedTipo: TipoDocumento;
+  public selectedCodiceRegistro: Registro = {descrizione: 'PG - Protocollo Generale', tipo: 'pg'};
+
+  public applicazione: string = 'INTERNAUTA';
   public _doc: Document;
   public selectedAllegato: Allegato;
   public progress: number = 0;
   public refreshTable: boolean = false;
   public display: boolean = false;
-  public selectedTipo: string;
   public uploadedFiles: File[] = [];
+  public selectedValue: string;
+
+  blockedPanelDoc: boolean = false;
+  blockedPanelUpload: boolean = false;
+
+  public azienda: Azienda = {id: 10} as Azienda;
+  public _strutturaInternautaSelezionata: Struttura;
+  public _fascicoloArgoSelezionato: FascicoloArgo;
+
+  formGroup: FormGroup;
+
+  public oggetto: string;
+
+  public cols: any[] = [
+    {
+      field: "codice",
+      header: "Numero",
+      width: "100px",
+      label: "Numero Raccolta Semplice",
+      textAlign: "center"
+    }
+  ];
+
+  public optionFascicoli = [];
+  public filteredOptions;
+
+  public selectedFascicolo: FascicoloArgo;
+  public filteredFascicoli: FascicoloArgo[];
+  public selectedFascicoli: FascicoloArgo[] = [];
+
+  public selectedDoc: DocumentoArgo;
+  public filteredDocs: DocumentoArgo[];
+  public selectedDocumentoBabel: DocumentoArgo;
+
+  public titoloHeader: string;
+  public prefixHeader: string;
 
   @ViewChild("fileUpload") fileUploadInput: FileUpload;
 
   @Input() set doc(value: Document) {
     this._doc = value;
-    this.setInitialData();
+    // this.setInitialData();
   }
 
-  constructor(
-    private messageService: MessageService,
-    private allegatoService: ExtendedAllegatoService
-    )
-   { }
+  constructor(private messageService: MessageService, 
+      private allegatoService: ExtendedAllegatoService, 
+      private raccoltaService: RaccoltaSempliceService,
+      private fb: FormBuilder,
+      private http: HttpClient) { 
+        this.prefixHeader = "Collega Documento Babel: ";
+        this.titoloHeader = this.prefixHeader;
+        this.selectedCodiceRegistro = {descrizione: 'Protocollo Generale [PG]', tipo: 'pg'};
+        
+      this.tipiDocumento = [
+        {name: 'Raccoglitore', code: 'raccoglitore'},
+        {name: 'Contatto', code: 'contatto'},
+        {name: 'CV', code: 'cv'},
+        {name: 'Documento', code: 'documento'}
+      ];
+  }
+
+  onClear() {
+    this.titoloHeader = this.prefixHeader;
+    this.selectedDocumentoBabel = null;
+  }
+
+  strutturaSelezionata(struttura: Struttura) {
+    this._strutturaInternautaSelezionata = struttura;
+  }
+
+  fascicoloSelezionato(fascicolo: FascicoloArgo) {
+    this._fascicoloArgoSelezionato = fascicolo;
+  }
+
+  blocca(value: string) {
+    console.log(value)
+    if (value === "doc") {
+      this.blockedPanelDoc = false;
+      this.blockedPanelUpload = true;
+    } else {
+      this.blockedPanelDoc = true;
+      this.blockedPanelUpload = false;
+    }
+      
+  }
 
   ngOnInit(): void {
-  }
-
-  getNumerazioneGerarchica() {
+ 
+    //this.initForm();
+    //this.getNames();
     
   }
 
-  private setInitialData(): void {
-    if (this._doc.allegati.length > 0) {
-      this.actualPrincipale = this._doc.allegati.find(a => a.principale);
-      this.selectedAllegato = this.actualPrincipale;
-    }
+  private checkData() {
+    
+    // this.oggetto
+    // this._strutturaInternautaSelezionata
+    // this.selectedTipo
+    // this.selectedFascicoli
+    // this.blockedPanelDoc 
+    //   this.selectedDoc
+    // this.blockedPanelUpload 
+    //   this.uploadedFiles
+
   }
+
+  initForm() {
+    // this.formGroup = this.fb.group({
+    //   'employee' : ['']
+    // })
+    // this.formGroup.get('employee').valueChanges.subscribe(response => {
+    //   console.log('data is', response);
+    //   this.filterData(response);
+    // })
+  }
+  
+  // filterData(enteredData){
+  //   this.getNames(enteredData);
+  //    this.filteredOptions = this.optionFascicoli.filter(item => {
+  //      return item.toLowerCase().indexOf(enteredData.toLowerCase()) > -1
+  //    })
+  // }
+
+  // getNames(value:string) {
+  //   this.raccoltaService.getData(value).subscribe(response => {
+  //     this.optionFascicoli = response;
+  //     this.filteredOptions = response;
+  //   })
+  // }
+
+
+  // private setInitialData(): void {
+  //   if (this._doc.allegati.length > 0) {
+  //     this.actualPrincipale = this._doc.allegati.find(a => a.principale);
+  //     this.selectedAllegato = this.actualPrincipale;
+  //   }
+  // }
+
+  /**
+   * Chiamato dal frontend per salvare il destinatario passato
+   * @param contatto 
+   * @param modalita 
+   */
+   public saveFascicolo(fascicolo: FascicoloArgo) {
+      // fare la gestione che si vuole
+      console.log("inserito",fascicolo.nomeFascicoloInterfaccia);
+      this.selectedFascicoli.push(fascicolo);
+      this.selectedFascicolo = null;
+  }
+
+  public searchFascicolo(event: any) {
+    this.raccoltaService.getFascicoliArgo('100999','andrea.marcomini',event.query).subscribe(res => {
+      this.filteredFascicoli = res.body;
+    });    
+  }
+
+  deleteFascicolo(i: number) {
+      this.selectedFascicoli.splice(i,1);
+  }
+
+
+  searchDocBabel(event: any) {
+    this.raccoltaService.getDocumentiArgo('100999','andrea.marcomini','PG',event.query).subscribe(res => {
+      this.filteredDocs = res.body;
+      console.log(this.filteredDocs);
+    });    
+  }
+
+  public saveDocBabel(doc: DocumentoArgo) {
+    this.selectedDocumentoBabel = doc;
+    this.titoloHeader = this.prefixHeader + ": " + doc.codiceRegistro+doc.numero + "/"+doc.anno
+}
 
   /**
    * @param event 
@@ -149,7 +316,7 @@ export class InserimentoManualeComponent implements OnInit {
     this.allegatoService.getData(null, filters, null, null).subscribe(
       (res: any) => {
         this._doc.allegati = [...res.results];
-        this.setInitialData();
+        // this.setInitialData();
       }
     );
   }
@@ -217,6 +384,23 @@ export class InserimentoManualeComponent implements OnInit {
     }
   }
 
+  onSelect(event: any) {
+    for(let file of event.files) {
+      this.uploadedFiles.push(file);
+    }
+    for(let file of this.uploadedFiles) {
+      console.log("file: " + file.name);
+    }
+  }
+
+  onRemove(event: any){
+    this.uploadedFiles.forEach((element,index)=>{
+      if(element.name==event.file.name) this.uploadedFiles.splice(index,1);
+   });
+   for(let file of this.uploadedFiles) {
+    console.log("file rimanenti: " + file.name);
+  }
+  }
 
   public onRowUnselect(): void {
     if (this.actualPrincipale) {
@@ -238,6 +422,61 @@ export class InserimentoManualeComponent implements OnInit {
         )
       );
     }
+  }
+
+  public onSubmit() {
+    console.log(this.uploadedFiles);
+    var formData:FormData = this.createFormData();
+    this.raccoltaService.createRs(formData).subscribe(
+      response =>
+        console.log(response)
+    );
+  }
+
+
+  private createFormData(): FormData {
+    
+    let formData: FormData = new FormData();
+
+    formData.append("applicazione_chiamante", "ARPAL UMBRIA");
+    formData.append("azienda", "100999");
+    formData.append("oggetto", this.oggetto);
+
+    if (!this.blockedPanelDoc){
+      formData.append("numero_documento_origine", this.selectedDoc.numero);
+      formData.append("anno_documento_origine", this.selectedDoc.anno.toString());
+      formData.append("codice_registro_origine", "PG");
+    }
+    
+    var fascicoliStr = this.selectedFascicoli.join(","); 
+    formData.append("fascicoli_babel", fascicoliStr);
+    formData.append("tipo_documento", this.selectedTipo.code);
+    formData.append("struttura_responsabile", this._strutturaInternautaSelezionata.id.toString());
+
+    if (!this.blockedPanelUpload){
+      for (var file of this.uploadedFiles) {
+        formData.append('allegati', file);
+      }
+    }
+        
+    var personeStr: string = JSON.stringify([ 	
+      {"descrizione": "persona Test", 
+      "nome": "Stanis La Rochelle", 
+      "cognome": "Cert",
+      "email": "slr@mail.it",
+      "tipologia": "FISICA"
+      }, 		
+      {"descrizione": "azienda Test",
+      "ragione_sociale": "Azienda Fa Cose",
+      "cognome": "Bologna",
+      "email": "azfc@mail.it",
+      "tipologia": "GIURIDICA"
+      }
+    ])
+   
+    formData.append("persone", personeStr);
+
+    return formData;
   }
 
   ngOnDestroy(): void {

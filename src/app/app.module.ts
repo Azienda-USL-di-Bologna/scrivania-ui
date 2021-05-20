@@ -57,6 +57,8 @@ import { ConfirmDialogModule } from "primeng-lts/confirmdialog";
 import { ConfirmationService } from "primeng-lts/api";
 import { ProgressSpinnerModule } from "primeng-lts/progressspinner";
 import { FileUploadModule } from 'primeng-lts/fileupload';
+import {RadioButtonModule} from 'primeng-lts/radiobutton';
+import {BlockUIModule} from 'primeng-lts/blockui';
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
@@ -74,6 +76,8 @@ import { InserimentoManualeComponent } from './tabelle/raccolta-semplice/inserim
 /* Angular Material Module */
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { ModalModule } from "ng2-modal";
 import { ModalComponent } from './tabelle/raccolta-semplice/dettaglio-annullamento/modal/modal.component';
 import { ModalService } from '../app/tabelle/raccolta-semplice/dettaglio-annullamento/modal/modal-service';
@@ -97,7 +101,6 @@ import { ModalService } from '../app/tabelle/raccolta-semplice/dettaglio-annulla
     RaccoltaSempliceComponent,
     InserimentoManualeComponent,
     ModalComponent
-
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
@@ -135,7 +138,11 @@ import { ModalService } from '../app/tabelle/raccolta-semplice/dettaglio-annulla
     ProgressSpinnerModule,
     MatMenuModule,
     MatIconModule,
-    ModalModule
+    ModalModule,
+    RadioButtonModule,
+    BlockUIModule,
+    MatInputModule,
+    MatAutocompleteModule
   ],
   providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService,
     ImpostazioniService, DialogService, ConfirmationService,

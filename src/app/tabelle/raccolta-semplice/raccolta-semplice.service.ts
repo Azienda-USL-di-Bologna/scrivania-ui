@@ -8,6 +8,12 @@ import { Document } from './documento.model';
 import { PersonaRS } from './personaRS.model';
 import { Observable } from 'rxjs';
 import { Storico } from './dettaglio-annullamento/modal/storico';
+import { map } from 'rxjs/operators';
+import { FascicoloArgo } from './fascicolo.model';
+import { DocumentoArgo } from './DocumentoArgo.model';
+import { RaccoltaSemplice } from './inserimento-manuale/rs.model';
+
+
 
 
 @Injectable({
@@ -31,5 +37,23 @@ import { Storico } from './dettaglio-annullamento/modal/storico';
         let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.ANNULLAMENTO_URL;
         //return this.http.post(url, )
     }
+
+    public getFascicoliArgo(azienda: string, idUtente:string, value: string) : Observable<HttpResponse<FascicoloArgo[]>>{
+      let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.GET_FASCICOLI_ARGO + "?azienda=" + azienda+"&idusr="+idUtente+"&param="+value;
+      return this.http.get<FascicoloArgo[]>(url, {responseType: "json", observe: 'response'});
+    }
+
+    public getDocumentiArgo(azienda: string, idUtente:string, registro:string, value: string) : Observable<HttpResponse<DocumentoArgo[]>>{
+      let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.GET_DOCUMENTI_ARGO + "?azienda=" + azienda+"&idusr="+idUtente+"&reg="+registro+"&param="+value;
+      return this.http.get<DocumentoArgo[]>(url, {responseType: "json", observe: 'response'});
+    }
+
+   public createRs(formData: FormData): Observable<any> {
+    const headers = { 'content-type': 'application/json'}  
+
+    let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.CREATE_RS
+  
+    return this.http.post(url, formData);
+   }
 
   }
