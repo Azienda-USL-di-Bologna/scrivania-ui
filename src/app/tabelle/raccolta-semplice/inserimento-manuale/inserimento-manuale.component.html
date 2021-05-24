@@ -1,3 +1,4 @@
+<p-button label="Submit"(click)="onSubmit()" ></p-button>
 <div class="p-grid">
   <div class="p-col-6 p-shadow-1">
     DATI
@@ -136,182 +137,132 @@
     </p-panel>
       
     </div>
+   
 </div>
   
   </div>
   <div class="p-col-12 p-shadow-1">
     PERSONA/AZIENDA
-    <p-button label="Submit"(click)="onSubmit()" ></p-button>
 
-  </div>
+    <p-toast></p-toast>
+
+<div class="card">
+  <button pButton pRipple label="Aggiungi Coinvolti" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+  <p-table #dt [value]="coinvolti" [rowHover]="true" dataKey="id">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="nome">Coinvolto<p-sortIcon field="nome"></p-sortIcon></th>
+        <th pSortableColumn="cf">CF<p-sortIcon field="price"></p-sortIcon></th>
+        <th pSortableColumn="partitaIva">P. Iva<p-sortIcon field="category"></p-sortIcon></th>
+        <th pSortableColumn="tipo">Tipologia<p-sortIcon field="rating"></p-sortIcon></th>
+        <th pSortableColumn="mail">Email<p-sortIcon field="rating"></p-sortIcon></th>
+        <th pSortableColumn="via">Indirizzo<p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+        <th pSortableColumn="telefono">Telefono<p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+        <th></th>
+      </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-coinvolto>
+        <tr>
+          <td>{{coinvolto.nomeInterfaccia}}</td>
+          <td>{{coinvolto.cf}}</td>
+          <td>{{coinvolto.partitaIva}}</td>   
+          <td>{{coinvolto.tipo}}</td>  
+          <td>{{coinvolto.mail}}</td>
+          <td>{{coinvolto.via}}</td>
+          <td>{{coinvolto.telefono}}</td>
+          <td>
+            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editProduct(coinvolto)"></button>
+            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(coinvolto)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="summary">
+          <div class="p-d-flex p-ai-center p-jc-between">
+              Coinvolti Totali: {{coinvolti ? coinvolti.length : 0 }}
+          </div>
+      </ng-template>
+    </p-table>
 </div>
 
-
-
-<!-- <div class="first-row">
-  <span class="ui-float-label">
-    <input pInputText type="text" formControlName="descrizione" />
-    <label for="float-input">Descrizione del gruppo</label>
-  </span>
-  <div class="submit">
-    <button type="button" (click)="onCancel()">Annulla</button>
-  </div>
-  <div class="submit">
-    <button type="submit" 
-      [disabled]="groupForm.invalid" 
-      [ngClass]="groupForm.invalid ? 'disabled' : ''">Salva</button>
-  </div>
-</div>
-
-<h3 class="crono-label">
-  
-  <button type="button" pButton pTooltip="Torna alla Raccolta Semplice" tooltipPosition="bottom"
-  icon="pi pi-table" [routerLink]="'/raccoltasemplice'" class="ui-button-secondary icon-style"
-  aria-label="Caricamento manuale documento" style="height:20px;width:20px"></button>
-  Inserimento manuale Raccolta Semplice
-</h3>
-
-<body>
-    <strong>Dati</strong>
-    <form action="/upload">
-        <label for="name">Nome</label>
-        <input type="text" id="name" name="name"><br><br>
-        <label for="applicazione">Applicazione:</label>
-        <input type="text" id="applicazione" name="applicazione"><br><br>
-        <label for="tipo_doc">Tipo Documento:</label>
-        <input type="text" id="tipo_doc" name="tipo_doc"><br><br>
-      </form>
-      <p></p>
-
-
-      <form method="post" name="uploadform" enctype="multipart/form-data">
-      </form>
-
-      <input type="file" id="upfiles" name="upfiles">
-
-      <script>
-
-        document.getElementById('upfiles').addEventListener('change', handle_files, false);
-      
-        function handle_files(evt) {
-      
-          var ff = document.forms['uploadform'];
-          var files  = evt.target.files;
-      
-          for ( var i = 0, file; file = files[i]; i++ ) {
-      
-            var reader = new FileReader();
-      
-            reader.onload = (function(file) {
-              return function (ufile) {
-                var upp = document.createElement('input');
-                upp['name'] = ufile.files.name;
-                upp['type'] =  ufile.files.type;
-                upp.value = ufile.target.result;
-                ff.appendChild(upp);
-              }
-            }(file));
-      
-            reader.readAsDataURL(file);
-          }
-        }
-      </script>
-
-
-      <br>
-      <br>
-
-        <strong>Collega documento Babel</strong>
-        <br><br>
-        <div>
-            <form action="loadAutocomplete()">
-            <label for="registro">Seleziona il codice registro:</label>
-            <select id="registri" name="registri">
-              <option value="PG">PG</option>
-              <option value="PICO">PICO</option>
-              <option value="DETE">DETE</option>
-              <option value="DELI">DELI</option>
-            </select>
-            <br>
-            <br>
-            <div class="autocomplete" style="width:300px;">
-              <input id="documento" type="text" name="documento" placeholder="Numerazione">
-            </div>
-            <input type="submit">
-          </form>
+<p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Nuovo Coinvolto" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+      <div class="p-formgrid p-grid">
+        <div class="p-field p-col">
+          <label for="nome">Nome</label>
+          <input type="text" pInputText id="nome" [(ngModel)]="coinvolto.nome" required autofocus />
+          <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.nome">Nome is required.</small> -->
         </div>
-      
+        <div class="p-field p-col">
+          <label for="cognome">Cognome</label>
+          <input type="text" pInputText id="cognome" [(ngModel)]="coinvolto.cognome" required autofocus />
+          <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cognome">Cognome is required.</small> -->
+        </div>
+      </div>
 
-        <p-fileUpload #fileUpload
-          name="demo[]" 
-          accept=".rtf, .odp, .ods, .odt, .xhtml,
-           .xml, .dtd, .xlst, .gif,
-          .jpg, .png, .tiff, .dwg,
-          .bmp, .eml, .p7m, .html, .mp3,
-          .odb, .mdb, .avi, .mp4, .wav,
-          .msg, .opus, .ogg, .m4a,
-          .fdf, .csv, .doc, .docx,
-          .xls, .xlsx, .ppt,
-          .pptx, .pdf, .txt" 
-          (uploadHandler)="onUpload($event)"
-          multiple = true
-          maxFileSize=1000000
-          chooseLabel="Sfoglia"
-          uploadLabel="Carica"
-          cancelLabel="Cancella">
-        </p-fileUpload>
-        <p-table
-          [value]="_doc?.allegati" 
-          selectionMode="single" 
-          [(selection)]="selectedAllegato" 
-          dataKey="id"
-          (onRowSelect)="onRowSelect($event)"
-          (onRowUnselect)="onRowUnselect()">
-          <ng-template pTemplate="caption" >
-            <p-button 
-              *ngIf="_doc?.allegati && _doc?.allegati.length > 1"
-              label="Scarica allegati su zip"
-              icon="pi pi-download" 
-              (click)="downloadAllAttachments()">
-            </p-button>
-          </ng-template>
-          <ng-template pTemplate="header">
-            <tr class="row">
-              <th class="colonna-principale"></th>
-              <th class="colonna-nome">Nome</th>
-              <th class="colonna-estensione">Estensione</th>
-              <th class="colonna-download"></th>
-              <th class="colonna-elimina"></th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-allegato let-rowIndex="rowIndex">
-            <tr class="row">
-              <td class="colonna-principale">
-                <p-tableRadioButton 
-                  [value]="allegato" 
-                  ariaLabel="Setta l'allegato come principale">
-                </p-tableRadioButton>
-              </td>
-              <td class="colonna-nome">{{getDettaglioByTipoDettaglioAllegato(allegato,"ORIGINALE").nome}}</td>
-              <td class="colonna-estensione">{{getDettaglioByTipoDettaglioAllegato(allegato,"ORIGINALE").estensione}}</td>
-              <td class="colonna-download">
-                <i class="pi pi-download bds-icon-btn"
-                  ariaLabel="Download allegato"
-                  pTooltip="Download" 
-                  tooltipPosition="top"
-                  (click)="onDownloadAttachment(allegato)">
-                </i>
-              </td>
-              <td class="colonna-elimina">
-                <i class="material-icons-outlined bds-icon-btn"
-                  ariaLabel="Elimina allegato"
-                  pTooltip="Elimina" 
-                  tooltipPosition="top" 
-                  (click)="onDeleteAttachment(allegato, rowIndex)">
-                  Cancella
-                </i>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-</body> -->
+      <div class="p-field">
+        <label for="ragioneSociale">Ragione Sociale</label>
+        <input type="text" pInputText id="ragioneSociale" [(ngModel)]="coinvolto.ragioneSociale" required autofocus />
+        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.ragioneSociale">Ragione Sociale is required.</small> -->
+      </div>
+      <div class="p-field">
+        <label for="cf">Codice Fiscale</label>
+        <input type="text" pInputText id="cf" [(ngModel)]="coinvolto.cf" required autofocus />
+        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cf">CF is required.</small> -->
+      </div>
+      <div class="p-field">
+        <label for="partitaIva">Partita IVA</label>
+        <input type="text" pInputText id="partitaIva" [(ngModel)]="coinvolto.partitaIva" required autofocus />
+        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.partitaIva">partitaIva is required.</small> -->
+      </div>
+      <div class="p-field">
+        <label for="partitaIva">Tipologia</label>
+        <p-dropdown [options]="tipiCoinvolti" [(ngModel)]="selectedTipoCoinvolto" placeholder="tipologia..." [showClear]="true"></p-dropdown>
+      </div>
+      
+      <div class="p-field">
+        <label for="mail">Email</label>
+        <input type="text" pInputText id="mail" [(ngModel)]="coinvolto.mail" required autofocus />
+        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.mail">mail is required.</small> -->
+      </div>
+      <div class="p-field">
+        <label for="telefono">Telefono</label>
+        <input type="text" pInputText id="telefono" [(ngModel)]="coinvolto.telefono" required autofocus />
+        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.telefono">telefono is required.</small> -->
+      </div>
+      <div class="p-field">
+        <label for="via">Via</label>
+        <input type="text" pInputText id="via" [(ngModel)]="coinvolto.via" required autofocus />
+        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.via">via is required.</small> -->
+      </div>
+      <div class="p-field">
+        <label for="civico">Civico</label>
+        <input type="text" pInputText id="civico" [(ngModel)]="coinvolto.civico" required autofocus />
+        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.civico">civico is required.</small> -->
+      </div>
+      <div class="p-field">
+        <label for="cap">CAP</label>
+        <input type="text" pInputText id="cap" [(ngModel)]="coinvolto.cap" required autofocus />
+        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cap">Name is required.</small> -->
+      </div>
+      <div class="p-field">
+        <label for="comune">Comune</label>
+        <input type="text" pInputText id="comune" [(ngModel)]="coinvolto.comune" required autofocus />
+        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.comune">comune is required.</small> -->
+      </div>
+      <div class="p-field">
+        <label for="provincia">Provincia</label>
+        <input type="text" pInputText id="provincia" [(ngModel)]="coinvolto.provincia" required autofocus />
+        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.provincia">Name is required.</small> -->
+      </div>
+    </ng-template>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+    </ng-template>
+</p-dialog>
+
+  <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    
+  </div>
+</div>

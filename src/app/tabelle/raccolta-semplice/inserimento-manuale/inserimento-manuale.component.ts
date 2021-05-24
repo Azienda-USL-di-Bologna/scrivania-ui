@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { Allegato } from './allegato';
 import { DettaglioAllegato } from './dettaglio-allegato';
 import { FileUpload } from 'primeng-lts/fileupload';
-import { MessageService } from 'primeng-lts/api';
+import { ConfirmationService, MessageService, SelectItem } from 'primeng-lts/api';
 import { ExtendedAllegatoService } from './extended-allegato.service';
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { UtilityFunctions } from '@bds/nt-communicator';
@@ -13,10 +13,8 @@ import { Azienda, BaseUrls, BaseUrlType, ENTITIES_STRUCTURE, Struttura } from '@
 import { FascicoloArgo } from '../fascicolo.model';
 import { RaccoltaSempliceService } from '../raccolta-semplice.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import {switchMap, debounceTime, tap, finalize} from 'rxjs/operators';
 import { DocumentoArgo } from '../DocumentoArgo.model';
-
-
+import { PersonaRS } from '../personaRS.model';
 
 interface TipoDocumento {
   name: string,
@@ -39,9 +37,11 @@ export class InserimentoManualeComponent implements OnInit {
   private actualPrincipale: Allegato;
 
   public tipiDocumento: TipoDocumento[];
+  public tipiCoinvolti: SelectItem[];
   public codiciRegistriAmmessi: Registro[];
 
   public selectedTipo: TipoDocumento;
+  public selectedTipoCoinvolto: string;
   public selectedCodiceRegistro: Registro = {descrizione: 'PG - Protocollo Generale', tipo: 'pg'};
 
   public applicazione: string = 'INTERNAUTA';
@@ -92,12 +92,19 @@ export class InserimentoManualeComponent implements OnInit {
 
   @Input() set doc(value: Document) {
     this._doc = value;
-    // this.setInitialData();
   }
+
+  // parte persone
+  productDialog: boolean;
+  coinvolti: PersonaRS[];
+  coinvolto: PersonaRS;
+  selectedProducts: PersonaRS[];
+  submitted: boolean;
 
   constructor(private messageService: MessageService, 
       private allegatoService: ExtendedAllegatoService, 
       private raccoltaService: RaccoltaSempliceService,
+      private confirmationService: ConfirmationService,
       private fb: FormBuilder,
       private http: HttpClient) { 
         this.prefixHeader = "Collega Documento Babel: ";
@@ -110,6 +117,11 @@ export class InserimentoManualeComponent implements OnInit {
         {name: 'CV', code: 'cv'},
         {name: 'Documento', code: 'documento'}
       ];
+
+      this.tipiCoinvolti = [
+        {label:"Fisica", value:"FISICA"},
+        {label:"Giuridica", value:"GIURIDICA"}
+    ];
   }
 
   onClear() {
@@ -138,11 +150,85 @@ export class InserimentoManualeComponent implements OnInit {
   }
 
   ngOnInit(): void {
- 
-    //this.initForm();
-    //this.getNames();
-    
+    this.coinvolti = [];
   }
+
+  openNew() {
+    this.coinvolto = new PersonaRS();
+    this.submitted = false;
+    this.productDialog = true;
+}
+
+hideDialog() {
+  this.productDialog = false;
+  this.submitted = false;
+}
+
+saveProduct() {
+  this.submitted = true;
+
+  if (this.selectedTipoCoinvolto === "GIURIDICA" && this.coinvolto.ragioneSociale!==undefined && this.coinvolto.ragioneSociale!=="") {
+    this.coinvolto.nomeInterfaccia = this.coinvolto.ragioneSociale;
+  } else {
+    this.coinvolto.nomeInterfaccia = this.coinvolto.nome + " "+ this.coinvolto.cognome;
+  }
+
+  if (this.coinvolto.guidInterfaccia) {
+      this.coinvolto.tipo = this.selectedTipoCoinvolto;
+      this.coinvolti[this.findIndexByGuid(this.coinvolto.guidInterfaccia)] = this.coinvolto;                
+      this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
+  }
+  else {
+    this.coinvolto.guidInterfaccia = this.createGuid();
+    this.coinvolto.tipo = this.selectedTipoCoinvolto;
+    
+    this.coinvolti.push(this.coinvolto);
+    this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
+  }
+
+ 
+  this.coinvolti = [...this.coinvolti];
+  this.productDialog = false;
+  this.coinvolto = new PersonaRS();
+}
+
+editProduct(coinvolto: PersonaRS) {
+  this.coinvolto = {...coinvolto};
+  this.productDialog = true;
+}
+
+findIndexByGuid(guid: string): number {
+  let index = -1;
+  for (let i = 0; i < this.coinvolti.length; i++) {
+      if (this.coinvolti[i].guidInterfaccia === guid) {
+          index = i;
+          break;
+      }
+  }
+  return index;
+}
+
+createGuid(): string {
+  let id = '';
+  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for ( var i = 0; i < 5; i++ ) {
+      id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+}
+
+deleteProduct(persona: PersonaRS) {
+  this.confirmationService.confirm({
+      message: 'Comfermare la cancellazione del seguente coinvolto? ' + persona.nomeInterfaccia,
+      header: 'Confirm',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+          this.coinvolti = this.coinvolti.filter(val => val.id !== persona.id);
+          this.coinvolto = new PersonaRS();
+          this.messageService.add({severity:'success', summary: 'Successful', detail: 'Coinvolto eliminato', life: 3000});
+      }
+  });
+}
 
   private checkData() {
     
@@ -158,38 +244,10 @@ export class InserimentoManualeComponent implements OnInit {
   }
 
   initForm() {
-    // this.formGroup = this.fb.group({
-    //   'employee' : ['']
-    // })
-    // this.formGroup.get('employee').valueChanges.subscribe(response => {
-    //   console.log('data is', response);
-    //   this.filterData(response);
-    // })
+   
   }
   
-  // filterData(enteredData){
-  //   this.getNames(enteredData);
-  //    this.filteredOptions = this.optionFascicoli.filter(item => {
-  //      return item.toLowerCase().indexOf(enteredData.toLowerCase()) > -1
-  //    })
-  // }
-
-  // getNames(value:string) {
-  //   this.raccoltaService.getData(value).subscribe(response => {
-  //     this.optionFascicoli = response;
-  //     this.filteredOptions = response;
-  //   })
-  // }
-
-
-  // private setInitialData(): void {
-  //   if (this._doc.allegati.length > 0) {
-  //     this.actualPrincipale = this._doc.allegati.find(a => a.principale);
-  //     this.selectedAllegato = this.actualPrincipale;
-  //   }
-  // }
-
-  /**
+    /**
    * Chiamato dal frontend per salvare il destinatario passato
    * @param contatto 
    * @param modalita 
@@ -458,23 +516,28 @@ export class InserimentoManualeComponent implements OnInit {
         formData.append('allegati', file);
       }
     }
-        
-    var personeStr: string = JSON.stringify([ 	
-      {"descrizione": "persona Test", 
-      "nome": "Stanis La Rochelle", 
-      "cognome": "Cert",
-      "email": "slr@mail.it",
-      "tipologia": "FISICA"
-      }, 		
-      {"descrizione": "azienda Test",
-      "ragione_sociale": "Azienda Fa Cose",
-      "cognome": "Bologna",
-      "email": "azfc@mail.it",
-      "tipologia": "GIURIDICA"
-      }
-    ])
+     
+    for (var coinvolto of this.coinvolti) {
+      formData.append('allegati', file);
+    }
+    formData.append("persone", JSON.stringify(this.coinvolti));
+
+    // var personeStr: string = JSON.stringify([ 	
+    //   {"descrizione": "persona Test", 
+    //   "nome": "Stanis La Rochelle", 
+    //   "cognome": "Cert",
+    //   "email": "slr@mail.it",
+    //   "tipologia": "FISICA"
+    //   }, 		
+    //   {"descrizione": "azienda Test",
+    //   "ragione_sociale": "Azienda Fa Cose",
+    //   "cognome": "Bologna",
+    //   "email": "azfc@mail.it",
+    //   "tipologia": "GIURIDICA"
+    //   }
+    // ])
    
-    formData.append("persone", personeStr);
+    // formData.append("persone", personeStr);
 
     return formData;
   }
