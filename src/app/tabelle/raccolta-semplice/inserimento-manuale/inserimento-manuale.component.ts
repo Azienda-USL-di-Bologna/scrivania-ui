@@ -94,11 +94,10 @@ export class InserimentoManualeComponent implements OnInit {
     this._doc = value;
   }
 
-  // parte persone
+  // parte coinvolti
   productDialog: boolean;
   coinvolti: PersonaRS[];
   coinvolto: PersonaRS;
-  selectedProducts: PersonaRS[];
   submitted: boolean;
 
   constructor(private messageService: MessageService, 
