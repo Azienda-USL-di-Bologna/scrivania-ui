@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { NextSDREntityProvider, FiltersAndSorts } from '@nfa/next-sdr';
-import { ENTITIES_STRUCTURE, getInternautaUrl, Azienda, BaseUrlType } from '@bds/ng-internauta-model';
+import { ENTITIES_STRUCTURE, getInternautaUrl, Azienda, BaseUrlType, Contatto } from '@bds/ng-internauta-model';
 import { CONTROLLERS_ENDPOINT } from 'src/environments/app-constants';
 import { Document } from './documento.model';
 import { PersonaRS } from './personaRS.model';

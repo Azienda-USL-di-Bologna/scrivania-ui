@@ -59,6 +59,7 @@ import { ProgressSpinnerModule } from "primeng-lts/progressspinner";
 import { FileUploadModule } from 'primeng-lts/fileupload';
 import {RadioButtonModule} from 'primeng-lts/radiobutton';
 import {BlockUIModule} from 'primeng-lts/blockui';
+import {ListboxModule} from 'primeng-lts/listbox';
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
@@ -142,7 +143,8 @@ import { ModalService } from '../app/tabelle/raccolta-semplice/dettaglio-annulla
     RadioButtonModule,
     BlockUIModule,
     MatInputModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    ListboxModule
   ],
   providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService,
     ImpostazioniService, DialogService, ConfirmationService,

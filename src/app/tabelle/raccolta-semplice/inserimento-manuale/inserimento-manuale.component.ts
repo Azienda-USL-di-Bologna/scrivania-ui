@@ -9,12 +9,13 @@ import { ExtendedAllegatoService } from './extended-allegato.service';
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { UtilityFunctions } from '@bds/nt-communicator';
 import { BatchOperation, BatchOperationTypes, FilterDefinition, FiltersAndSorts, FILTER_TYPES, NextSdrEntity, SortDefinition, SORT_MODES } from '@nfa/next-sdr';
-import { Azienda, BaseUrls, BaseUrlType, ENTITIES_STRUCTURE, Struttura } from '@bds/ng-internauta-model';
+import { Azienda, BaseUrls, BaseUrlType, Contatto, ContattoService, DettaglioContatto, DettaglioContattoService, ENTITIES_STRUCTURE, Struttura } from '@bds/ng-internauta-model';
 import { FascicoloArgo } from '../fascicolo.model';
 import { RaccoltaSempliceService } from '../raccolta-semplice.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DocumentoArgo } from '../DocumentoArgo.model';
 import { PersonaRS } from '../personaRS.model';
+import { Router } from '@angular/router';
 
 interface TipoDocumento {
   name: string,
@@ -100,12 +101,27 @@ export class InserimentoManualeComponent implements OnInit {
   coinvolto: PersonaRS;
   submitted: boolean;
 
+  public selectedContatto: Contatto;
+  public selectedContatti: Contatto[] = [];
+  public filteredContatti: Contatto[];
+  public disabledContatto: boolean;
+
+  public selectedDettaglioContatto: DettaglioContatto;
+  public selectedDettagliContatti: DettaglioContatto[] = [];
+  public filteredDettagliContatti: DettaglioContatto[];
+  public disabledDettaglioContatto: boolean;
+
+  public displayRubricaPopup = false;
+
   constructor(private messageService: MessageService, 
       private allegatoService: ExtendedAllegatoService, 
       private raccoltaService: RaccoltaSempliceService,
       private confirmationService: ConfirmationService,
+      private contattoService: ContattoService,
+      private dettaglioContattoService: DettaglioContattoService,
       private fb: FormBuilder,
-      private http: HttpClient) { 
+      private http: HttpClient,
+      private router: Router) { 
         this.prefixHeader = "Collega Documento Babel: ";
         this.titoloHeader = this.prefixHeader;
         this.selectedCodiceRegistro = {descrizione: 'Protocollo Generale [PG]', tipo: 'pg'};
@@ -121,6 +137,10 @@ export class InserimentoManualeComponent implements OnInit {
         {label:"Fisica", value:"FISICA"},
         {label:"Giuridica", value:"GIURIDICA"}
     ];
+
+  this.disabledDettaglioContatto = true;
+  this.disabledContatto = false;
+
   }
 
   onClear() {
@@ -156,6 +176,19 @@ export class InserimentoManualeComponent implements OnInit {
     this.coinvolto = new PersonaRS();
     this.submitted = false;
     this.productDialog = true;
+}
+
+/**
+   * Apre popup
+   */
+ onOpenRubricaPopup() {
+  console.log("onOpenRubricaPopup");
+  this.displayRubricaPopup = true;
+}
+
+onCloseRubricaPopup() {
+  console.log("onCloseRubricaPopup");
+  this.displayRubricaPopup = false;
 }
 
 hideDialog() {
@@ -252,7 +285,6 @@ deleteProduct(persona: PersonaRS) {
    * @param modalita 
    */
    public saveFascicolo(fascicolo: FascicoloArgo) {
-      // fare la gestione che si vuole
       console.log("inserito",fascicolo.nomeFascicoloInterfaccia);
       this.selectedFascicoli.push(fascicolo);
       this.selectedFascicolo = null;
@@ -267,6 +299,107 @@ deleteProduct(persona: PersonaRS) {
   deleteFascicolo(i: number) {
       this.selectedFascicoli.splice(i,1);
   }
+
+  public saveContatto(contatto: Contatto) {
+    //this.selectedContatti.push(contatto);
+    this.selectedContatto = contatto;
+    this.disabledDettaglioContatto = false;
+    this.disabledContatto = true;
+    this.searchDettaglioContatto(contatto.id);
+}
+
+public searchContatto(event: any) {
+  const fd: FilterDefinition  = new FilterDefinition("descrizione", FILTER_TYPES.string.containsIgnoreCase,event.query);
+  const filter: FiltersAndSorts  = new FiltersAndSorts();
+  filter.addFilter(fd);
+  this.contattoService.getData(null, filter).subscribe(res => {
+    if (res) {
+      this.filteredContatti = res.results;
+    }
+  });
+}
+
+public searchDettaglioContatto(idContatto: any) {
+  const fd: FilterDefinition  = new FilterDefinition("idContatto", FILTER_TYPES.not_string.equals,idContatto);
+  const filter: FiltersAndSorts  = new FiltersAndSorts();
+  filter.addFilter(fd);
+  this.dettaglioContattoService.getData(null, filter).subscribe(res => {
+    if (res) {
+      this.filteredDettagliContatti = res.results;
+    }
+  });
+}
+
+public saveDettaglioContatto(dettaglio: DettaglioContatto) {
+  console.log("DETTAGLIO: " + dettaglio.tipo)
+  this.selectedDettaglioContatto = dettaglio;
+}
+
+public removeContatto() {
+  this.disabledContatto = false;
+  this.disabledDettaglioContatto = true;
+  this.selectedContatto = null;
+  this.filteredDettagliContatti = [];
+}
+
+public alreadyInserted(idContattoDaInserire): boolean {
+  var i: number;
+  for (i = 0; i < this.coinvolti.length; i++) {
+      if (this.coinvolti[i].id === idContattoDaInserire) {
+          return true;
+      }
+  }
+  return false;
+}
+
+public insertContatto(dettaglio: DettaglioContatto){
+  console.log(dettaglio);
+
+  if (!this.alreadyInserted(this.selectedContatto.id)) {
+    const nuovoCoinvolto: PersonaRS  = new PersonaRS();
+    nuovoCoinvolto.id = this.selectedContatto.id;
+    nuovoCoinvolto.guidInterfaccia = this.createGuid();
+    nuovoCoinvolto.cf = this.selectedContatto.codiceFiscale;
+    nuovoCoinvolto.nome = this.selectedContatto.nome;
+    nuovoCoinvolto.cognome = this.selectedContatto.cognome;
+    nuovoCoinvolto.partitaIva = this.selectedContatto.partitaIva;
+
+    if(this.selectedContatto.ragioneSociale) {
+      nuovoCoinvolto.tipo = "GIURIDICA";
+    } else {
+      nuovoCoinvolto.tipo = "FISICA";
+    }
+
+    nuovoCoinvolto.ragioneSociale = this.selectedContatto.ragioneSociale;
+    nuovoCoinvolto.nomeInterfaccia = this.selectedContatto.descrizione;
+    
+  
+    if (dettaglio.tipo === "EMAIL") {
+      nuovoCoinvolto.mail = dettaglio.descrizione;
+    } else if (dettaglio.tipo === "TELEFONO") {
+      nuovoCoinvolto.telefono = dettaglio.descrizione;
+  
+    } else if (dettaglio.tipo === "INDIRIZZO_FISICO") {
+      if (dettaglio.indirizzo){
+        nuovoCoinvolto.via = (dettaglio.indirizzo.via?dettaglio.indirizzo.via:null);
+        nuovoCoinvolto.cap = (dettaglio.indirizzo.cap?dettaglio.indirizzo.cap:null);
+        nuovoCoinvolto.provincia = (dettaglio.indirizzo.provincia?dettaglio.indirizzo.provincia:null);
+        nuovoCoinvolto.comune = (dettaglio.indirizzo.comune?dettaglio.indirizzo.comune:null);
+        nuovoCoinvolto.civico = (dettaglio.indirizzo.civico?dettaglio.indirizzo.civico:null);
+      } else {
+        nuovoCoinvolto.via = dettaglio.descrizione;
+      }
+      
+    }
+    this.coinvolti.push(nuovoCoinvolto);
+    this.coinvolti = [...this.coinvolti];
+    this.productDialog = false;
+    this.displayRubricaPopup = false;
+    this.coinvolto = new PersonaRS();
+  } else {
+    this.messageService.add({severity:'error', summary: 'Operazione non consentita', detail: 'Contatto già presente nei coinvolti', life: 3000});
+  }
+}
 
 
   searchDocBabel(event: any) {

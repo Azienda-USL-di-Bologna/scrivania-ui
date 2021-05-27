@@ -1,4 +1,8 @@
-<p-button label="Submit"(click)="onSubmit()" ></p-button>
+
+<button type="button" label = "Annulla" pButton icon="pi pi-chevron-left"
+          iconPos="left" [routerLink]="'/raccoltasemplice'" class="ui-button-secondary icon-style"
+          aria-label="Vai a lista Raccolta Semplice"></button>  
+<p-button label="Submit"(click)="onSubmit()" ></p-button>     
 <div class="p-grid">
   <div class="p-col-6 p-shadow-1">
     DATI
@@ -55,10 +59,10 @@
       </ng-template>
     </p-autoComplete>
 
-    <p-table [value]="selectedFascicoli">
+    <p-table [value]="selectedFascicoli" [resizableColumns]="true" [autoLayout]="true">
     <ng-template pTemplate="header">
         <tr>
-            <th>Fascicolo selezionato</th>
+            <th>Fascicoli selezionato</th>
             <th></th>
         </tr>
     </ng-template>
@@ -74,72 +78,68 @@
     
   </div>
   <div class="p-col-12 flex p-shadow-1">
-    <h5>Documenti</h5>
-<div class="p-grid">
-    <div class="p-col">
-      <p-radioButton name="doc_babel" value="Documento Babel" (onClick)="blocca('doc')" [(ngModel)]="selectedValue"></p-radioButton>
-      <label for="doc_babel">Documento Babel</label>
-      <p-blockUI [target]="pnl" [blocked]="blockedPanelDoc">
-        <i class="pi pi-lock" style="font-size: 3rem"></i>
-    </p-blockUI>
-    <p-panel #pnl [header]="titoloHeader" styleClass="p-mt-4">
-      <input id="disabled-input-codice-registro" type="text" pInputText [disabled]="true" [(ngModel)]="selectedCodiceRegistro.descrizione" />
-      <p-autoComplete id="docbabel"  #autocompletedocbabel
-      ariaLabel="docbabel"
-      [(ngModel)]="selectedDoc"
-      (onSelect)="saveDocBabel($event)"
-      [suggestions]="filteredDocs"
-      (completeMethod)="searchDocBabel($event)"
-      field="codiceBabel"
-      appendTo="body"
-      class="p-col"
-      dropdown=true
-      (onClear)="onClear()"
-      type="search"
-      placeholder="Cerca documento..."
-      emptyMessage="Nessun riferimento trovato">
-      <ng-template let-documento pTemplate="item">
-        <div>[{{documento.numero}}/{{documento.anno}}] {{documento.oggetto}}</div>
-      </ng-template>
-    </p-autoComplete>
-    </p-panel>
-        
-    </div>
-    <div class="p-col">
-      <p-radioButton name="doc_babel" value="Caricamento File" (onClick)="blocca('file')" [(ngModel)]="selectedValue"></p-radioButton>
-      <label for="upload_file">Caricamento File</label>
-      <p-blockUI [target]="pnlup" [blocked]="blockedPanelUpload">
-        <i class="pi pi-lock" style="font-size: 3rem"></i>
-      </p-blockUI>
-    <p-panel #pnlup header="Carica file" styleClass="p-mt-4">
-      <form>
-        <div class="form-group">
-          <p-fileUpload #fileInput name="file" multiple="multiple" [showUploadButton]="false"
-            [showCancelButton]="false" maxFileSize="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf"
-            (onSelect)="onSelect($event)" (onRemove)="onRemove($event)">
-            <ng-template pTemplate="content">
-              <div class="ui-fileupload-row" *ngFor="let file of attachments; let i = index;">
-                <div>
-                  <img [src]="file.objectURL" *ngIf="uploadService.isImage(file)" />
-                </div>
-                <div class="uploaded-file" (click)="uploadService.downloadFile(attachments, i)">
-                  {{file.uploadname}}
-                </div>
-                <div>
-                 <button type="button" class="btn-xs btn-danger confirm-btn" (click)="deleteFile(attachments, i)">Delete</button>
-                </div>
-              </div>
+    <!-- <h5>Documenti</h5> -->
+    <div class="p-grid">
+      <div class="p-col">
+        <p-radioButton name="doc_babel" value="Documento Babel" (onClick)="blocca('doc')" [(ngModel)]="selectedValue"></p-radioButton>
+        <label for="doc_babel">Documento Babel</label>
+        <p-blockUI [target]="pnl" [blocked]="blockedPanelDoc">
+          <i class="pi pi-lock" style="font-size: 3rem"></i>
+        </p-blockUI>
+        <p-panel #pnl [header]="titoloHeader" styleClass="p-mt-4">
+          <input id="disabled-input-codice-registro" type="text" pInputText [disabled]="true" [(ngModel)]="selectedCodiceRegistro.descrizione" />
+          <p-autoComplete id="docbabel"  #autocompletedocbabel
+            ariaLabel="docbabel"
+            [(ngModel)]="selectedDoc"
+            (onSelect)="saveDocBabel($event)"
+            [suggestions]="filteredDocs"
+            (completeMethod)="searchDocBabel($event)"
+            field="codiceBabel"
+            appendTo="body"
+            class="p-col"
+            dropdown=true
+            (onClear)="onClear()"
+            type="search"
+            placeholder="Cerca documento..."
+            emptyMessage="Nessun riferimento trovato">
+            <ng-template let-documento pTemplate="item">
+              <div>[{{documento.numero}}/{{documento.anno}}] {{documento.oggetto}}</div>
             </ng-template>
-          </p-fileUpload>
-          
-        </div>
-      </form>
-    </p-panel>
-      
+          </p-autoComplete>
+        </p-panel>
+      </div>
+      <div class="p-col">
+        <p-radioButton name="upload_file" value="Caricamento File" (onClick)="blocca('file')" [(ngModel)]="selectedValue"></p-radioButton>
+        <label for="upload_file">Caricamento File</label>
+        <p-blockUI [target]="pnlup" [blocked]="blockedPanelUpload">
+          <i class="pi pi-lock" style="font-size: 3rem"></i>
+        </p-blockUI>
+        <p-panel #pnlup header="Carica file" styleClass="p-mt-4">
+          <form>
+            <div class="form-group">
+              <p-fileUpload #fileInput name="file" multiple="multiple" [showUploadButton]="false"
+                [showCancelButton]="false" maxFileSize="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf"
+                (onSelect)="onSelect($event)" (onRemove)="onRemove($event)">
+                <ng-template pTemplate="content">
+                  <div class="ui-fileupload-row" *ngFor="let file of attachments; let i = index;">
+                    <div>
+                      <img [src]="file.objectURL" *ngIf="uploadService.isImage(file)" />
+                    </div>
+                    <div class="uploaded-file" (click)="uploadService.downloadFile(attachments, i)">
+                      {{file.uploadname}}
+                    </div>
+                    <div>
+                    <button type="button" class="btn-xs btn-danger confirm-btn" (click)="deleteFile(attachments, i)">Delete</button>
+                    </div>
+                  </div>
+                </ng-template>
+              </p-fileUpload>
+              
+            </div>
+          </form>
+        </p-panel>
+      </div>
     </div>
-   
-</div>
-  
   </div>
   <div class="p-col-12 p-shadow-1">
     PERSONA/AZIENDA
@@ -148,7 +148,8 @@
 
 <div class="card">
   <button pButton pRipple label="Aggiungi Coinvolti" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
-  <p-table #dt [value]="coinvolti" [rowHover]="true" dataKey="id">
+  <button pButton pRipple label="Aggiungi da Rubrica" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="onOpenRubricaPopup()"></button>
+  <p-table #dt [value]="coinvolti" [rowHover]="true" dataKey="id" [scrollable]="true">
     <ng-template pTemplate="header">
       <tr>
         <th pSortableColumn="nome">Coinvolto<p-sortIcon field="nome"></p-sortIcon></th>
@@ -265,4 +266,44 @@
   <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
     
   </div>
+
+  <p-dialog appendTo="body" [(visible)]="displayRubricaPopup" [modal]="true" header="Title">
+    
+    <p-autoComplete id="contatto"  #autocompleteContatto
+      [disabled]="disabledContatto"
+      ariaLabel="contatto"
+      [(ngModel)]="selectedContatto"
+      (onSelect)="saveContatto($event)"
+      [suggestions]="filteredContatti"
+      (completeMethod)="searchContatto($event)"
+      field="descrizione"
+      appendTo="body"
+      class="p-col"
+      dropdown=true
+      placeholder="Cerca contatto..."
+      emptyMessage="Nessun riferimento trovato">
+      <ng-template let-contatto pTemplate="itemContatto">
+        <div>[{{contatto.descrizione}}] {{contatto.tipo}} {{contatto.categoria}}</div>
+      </ng-template>
+    </p-autoComplete>
+    <button pButton icon="pi pi-times" class="p-button" (click)="removeContatto()"></button>
+
+    <p-table [value]="filteredDettagliContatti">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Dettagli contatto</th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-dettaglio let-i="rowIndex">
+        <tr>
+            <td>[{{dettaglio.tipo}}] {{dettaglio.descrizione}}</td>
+            <td>
+                <button pButton icon="pi pi-save" class="p-button" (click)="insertContatto(dettaglio)"></button>
+            </td>
+        </tr>
+    </ng-template>
+    </p-table> 
+    
+  </p-dialog>
 </div>
