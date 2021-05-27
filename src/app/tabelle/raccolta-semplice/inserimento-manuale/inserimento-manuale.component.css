@@ -31,3 +31,15 @@
   margin: 100px;
 }
 
+.expansion-header{
+  background-color: darkgrey;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  background-color: white !important;
+  color: black;
+}
+
+.expansion-single-box {
+  margin-bottom: 0.5em;
+}

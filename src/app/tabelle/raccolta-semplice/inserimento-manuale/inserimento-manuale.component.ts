@@ -56,6 +56,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   blockedPanelDoc: boolean = false;
   blockedPanelUpload: boolean = false;
+  blockedPanelInserimentoManuale: boolean = false;
 
   public azienda: Azienda = {id: 10} as Azienda;
   public _strutturaInternautaSelezionata: Struttura;
@@ -111,7 +112,15 @@ export class InserimentoManualeComponent implements OnInit {
   public filteredDettagliContatti: DettaglioContatto[];
   public disabledDettaglioContatto: boolean;
 
+  public panelOpenStateDati: string = "Incompleto"
+  public panelOpenState: boolean = true;
+
   public displayRubricaPopup = false;
+  public progressBarEnable = false;
+  public displayModal: boolean;
+  public numerazioneRSCreata: string = "";
+  public esitoCreazioneRS: string = "Creazione Raccolta Semplice in corso...";
+  public creazioneInCorso: boolean = true;
 
   constructor(private messageService: MessageService, 
       private allegatoService: ExtendedAllegatoService, 
@@ -196,23 +205,26 @@ hideDialog() {
   this.submitted = false;
 }
 
-saveProduct() {
+saveCoinvoltoCreato() {
   this.submitted = true;
+  console.log("tipo: " + this.selectedTipoCoinvolto);
 
   if (this.selectedTipoCoinvolto === "GIURIDICA" && this.coinvolto.ragioneSociale!==undefined && this.coinvolto.ragioneSociale!=="") {
     this.coinvolto.nomeInterfaccia = this.coinvolto.ragioneSociale;
-  } else {
+  } else if(this.coinvolto.nome && this.coinvolto.cognome) {
     this.coinvolto.nomeInterfaccia = this.coinvolto.nome + " "+ this.coinvolto.cognome;
+  } else {
+    this.coinvolto.nomeInterfaccia = "";
   }
 
   if (this.coinvolto.guidInterfaccia) {
-      this.coinvolto.tipo = this.selectedTipoCoinvolto;
+      this.coinvolto.tipologia = this.selectedTipoCoinvolto;
       this.coinvolti[this.findIndexByGuid(this.coinvolto.guidInterfaccia)] = this.coinvolto;                
       this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
   }
   else {
     this.coinvolto.guidInterfaccia = this.createGuid();
-    this.coinvolto.tipo = this.selectedTipoCoinvolto;
+    this.coinvolto.tipologia = this.selectedTipoCoinvolto;
     
     this.coinvolti.push(this.coinvolto);
     this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
@@ -365,12 +377,13 @@ public insertContatto(dettaglio: DettaglioContatto){
     nuovoCoinvolto.partitaIva = this.selectedContatto.partitaIva;
 
     if(this.selectedContatto.ragioneSociale) {
-      nuovoCoinvolto.tipo = "GIURIDICA";
+      nuovoCoinvolto.ragioneSociale = this.selectedContatto.ragioneSociale;
+      nuovoCoinvolto.tipologia = "GIURIDICA";
     } else {
-      nuovoCoinvolto.tipo = "FISICA";
+      nuovoCoinvolto.tipologia = "FISICA";
     }
 
-    nuovoCoinvolto.ragioneSociale = this.selectedContatto.ragioneSociale;
+    
     nuovoCoinvolto.nomeInterfaccia = this.selectedContatto.descrizione;
     
   
@@ -614,15 +627,58 @@ public insertContatto(dettaglio: DettaglioContatto){
     }
   }
 
-  public onSubmit() {
-    console.log(this.uploadedFiles);
-    var formData:FormData = this.createFormData();
-    this.raccoltaService.createRs(formData).subscribe(
-      response =>
-        console.log(response)
-    );
+  public delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
+  public onSubmit() {
+    this.creazioneInCorso = true;
+    this.showModalDialog();
+    
+    setTimeout(() => {
+      this.progressBarEnable = true;
+      this.creazioneInCorso = false;
+      this.progressBarEnable = false;
+      this.esitoCreazioneRS = "Raccolta Semplice creata con successo";
+      this.numerazioneRSCreata = "0007/2021";
+    }, 1000);
+    // this.progressBarEnable = true;
+    // var formData:FormData = this.createFormData();
+    // this.raccoltaService.createRs(formData).subscribe(
+    // response => {
+    //   this.blockedPanelInserimentoManuale = false;
+    //   this.progressBarEnable = false;
+    //   this.showModalDialog();
+    //   this. numerazioneRSCreata = response;
+    // },
+    // error => {
+    //   this.progressBarEnable = false;
+    //   this.blockedPanelInserimentoManuale = false;
+    //   this.messageService.add({
+    //     severity:'error', 
+    //     summary:'Creazione Raccolta Semplice', 
+    //     detail:error
+    //   });
+    // });
+  }
+
+  public showModalDialog() {
+    this.progressBarEnable = true;
+    this.displayModal = true;
+  }
+
+  private stringifyFascicoli():string {
+    let a = [];
+
+    for (let i = 0; i < this.selectedFascicoli.length; i++) {
+      a.push(this.selectedFascicoli[i].numerazioneGerarchica);
+    }
+    
+    // Converting the object to JSON...
+    let json = JSON.stringify(a);
+
+    return json;
+  }
 
   private createFormData(): FormData {
     
@@ -638,7 +694,7 @@ public insertContatto(dettaglio: DettaglioContatto){
       formData.append("codice_registro_origine", "PG");
     }
     
-    var fascicoliStr = this.selectedFascicoli.join(","); 
+    var fascicoliStr = this.stringifyFascicoli(); 
     formData.append("fascicoli_babel", fascicoliStr);
     formData.append("tipo_documento", this.selectedTipo.code);
     formData.append("struttura_responsabile", this._strutturaInternautaSelezionata.id.toString());
@@ -649,9 +705,9 @@ public insertContatto(dettaglio: DettaglioContatto){
       }
     }
      
-    for (var coinvolto of this.coinvolti) {
-      formData.append('allegati', file);
-    }
+    // for (var coinvolto of this.coinvolti) {
+    //   formData.append('allegati', file);
+    // }
     formData.append("persone", JSON.stringify(this.coinvolti));
 
     // var personeStr: string = JSON.stringify([ 	

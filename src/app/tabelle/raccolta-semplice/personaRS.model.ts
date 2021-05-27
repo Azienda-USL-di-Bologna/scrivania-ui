@@ -17,7 +17,7 @@ export class PersonaRS {
     public provincia: string;
     public ragioneSociale: string;
     public telefono: string;
-    public tipo: string;
+    public tipologia: string;
     public via: string;
     public nomeInterfaccia: string;
 }

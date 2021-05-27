@@ -1,309 +1,385 @@
-
 <button type="button" label = "Annulla" pButton icon="pi pi-chevron-left"
-          iconPos="left" [routerLink]="'/raccoltasemplice'" class="ui-button-secondary icon-style"
-          aria-label="Vai a lista Raccolta Semplice"></button>  
-<p-button label="Submit"(click)="onSubmit()" ></p-button>     
-<div class="p-grid">
-  <div class="p-col-6 p-shadow-1">
-    DATI
-    <div class="p-fluid">
-      <div class="p-field p-grid">
-          <label for="oggetto" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Oggetto</label>
-          <div class="p-col-12 p-md-10">
-              <input id="oggetto" type="text" pInputText [(ngModel)]="oggetto" required minlength="5"> 
+  iconPos="left" [routerLink]="'/raccoltasemplice'" class="ui-button-secondary icon-style"
+  aria-label="Vai a lista Raccolta Semplice"></button>  
+  <p-button label="Submit"(click)="onSubmit()" ></p-button>     
+  
+
+  
+  
+  <p-scrollPanel [style]="{width: '100%', height: '95%'}" styleClass="custombar2">
+  <!-- DATI -->
+  <div class="expansion-single-box">
+    <mat-accordion>
+      <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true"> 
+        <mat-expansion-panel-header class="expansion-header">
+          <mat-panel-title>
+            DATI
+          </mat-panel-title>
+          <mat-panel-description>
+            Stato: {{panelOpenStateDati}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div style="margin-top: 1em;">
+          <div class="p-field p-grid">
+              <label for="oggetto" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Oggetto</label>
+              <div class="p-col-12 p-md-10">
+                  <input id="oggetto" type="text" pInputText [(ngModel)]="oggetto" required minlength="5"> 
+              </div>
+          </div>
+          <div class="p-field p-grid">
+              <label for="struttura-responsabile" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Struttura Responsabile</label>
+              <div class="p-col-12 p-md-10">
+                <!-- autocomplete delle struttura internauta -->
+                <lib-structures-autocomplete
+                  [enabled]="true" 
+                  [azienda]="azienda" 
+                  [clearEnabled]="true" 
+                  (strutturaSelezionataEmit)="strutturaSelezionata($event)">
+                </lib-structures-autocomplete> 
+              </div>
+          </div>
+          <div class="p-field p-grid">
+            <label for="applicazione" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Applicazione</label>
+            <div class="p-col-12 p-md-10">
+              <input id="applicazioneId" type="text" pInputText [disabled]="true" [(ngModel)]="applicazione" />
+            </div>
+          </div>
+          <div class="p-field p-grid">
+            <label for="tipo-documento" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Tipo Documento</label>
+            <div class="p-col-12 p-md-10">
+              <p-dropdown [options]="tipiDocumento" [(ngModel)]="selectedTipo" placeholder="Scegli tipo documento..." optionLabel="name" [showClear]="true"></p-dropdown>
+            </div>
           </div>
       </div>
-      <div class="p-field p-grid">
-          <label for="struttura-responsabile" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Struttura Responsabile</label>
-          <div class="p-col-12 p-md-10">
-            <!-- autocomplete delle struttura internauta -->
-            <lib-structures-autocomplete
-              [enabled]="true" 
-              [azienda]="azienda" 
-              [clearEnabled]="true" 
-              (strutturaSelezionataEmit)="strutturaSelezionata($event)">
-            </lib-structures-autocomplete> 
-          </div>
-      </div>
-      <div class="p-field p-grid">
-        <label for="applicazione" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Applicazione</label>
-        <div class="p-col-12 p-md-10">
-          <input id="applicazioneId" type="text" pInputText [disabled]="true" [(ngModel)]="applicazione" />
-        </div>
-      </div>
-      <div class="p-field p-grid">
-        <label for="tipo-documento" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Tipo Documento</label>
-        <div class="p-col-12 p-md-10">
-          <p-dropdown [options]="tipiDocumento" [(ngModel)]="selectedTipo" placeholder="Scegli tipo documento..." optionLabel="name" [showClear]="true"></p-dropdown>
-        </div>
-      </div>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
-  </div>
-  <div class="p-col-6 p-shadow-1">
-    FASCICOLAZIONI
-
-    <p-autoComplete id="fascicoli"  #autocompleteFascicoli
-      ariaLabel="fascicoli"
-      [(ngModel)]="selectedFascicolo"
-      (onSelect)="saveFascicolo($event)"
-      [suggestions]="filteredFascicoli"
-      (completeMethod)="searchFascicolo($event)"
-      field="nomeFascicolo"
-      appendTo="body"
-      class="p-col"
-      dropdown=true
-      placeholder="Cerca fascicolo..."
-      emptyMessage="Nessun riferimento trovato">
-      <ng-template let-fascicolo pTemplate="item">
-        <div>[{{fascicolo.numerazioneGerarchica}}] {{fascicolo.nomeFascicolo}}</div>
-      </ng-template>
-    </p-autoComplete>
-
-    <p-table [value]="selectedFascicoli" [resizableColumns]="true" [autoLayout]="true">
-    <ng-template pTemplate="header">
-        <tr>
-            <th>Fascicoli selezionato</th>
-            <th></th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-selectedFascicoli let-i="rowIndex">
-        <tr>
-            <td>[{{selectedFascicoli.numerazioneGerarchica}}] {{selectedFascicoli.nomeFascicolo}}</td>
-            <td>
-                <button pButton icon="pi pi-trash" class="p-button" (click)="deleteFascicolo(i)"></button>
-            </td>
-        </tr>
-    </ng-template>
-    </p-table>
-    
-  </div>
-  <div class="p-col-12 flex p-shadow-1">
-    <!-- <h5>Documenti</h5> -->
-    <div class="p-grid">
-      <div class="p-col">
-        <p-radioButton name="doc_babel" value="Documento Babel" (onClick)="blocca('doc')" [(ngModel)]="selectedValue"></p-radioButton>
-        <label for="doc_babel">Documento Babel</label>
-        <p-blockUI [target]="pnl" [blocked]="blockedPanelDoc">
-          <i class="pi pi-lock" style="font-size: 3rem"></i>
-        </p-blockUI>
-        <p-panel #pnl [header]="titoloHeader" styleClass="p-mt-4">
-          <input id="disabled-input-codice-registro" type="text" pInputText [disabled]="true" [(ngModel)]="selectedCodiceRegistro.descrizione" />
-          <p-autoComplete id="docbabel"  #autocompletedocbabel
-            ariaLabel="docbabel"
-            [(ngModel)]="selectedDoc"
-            (onSelect)="saveDocBabel($event)"
-            [suggestions]="filteredDocs"
-            (completeMethod)="searchDocBabel($event)"
-            field="codiceBabel"
+  
+  
+  <!-- FASCICOLAZIONI -->
+  <div class="expansion-single-box">
+    <mat-accordion>
+      <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true"> 
+        <mat-expansion-panel-header class="expansion-header">
+          <mat-panel-title>
+            FASCICOLAZIONI
+          </mat-panel-title>
+          <mat-panel-description>
+            Stato: {{panelOpenStateDati}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div style="margin-top: 1em;">
+          <!-- cerca fascicolo -->
+          <p-autoComplete id="fascicoli"  #autocompleteFascicoli
+            ariaLabel="fascicoli"
+            [(ngModel)]="selectedFascicolo"
+            (onSelect)="saveFascicolo($event)"
+            [suggestions]="filteredFascicoli"
+            (completeMethod)="searchFascicolo($event)"
+            field="nomeFascicolo"
             appendTo="body"
             class="p-col"
             dropdown=true
-            (onClear)="onClear()"
-            type="search"
-            placeholder="Cerca documento..."
+            placeholder="Cerca fascicolo..."
             emptyMessage="Nessun riferimento trovato">
-            <ng-template let-documento pTemplate="item">
-              <div>[{{documento.numero}}/{{documento.anno}}] {{documento.oggetto}}</div>
+            <ng-template let-fascicolo pTemplate="item">
+              <div>[{{fascicolo.numerazioneGerarchica}}] {{fascicolo.nomeFascicolo}}</div>
             </ng-template>
           </p-autoComplete>
-        </p-panel>
-      </div>
-      <div class="p-col">
-        <p-radioButton name="upload_file" value="Caricamento File" (onClick)="blocca('file')" [(ngModel)]="selectedValue"></p-radioButton>
-        <label for="upload_file">Caricamento File</label>
-        <p-blockUI [target]="pnlup" [blocked]="blockedPanelUpload">
-          <i class="pi pi-lock" style="font-size: 3rem"></i>
-        </p-blockUI>
-        <p-panel #pnlup header="Carica file" styleClass="p-mt-4">
-          <form>
-            <div class="form-group">
-              <p-fileUpload #fileInput name="file" multiple="multiple" [showUploadButton]="false"
-                [showCancelButton]="false" maxFileSize="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf"
-                (onSelect)="onSelect($event)" (onRemove)="onRemove($event)">
-                <ng-template pTemplate="content">
-                  <div class="ui-fileupload-row" *ngFor="let file of attachments; let i = index;">
-                    <div>
-                      <img [src]="file.objectURL" *ngIf="uploadService.isImage(file)" />
-                    </div>
-                    <div class="uploaded-file" (click)="uploadService.downloadFile(attachments, i)">
-                      {{file.uploadname}}
-                    </div>
-                    <div>
-                    <button type="button" class="btn-xs btn-danger confirm-btn" (click)="deleteFile(attachments, i)">Delete</button>
-                    </div>
-                  </div>
-                </ng-template>
-              </p-fileUpload>
-              
+    
+          <!-- fascicoli selezionati -->
+          <p-table [value]="selectedFascicoli" [resizableColumns]="true" [autoLayout]="true">
+            <ng-template pTemplate="header">
+              <tr>
+                  <th>Fascicoli selezionato</th>
+                  <th></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-selectedFascicoli let-i="rowIndex">
+                <tr>
+                  <td>[{{selectedFascicoli.numerazioneGerarchica}}] {{selectedFascicoli.nomeFascicolo}}</td>
+                  <td>
+                      <button pButton icon="pi pi-trash" class="p-button" (click)="deleteFascicolo(i)"></button>
+                  </td>
+                </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  
+  <div class="expansion-single-box">
+    <mat-accordion>
+      <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true"> 
+        <mat-expansion-panel-header class="expansion-header">
+          <mat-panel-title>
+            DOCUMENTI
+          </mat-panel-title>
+          <mat-panel-description style="float: right;">
+            Stato: {{panelOpenStateDati}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div style="margin-top: 1em;">
+          <div class="p-grid">
+            <div class="p-col">
+              <p-radioButton name="doc_babel" value="Documento Babel" (onClick)="blocca('doc')" [(ngModel)]="selectedValue"></p-radioButton>
+              <label for="doc_babel">Documento Babel</label>
+              <p-blockUI [target]="pnl" [blocked]="blockedPanelDoc">
+                <i class="pi pi-lock" style="font-size: 3rem"></i>
+              </p-blockUI>
+              <p-panel #pnl [header]="titoloHeader" styleClass="p-mt-4">
+                <input id="disabled-input-codice-registro" type="text" pInputText [disabled]="true" [(ngModel)]="selectedCodiceRegistro.descrizione" class="p-col p-grid"/>
+                <p-autoComplete id="docbabel"  #autocompletedocbabel
+                  ariaLabel="docbabel"
+                  [(ngModel)]="selectedDoc"
+                  (onSelect)="saveDocBabel($event)"
+                  [suggestions]="filteredDocs"
+                  (completeMethod)="searchDocBabel($event)"
+                  field="codiceBabel"
+                  appendTo="body"
+                  class="p-col p-grid"
+                  dropdown=true
+                  (onClear)="onClear()"
+                  type="search"
+                  placeholder="Cerca documento..."
+                  emptyMessage="Nessun riferimento trovato">
+                  <ng-template let-documento pTemplate="item">
+                    <div>[{{documento.numero}}/{{documento.anno}}] {{documento.oggetto}}</div>
+                  </ng-template>
+                </p-autoComplete>
+              </p-panel>
             </div>
-          </form>
-        </p-panel>
-      </div>
-    </div>
-  </div>
-  <div class="p-col-12 p-shadow-1">
-    PERSONA/AZIENDA
-
-    <p-toast></p-toast>
-
-<div class="card">
-  <button pButton pRipple label="Aggiungi Coinvolti" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
-  <button pButton pRipple label="Aggiungi da Rubrica" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="onOpenRubricaPopup()"></button>
-  <p-table #dt [value]="coinvolti" [rowHover]="true" dataKey="id" [scrollable]="true">
-    <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="nome">Coinvolto<p-sortIcon field="nome"></p-sortIcon></th>
-        <th pSortableColumn="cf">CF<p-sortIcon field="price"></p-sortIcon></th>
-        <th pSortableColumn="partitaIva">P. Iva<p-sortIcon field="category"></p-sortIcon></th>
-        <th pSortableColumn="tipo">Tipologia<p-sortIcon field="rating"></p-sortIcon></th>
-        <th pSortableColumn="mail">Email<p-sortIcon field="rating"></p-sortIcon></th>
-        <th pSortableColumn="via">Indirizzo<p-sortIcon field="inventoryStatus"></p-sortIcon></th>
-        <th pSortableColumn="telefono">Telefono<p-sortIcon field="inventoryStatus"></p-sortIcon></th>
-        <th></th>
-      </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-coinvolto>
-        <tr>
-          <td>{{coinvolto.nomeInterfaccia}}</td>
-          <td>{{coinvolto.cf}}</td>
-          <td>{{coinvolto.partitaIva}}</td>   
-          <td>{{coinvolto.tipo}}</td>  
-          <td>{{coinvolto.mail}}</td>
-          <td>{{coinvolto.via}}</td>
-          <td>{{coinvolto.telefono}}</td>
-          <td>
-            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editProduct(coinvolto)"></button>
-            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(coinvolto)"></button>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="summary">
-          <div class="p-d-flex p-ai-center p-jc-between">
-              Coinvolti Totali: {{coinvolti ? coinvolti.length : 0 }}
+            <div class="p-col">
+              <p-radioButton name="upload_file" value="Caricamento File" (onClick)="blocca('file')" [(ngModel)]="selectedValue"></p-radioButton>
+              <label for="upload_file">Caricamento File</label>
+              <p-blockUI [target]="pnlup" [blocked]="blockedPanelUpload">
+                <i class="pi pi-lock" style="font-size: 3rem"></i>
+              </p-blockUI>
+              <!-- <p-panel #pnlup header="Carica file" styleClass="p-mt-4"> -->
+                <form >
+                  <div class="form-group">
+                    <p-fileUpload #pnlup #fileInput name="file" multiple="multiple" [showUploadButton]="false"
+                      [showCancelButton]="false" maxFileSize="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf" chooseLabel="Importa"
+                      (onSelect)="onSelect($event)" (onRemove)="onRemove($event)">
+                      <ng-template pTemplate="content">
+                        <div class="ui-fileupload-row" *ngFor="let file of attachments; let i = index;">
+                          <div>
+                            <img [src]="file.objectURL" *ngIf="uploadService.isImage(file)" />
+                          </div>
+                          <div class="uploaded-file" (click)="uploadService.downloadFile(attachments, i)">
+                            {{file.uploadname}}
+                          </div>
+                          <div>
+                          <button type="button" class="btn-xs btn-danger confirm-btn" (click)="deleteFile(attachments, i)">Delete</button>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-fileUpload>
+                    
+                  </div>
+                </form>
+              <!-- </p-panel> -->
+            </div>
           </div>
-      </ng-template>
-    </p-table>
-</div>
-
-<p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Nuovo Coinvolto" [modal]="true" styleClass="p-fluid">
-    <ng-template pTemplate="content">
-      <div class="p-formgrid p-grid">
-        <div class="p-field p-col">
-          <label for="nome">Nome</label>
-          <input type="text" pInputText id="nome" [(ngModel)]="coinvolto.nome" required autofocus />
-          <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.nome">Nome is required.</small> -->
         </div>
-        <div class="p-field p-col">
-          <label for="cognome">Cognome</label>
-          <input type="text" pInputText id="cognome" [(ngModel)]="coinvolto.cognome" required autofocus />
-          <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cognome">Cognome is required.</small> -->
-        </div>
-      </div>
-
-      <div class="p-field">
-        <label for="ragioneSociale">Ragione Sociale</label>
-        <input type="text" pInputText id="ragioneSociale" [(ngModel)]="coinvolto.ragioneSociale" required autofocus />
-        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.ragioneSociale">Ragione Sociale is required.</small> -->
-      </div>
-      <div class="p-field">
-        <label for="cf">Codice Fiscale</label>
-        <input type="text" pInputText id="cf" [(ngModel)]="coinvolto.cf" required autofocus />
-        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cf">CF is required.</small> -->
-      </div>
-      <div class="p-field">
-        <label for="partitaIva">Partita IVA</label>
-        <input type="text" pInputText id="partitaIva" [(ngModel)]="coinvolto.partitaIva" required autofocus />
-        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.partitaIva">partitaIva is required.</small> -->
-      </div>
-      <div class="p-field">
-        <label for="partitaIva">Tipologia</label>
-        <p-dropdown [options]="tipiCoinvolti" [(ngModel)]="selectedTipoCoinvolto" placeholder="tipologia..." [showClear]="true"></p-dropdown>
-      </div>
-      
-      <div class="p-field">
-        <label for="mail">Email</label>
-        <input type="text" pInputText id="mail" [(ngModel)]="coinvolto.mail" required autofocus />
-        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.mail">mail is required.</small> -->
-      </div>
-      <div class="p-field">
-        <label for="telefono">Telefono</label>
-        <input type="text" pInputText id="telefono" [(ngModel)]="coinvolto.telefono" required autofocus />
-        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.telefono">telefono is required.</small> -->
-      </div>
-      <div class="p-field">
-        <label for="via">Via</label>
-        <input type="text" pInputText id="via" [(ngModel)]="coinvolto.via" required autofocus />
-        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.via">via is required.</small> -->
-      </div>
-      <div class="p-field">
-        <label for="civico">Civico</label>
-        <input type="text" pInputText id="civico" [(ngModel)]="coinvolto.civico" required autofocus />
-        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.civico">civico is required.</small> -->
-      </div>
-      <div class="p-field">
-        <label for="cap">CAP</label>
-        <input type="text" pInputText id="cap" [(ngModel)]="coinvolto.cap" required autofocus />
-        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cap">Name is required.</small> -->
-      </div>
-      <div class="p-field">
-        <label for="comune">Comune</label>
-        <input type="text" pInputText id="comune" [(ngModel)]="coinvolto.comune" required autofocus />
-        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.comune">comune is required.</small> -->
-      </div>
-      <div class="p-field">
-        <label for="provincia">Provincia</label>
-        <input type="text" pInputText id="provincia" [(ngModel)]="coinvolto.provincia" required autofocus />
-        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.provincia">Name is required.</small> -->
-      </div>
-    </ng-template>
-    
-    <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
-    </ng-template>
-</p-dialog>
-
-  <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
-    
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
-
-  <p-dialog appendTo="body" [(visible)]="displayRubricaPopup" [modal]="true" header="Title">
-    
-    <p-autoComplete id="contatto"  #autocompleteContatto
-      [disabled]="disabledContatto"
-      ariaLabel="contatto"
-      [(ngModel)]="selectedContatto"
-      (onSelect)="saveContatto($event)"
-      [suggestions]="filteredContatti"
-      (completeMethod)="searchContatto($event)"
-      field="descrizione"
-      appendTo="body"
-      class="p-col"
-      dropdown=true
-      placeholder="Cerca contatto..."
-      emptyMessage="Nessun riferimento trovato">
-      <ng-template let-contatto pTemplate="itemContatto">
-        <div>[{{contatto.descrizione}}] {{contatto.tipo}} {{contatto.categoria}}</div>
-      </ng-template>
-    </p-autoComplete>
-    <button pButton icon="pi pi-times" class="p-button" (click)="removeContatto()"></button>
-
-    <p-table [value]="filteredDettagliContatti">
-    <ng-template pTemplate="header">
-        <tr>
-            <th>Dettagli contatto</th>
-            <th></th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-dettaglio let-i="rowIndex">
-        <tr>
-            <td>[{{dettaglio.tipo}}] {{dettaglio.descrizione}}</td>
-            <td>
-                <button pButton icon="pi pi-save" class="p-button" (click)="insertContatto(dettaglio)"></button>
-            </td>
-        </tr>
-    </ng-template>
-    </p-table> 
-    
+  
+  <!-- COINVOLTI -->
+  <div class="expansion-single-box">
+    <mat-accordion>
+      <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true"> 
+        <mat-expansion-panel-header class="expansion-header">
+          <mat-panel-title>
+            COINVOLTI
+          </mat-panel-title>
+          <mat-panel-description>
+            Stato: {{panelOpenStateDati}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div style="margin-top: 1em;">
+          
+          <p-toast></p-toast>
+  
+          <!-- <div class="card"> -->
+            <button pButton pRipple label="Aggiungi Coinvolti" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+            <button pButton pRipple label="Aggiungi da Rubrica" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="onOpenRubricaPopup()"></button>
+            <p-table  [value]="coinvolti" [rowHover]="true" dataKey="id">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th pSortableColumn="nome">Coinvolto<p-sortIcon field="nome"></p-sortIcon></th>
+                  <th pSortableColumn="cf">CF<p-sortIcon field="price"></p-sortIcon></th>
+                  <th pSortableColumn="partitaIva">P. Iva<p-sortIcon field="category"></p-sortIcon></th>
+                  <th pSortableColumn="tipo">Tipologia<p-sortIcon field="rating"></p-sortIcon></th>
+                  <th pSortableColumn="mail">Email<p-sortIcon field="rating"></p-sortIcon></th>
+                  <th pSortableColumn="via">Indirizzo<p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+                  <th pSortableColumn="telefono">Telefono<p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+                  <th></th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-coinvolto>
+                  <tr>
+                    <td>{{coinvolto.nomeInterfaccia}}</td>
+                    <td>{{coinvolto.cf}}</td>
+                    <td>{{coinvolto.partitaIva}}</td>   
+                    <td>{{coinvolto.tipo}}</td>  
+                    <td>{{coinvolto.mail}}</td>
+                    <td>{{coinvolto.via}}</td>
+                    <td>{{coinvolto.telefono}}</td>
+                    <td>
+                      <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editProduct(coinvolto)"></button>
+                      <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(coinvolto)"></button>
+                    </td>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        Coinvolti Totali: {{coinvolti ? coinvolti.length : 0 }}
+                    </div>
+              </ng-template>
+            </p-table>
+          <!-- </div> -->
+          
+          <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Nuovo Coinvolto" [modal]="true" styleClass="p-fluid">
+              <ng-template pTemplate="content">
+                <div class="p-formgrid p-grid">
+                  <div class="p-field p-col">
+                    <label for="nome">Nome</label>
+                    <input type="text" pInputText id="nome" [(ngModel)]="coinvolto.nome" required autofocus />
+                    <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.nome">Nome is required.</small> -->
+                  </div>
+                  <div class="p-field p-col">
+                    <label for="cognome">Cognome</label>
+                    <input type="text" pInputText id="cognome" [(ngModel)]="coinvolto.cognome" required autofocus />
+                    <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cognome">Cognome is required.</small> -->
+                  </div>
+                </div>
+          
+                <div class="p-field">
+                  <label for="ragioneSociale">Ragione Sociale</label>
+                  <input type="text" pInputText id="ragioneSociale" [(ngModel)]="coinvolto.ragioneSociale" required autofocus />
+                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.ragioneSociale">Ragione Sociale is required.</small> -->
+                </div>
+                <div class="p-field">
+                  <label for="cf">Codice Fiscale</label>
+                  <input type="text" pInputText id="cf" [(ngModel)]="coinvolto.cf" required autofocus />
+                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cf">CF is required.</small> -->
+                </div>
+                <div class="p-field">
+                  <label for="partitaIva">Partita IVA</label>
+                  <input type="text" pInputText id="partitaIva" [(ngModel)]="coinvolto.partitaIva" required autofocus />
+                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.partitaIva">partitaIva is required.</small> -->
+                </div>
+                <div class="p-field">
+                  <label for="partitaIva">Tipologia</label>
+                  <p-dropdown [options]="tipiCoinvolti" [(ngModel)]="selectedTipoCoinvolto" placeholder="tipologia..." [showClear]="true"></p-dropdown>
+                </div>
+                
+                <div class="p-field">
+                  <label for="mail">Email</label>
+                  <input type="text" pInputText id="mail" [(ngModel)]="coinvolto.mail" required autofocus />
+                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.mail">mail is required.</small> -->
+                </div>
+                <div class="p-field">
+                  <label for="telefono">Telefono</label>
+                  <input type="text" pInputText id="telefono" [(ngModel)]="coinvolto.telefono" required autofocus />
+                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.telefono">telefono is required.</small> -->
+                </div>
+                <div class="p-field">
+                  <label for="via">Via</label>
+                  <input type="text" pInputText id="via" [(ngModel)]="coinvolto.via" required autofocus />
+                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.via">via is required.</small> -->
+                </div>
+                <div class="p-field">
+                  <label for="civico">Civico</label>
+                  <input type="text" pInputText id="civico" [(ngModel)]="coinvolto.civico" required autofocus />
+                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.civico">civico is required.</small> -->
+                </div>
+                <div class="p-field">
+                  <label for="cap">CAP</label>
+                  <input type="text" pInputText id="cap" [(ngModel)]="coinvolto.cap" required autofocus />
+                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cap">Name is required.</small> -->
+                </div>
+                <div class="p-field">
+                  <label for="comune">Comune</label>
+                  <input type="text" pInputText id="comune" [(ngModel)]="coinvolto.comune" required autofocus />
+                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.comune">comune is required.</small> -->
+                </div>
+                <div class="p-field">
+                  <label for="provincia">Provincia</label>
+                  <input type="text" pInputText id="provincia" [(ngModel)]="coinvolto.provincia" required autofocus />
+                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.provincia">Name is required.</small> -->
+                </div>
+              </ng-template>
+              
+              <ng-template pTemplate="footer">
+                  <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                  <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveCoinvoltoCreato()"></button>
+              </ng-template>
+          </p-dialog>
+          
+          <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+                
+          <p-dialog appendTo="body" [(visible)]="displayRubricaPopup" [modal]="true" header="Cerca Contatto">
+              
+            <p-autoComplete id="contatto"  #autocompleteContatto
+                [disabled]="disabledContatto"
+                ariaLabel="contatto"
+                [(ngModel)]="selectedContatto"
+                (onSelect)="saveContatto($event)"
+                [suggestions]="filteredContatti"
+                (completeMethod)="searchContatto($event)"
+                field="descrizione"
+                appendTo="body"
+                class="p-col"
+                dropdown=true
+                placeholder="Cerca contatto..."
+                emptyMessage="Nessun riferimento trovato">
+                <ng-template let-contatto pTemplate="itemContatto">
+                  <div>[{{contatto.descrizione}}] {{contatto.tipo}} {{contatto.categoria}}</div>
+                </ng-template>
+            </p-autoComplete>
+            <button pButton icon="pi pi-times" class="p-button" (click)="removeContatto()"></button>
+            <p-table [value]="filteredDettagliContatti">
+              <ng-template pTemplate="header">
+                  <tr>
+                      <th>Dettagli contatto</th>
+                      <th></th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-dettaglio let-i="rowIndex">
+                  <tr>
+                      <td>[{{dettaglio.tipo}}] {{dettaglio.descrizione}}</td>
+                      <td>
+                          <button pButton icon="pi pi-save" class="p-button" (click)="insertContatto(dettaglio)"></button>
+                      </td>
+                  </tr>
+              </ng-template>
+            </p-table> 
+          </p-dialog>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  </p-scrollPanel>
+  
+  <p-dialog header="Creazione documento" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+      [draggable]="false" [resizable]="false">
+      <p-progressBar  
+      [ngClass]="{'progressbar-disable': !progressBarEnable}"
+      mode="indeterminate">
+    </p-progressBar>
+      <p class="p-m-0">
+        <span *ngIf="!creazioneInCorso && numerazioneRSCreata" class="p-tag p-tag-success">Successo</span>
+        <span *ngIf="!creazioneInCorso && numerazioneRSCreata===''" class="p-tag p-tag-danger">Errore</span>
+        <span *ngIf="creazioneInCorso">{{esitoCreazioneRS}}</span>
+      </p>
+      <p *ngIf="!creazioneInCorso && numerazioneRSCreata">Numerazione:<b>{{numerazioneRSCreata}}</b> </p>
+      <p *ngIf="!creazioneInCorso && numerazioneRSCreata===''"><b>Errore nella creazione del documento. Contattare babelcare</b> </p>
+          <ng-template pTemplate="footer">
+              <p-button icon="pi pi-check" (click)="displayModal=false" label="OK" class="p-button-text"></p-button>
+          </ng-template>
   </p-dialog>
-</div>
+  
