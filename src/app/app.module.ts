@@ -33,6 +33,7 @@ import { ExtendedAllegatoService } from "./tabelle/raccolta-semplice/inserimento
 import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtuale.service";
 
 /* PrimeNG component */
+import { RadioButtonModule } from 'primeng-lts/radiobutton';
 import { AccordionModule } from "primeng-lts/accordion";
 import { LightboxModule } from "primeng-lts/lightbox";
 import { PanelModule } from "primeng-lts/panel";
@@ -83,6 +84,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { ModalModule } from "ng2-modal";
 import { ModalComponent } from './tabelle/raccolta-semplice/dettaglio-annullamento/modal/modal.component';
+import { ModalService } from '../app/tabelle/raccolta-semplice/dettaglio-annullamento/modal/modal-service';
 import {MatExpansionModule} from '@angular/material/expansion';
 
 
@@ -103,6 +105,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
     ImpostazioniComponent,
     DatiBolloVirtualeComponent,
     RaccoltaSempliceComponent,
+    InserimentoManualeComponent
     InserimentoManualeComponent,
     ModalComponent
   ],
@@ -155,7 +158,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
   providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService,
     ImpostazioniService, DialogService, ConfirmationService,
     BolloVirtualeService, RaccoltaSempliceService, ExtendedAllegatoService
-    //, ModalService
   ],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent, ProfiloComponent]

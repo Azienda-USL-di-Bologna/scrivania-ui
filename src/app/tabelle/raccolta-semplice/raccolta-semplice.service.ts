@@ -6,8 +6,9 @@ import { ENTITIES_STRUCTURE, getInternautaUrl, Azienda, BaseUrlType, Contatto } 
 import { CONTROLLERS_ENDPOINT } from 'src/environments/app-constants';
 import { Document } from './documento.model';
 import { PersonaRS } from './personaRS.model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Storico } from './dettaglio-annullamento/modal/storico';
+import { exception } from 'console';
 import { map } from 'rxjs/operators';
 import { FascicoloArgo } from './fascicolo.model';
 import { DocumentoArgo } from './DocumentoArgo.model';
@@ -33,9 +34,27 @@ import { RaccoltaSemplice } from './inserimento-manuale/rs.model';
       return this.http.get<Storico[]>(url, {responseType: "json", observe: 'response'});
     }
 
-    public updateAnnullamento(id: string, utente: string, azione: string, annullato: string): void {
+    public ricercaRaccolta(campi: string[], filtri: string[]) : Observable<HttpResponse<Document[]>> {
+      let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.RICERCA_RACCOLTA + "?";
+      if(campi.length != filtri.length)
+        console.log("Il numero di campi e filtri è diverso")
+      else {
+        if(campi.length == 0 )
+          url = url + filtri[0] + "=" + campi[0];
+          else {
+            for(let i = 0 ; i < campi.length; i++) {
+              url = url + filtri[i] + "=" + campi[i];
+              if(i < campi.length - 1)
+              url = url +"&";
+          }
+        }
+        return this.http.get<Document[]>(url, {responseType: "json", observe: 'response'});
+      }
+    }
+
+    public updateAnnullamento(body: JSON): any {
         let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.ANNULLAMENTO_URL;
-        //return this.http.post(url, )
+        return this.http.post(url, body).subscribe(res => console.log(res));
     }
 
     public getFascicoliArgo(azienda: string, idUtente:string, value: string) : Observable<HttpResponse<FascicoloArgo[]>>{
