@@ -1,9 +1,12 @@
-<button type="button" label="Annulla" pButton icon="pi pi-chevron-left" iconPos="left"
-  [routerLink]="'/raccoltasemplice'" class="ui-button-secondary icon-style"
+<div class="p-d-flex p-jc-end p-col-12">
+  <div class="p-mr-2">
+    <button type="button" label="Annulla" pButton [routerLink]="'/raccoltasemplice'" class="p-button babel-color"
   aria-label="Vai a lista Raccolta Semplice"></button>
-<p-button label="Submit" (click)="onSubmit()"></p-button>
-
-
+  </div>
+  <div class="p-mr-2">
+    <button pButton class="p-button babel-color" label="Conferma" (click)="onSubmit()"></button>
+  </div>
+</div>
 
 
 <p-scrollPanel [style]="{width: '100%', height: '95%'}" styleClass="custombar2">
@@ -169,7 +172,7 @@
                 <div class="form-group">
                   <p-fileUpload #pnlup #fileInput name="file" multiple="multiple" [showUploadButton]="false"
                     [showCancelButton]="false" maxFileSize="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf"
-                    chooseLabel="Importa" (onSelect)="onSelect($event)" (onRemove)="onRemove($event)">
+                    chooseLabel="Importa" (onSelect)="onSelect($event)" (onRemove)="onRemove($event)" [styleClass]="babel-color">
                     <ng-template pTemplate="content">
                       <p *ngIf="this.uploadedFiles.length<=0" class="content-message">lista file da caricare</p>
                       <div class="ui-fileupload-row" *ngFor="let file of attachments; let i = index;">
@@ -212,58 +215,66 @@
 
           <p-toast></p-toast>
 
-          <!-- <div class="card"> -->
-          <button pButton pRipple label="Aggiungi Coinvolti" icon="pi pi-plus" class="p-button babel-color"
-            (click)="openNew()"></button>
-          <button pButton pRipple label="Aggiungi da Rubrica" icon="pi pi-plus" class="p-button babel-color"
-            (click)="onOpenRubricaPopup()"></button>
-            <div class="p-field p-col-12">
-              <p-table [value]="coinvolti" [rowHover]="true" dataKey="id">
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th pSortableColumn="nome">Coinvolto<p-sortIcon field="nome"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="cf">CF<p-sortIcon field="price"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="partitaIva">P. Iva<p-sortIcon field="category"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="tipo">Tipologia<p-sortIcon field="rating"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="mail">Email<p-sortIcon field="rating"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="via">Indirizzo<p-sortIcon field="inventoryStatus"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="telefono">Telefono<p-sortIcon field="inventoryStatus"></p-sortIcon>
-                    </th>
-                    <th></th>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-coinvolto>
-                  <tr>
-                    <td>{{coinvolto.nomeInterfaccia}}</td>
-                    <td>{{coinvolto.cf}}</td>
-                    <td>{{coinvolto.partitaIva}}</td>
-                    <td>{{coinvolto.tipo}}</td>
-                    <td>{{coinvolto.mail}}</td>
-                    <td>{{coinvolto.via}}</td>
-                    <td>{{coinvolto.telefono}}</td>
-                    <td>
-                      <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
-                        (click)="editProduct(coinvolto)"></button>
-                      <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-                        (click)="deleteProduct(coinvolto)"></button>
-                    </td>
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="summary">
-                  <div class="p-d-flex p-ai-center p-jc-between">
-                    Coinvolti Totali: {{coinvolti ? coinvolti.length : 0 }}
-                  </div>
-                </ng-template>
-              </p-table>
-              <!-- </div> -->
+          <div class="p-d-flex p-col-12">
+            <div class="p-mr-2">
+              <button pButton pRipple label="Aggiungi Coinvolti" icon="pi pi-plus" class="p-button babel-color"
+                (click)="openNew()"></button>
             </div>
-          
+            <div class="p-mr-2">
+              <button pButton pRipple label="Aggiungi da Rubrica" icon="pi pi-plus" class="p-button babel-color"
+                (click)="onOpenRubricaPopup()"></button>
+            </div>
+          </div>
+
+          <div class="p-field p-col-12">
+            <p-table [value]="coinvolti" [rowHover]="true" dataKey="id" >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th pSortableColumn="nome">Coinvolto<p-sortIcon field="nome"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="cf">CF<p-sortIcon field="price"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="partitaIva">P. Iva<p-sortIcon field="category"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="tipo">Tipologia<p-sortIcon field="rating"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="mail">Email<p-sortIcon field="rating"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="via">Indirizzo<p-sortIcon field="inventoryStatus"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="telefono">Telefono<p-sortIcon field="inventoryStatus"></p-sortIcon>
+                  </th>
+                  <th></th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-coinvolto>
+                <tr>
+                  <td>{{coinvolto.nomeInterfaccia}}</td>
+                  <td>{{coinvolto.cf}}</td>
+                  <td>{{coinvolto.partitaIva}}</td>
+                  <td>{{coinvolto.tipo}}</td>
+                  <td>{{coinvolto.mail}}</td>
+                  <td>{{coinvolto.via}}</td>
+                  <td>{{coinvolto.telefono}}</td>
+                  <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                      (click)="editProduct(coinvolto)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                      (click)="deleteProduct(coinvolto)"></button>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="summary">
+                <div class="p-d-flex p-ai-center p-jc-between">
+                  <span *ngIf="coinvolti.length>0">Totali: {{coinvolti ? coinvolti.length : 0 }}</span> 
+                  <span *ngIf="coinvolti.length<=0">Inserisci nuovi coinvolti o aggiungili dalla rubrica</span> 
+                  
+                </div>
+              </ng-template>
+            </p-table>
+            <!-- </div> -->
+          </div>
+
 
           <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Nuovo Coinvolto" [modal]="true"
             styleClass="p-fluid">

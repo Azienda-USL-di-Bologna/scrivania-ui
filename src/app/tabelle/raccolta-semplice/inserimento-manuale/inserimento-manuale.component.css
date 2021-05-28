@@ -46,12 +46,27 @@
   
 }
 
-/* ------------------------------------------------------------------------------------------------------------- */
-
 .custom-grid {
   height: 6em;  
 }
 
 .align-table {
   margin-top: 1.4em;
+}
+
+.babel-color {
+  background-color: #993366;
+  border: white;
+}
+
+/* cambio colore pulsante upload */
+::ng-deep .p-fileupload-choose  {
+  background-color: #993366;
+  border: white;
+}
+
+/* cambio colore pulsante upload con hover*/
+::ng-deep .p-fileupload-choose:not(.p-disabled):hover {
+  background-color: #993366;
+  border: white;
 }
