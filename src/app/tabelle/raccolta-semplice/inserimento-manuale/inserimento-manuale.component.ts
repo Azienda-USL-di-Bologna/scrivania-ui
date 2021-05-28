@@ -43,7 +43,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   public selectedTipo: TipoDocumento;
   public selectedTipoCoinvolto: string;
-  public selectedCodiceRegistro: Registro = {descrizione: 'PG - Protocollo Generale', tipo: 'pg'};
+  public selectedCodiceRegistro: Registro = { descrizione: 'PG - Protocollo Generale', tipo: 'pg' };
 
   public applicazione: string = 'INTERNAUTA';
   public _doc: Document;
@@ -58,7 +58,7 @@ export class InserimentoManualeComponent implements OnInit {
   blockedPanelUpload: boolean = false;
   blockedPanelInserimentoManuale: boolean = false;
 
-  public azienda: Azienda = {id: 10} as Azienda;
+  public azienda: Azienda = { id: 10 } as Azienda;
   public _strutturaInternautaSelezionata: Struttura;
   public _fascicoloArgoSelezionato: FascicoloArgo;
 
@@ -122,33 +122,33 @@ export class InserimentoManualeComponent implements OnInit {
   public esitoCreazioneRS: string = "Creazione Raccolta Semplice in corso...";
   public creazioneInCorso: boolean = true;
 
-  constructor(private messageService: MessageService, 
-      private allegatoService: ExtendedAllegatoService, 
-      private raccoltaService: RaccoltaSempliceService,
-      private confirmationService: ConfirmationService,
-      private contattoService: ContattoService,
-      private dettaglioContattoService: DettaglioContattoService,
-      private fb: FormBuilder,
-      private http: HttpClient,
-      private router: Router) { 
-        this.prefixHeader = "Collega Documento Babel: ";
-        this.titoloHeader = this.prefixHeader;
-        this.selectedCodiceRegistro = {descrizione: 'Protocollo Generale [PG]', tipo: 'pg'};
-        
-      this.tipiDocumento = [
-        {name: 'Raccoglitore', code: 'raccoglitore'},
-        {name: 'Contatto', code: 'contatto'},
-        {name: 'CV', code: 'cv'},
-        {name: 'Documento', code: 'documento'}
-      ];
+  constructor(private messageService: MessageService,
+    private allegatoService: ExtendedAllegatoService,
+    private raccoltaService: RaccoltaSempliceService,
+    private confirmationService: ConfirmationService,
+    private contattoService: ContattoService,
+    private dettaglioContattoService: DettaglioContattoService,
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router) {
+    this.prefixHeader = "Collega Documento Babel: ";
+    this.titoloHeader = this.prefixHeader;
+    this.selectedCodiceRegistro = { descrizione: 'Protocollo Generale [PG]', tipo: 'pg' };
 
-      this.tipiCoinvolti = [
-        {label:"Fisica", value:"FISICA"},
-        {label:"Giuridica", value:"GIURIDICA"}
+    this.tipiDocumento = [
+      { name: 'Raccoglitore', code: 'raccoglitore' },
+      { name: 'Contatto', code: 'contatto' },
+      { name: 'CV', code: 'cv' },
+      { name: 'Documento', code: 'documento' }
     ];
 
-  this.disabledDettaglioContatto = true;
-  this.disabledContatto = false;
+    this.tipiCoinvolti = [
+      { label: "Fisica", value: "FISICA" },
+      { label: "Giuridica", value: "GIURIDICA" }
+    ];
+
+    this.disabledDettaglioContatto = true;
+    this.disabledContatto = false;
 
   }
 
@@ -174,7 +174,7 @@ export class InserimentoManualeComponent implements OnInit {
       this.blockedPanelDoc = true;
       this.blockedPanelUpload = false;
     }
-      
+
   }
 
   ngOnInit(): void {
@@ -185,97 +185,97 @@ export class InserimentoManualeComponent implements OnInit {
     this.coinvolto = new PersonaRS();
     this.submitted = false;
     this.productDialog = true;
-}
-
-/**
-   * Apre popup
-   */
- onOpenRubricaPopup() {
-  console.log("onOpenRubricaPopup");
-  this.displayRubricaPopup = true;
-}
-
-onCloseRubricaPopup() {
-  console.log("onCloseRubricaPopup");
-  this.displayRubricaPopup = false;
-}
-
-hideDialog() {
-  this.productDialog = false;
-  this.submitted = false;
-}
-
-saveCoinvoltoCreato() {
-  this.submitted = true;
-  console.log("tipo: " + this.selectedTipoCoinvolto);
-
-  if (this.selectedTipoCoinvolto === "GIURIDICA" && this.coinvolto.ragioneSociale!==undefined && this.coinvolto.ragioneSociale!=="") {
-    this.coinvolto.nomeInterfaccia = this.coinvolto.ragioneSociale;
-  } else if(this.coinvolto.nome && this.coinvolto.cognome) {
-    this.coinvolto.nomeInterfaccia = this.coinvolto.nome + " "+ this.coinvolto.cognome;
-  } else {
-    this.coinvolto.nomeInterfaccia = "";
   }
 
-  if (this.coinvolto.guidInterfaccia) {
+  /**
+     * Apre popup
+     */
+  onOpenRubricaPopup() {
+    console.log("onOpenRubricaPopup");
+    this.displayRubricaPopup = true;
+  }
+
+  onCloseRubricaPopup() {
+    console.log("onCloseRubricaPopup");
+    this.displayRubricaPopup = false;
+  }
+
+  hideDialog() {
+    this.productDialog = false;
+    this.submitted = false;
+  }
+
+  saveCoinvoltoCreato() {
+    this.submitted = true;
+    console.log("tipo: " + this.selectedTipoCoinvolto);
+
+    if (this.selectedTipoCoinvolto === "GIURIDICA" && this.coinvolto.ragioneSociale !== undefined && this.coinvolto.ragioneSociale !== "") {
+      this.coinvolto.nomeInterfaccia = this.coinvolto.ragioneSociale;
+    } else if (this.coinvolto.nome && this.coinvolto.cognome) {
+      this.coinvolto.nomeInterfaccia = this.coinvolto.nome + " " + this.coinvolto.cognome;
+    } else {
+      this.coinvolto.nomeInterfaccia = "";
+    }
+
+    if (this.coinvolto.guidInterfaccia) {
       this.coinvolto.tipologia = this.selectedTipoCoinvolto;
-      this.coinvolti[this.findIndexByGuid(this.coinvolto.guidInterfaccia)] = this.coinvolto;                
-      this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
+      this.coinvolti[this.findIndexByGuid(this.coinvolto.guidInterfaccia)] = this.coinvolto;
+      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+    }
+    else {
+      this.coinvolto.guidInterfaccia = this.createGuid();
+      this.coinvolto.tipologia = this.selectedTipoCoinvolto;
+
+      this.coinvolti.push(this.coinvolto);
+      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+    }
+
+
+    this.coinvolti = [...this.coinvolti];
+    this.productDialog = false;
+    this.coinvolto = new PersonaRS();
   }
-  else {
-    this.coinvolto.guidInterfaccia = this.createGuid();
-    this.coinvolto.tipologia = this.selectedTipoCoinvolto;
-    
-    this.coinvolti.push(this.coinvolto);
-    this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
+
+  editProduct(coinvolto: PersonaRS) {
+    this.coinvolto = { ...coinvolto };
+    this.productDialog = true;
   }
 
- 
-  this.coinvolti = [...this.coinvolti];
-  this.productDialog = false;
-  this.coinvolto = new PersonaRS();
-}
-
-editProduct(coinvolto: PersonaRS) {
-  this.coinvolto = {...coinvolto};
-  this.productDialog = true;
-}
-
-findIndexByGuid(guid: string): number {
-  let index = -1;
-  for (let i = 0; i < this.coinvolti.length; i++) {
+  findIndexByGuid(guid: string): number {
+    let index = -1;
+    for (let i = 0; i < this.coinvolti.length; i++) {
       if (this.coinvolti[i].guidInterfaccia === guid) {
-          index = i;
-          break;
+        index = i;
+        break;
       }
+    }
+    return index;
   }
-  return index;
-}
 
-createGuid(): string {
-  let id = '';
-  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  for ( var i = 0; i < 5; i++ ) {
+  createGuid(): string {
+    let id = '';
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (var i = 0; i < 5; i++) {
       id += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return id;
   }
-  return id;
-}
 
-deleteProduct(persona: PersonaRS) {
-  this.confirmationService.confirm({
+  deleteProduct(persona: PersonaRS) {
+    this.confirmationService.confirm({
       message: 'Comfermare la cancellazione del seguente coinvolto? ' + persona.nomeInterfaccia,
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-          this.coinvolti = this.coinvolti.filter(val => val.id !== persona.id);
-          this.coinvolto = new PersonaRS();
-          this.messageService.add({severity:'success', summary: 'Successful', detail: 'Coinvolto eliminato', life: 3000});
+        this.coinvolti = this.coinvolti.filter(val => val.id !== persona.id);
+        this.coinvolto = new PersonaRS();
+        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Coinvolto eliminato', life: 3000 });
       }
-  });
-}
+    });
+  }
 
   private checkData() {
-    
+
     // this.oggetto
     // this._strutturaInternautaSelezionata
     // this.selectedTipo
@@ -288,28 +288,28 @@ deleteProduct(persona: PersonaRS) {
   }
 
   initForm() {
-   
+
   }
-  
-    /**
-   * Chiamato dal frontend per salvare il destinatario passato
-   * @param contatto 
-   * @param modalita 
-   */
-   public saveFascicolo(fascicolo: FascicoloArgo) {
-      console.log("inserito",fascicolo.nomeFascicoloInterfaccia);
-      this.selectedFascicoli.push(fascicolo);
-      this.selectedFascicolo = null;
+
+  /**
+ * Chiamato dal frontend per salvare il destinatario passato
+ * @param contatto 
+ * @param modalita 
+ */
+  public saveFascicolo(fascicolo: FascicoloArgo) {
+    console.log("inserito", fascicolo.nomeFascicoloInterfaccia);
+    this.selectedFascicoli.push(fascicolo);
+    this.selectedFascicolo = null;
   }
 
   public searchFascicolo(event: any) {
-    this.raccoltaService.getFascicoliArgo('100999','andrea.marcomini',event.query).subscribe(res => {
+    this.raccoltaService.getFascicoliArgo('100999', 'andrea.marcomini', event.query).subscribe(res => {
       this.filteredFascicoli = res.body;
-    });    
+    });
   }
 
   deleteFascicolo(i: number) {
-      this.selectedFascicoli.splice(i,1);
+    this.selectedFascicoli.splice(i, 1);
   }
 
   public saveContatto(contatto: Contatto) {
@@ -318,114 +318,114 @@ deleteProduct(persona: PersonaRS) {
     this.disabledDettaglioContatto = false;
     this.disabledContatto = true;
     this.searchDettaglioContatto(contatto.id);
-}
+  }
 
-public searchContatto(event: any) {
-  const fd: FilterDefinition  = new FilterDefinition("descrizione", FILTER_TYPES.string.containsIgnoreCase,event.query);
-  const filter: FiltersAndSorts  = new FiltersAndSorts();
-  filter.addFilter(fd);
-  this.contattoService.getData(null, filter).subscribe(res => {
-    if (res) {
-      this.filteredContatti = res.results;
-    }
-  });
-}
+  public searchContatto(event: any) {
+    const fd: FilterDefinition = new FilterDefinition("descrizione", FILTER_TYPES.string.containsIgnoreCase, event.query);
+    const filter: FiltersAndSorts = new FiltersAndSorts();
+    filter.addFilter(fd);
+    this.contattoService.getData(null, filter).subscribe(res => {
+      if (res) {
+        this.filteredContatti = res.results;
+      }
+    });
+  }
 
-public searchDettaglioContatto(idContatto: any) {
-  const fd: FilterDefinition  = new FilterDefinition("idContatto", FILTER_TYPES.not_string.equals,idContatto);
-  const filter: FiltersAndSorts  = new FiltersAndSorts();
-  filter.addFilter(fd);
-  this.dettaglioContattoService.getData(null, filter).subscribe(res => {
-    if (res) {
-      this.filteredDettagliContatti = res.results;
-    }
-  });
-}
+  public searchDettaglioContatto(idContatto: any) {
+    const fd: FilterDefinition = new FilterDefinition("idContatto", FILTER_TYPES.not_string.equals, idContatto);
+    const filter: FiltersAndSorts = new FiltersAndSorts();
+    filter.addFilter(fd);
+    this.dettaglioContattoService.getData(null, filter).subscribe(res => {
+      if (res) {
+        this.filteredDettagliContatti = res.results;
+      }
+    });
+  }
 
-public saveDettaglioContatto(dettaglio: DettaglioContatto) {
-  console.log("DETTAGLIO: " + dettaglio.tipo)
-  this.selectedDettaglioContatto = dettaglio;
-}
+  public saveDettaglioContatto(dettaglio: DettaglioContatto) {
+    console.log("DETTAGLIO: " + dettaglio.tipo)
+    this.selectedDettaglioContatto = dettaglio;
+  }
 
-public removeContatto() {
-  this.disabledContatto = false;
-  this.disabledDettaglioContatto = true;
-  this.selectedContatto = null;
-  this.filteredDettagliContatti = [];
-}
+  public removeContatto() {
+    this.disabledContatto = false;
+    this.disabledDettaglioContatto = true;
+    this.selectedContatto = null;
+    this.filteredDettagliContatti = [];
+  }
 
-public alreadyInserted(idContattoDaInserire): boolean {
-  var i: number;
-  for (i = 0; i < this.coinvolti.length; i++) {
+  public alreadyInserted(idContattoDaInserire): boolean {
+    var i: number;
+    for (i = 0; i < this.coinvolti.length; i++) {
       if (this.coinvolti[i].id === idContattoDaInserire) {
-          return true;
+        return true;
       }
-  }
-  return false;
-}
-
-public insertContatto(dettaglio: DettaglioContatto){
-  console.log(dettaglio);
-
-  if (!this.alreadyInserted(this.selectedContatto.id)) {
-    const nuovoCoinvolto: PersonaRS  = new PersonaRS();
-    nuovoCoinvolto.id = this.selectedContatto.id;
-    nuovoCoinvolto.guidInterfaccia = this.createGuid();
-    nuovoCoinvolto.cf = this.selectedContatto.codiceFiscale;
-    nuovoCoinvolto.nome = this.selectedContatto.nome;
-    nuovoCoinvolto.cognome = this.selectedContatto.cognome;
-    nuovoCoinvolto.partitaIva = this.selectedContatto.partitaIva;
-
-    if(this.selectedContatto.ragioneSociale) {
-      nuovoCoinvolto.ragioneSociale = this.selectedContatto.ragioneSociale;
-      nuovoCoinvolto.tipologia = "GIURIDICA";
-    } else {
-      nuovoCoinvolto.tipologia = "FISICA";
     }
+    return false;
+  }
 
-    
-    nuovoCoinvolto.nomeInterfaccia = this.selectedContatto.descrizione;
-    
-  
-    if (dettaglio.tipo === "EMAIL") {
-      nuovoCoinvolto.mail = dettaglio.descrizione;
-    } else if (dettaglio.tipo === "TELEFONO") {
-      nuovoCoinvolto.telefono = dettaglio.descrizione;
-  
-    } else if (dettaglio.tipo === "INDIRIZZO_FISICO") {
-      if (dettaglio.indirizzo){
-        nuovoCoinvolto.via = (dettaglio.indirizzo.via?dettaglio.indirizzo.via:null);
-        nuovoCoinvolto.cap = (dettaglio.indirizzo.cap?dettaglio.indirizzo.cap:null);
-        nuovoCoinvolto.provincia = (dettaglio.indirizzo.provincia?dettaglio.indirizzo.provincia:null);
-        nuovoCoinvolto.comune = (dettaglio.indirizzo.comune?dettaglio.indirizzo.comune:null);
-        nuovoCoinvolto.civico = (dettaglio.indirizzo.civico?dettaglio.indirizzo.civico:null);
+  public insertContatto(dettaglio: DettaglioContatto) {
+    console.log(dettaglio);
+
+    if (!this.alreadyInserted(this.selectedContatto.id)) {
+      const nuovoCoinvolto: PersonaRS = new PersonaRS();
+      nuovoCoinvolto.id = this.selectedContatto.id;
+      nuovoCoinvolto.guidInterfaccia = this.createGuid();
+      nuovoCoinvolto.cf = this.selectedContatto.codiceFiscale;
+      nuovoCoinvolto.nome = this.selectedContatto.nome;
+      nuovoCoinvolto.cognome = this.selectedContatto.cognome;
+      nuovoCoinvolto.partitaIva = this.selectedContatto.partitaIva;
+
+      if (this.selectedContatto.ragioneSociale) {
+        nuovoCoinvolto.ragioneSociale = this.selectedContatto.ragioneSociale;
+        nuovoCoinvolto.tipologia = "GIURIDICA";
       } else {
-        nuovoCoinvolto.via = dettaglio.descrizione;
+        nuovoCoinvolto.tipologia = "FISICA";
       }
-      
+
+
+      nuovoCoinvolto.nomeInterfaccia = this.selectedContatto.descrizione;
+
+
+      if (dettaglio.tipo === "EMAIL") {
+        nuovoCoinvolto.mail = dettaglio.descrizione;
+      } else if (dettaglio.tipo === "TELEFONO") {
+        nuovoCoinvolto.telefono = dettaglio.descrizione;
+
+      } else if (dettaglio.tipo === "INDIRIZZO_FISICO") {
+        if (dettaglio.indirizzo) {
+          nuovoCoinvolto.via = (dettaglio.indirizzo.via ? dettaglio.indirizzo.via : null);
+          nuovoCoinvolto.cap = (dettaglio.indirizzo.cap ? dettaglio.indirizzo.cap : null);
+          nuovoCoinvolto.provincia = (dettaglio.indirizzo.provincia ? dettaglio.indirizzo.provincia : null);
+          nuovoCoinvolto.comune = (dettaglio.indirizzo.comune ? dettaglio.indirizzo.comune : null);
+          nuovoCoinvolto.civico = (dettaglio.indirizzo.civico ? dettaglio.indirizzo.civico : null);
+        } else {
+          nuovoCoinvolto.via = dettaglio.descrizione;
+        }
+
+      }
+      this.coinvolti.push(nuovoCoinvolto);
+      this.coinvolti = [...this.coinvolti];
+      this.productDialog = false;
+      this.displayRubricaPopup = false;
+      this.coinvolto = new PersonaRS();
+    } else {
+      this.messageService.add({ severity: 'error', summary: 'Operazione non consentita', detail: 'Contatto già presente nei coinvolti', life: 3000 });
     }
-    this.coinvolti.push(nuovoCoinvolto);
-    this.coinvolti = [...this.coinvolti];
-    this.productDialog = false;
-    this.displayRubricaPopup = false;
-    this.coinvolto = new PersonaRS();
-  } else {
-    this.messageService.add({severity:'error', summary: 'Operazione non consentita', detail: 'Contatto già presente nei coinvolti', life: 3000});
   }
-}
 
 
   searchDocBabel(event: any) {
-    this.raccoltaService.getDocumentiArgo('100999','andrea.marcomini','PG',event.query).subscribe(res => {
+    this.raccoltaService.getDocumentiArgo('100999', 'andrea.marcomini', 'PG', event.query).subscribe(res => {
       this.filteredDocs = res.body;
       console.log(this.filteredDocs);
-    });    
+    });
   }
 
   public saveDocBabel(doc: DocumentoArgo) {
     this.selectedDocumentoBabel = doc;
-    this.titoloHeader = this.prefixHeader + ": " + doc.codiceRegistro+doc.numero + "/"+doc.anno
-}
+    this.titoloHeader = this.prefixHeader + ": " + doc.codiceRegistro + doc.numero + "/" + doc.anno
+  }
 
   /**
    * @param event 
@@ -444,8 +444,8 @@ public insertContatto(dettaglio: DettaglioContatto){
           this.setProgressBarWidth(this.progress);
           if (!event.ok && !(event.status === 200)) {
             this.messageService.add({
-              severity: "error", 
-              summary: `Error code ${event.status}`, 
+              severity: "error",
+              summary: `Error code ${event.status}`,
               detail: "Backend Error, I dati passati per l'importazione sono assenti o non corretti."
             });
           }
@@ -466,18 +466,19 @@ public insertContatto(dettaglio: DettaglioContatto){
           setTimeout(() => {
             this.progress = 0;
             this.setProgressBarWidth(this.progress);
-            this.onCloseFileUploadDialog();          
-          this.refreshTable = false;
-        }, 7000);
-    }}));
+            this.onCloseFileUploadDialog();
+            this.refreshTable = false;
+          }, 7000);
+      }
+    }));
 
     this.messageService.add({ severity: 'info', summary: 'File caricato', detail: '' });
   }
 
-  private buildFormData(event :any ): FormData {
+  private buildFormData(event: any): FormData {
     this.uploadedFiles = event.files;
     const formData: FormData = new FormData();
-    formData.append("idDoc",this._doc.id.toString());
+    formData.append("idDoc", this._doc.id.toString());
     formData.append("numeroProposta", "6");
     this.uploadedFiles.forEach((file: File) => {
       formData.append("files", file);
@@ -497,7 +498,7 @@ public insertContatto(dettaglio: DettaglioContatto){
   }
 
   public onDownloadAttachment(allegato: Allegato): void {
-    let dettaglioAllegato : DettaglioAllegato = this.getDettaglioByTipoDettaglioAllegato(allegato, "ORIGINALE");
+    let dettaglioAllegato: DettaglioAllegato = this.getDettaglioByTipoDettaglioAllegato(allegato, "ORIGINALE");
     this.allegatoService.downloadAttachment(dettaglioAllegato).subscribe(
       response =>
         UtilityFunctions.downLoadFile(response, dettaglioAllegato.mimeType, dettaglioAllegato.nome + "." + dettaglioAllegato.estensione, false)
@@ -506,7 +507,7 @@ public insertContatto(dettaglio: DettaglioContatto){
 
   public downloadAllAttachments(): void {
     this.allegatoService.downloadAllAttachments(this._doc).subscribe(
-      response => 
+      response =>
         UtilityFunctions.downLoadFile(response, "application/zip", "allegati.zip")
 
     );
@@ -528,9 +529,9 @@ public insertContatto(dettaglio: DettaglioContatto){
     this.allegatoService.deleteHttpCall(allegato.id).subscribe(
       res => {
         this.messageService.add({
-          severity:'success', 
-          summary:'Allegato', 
-          detail:'Allegato eliminato con successo'
+          severity: 'success',
+          summary: 'Allegato',
+          detail: 'Allegato eliminato con successo'
         });
         this.loadAllegati();
       }
@@ -562,47 +563,47 @@ public insertContatto(dettaglio: DettaglioContatto){
             principale: false
           } as NextSdrEntity,
         } as BatchOperation);
-      } 
+      }
       this.subscriptions.push(
         this.allegatoService.batchHttpCall(batchOperations).subscribe(
           (res: BatchOperation[]) => {
             this.messageService.add({
-              severity:'success', 
-              summary:'Allegato', 
-              detail:'Allegato principale impostato con successo'
+              severity: 'success',
+              summary: 'Allegato',
+              detail: 'Allegato principale impostato con successo'
             });
             if (this.actualPrincipale) {
               this.actualPrincipale.principale = false;
-              this.actualPrincipale.version = (res.find(b => 
+              this.actualPrincipale.version = (res.find(b =>
                 (b.entityBody as Allegato).id === this.actualPrincipale.id
-                ).entityBody as Allegato).version;
+              ).entityBody as Allegato).version;
             }
             this.selectedAllegato.principale = true;
-            this.selectedAllegato.version = (res.find(b => 
+            this.selectedAllegato.version = (res.find(b =>
               (b.entityBody as Allegato).id === this.selectedAllegato.id
-              ).entityBody as Allegato).version;
+            ).entityBody as Allegato).version;
             this.actualPrincipale = this.selectedAllegato;
-        })
+          })
       );
     }
   }
 
   onSelect(event: any) {
-    for(let file of event.files) {
+    for (let file of event.files) {
       this.uploadedFiles.push(file);
     }
-    for(let file of this.uploadedFiles) {
+    for (let file of this.uploadedFiles) {
       console.log("file: " + file.name);
     }
   }
 
-  onRemove(event: any){
-    this.uploadedFiles.forEach((element,index)=>{
-      if(element.name==event.file.name) this.uploadedFiles.splice(index,1);
-   });
-   for(let file of this.uploadedFiles) {
-    console.log("file rimanenti: " + file.name);
-  }
+  onRemove(event: any) {
+    this.uploadedFiles.forEach((element, index) => {
+      if (element.name == event.file.name) this.uploadedFiles.splice(index, 1);
+    });
+    for (let file of this.uploadedFiles) {
+      console.log("file rimanenti: " + file.name);
+    }
   }
 
   public onRowUnselect(): void {
@@ -616,9 +617,9 @@ public insertContatto(dettaglio: DettaglioContatto){
             this.actualPrincipale.version = allegato.version;
             this.actualPrincipale.principale = false;
             this.messageService.add({
-              severity:'success', 
-              summary:'Allegato', 
-              detail:'Allegato principale deselezionato'
+              severity: 'success',
+              summary: 'Allegato',
+              detail: 'Allegato principale deselezionato'
             });
             this.actualPrincipale = null;
           }
@@ -628,13 +629,13 @@ public insertContatto(dettaglio: DettaglioContatto){
   }
 
   public delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   public onSubmit() {
     this.creazioneInCorso = true;
     this.showModalDialog();
-    
+
     setTimeout(() => {
       this.progressBarEnable = true;
       this.creazioneInCorso = false;
@@ -667,13 +668,13 @@ public insertContatto(dettaglio: DettaglioContatto){
     this.displayModal = true;
   }
 
-  private stringifyFascicoli():string {
+  private stringifyFascicoli(): string {
     let a = [];
 
     for (let i = 0; i < this.selectedFascicoli.length; i++) {
       a.push(this.selectedFascicoli[i].numerazioneGerarchica);
     }
-    
+
     // Converting the object to JSON...
     let json = JSON.stringify(a);
 
@@ -681,30 +682,30 @@ public insertContatto(dettaglio: DettaglioContatto){
   }
 
   private createFormData(): FormData {
-    
+
     let formData: FormData = new FormData();
 
     formData.append("applicazione_chiamante", "ARPAL UMBRIA");
     formData.append("azienda", "100999");
     formData.append("oggetto", this.oggetto);
 
-    if (!this.blockedPanelDoc){
+    if (!this.blockedPanelDoc) {
       formData.append("numero_documento_origine", this.selectedDoc.numero);
       formData.append("anno_documento_origine", this.selectedDoc.anno.toString());
       formData.append("codice_registro_origine", "PG");
     }
-    
-    var fascicoliStr = this.stringifyFascicoli(); 
+
+    var fascicoliStr = this.stringifyFascicoli();
     formData.append("fascicoli_babel", fascicoliStr);
     formData.append("tipo_documento", this.selectedTipo.code);
     formData.append("struttura_responsabile", this._strutturaInternautaSelezionata.id.toString());
 
-    if (!this.blockedPanelUpload){
+    if (!this.blockedPanelUpload) {
       for (var file of this.uploadedFiles) {
         formData.append('allegati', file);
       }
     }
-     
+
     // for (var coinvolto of this.coinvolti) {
     //   formData.append('allegati', file);
     // }
@@ -724,7 +725,7 @@ public insertContatto(dettaglio: DettaglioContatto){
     //   "tipologia": "GIURIDICA"
     //   }
     // ])
-   
+
     // formData.append("persone", personeStr);
 
     return formData;
@@ -735,8 +736,8 @@ public insertContatto(dettaglio: DettaglioContatto){
     this.subscriptions = [];
   }
 
-  public getDettaglioByTipoDettaglioAllegato(allegato:Allegato, tipo : string ): DettaglioAllegato {
-       return allegato.dettagliAllegatiList.find(dettaglioAllegato => (dettaglioAllegato.caratteristica == tipo));
-     }
+  public getDettaglioByTipoDettaglioAllegato(allegato: Allegato, tipo: string): DettaglioAllegato {
+    return allegato.dettagliAllegatiList.find(dettaglioAllegato => (dettaglioAllegato.caratteristica == tipo));
+  }
 
 }

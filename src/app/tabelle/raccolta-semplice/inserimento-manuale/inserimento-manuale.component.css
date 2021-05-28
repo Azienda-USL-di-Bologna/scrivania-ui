@@ -33,6 +33,7 @@
 
 .expansion-header{
   background-color: darkgrey;
+  height: 2em;
 }
 
 ::ng-deep .mat-expansion-panel-body {
@@ -42,4 +43,15 @@
 
 .expansion-single-box {
   margin-bottom: 0.5em;
+  
+}
+
+/* ------------------------------------------------------------------------------------------------------------- */
+
+.custom-grid {
+  height: 6em;  
+}
+
+.align-table {
+  margin-top: 1.4em;
 }
