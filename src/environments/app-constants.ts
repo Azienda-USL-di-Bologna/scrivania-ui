@@ -92,6 +92,7 @@ export const CONTROLLERS_ENDPOINT = {
     GET_DOCUMENTI_ARGO: "/getDocumentiArgo",
     GET_STORICO: "/storico",
     ANNULLAMENTO_URL: "/annullamento",
+    RICERCA_RACCOLTA: "/ricerca",
     CREATE_RS: "/createRS"
 };
 
@@ -162,7 +163,13 @@ export const PROJECTIONS = {
             utenteWithIdAziendaAndIdPersonaAndUtenteStrutturaList: "UtenteWithIdAziendaAndIdPersonaAndUtenteStrutturaList"
         },
         customProjections: {}
-    }
+    },
+    raccolta: {
+        standardProjections: {
+            raccolta: "RaccoltaProjection"
+        },
+        customProjections: {}
+    }  
 }
 
 export const ENTITIES_CONFIGURATION: EntitiesConfiguration = {

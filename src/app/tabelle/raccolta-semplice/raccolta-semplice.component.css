@@ -16,7 +16,6 @@
     table-layout: fixed;
 
 }
-
 .table-inner {
     height: 100%;
     width: 100%;
@@ -26,7 +25,49 @@
     right: 0;
     table-layout: fixed;
 }
+::ng-deep .modal .p-dialog-mask .p-dialog {
+  height: 70%;
+  width: 70%;
+}
+.headerEspansione {
+  width: 40px;
+  height: 40px;
+}
 
+button.viewAnnullamento {
+  width: 17px;
+  height: 20px;
+}
+
+.cellaEspansione {
+  width: 40px;
+  height: 40px;
+}
+
+
+.table-wrapperDialog {
+  flex: 1 1 0;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  table-layout: fixed;
+
+}
+.table-innerDialog {
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  table-layout: fixed;
+}
+.tableAnnullamento{
+  width:100%;
+}
 .content-left {
     height: 100%;
     display: flex;
@@ -76,7 +117,37 @@ margin: auto 8px auto 2px;
 height: 80%;
 display: inline;
 }
-  
+ 
+.radioB {
+  width: 15px;
+  height: 15px;
+}
+.cellaAnnullamento {
+  height:50px;
+  width:225px;
+}
+
+.headerAnnullamento {
+  height: 37px;
+  width:225px;
+}
+
+.rigaAnnullamento {
+  height:37px;
+  width: 1000px;
+}
+
+
+
+.motivazione {
+  width:250px;
+  height:150px;
+}
+
+.invio {
+  width:100px;
+  height: 30px;
+}
 
   
 /* BUTTON STYLES */
