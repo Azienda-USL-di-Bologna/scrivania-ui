@@ -58,7 +58,6 @@ import { ConfirmDialogModule } from "primeng-lts/confirmdialog";
 import { ConfirmationService } from "primeng-lts/api";
 import { ProgressSpinnerModule } from "primeng-lts/progressspinner";
 import { FileUploadModule } from 'primeng-lts/fileupload';
-import {RadioButtonModule} from 'primeng-lts/radiobutton';
 import {BlockUIModule} from 'primeng-lts/blockui';
 import {ListboxModule} from 'primeng-lts/listbox';
 import {FieldsetModule} from 'primeng-lts/fieldset';
@@ -83,8 +82,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { ModalModule } from "ng2-modal";
-import { ModalComponent } from './tabelle/raccolta-semplice/dettaglio-annullamento/modal/modal.component';
-import { ModalService } from '../app/tabelle/raccolta-semplice/dettaglio-annullamento/modal/modal-service';
 import {MatExpansionModule} from '@angular/material/expansion';
 
 
@@ -106,8 +103,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
     DatiBolloVirtualeComponent,
     RaccoltaSempliceComponent,
     InserimentoManualeComponent
-    InserimentoManualeComponent,
-    ModalComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),

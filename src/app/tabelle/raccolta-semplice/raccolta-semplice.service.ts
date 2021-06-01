@@ -1,18 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-import { NextSDREntityProvider, FiltersAndSorts } from '@nfa/next-sdr';
-import { ENTITIES_STRUCTURE, getInternautaUrl, Azienda, BaseUrlType, Contatto } from '@bds/ng-internauta-model';
+import { getInternautaUrl, BaseUrlType } from '@bds/ng-internauta-model';
 import { CONTROLLERS_ENDPOINT } from 'src/environments/app-constants';
 import { Document } from './documento.model';
-import { PersonaRS } from './personaRS.model';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Storico } from './dettaglio-annullamento/modal/storico';
-import { exception } from 'console';
-import { map } from 'rxjs/operators';
 import { FascicoloArgo } from './fascicolo.model';
 import { DocumentoArgo } from './DocumentoArgo.model';
-import { RaccoltaSemplice } from './inserimento-manuale/rs.model';
+
 
 
 
@@ -36,8 +32,11 @@ import { RaccoltaSemplice } from './inserimento-manuale/rs.model';
 
     public ricercaRaccolta(campi: string[], filtri: string[]) : Observable<HttpResponse<Document[]>> {
       let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.RICERCA_RACCOLTA + "?";
-      if(campi.length != filtri.length)
-        console.log("Il numero di campi e filtri è diverso")
+      if(campi.length != filtri.length) {
+        console.log("Il numero di campi e filtri è diverso");
+        return null;
+      }
+        
       else {
         if(campi.length == 0 )
           url = url + filtri[0] + "=" + campi[0];
