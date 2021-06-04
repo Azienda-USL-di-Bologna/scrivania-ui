@@ -93,7 +93,8 @@ export const CONTROLLERS_ENDPOINT = {
     GET_STORICO: "/storico",
     ANNULLAMENTO_URL: "/annullamento",
     RICERCA_RACCOLTA: "/ricerca",
-    CREATE_RS: "/createRS"
+    CREATE_RS: "/createRS",
+    DOWNLOAD: "/downloadAllegato"
 };
 
 export const COMMANDS = {

@@ -74,4 +74,9 @@ import { DocumentoArgo } from './DocumentoArgo.model';
     return this.http.post(url, formData);
    }
 
+   public downloadAllegato(azienda: String, idSottodocumento: String) : Observable<any> {
+     let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.DOWNLOAD + "?azienda=" + azienda + "&id=" + idSottodocumento;
+     return this.http.get(url, {responseType: "blob"});
+   }
+
   }

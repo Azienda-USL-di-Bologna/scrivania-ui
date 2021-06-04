@@ -167,7 +167,8 @@
                             <td [style.overflow]="auto">{{sottodocumento.nome}}</td>
                             <td [style.overflow]="auto">{{sottodocumento.nomeOriginale}}</td>
                             <td [style.overflow]="auto">{{sottodocumento.mimeTypeOriginale}}</td>
-                            <td [style.overflow]="auto"> PLACHEHOLDER DOWNLOAD</td>
+                            <td [style.overflow]="auto"> <button pButton class="viewAnnullamento" type="button" (click)="download(sottodocumento.guidSottodocumento, 
+                              sottodocumento.nomeOriginale, sottodocumento.mimeTypeOriginale)" label="Scarica allegato" iconPos="center" icon="pi pi-download"></button></td>
                           </tr>
                         </ng-template>
                       </p-table>
