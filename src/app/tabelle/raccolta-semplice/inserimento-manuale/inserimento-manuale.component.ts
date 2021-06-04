@@ -16,6 +16,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DocumentoArgo } from '../DocumentoArgo.model';
 import { PersonaRS } from '../personaRS.model';
 import { Router } from '@angular/router';
+import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
 
 interface TipoDocumento {
   name: string,
@@ -33,6 +34,14 @@ interface Registro {
   styleUrls: ['./inserimento-manuale.component.css']
 })
 export class InserimentoManualeComponent implements OnInit {
+
+  _azienda: Azienda;
+  @Input() set azienda(aziendaValue: Azienda) {
+    if (aziendaValue) {
+      this._azienda = aziendaValue;
+    }
+  }
+
   @ViewChild('fileInput') fileInput: FileUpload;
   private subscriptions: Subscription[] = [];
   private actualPrincipale: Allegato;
@@ -58,7 +67,7 @@ export class InserimentoManualeComponent implements OnInit {
   blockedPanelUpload: boolean = false;
   blockedPanelInserimentoManuale: boolean = false;
 
-  public azienda: Azienda = { id: 10 } as Azienda;
+  //public azienda: Azienda = { id: 10 } as Azienda;
   public _strutturaInternautaSelezionata: Struttura;
   public _fascicoloArgoSelezionato: FascicoloArgo;
 
@@ -96,6 +105,8 @@ export class InserimentoManualeComponent implements OnInit {
     this._doc = value;
   }
 
+  public loggedUser: UtenteUtilities;
+
   // parte coinvolti
   productDialog: boolean;
   coinvolti: PersonaRS[];
@@ -130,6 +141,7 @@ export class InserimentoManualeComponent implements OnInit {
     private dettaglioContattoService: DettaglioContattoService,
     private fb: FormBuilder,
     private http: HttpClient,
+    private loginService: NtJwtLoginService,
     private router: Router) {
     this.prefixHeader = "Collega Documento Babel: ";
     this.titoloHeader = this.prefixHeader;
@@ -179,6 +191,12 @@ export class InserimentoManualeComponent implements OnInit {
 
   ngOnInit(): void {
     this.coinvolti = [];
+
+    this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
+      this.loggedUser = u;
+      this.azienda = u.getUtente().aziendaLogin;
+      console.log("Azienda: ",u.getUtente().aziendaLogin.descrizione);
+    }));
   }
 
   openNew() {
@@ -636,31 +654,30 @@ export class InserimentoManualeComponent implements OnInit {
     this.creazioneInCorso = true;
     this.showModalDialog();
 
-    setTimeout(() => {
-      this.progressBarEnable = true;
+    // setTimeout(() => {
+    //   this.progressBarEnable = true;
+    //   this.creazioneInCorso = false;
+    //   this.progressBarEnable = false;
+    //   this.esitoCreazioneRS = "Raccolta Semplice creata con successo";
+    //   this.numerazioneRSCreata = "0007/2021";
+    // }, 1000);
+    
+     var formData:FormData = this.createFormData();
+     this.raccoltaService.createRs(formData).subscribe(
+     response => {
       this.creazioneInCorso = false;
       this.progressBarEnable = false;
       this.esitoCreazioneRS = "Raccolta Semplice creata con successo";
-      this.numerazioneRSCreata = "0007/2021";
-    }, 1000);
-    // this.progressBarEnable = true;
-    // var formData:FormData = this.createFormData();
-    // this.raccoltaService.createRs(formData).subscribe(
-    // response => {
-    //   this.blockedPanelInserimentoManuale = false;
-    //   this.progressBarEnable = false;
-    //   this.showModalDialog();
-    //   this. numerazioneRSCreata = response;
-    // },
-    // error => {
-    //   this.progressBarEnable = false;
-    //   this.blockedPanelInserimentoManuale = false;
-    //   this.messageService.add({
-    //     severity:'error', 
-    //     summary:'Creazione Raccolta Semplice', 
-    //     detail:error
-    //   });
-    // });
+      this. numerazioneRSCreata = response; },
+     error => {
+       this.progressBarEnable = false;
+       this.creazioneInCorso = false;
+       this.messageService.add({
+         severity:'error', 
+         summary:'Creazione Raccolta Semplice', 
+         detail:error
+       });
+     });
   }
 
   public showModalDialog() {
@@ -685,8 +702,8 @@ export class InserimentoManualeComponent implements OnInit {
 
     let formData: FormData = new FormData();
 
-    formData.append("applicazione_chiamante", "ARPAL UMBRIA");
-    formData.append("azienda", "100999");
+    formData.append("applicazione_chiamante", this.azienda.descrizione);
+    formData.append("azienda", "100" + this.azienda.codice);
     formData.append("oggetto", this.oggetto);
 
     if (!this.blockedPanelDoc) {
