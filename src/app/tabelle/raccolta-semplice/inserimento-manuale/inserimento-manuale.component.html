@@ -33,7 +33,7 @@
             <div class="p-field p-col">
               <label for="struttura-responsabile">Struttura Responsabile</label>
               <!-- autocomplete delle struttura internauta -->
-              <lib-structures-autocomplete [enabled]="true" [azienda]="azienda" [clearEnabled]="true"
+              <lib-structures-autocomplete [enabled]="true" [azienda]="_azienda" [clearEnabled]="true"
                 (strutturaSelezionataEmit)="strutturaSelezionata($event)">
               </lib-structures-autocomplete>
             </div>
