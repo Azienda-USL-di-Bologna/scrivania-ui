@@ -73,6 +73,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public hidePreview = false;
   public sliding = false;
   public showBolli: boolean = false;
+  public showRaccoltaSemplice: boolean = false;
   public tabellaDaRefreshare: any = { name: "" };
   constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService,
     private confirmationService: ConfirmationService, private configurazioneService: ConfigurazioneService) {
@@ -509,8 +510,15 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((parametriAziende: ParametroAziende[]) => {
         console.log(parametriAziende[0].valore);
         this.showBolli = JSON.parse(parametriAziende[0].valore || false);
-        console.log(this.showBolli);
-      });
+        console.log("showBolli: ",this.showBolli);
+    });
+
+    this.configurazioneService.getParametriAziende("raccoltaSemplice", null, idAziendaArray)
+    .subscribe((parametriAziende: ParametroAziende[]) => {
+      console.log(parametriAziende[0].valore);
+      this.showRaccoltaSemplice = JSON.parse(parametriAziende[0].valore || false);
+      console.log("showRS: ",this.showRaccoltaSemplice);
+    });
   }
 
 

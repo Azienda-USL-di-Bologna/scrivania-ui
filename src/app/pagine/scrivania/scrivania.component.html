@@ -59,14 +59,14 @@
                 [popup]="true"
                 (itemClick)="handleItemClick($event, null)">
             </p-tieredMenu>
-            <button #btn 
+            <button #btn *ngIf="showRaccoltaSemplice"
                 type="button"
                 pButton 
                 pTooltip="Vai alla Raccolta Semplice" 
                 tooltipPosition="bottom" 
                 [routerLink]="'/raccoltasemplice'"
                 iconPos="left" 
-                icon="pi pi-table" 
+                icon="pi pi-briefcase" 
                 class="ui-button-secondary icon-style" 
                 aria-label="Vai alla Raccolta Semplice">
             </button>
