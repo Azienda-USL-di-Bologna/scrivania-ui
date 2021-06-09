@@ -207,16 +207,16 @@ export class InserimentoManualeComponent implements OnInit {
       this.azienda = u.getUtente().aziendaLogin;
       this.username = u.getUtente().username;
       console.log("Azienda: ",u.getUtente().aziendaLogin.descrizione);
+      // la funzione atob server per decodificare la stringa base64 con cui viene passato dataForRubricaInternauta per evitare problemi coi caratteri strambi
+      if (!!sessionStorage.getItem("dataForInsertRaccoltaSemplice")) {
+        console.log("dataForInsertRaccoltaSemplice trovati");
+        this._callerData = JSON.parse(atob(sessionStorage.getItem("dataForInsertRaccoltaSemplice")));
+        this.openFromRecord();
+      } else {
+        console.log("dataForInsertRaccoltaSemplice NON trovati");
+      }
     }));
 
-    // la funzione atob server per decodificare la stringa base64 con cui viene passato dataForRubricaInternauta per evitare problemi coi caratteri strambi
-    if (!!sessionStorage.getItem("dataForInsertRaccoltaSemplice")) {
-      console.log("dataForInsertRaccoltaSemplice trovati");
-      this._callerData = JSON.parse(atob(sessionStorage.getItem("dataForInsertRaccoltaSemplice")));
-      this.openFromRecord();
-    } else {
-      console.log("dataForInsertRaccoltaSemplice NON trovati");
-    }
   }
 
 
