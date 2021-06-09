@@ -41,12 +41,12 @@ interface Registro {
 })
 export class InserimentoManualeComponent implements OnInit {
 
-  _azienda: Azienda;
-  @Input() set azienda(aziendaValue: Azienda) {
-    if (aziendaValue) {
-      this._azienda = aziendaValue;
-    }
-  }
+  // _azienda: Azienda;
+  // @Input() set azienda(aziendaValue: Azienda) {
+  //   if (aziendaValue) {
+  //     this._azienda = aziendaValue;
+  //   }
+  // }
 
   public _callerData: ExternalAppDataRS;
 
@@ -75,7 +75,7 @@ export class InserimentoManualeComponent implements OnInit {
   public blockedPanelUpload: boolean = false;
   public blockedPanelInserimentoManuale: boolean = false;
 
-  //public azienda: Azienda = { id: 10 } as Azienda;
+  public azienda: Azienda;
   public _strutturaInternautaSelezionata: Struttura;
   public _fascicoloArgoSelezionato: FascicoloArgo;
 
