@@ -222,7 +222,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   // apre interfaccia di inserimento con dati prepopolati perchè aperto da Pico, ecc...
   openFromRecord() {
-    if (!this._callerData) {
+    if (this._callerData) {
       const codice: string = "100" + this.azienda.codice;
       const docToSearch = this._callerData.protocollo + "/" + this._callerData.anno;
       this.raccoltaService.getDocumentiArgo(codice, this.username, 'PG', docToSearch).subscribe(res => {
