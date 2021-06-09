@@ -24,7 +24,8 @@ interface TipoDocumento {
 }
 
 interface ExternalAppDataRS {
-  guid: string;
+  protocollo: string;
+  anno: string;
   codiceAzienda: string;
 }
 
@@ -59,7 +60,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   public selectedTipo: TipoDocumento;
   public selectedTipoCoinvolto: string;
-  public selectedCodiceRegistro: Registro = { descrizione: 'PG - Protocollo Generale', tipo: 'pg' };
+  public selectedCodiceRegistro: Registro;
 
   public applicazione: string = 'INTERNAUTA';
   public _doc: Document;
@@ -140,6 +141,8 @@ export class InserimentoManualeComponent implements OnInit {
   public esitoCreazioneRS: string = "Creazione Raccolta Semplice in corso...";
   public creazioneInCorso: boolean = true;
 
+  public username: string;
+ 
   constructor(private messageService: MessageService,
     private allegatoService: ExtendedAllegatoService,
     private raccoltaService: RaccoltaSempliceService,
@@ -202,17 +205,34 @@ export class InserimentoManualeComponent implements OnInit {
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       this.loggedUser = u;
       this.azienda = u.getUtente().aziendaLogin;
+      this.username = u.getUtente().username;
       console.log("Azienda: ",u.getUtente().aziendaLogin.descrizione);
     }));
 
     // la funzione atob server per decodificare la stringa base64 con cui viene passato dataForRubricaInternauta per evitare problemi coi caratteri strambi
-    if (!!sessionStorage.getItem("dataForInsertRaccoltaSemplice")) this._callerData = JSON.parse(atob(sessionStorage.getItem("dataForInsertRaccoltaSemplice")));
+    if (!!sessionStorage.getItem("dataForInsertRaccoltaSemplice")) {
+      this._callerData = JSON.parse(atob(sessionStorage.getItem("dataForInsertRaccoltaSemplice")));
+      this.openFromRecord();
+    }
+  }
 
+
+  // apre interfaccia di inserimento con dati prepopolati perchè aperto da Pico, ecc...
+  openFromRecord() {
     if (!this._callerData) {
-      console.log("guid: ", this._callerData.guid);
+      const codice: string = "100" + this.azienda.codice;
+      const docToSearch = this._callerData.protocollo + "/" + this._callerData.anno;
+      this.raccoltaService.getDocumentiArgo(codice, this.username, 'PG', docToSearch).subscribe(res => {
+        this.selectedDoc = res.body[0];
+        this.oggetto = this.selectedDoc.oggetto;
+  });
+
+
+      console.log("protocollo: ", this._callerData.protocollo);
       console.log("codiceAzienda: ", this._callerData.codiceAzienda);
     }
   }
+
 
   openNew() {
     this.coinvolto = new PersonaRS();
