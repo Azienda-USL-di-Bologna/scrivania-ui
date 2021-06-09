@@ -23,6 +23,11 @@ interface TipoDocumento {
   code: string
 }
 
+interface ExternalAppDataRS {
+  guid: string;
+  codiceAzienda: string;
+}
+
 interface Registro {
   descrizione: string,
   tipo: string
@@ -41,6 +46,8 @@ export class InserimentoManualeComponent implements OnInit {
       this._azienda = aziendaValue;
     }
   }
+
+  public _callerData: ExternalAppDataRS;
 
   @ViewChild('fileInput') fileInput: FileUpload;
   public subscriptions: Subscription[] = [];
@@ -197,6 +204,14 @@ export class InserimentoManualeComponent implements OnInit {
       this.azienda = u.getUtente().aziendaLogin;
       console.log("Azienda: ",u.getUtente().aziendaLogin.descrizione);
     }));
+
+    // la funzione atob server per decodificare la stringa base64 con cui viene passato dataForRubricaInternauta per evitare problemi coi caratteri strambi
+    if (!!sessionStorage.getItem("dataForInsertRaccoltaSemplice")) this._callerData = JSON.parse(atob(sessionStorage.getItem("dataForInsertRaccoltaSemplice")));
+
+    if (!this._callerData) {
+      console.log("guid: ", this._callerData.guid);
+      console.log("codiceAzienda: ", this._callerData.codiceAzienda);
+    }
   }
 
   openNew() {
