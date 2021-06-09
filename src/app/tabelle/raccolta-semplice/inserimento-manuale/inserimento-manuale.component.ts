@@ -15,7 +15,7 @@ import { RaccoltaSempliceService } from '../raccolta-semplice.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DocumentoArgo } from '../DocumentoArgo.model';
 import { PersonaRS } from '../personaRS.model';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
 
 interface TipoDocumento {
@@ -141,8 +141,6 @@ export class InserimentoManualeComponent implements OnInit {
   public esitoCreazioneRS: string = "Creazione Raccolta Semplice in corso...";
   public creazioneInCorso: boolean = true;
 
-  private modeParamAlreadyRead = false;
-
   public username: string;
  
   constructor(private messageService: MessageService,
@@ -154,7 +152,7 @@ export class InserimentoManualeComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private loginService: NtJwtLoginService,
-    private activatedRoute: ActivatedRoute) {
+    private router: Router) {
     this.prefixHeader = "Collega Documento Babel: ";
     this.titoloHeader = this.prefixHeader;
     this.selectedCodiceRegistro = { descrizione: 'Protocollo Generale [PG]', tipo: 'pg' };
@@ -170,24 +168,6 @@ export class InserimentoManualeComponent implements OnInit {
       { label: "Fisica", value: "FISICA" },
       { label: "Giuridica", value: "GIURIDICA" }
     ];
-
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (!this.modeParamAlreadyRead) {
-        this.modeParamAlreadyRead = true;
-        const mode = params['mode'];
-        const from = params['from'];
-        
-        if (mode === "selection") {
-          // la funzione atob server per decodificare la stringa base64 con cui viene passato dataForRubricaInternauta per evitare problemi coi caratteri strambi
-          if (!!sessionStorage.getItem("dataForInsertRaccoltaSemplice")) {
-            this._callerData = JSON.parse(atob(sessionStorage.getItem("dataForInsertRaccoltaSemplice")));
-            this.openFromRecord();
-          }
-        }
-        
-      }
-      
-    });
 
     this.disabledDettaglioContatto = true;
     this.disabledContatto = false;
@@ -229,7 +209,14 @@ export class InserimentoManualeComponent implements OnInit {
       console.log("Azienda: ",u.getUtente().aziendaLogin.descrizione);
     }));
 
-    
+    // la funzione atob server per decodificare la stringa base64 con cui viene passato dataForRubricaInternauta per evitare problemi coi caratteri strambi
+    if (!!sessionStorage.getItem("dataForInsertRaccoltaSemplice")) {
+      console.log("dataForInsertRaccoltaSemplice trovati");
+      this._callerData = JSON.parse(atob(sessionStorage.getItem("dataForInsertRaccoltaSemplice")));
+      this.openFromRecord();
+    } else {
+      console.log("dataForInsertRaccoltaSemplice NON trovati");
+    }
   }
 
 
