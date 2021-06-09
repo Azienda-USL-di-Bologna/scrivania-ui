@@ -86,7 +86,15 @@ export const CONTROLLERS_ENDPOINT = {
     PRENDONE_URLS: "/getPrendoneUrls",
     CANCELLA_NOTIFICHE: "/cancellaNotifiche",
     GET_MENU_SCRIVANIA: "/getMenuScrivania",
-    GET_DATI_BOLLO_AZIENDA: "/getDatiBolloByAzienda"
+    GET_DATI_BOLLO_AZIENDA: "/getDatiBolloByAzienda",
+    GET_DATI_RACCOLTA_SEMPLICE: "/getRaccoltaSemplice",
+    GET_FASCICOLI_ARGO: "/getFascicoliArgo",
+    GET_DOCUMENTI_ARGO: "/getDocumentiArgo",
+    GET_STORICO: "/storico",
+    ANNULLAMENTO_URL: "/annullamento",
+    RICERCA_RACCOLTA: "/ricerca",
+    CREATE_RS: "/createRS",
+    DOWNLOAD: "/downloadAllegato"
 };
 
 export const COMMANDS = {
@@ -156,7 +164,13 @@ export const PROJECTIONS = {
             utenteWithIdAziendaAndIdPersonaAndUtenteStrutturaList: "UtenteWithIdAziendaAndIdPersonaAndUtenteStrutturaList"
         },
         customProjections: {}
-    }
+    },
+    raccolta: {
+        standardProjections: {
+            raccolta: "RaccoltaProjection"
+        },
+        customProjections: {}
+    }  
 }
 
 export const ENTITIES_CONFIGURATION: EntitiesConfiguration = {
@@ -191,5 +205,10 @@ export const COMMON_PARAMETERS = {
     BABEL_APPLICATION: "BABEL_APPLICATION"
 };
 
+export const CUSTOM_SERVER_METHODS = {
+    saveAllegato: "saveAllegato",
+    downloadAttachment: "downloadAttachment",
+    downloadAllAttachments: "downloadAllAttachments"
+  };
 
 
