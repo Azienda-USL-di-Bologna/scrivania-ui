@@ -172,7 +172,7 @@
                 <div class="form-group">
                   <p-fileUpload #pnlup #fileInput name="file" multiple="multiple" [showUploadButton]="false"
                     [showCancelButton]="false" maxFileSize="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf"
-                    chooseLabel="Importa" (onSelect)="onSelect($event)" (onRemove)="onRemove($event)" [styleClass]="babel-color">
+                    chooseLabel="Importa" (onSelect)="onSelect($event)" (onRemove)="onRemove($event)" styleClass="babel-color">
                     <ng-template pTemplate="content">
                       <p *ngIf="this.uploadedFiles.length<=0" class="content-message">lista file da caricare</p>
                       <div class="ui-fileupload-row" *ngFor="let file of attachments; let i = index;">

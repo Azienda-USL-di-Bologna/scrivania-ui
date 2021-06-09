@@ -81,7 +81,6 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import { ModalModule } from "ng2-modal";
 import {MatExpansionModule} from '@angular/material/expansion';
 
 
@@ -140,7 +139,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
     ProgressSpinnerModule,
     MatMenuModule,
     MatIconModule,
-    ModalModule,
     RadioButtonModule,
     BlockUIModule,
     MatInputModule,
