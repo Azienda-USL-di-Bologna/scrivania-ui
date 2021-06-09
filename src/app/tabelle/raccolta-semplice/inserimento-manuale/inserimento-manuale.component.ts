@@ -645,7 +645,7 @@ export class InserimentoManualeComponent implements OnInit {
         this.allegatoService.patchHttpCall({
           version: this.actualPrincipale.version,
           principale: false
-        }, this.actualPrincipale.id, null, null).subscribe(
+        } as NextSdrEntity, this.actualPrincipale.id, null, null).subscribe(
           (allegato: Allegato) => {
             this.actualPrincipale.version = allegato.version;
             this.actualPrincipale.principale = false;
