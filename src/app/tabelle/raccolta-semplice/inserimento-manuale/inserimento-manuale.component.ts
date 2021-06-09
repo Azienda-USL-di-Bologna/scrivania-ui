@@ -43,8 +43,8 @@ export class InserimentoManualeComponent implements OnInit {
   }
 
   @ViewChild('fileInput') fileInput: FileUpload;
-  private subscriptions: Subscription[] = [];
-  private actualPrincipale: Allegato;
+  public subscriptions: Subscription[] = [];
+  public actualPrincipale: Allegato;
 
   public tipiDocumento: TipoDocumento[];
   public tipiCoinvolti: SelectItem[];
@@ -63,15 +63,15 @@ export class InserimentoManualeComponent implements OnInit {
   public uploadedFiles: File[] = [];
   public selectedValue: string;
 
-  blockedPanelDoc: boolean = false;
-  blockedPanelUpload: boolean = false;
-  blockedPanelInserimentoManuale: boolean = false;
+  public blockedPanelDoc: boolean = false;
+  public blockedPanelUpload: boolean = false;
+  public blockedPanelInserimentoManuale: boolean = false;
 
   //public azienda: Azienda = { id: 10 } as Azienda;
   public _strutturaInternautaSelezionata: Struttura;
   public _fascicoloArgoSelezionato: FascicoloArgo;
 
-  formGroup: FormGroup;
+  public formGroup: FormGroup;
 
   public oggetto: string;
 
@@ -108,10 +108,10 @@ export class InserimentoManualeComponent implements OnInit {
   public loggedUser: UtenteUtilities;
 
   // parte coinvolti
-  productDialog: boolean;
-  coinvolti: PersonaRS[];
-  coinvolto: PersonaRS;
-  submitted: boolean;
+  public productDialog: boolean;
+  public coinvolti: PersonaRS[];
+  public coinvolto: PersonaRS;
+  public submitted: boolean;
 
   public selectedContatto: Contatto;
   public selectedContatti: Contatto[] = [];

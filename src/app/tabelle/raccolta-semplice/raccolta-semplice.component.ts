@@ -35,15 +35,15 @@ export class RaccoltaSempliceComponent implements OnInit {
     }
   }
 
-  private validateForm: FormGroup = this.formBuilder.group({
+  public validateForm: FormGroup = this.formBuilder.group({
     'stato': new FormControl('', Validators.required),
     'motivazione' : new FormControl('', Validators.required)
   });
 
   public contentTypesEnabledForPreview = ["text/html", "application/pdf", "text/plain", "image/jpeg", "image/png"];
   public filters: any;
-  private selectedButton: string;
-  private lastStato: boolean;
+  public selectedButton: string;
+  public lastStato: boolean;
   public storici: Storico[] = [];  
   public display = false;
   public mostra = false;
@@ -52,7 +52,7 @@ export class RaccoltaSempliceComponent implements OnInit {
   public prova: Document[] = [];
   public loading: boolean = false;
   public _rows = 20;
-  private subscriptions: Subscription[]=[];
+  public subscriptions: Subscription[]=[];
   public loggedUser: UtenteUtilities;
   public exportCsvInProgress: boolean = false;
   public totalRecords: number = 0;
@@ -60,9 +60,9 @@ export class RaccoltaSempliceComponent implements OnInit {
   public dataOggi: Date = new Date();
   public dataInizio: Date = null;
   public dataFine: Date = new Date(this.dataOggi.toDateString());
-  private idRaccoltaTemp: string;
-  private radioStato: string;
-  private testoMotivazione: string;
+  public idRaccoltaTemp: string;
+  public radioStato: string;
+  public testoMotivazione: string;
   public filtri: string[] = [];
   public filtriRicerca: string[] = [];
   public untouched: boolean;
@@ -79,7 +79,7 @@ export class RaccoltaSempliceComponent implements OnInit {
   ]
 
 
-  private ricerca: any[] = [
+  public ricerca: any[] = [
     {
       field: "codice"
     },
