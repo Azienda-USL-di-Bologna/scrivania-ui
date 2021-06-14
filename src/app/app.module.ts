@@ -28,8 +28,12 @@ import { AttivitaService } from "./tabelle/attivita/attivita.service";
 import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
 import { MessageService } from "primeng-lts/api";
 import { DialogService } from "primeng-lts/dynamicdialog";
+import { RaccoltaSempliceService } from './tabelle/raccolta-semplice/raccolta-semplice.service';
+import { ExtendedAllegatoService } from "./tabelle/raccolta-semplice/inserimento-manuale/extended-allegato.service";
+import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtuale.service";
 
 /* PrimeNG component */
+import { RadioButtonModule } from 'primeng-lts/radiobutton';
 import { AccordionModule } from "primeng-lts/accordion";
 import { LightboxModule } from "primeng-lts/lightbox";
 import { PanelModule } from "primeng-lts/panel";
@@ -53,7 +57,11 @@ import { CardModule } from "primeng-lts/card";
 import { ConfirmDialogModule } from "primeng-lts/confirmdialog";
 import { ConfirmationService } from "primeng-lts/api";
 import { ProgressSpinnerModule } from "primeng-lts/progressspinner";
-
+import { FileUploadModule } from 'primeng-lts/fileupload';
+import {BlockUIModule} from 'primeng-lts/blockui';
+import {ListboxModule} from 'primeng-lts/listbox';
+import {FieldsetModule} from 'primeng-lts/fieldset';
+import {ScrollPanelModule} from 'primeng-lts/scrollpanel';
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
@@ -64,11 +72,19 @@ import { ImpostazioniService } from "./services/impostazioni.service";
 import { NtCommunicatorModule } from "@bds/nt-communicator";
 import { CommonComponentsModule } from "@bds/common-components";
 import { DatiBolloVirtualeComponent } from './tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component';
-import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtuale.service";
+import { RaccoltaSempliceComponent } from './tabelle/raccolta-semplice/raccolta-semplice.component';
+import { InserimentoManualeComponent } from './tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component';
+
 
 /* Angular Material Module */
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatExpansionModule} from '@angular/material/expansion';
+
+
+
 
 
 @NgModule({
@@ -83,7 +99,9 @@ import {MatIconModule} from '@angular/material/icon';
     DropdownAziendeComponent,
     LoadingComponent,
     ImpostazioniComponent,
-    DatiBolloVirtualeComponent
+    DatiBolloVirtualeComponent,
+    RaccoltaSempliceComponent,
+    InserimentoManualeComponent
   ],
   imports: [
     NtJwtLoginModule.forRoot(loginModuleConfig),
@@ -112,6 +130,7 @@ import {MatIconModule} from '@angular/material/icon';
     DynamicDialogModule,
     ContextMenuModule,
     ToastModule,
+    FileUploadModule,
     CardModule,
     ConfirmDialogModule,
     PrimengPluginModule,
@@ -119,9 +138,20 @@ import {MatIconModule} from '@angular/material/icon';
     CommonComponentsModule,
     ProgressSpinnerModule,
     MatMenuModule,
-    MatIconModule
+    MatIconModule,
+    RadioButtonModule,
+    BlockUIModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    ListboxModule,
+    FieldsetModule,
+    MatExpansionModule,
+    ScrollPanelModule
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService, ImpostazioniService, DialogService, ConfirmationService, BolloVirtualeService],
+  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService,
+    ImpostazioniService, DialogService, ConfirmationService,
+    BolloVirtualeService, RaccoltaSempliceService, ExtendedAllegatoService
+  ],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent, ProfiloComponent]
 })

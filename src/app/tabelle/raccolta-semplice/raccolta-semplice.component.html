@@ -1,0 +1,249 @@
+<!-- per visualizzare la tabella è necessario definire alcune cose nel CSS, esempio vedi raccolta-semplice.component.css-->
+<div class="p-grid attivita-wrapper position-relative">
+  <div class="content-left" #leftSide>
+    <div class="option-bar">
+      <div class="buttons-bar">
+        <button type="button" pButton pTooltip="Vai alla scrivania" tooltipPosition="bottom" icon="pi pi-chevron-left"
+          iconPos="left" [routerLink]="'/attivita'" class="ui-button-secondary icon-style"
+          aria-label="Vai alla tabella delle attivita">
+        </button>
+        <div class="separator-class"></div>
+        <button type="button" pButton pTooltip="Caricamento manuale documento" tooltipPosition="bottom"
+          icon="pi pi-plus-circle" iconPos="left" [routerLink]="'/inserimento'" class="ui-button-secondary icon-style"
+          aria-label="Caricamento manuale documento">
+        </button>
+        <button type="button" pButton pTooltip="Aggiorna tabella" tooltipPosition="bottom" (click)="onTableRefresh()"
+          iconPos="left" icon="pi pi-refresh" class="ui-button-secondary icon-style"
+          aria-label="Aggiorna la tabella della raccolta semplice">
+        </button>
+        <button type="button" pButton pTooltip="Esporta in CSV tutti i dati" tooltipPosition="bottom"
+          (click)="exportToCsv(tableRaccoltaSemplice)" iconPos="left" icon="pi pi-download"
+          class="ui-button-secondary icon-style" aria-label="Esporta in CSV tutti i dati">
+        </button>
+      </div>
+      <h3 class="crono-label">Raccolta Semplice</h3>
+      <div class="p-grid p-align-center p-nogutter">
+        <lib-aziende-autocomplete [azienda]="_azienda" (aziendaChange)="handleSelectedAziendaEmit($event, 'Azienda')"
+          [filterByRole]="true">
+        </lib-aziende-autocomplete>
+        <span>Da:</span>
+        <p-calendar [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showButtonBar]="true"
+          yearRange="1000:4000" [locale]="it" [required]="true" dateFormat="dd/mm/yy" [hideOnDateTimeSelect]="true"
+          [(ngModel)]="dataInizio" [maxDate]="dataFine" [disabled]="!!!_azienda.codice" [inputStyle]="{'width':'87px'}"
+          appendTo="body" placeholder="Data di inizio" pTooltip="Filtra dati a partire dal">
+        </p-calendar>
+        <span style="width: 4px;" aria-hidden="true"></span>
+        <span> A:</span>
+        <p-calendar [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showButtonBar]="true"
+          yearRange="1900:2500" [locale]="it" dateFormat="dd/mm/yy" [hideOnDateTimeSelect]="true" [(ngModel)]="dataFine"
+          [disabled]="false" [minDate]="dataInizio" [inputStyle]="{'width':'87px'}" appendTo="body"
+          placeholder="Data di fine" pTooltip="Filtra dati fino al">
+        </p-calendar>
+        <button type="button" pButton pTooltip="Estrai" tooltipPosition="bottom" style="margin-left: 6px"
+          (click)="onLoadRaccoltaSemplice()" iconPos="left" icon="pi pi-check-circle"
+          class="ui-button-secondary icon-style" aria-label="Estrai">
+        </button>
+      </div>
+    </div>
+    <!-- Tabella -->
+    <div class="table-wrapper">
+      <div class="table-inner">
+        <p-table #tableRaccoltaSemplice [value]="datiDocumenti" [columns]="cols" [rows]="_rows" [autoLayout]="false"
+          [totalRecords]="20" dataKey="id" selectionMode="single" 
+          [scrollable]="true" [loading]="loading" 
+          csvSeparator=";" scrollHeight="100%"
+          [exportFilename]="dataInizio ? 'dati-raccolta_semplice_'+ dataInizio.toDateString()+'_'+dataFine.toDateString() : 'dati-raccolta_semplice_'"
+          rowExpandMode="single" [lazy]="true" (onLazyLoad)="lazyLoad($event)" >
+          <!-- Header tabellla-->
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th class= "headerEspansione"></th>
+              <th *ngFor="let col of columns" [style.width]="col.width" [style.padding]="col.padding"
+                [pSortableColumn]="col.field" [pTooltip]="col.label"
+                attr.aria-label="Colonna {{col.label}}, {{col.header ? 'Ordinare colonna' : ''}}">
+                {{col.header}}
+                <p-sortIcon [field]="col.field" *ngIf="col.field != undefined"
+                  attr.aria-label="Ordinare colonna {{col.label}}" arialabelasc="Ordinamento ascendente"
+                  arialabeldesc="Ordinamento discendente">
+                </p-sortIcon>
+              </th>
+            </tr>
+            <tr>
+              <td></td>
+              <td *ngFor="let col of columns" 
+                  [ngSwitch]="col.filterWidget" 
+                  class="filters-styles" 
+                  [style.width]="col.width" 
+                  [style.minWidth]="col.minWidth" 
+                  [style.display]="col.display">
+                      
+                  <div *ngIf="col.field != undefined && col.field !== 'azione' && col.field !== 'priorita' && col.field !== 'anteprima'">
+                    <p-calendar #calGenz *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." [showButtonBar]="true"
+                        [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
+                        (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
+                        appendTo="body" selectionMode="range" [readonlyInput]="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
+                    </p-calendar>
+                    <input pInputText *ngSwitchDefault
+                          attr.aria-label="Cella filtro per colonna {{col.label}}"
+                          type="text"
+                          (input)="tableRaccoltaSemplice.filter($event.target.value, col.field, col.filterMatchMode.value)"
+                          #filterInputText [disabled]="loading">
+                     </div>     
+              </td>
+            </tr>
+          </ng-template>
+
+          
+          <!--Body tabella-->
+          <ng-template pTemplate="body" let-rowRS let-columns="columns">
+            <tr class="row-class">
+              <td class="cellaEspansione">
+                <button type="button" pButton pRipple [pRowToggler]="rowRS"
+                  class="p-button-text p-button-rounded p-button-plain"
+                  [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+              </td>
+              <td *ngFor="let col of columns" class="column-class" [style.width]="col.width"
+                [style.textAlign]="col.textAlign" [pTooltip]="col.label" [style.overflow]="auto"> 
+                {{rowRS[col.field]}}
+                <div *ngIf= "col.field == 'stato'">
+                  <button pButton class="viewAnnullamento" type="button" (click)="openModal(rowRS.id)" label="Mostra annullamento" iconPos="center" icon="pi pi-ellipsis-h"></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <!-- Espansione tabella -->
+          <ng-template pTemplate="rowexpansion" let-rowRS>
+            <tr>
+              <td colspan="10">
+                <div class="p-p-3">
+                  <p-table [value]="rowRS.coinvolti" dataKey="id" rowExpandMode="single">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th pSortableColumn="name"> Nome <p-sortIcon field="descrizione"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="cf"> CF <p-sortIcon field="CF"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="piva"> P.Iva <p-sortIcon field="partitaIva"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tipo"> Tipologia <p-sortIcon field="tipo"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="mail"> Email <p-sortIcon field="mail"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="indirizzo"> Indirizzo <p-sortIcon field="indirizzo"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="telefono"> Telefono <p-sortIcon field="telefono"></p-sortIcon>
+                        </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-dettaglio>
+                      <tr>
+                        <td [style.overflow]="auto">{{dettaglio.descrizione}}</td>
+                        <td [style.overflow]="auto">{{dettaglio.cf}}</td>
+                        <td [style.overflow]="auto">{{dettaglio.piva}}</td>
+                        <td [style.overflow]="auto">{{dettaglio.tipo}}</td>
+                        <td [style.overflow]="auto">{{dettaglio.mail}}</td>
+                        <td [style.overflow]="auto">{{dettaglio.via + " " + dettaglio.civico + " " + dettaglio.comune + " " + dettaglio.cap + " " + dettaglio.provincia + " " + dettaglio.nazione}}</td>
+                        <td [style.overflow]="auto">{{dettaglio.telefono}}</td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+
+                  <tr>
+                    <td>
+                      <p-table [value]="rowRS.sottodocumenti" dataKey="id" rowExpandMode="single">
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th pSortableColumn="nome"> Nome <p-sortIcon field="nome"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="nome_originale"> Nome originale <p-sortIcon field="nomeOriginale"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="piva"> Mimetype Originale <p-sortIcon field="mimeTypeOriginale"></p-sortIcon>
+                            </th>
+                            <th> Download allegato </th>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-sottodocumento>
+                          <tr>
+                            <td [style.overflow]="auto">{{sottodocumento.nome}}</td>
+                            <td [style.overflow]="auto">{{sottodocumento.nomeOriginale}}</td>
+                            <td [style.overflow]="auto">{{sottodocumento.mimeTypeOriginale}}</td>
+                            <td [style.overflow]="auto"> <button pButton class="viewAnnullamento" type="button" (click)="download(sottodocumento.guidSottodocumento, 
+                              sottodocumento.nomeOriginale, sottodocumento.mimeTypeOriginale)" label="Scarica allegato" iconPos="center" icon="pi pi-download"></button></td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+                    </td>
+                  </tr>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<p-dialog header="Dettaglio stato documento" [(visible)]="display" class="modal" (onHide)="onHide()">
+  <h1>Sezione annullamento</h1>
+    <form (ngSubmit)="onSubmit()" [formGroup]="validateForm">
+      Stato documento:       
+      <div *ngIf="lastStato == true">
+        <b>Attivo</b>
+      </div>
+
+      <div *ngIf="lastStato == false">
+        <b>Annullato</b>
+      </div>
+      
+
+      
+      <br>
+      <div *ngIf="lastStato == true">
+
+        <label for="stato">Annulla documento</label>
+      </div> 
+
+      <div *ngIf="lastStato == false">
+        <label for="stato" >Attiva documento</label>
+      </div>
+      <p-radioButton inputId="stato" name="stato" class="radioB" required value="SELECTED" [(ngModel)]="selectedButton" formControlName="stato"></p-radioButton>
+      <br>
+      
+    <p>
+      Motivazione: 
+      <br>
+      <br>
+      <input type="text" [(ngModel)]="testoMotivazione" name="motivazione" class="motivazione" formControlName="motivazione"/>
+      <br>
+      <br>
+      <input type="submit" id="submit" name="subit" value="Aggiorna" class="invio" [disabled]="!validateForm?.valid">
+    </p>
+  </form>
+
+      <br>
+        <div class="table-wrapperDialog">
+            <div class="table-innerDialog">
+                <p-table #tableStorico [value]="storici" class="tableAnnullamento">
+                    <ng-template pTemplate="header">
+                        <tr class="rigaAnnullamento">
+                            <th class="headerAnnullamento"> Utente annullante </th>
+                            <th class="headerAnnullamento"> Motivazione </th>
+                            <th class="headerAnnullamento"> Stato </th>
+                            <th class="headerAnnullamento"> Data</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-storico>
+                        <tr class="rigaAnnullamento">
+                            <td class="cellaAnnullamento">{{storico?.utente}}</td>
+                            <td class="cellaAnnullamento">{{storico?.motivazione}}</td>
+                            <td class="cellaAnnullamento">{{storico?.stato}}</td>
+                            <td class="cellaAnnullamento">{{storico?.data}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+</p-dialog>
+
