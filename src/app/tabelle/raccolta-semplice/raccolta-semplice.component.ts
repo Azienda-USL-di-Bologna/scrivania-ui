@@ -66,6 +66,7 @@ export class RaccoltaSempliceComponent implements OnInit {
   public filtri: string[] = [];
   public filtriRicerca: string[] = [];
   public untouched: boolean;
+  public newDate: string;
 
   @ViewChild("tableRaccoltaSemplice") private dataTable: Table;
   @ViewChildren("calGenz") public _calGen: QueryList<Calendar>;
@@ -229,6 +230,8 @@ export class RaccoltaSempliceComponent implements OnInit {
     let calSel: Calendar = null;
     switch (action) {
       case "today":
+        this.newDate = event.toLocaleDateString();
+        console.log("NewDate:", this.newDate);
         calSel = this._calGen.find(e => e.inputId === "CalInput_" + field);
         if (calSel) {
           calSel.overlayVisible = false;
@@ -241,6 +244,9 @@ export class RaccoltaSempliceComponent implements OnInit {
 
       case "select":
         if (this._calGen) {
+          
+          this.newDate = event.toLocaleDateString();
+          console.log("NewDate:", this.newDate);
           calSel = this._calGen.find(a => a.inputId === "CalInput_" + field);
           if (calSel && this.dataRange && this.dataRange[field].length === 2
             && this.dataRange[field][0] && this.dataRange[field][1]) {
@@ -280,7 +286,7 @@ export class RaccoltaSempliceComponent implements OnInit {
     console.log(functionName, "event: ", event);
 
     if(event.filters.codice?.value != undefined) {
-      this.filtri.push(event.filters.codice?.value.toString());
+      this.filtri.push(this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'));
       this.filtriRicerca.push("numero");
       console.log("Inserimento: "+ this.filtri.length);
       this.untouched = false;
@@ -294,7 +300,7 @@ export class RaccoltaSempliceComponent implements OnInit {
     }
 
     if(event.filters.createTime?.value != undefined) {
-      this.filtri.push(event.filters.createTime?.value.toString());
+      this.filtri.push(this.newDate);
       this.filtriRicerca.push("createTime");
       console.log("Inserimento: "+ this.filtri.length);
       this.untouched = false;
