@@ -79,7 +79,7 @@
                       
                   <div *ngIf="col.field != undefined && col.field !== 'azione' && col.field !== 'priorita' && col.field !== 'anteprima'">
                     <p-calendar #calGenz *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." [showButtonBar]="true"
-                        [locale]="localIt" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
+                        [locale]="it" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
                         (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
                         appendTo="body" selectionMode="range" [readonlyInput]="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
                     </p-calendar>
