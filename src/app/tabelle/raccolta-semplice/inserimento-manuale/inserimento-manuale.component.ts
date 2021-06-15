@@ -1,22 +1,24 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Document } from '../documento.model';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Allegato } from './allegato';
 import { DettaglioAllegato } from './dettaglio-allegato';
 import { FileUpload } from 'primeng-lts/fileupload';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng-lts/api';
 import { ExtendedAllegatoService } from './extended-allegato.service';
-import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
 import { UtilityFunctions } from '@bds/nt-communicator';
 import { BatchOperation, BatchOperationTypes, FilterDefinition, FiltersAndSorts, FILTER_TYPES, NextSdrEntity, SortDefinition, SORT_MODES } from '@nfa/next-sdr';
 import { Azienda, BaseUrls, BaseUrlType, Contatto, ContattoService, DettaglioContatto, DettaglioContattoService, ENTITIES_STRUCTURE, Struttura } from '@bds/ng-internauta-model';
 import { FascicoloArgo } from '../fascicolo.model';
 import { RaccoltaSempliceService } from '../raccolta-semplice.service';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, SelectMultipleControlValueAccessor } from '@angular/forms';
 import { DocumentoArgo } from '../DocumentoArgo.model';
 import { PersonaRS } from '../personaRS.model';
 import { Router } from '@angular/router';
 import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
+
+
 
 interface TipoDocumento {
   name: string,
@@ -41,24 +43,16 @@ interface Registro {
 })
 export class InserimentoManualeComponent implements OnInit {
 
-  // _azienda: Azienda;
-  // @Input() set azienda(aziendaValue: Azienda) {
-  //   if (aziendaValue) {
-  //     this._azienda = aziendaValue;
-  //   }
-  // }
-
   public _callerData: ExternalAppDataRS;
 
   @ViewChild('fileInput') fileInput: FileUpload;
   public subscriptions: Subscription[] = [];
   public actualPrincipale: Allegato;
 
-  public tipiDocumento: TipoDocumento[];
   public tipiCoinvolti: SelectItem[];
   public codiciRegistriAmmessi: Registro[];
 
-  public selectedTipo: TipoDocumento;
+  public selectedTipo: SelectItem;
   public selectedTipoCoinvolto: string;
   public selectedCodiceRegistro: Registro;
 
@@ -69,14 +63,14 @@ export class InserimentoManualeComponent implements OnInit {
   public refreshTable: boolean = false;
   public display: boolean = false;
   public uploadedFiles: File[] = [];
-  public selectedValue: string;
+  public selectedValue: string = "Documento Babel";
 
   public blockedPanelDoc: boolean = false;
   public blockedPanelUpload: boolean = false;
   public blockedPanelInserimentoManuale: boolean = false;
 
   public azienda: Azienda;
-  public _strutturaInternautaSelezionata: Struttura;
+  public _strutturaInternautaSelezionata: Struttura = new Struttura();
   public _fascicoloArgoSelezionato: FascicoloArgo;
 
   public formGroup: FormGroup;
@@ -133,6 +127,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   public panelOpenStateDati: string = "Incompleto"
   public panelOpenState: boolean = true;
+  public tipologieDocumenti$: SelectItem[] = [];
 
   public displayRubricaPopup = false;
   public progressBarEnable = false;
@@ -157,13 +152,6 @@ export class InserimentoManualeComponent implements OnInit {
     this.titoloHeader = this.prefixHeader;
     this.selectedCodiceRegistro = { descrizione: 'Protocollo Generale [PG]', tipo: 'pg' };
 
-    this.tipiDocumento = [
-      { name: 'Raccoglitore', code: 'raccoglitore' },
-      { name: 'Contatto', code: 'contatto' },
-      { name: 'CV', code: 'cv' },
-      { name: 'Documento', code: 'documento' }
-    ];
-
     this.tipiCoinvolti = [
       { label: "Fisica", value: "FISICA" },
       { label: "Giuridica", value: "GIURIDICA" }
@@ -171,6 +159,7 @@ export class InserimentoManualeComponent implements OnInit {
 
     this.disabledDettaglioContatto = true;
     this.disabledContatto = false;
+    
 
   }
 
@@ -188,7 +177,8 @@ export class InserimentoManualeComponent implements OnInit {
   }
 
   blocca(value: string) {
-    console.log(value)
+    console.log(value);
+    console.log(this.selectedValue);
     if (value === "doc") {
       this.blockedPanelDoc = false;
       this.blockedPanelUpload = true;
@@ -198,6 +188,8 @@ export class InserimentoManualeComponent implements OnInit {
     }
 
   }
+
+
 
   ngOnInit(): void {
     this.coinvolti = [];
@@ -216,7 +208,18 @@ export class InserimentoManualeComponent implements OnInit {
       } else {
         console.log("dataForInsertRaccoltaSemplice NON trovati");
       }
-    }));
+      } 
+      ))
+      
+      this.raccoltaService.getTipologia(this.azienda.codice).subscribe(tipo => {
+        tipo.body.forEach(elem =>
+          {
+            let select = {label: elem, value: elem}
+            this.tipologieDocumenti$.push(select);
+            
+          })
+      });
+
 
   }
 
@@ -532,6 +535,19 @@ export class InserimentoManualeComponent implements OnInit {
     this.messageService.add({ severity: 'info', summary: 'File caricato', detail: '' });
   }
 
+  public loadTipologie(azienda: string): string[] {
+    let tipologie : string[]; 
+
+    this.subscriptions.push(this.raccoltaService.getTipologia(this.azienda.codice)
+        .subscribe((res: HttpResponse<string[]>) => {
+          tipologie = res.body;
+          console.log("loadTipo: ", tipologie);
+        }) 
+      )
+
+	return tipologie;
+}
+
   private buildFormData(event: any): FormData {
     this.uploadedFiles = event.files;
     const formData: FormData = new FormData();
@@ -753,7 +769,7 @@ export class InserimentoManualeComponent implements OnInit {
 
     var fascicoliStr = this.stringifyFascicoli();
     formData.append("fascicoli_babel", fascicoliStr);
-    formData.append("tipo_documento", this.selectedTipo.code);
+    formData.append("tipo_documento", this.selectedTipo.value);
     formData.append("struttura_responsabile", this._strutturaInternautaSelezionata.id.toString());
 
     if (!this.blockedPanelUpload) {

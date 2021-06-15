@@ -68,7 +68,7 @@ export class RaccoltaSempliceComponent implements OnInit {
   public untouched: boolean;
 
   @ViewChild("tableRaccoltaSemplice") private dataTable: Table;
-  @ViewChildren("calGenz") private _calGen: QueryList<Calendar>;
+  @ViewChildren("calGenz") public _calGen: QueryList<Calendar>;
    
 
 
@@ -77,17 +77,6 @@ export class RaccoltaSempliceComponent implements OnInit {
       field: "nome"
     }
   ]
-
-
-  public ricerca: any[] = [
-    {
-      field: "codice"
-    },
-    {
-      field: "createTime"
-    }
-  ]
-    
 
 
 
@@ -104,10 +93,10 @@ export class RaccoltaSempliceComponent implements OnInit {
       field: "createTime",
       header: "Registrazione",
       width: "122px",
-      filterMatchMode: FILTER_TYPES.not_string.equals,
+      filterMatchMode: '',
       label: "Data registrazione",
       filterWidget: "Calendar",
-      fieldType: "DateTime",
+      fieldType: "'DateTime'",
       textAlign:"center"
     },
     {
@@ -290,7 +279,6 @@ export class RaccoltaSempliceComponent implements OnInit {
 
     console.log(functionName, "event: ", event);
 
-    console.log("Filtro numero: "+ event.filters.numero?.value.toString());
     if(event.filters.codice?.value != undefined) {
       this.filtri.push(event.filters.codice?.value.toString());
       this.filtriRicerca.push("numero");
@@ -298,11 +286,16 @@ export class RaccoltaSempliceComponent implements OnInit {
       this.untouched = false;
     }
 
-
-    //console.log("Filtro applicazione: " + event.filters.applicazioneChiamante?.value.toString());
     if(event.filters.applicazioneChiamante?.value != undefined) {
       this.filtri.push(event.filters.applicazioneChiamante?.value.toString());
       this.filtriRicerca.push("applicazioneChiamante");
+      console.log("Inserimento: "+ this.filtri.length);
+      this.untouched = false;
+    }
+
+    if(event.filters.createTime?.value != undefined) {
+      this.filtri.push(event.filters.createTime?.value.toString());
+      this.filtriRicerca.push("createTime");
       console.log("Inserimento: "+ this.filtri.length);
       this.untouched = false;
     }

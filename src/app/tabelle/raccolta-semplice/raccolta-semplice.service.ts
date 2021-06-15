@@ -68,10 +68,14 @@ import { DocumentoArgo } from './DocumentoArgo.model';
 
    public createRs(formData: FormData): Observable<any> {
     const headers = { 'content-type': 'application/json'}  
-
     let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.CREATE_RS
-  
     return this.http.post(url, formData);
+   }
+
+   public getTipologia(azienda: string) : Observable<HttpResponse<string[]>> {
+    let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.TIPOLOGIE + "?azienda=" + azienda;
+    console.log("Url tipologie: ", url);
+    return this.http.get<string[]>(url, {responseType: "json", observe: 'response'});
    }
 
    public downloadAllegato(azienda: String, idSottodocumento: String) : Observable<any> {

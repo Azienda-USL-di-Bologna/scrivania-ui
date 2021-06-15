@@ -77,7 +77,7 @@
                   [style.minWidth]="col.minWidth" 
                   [style.display]="col.display">
                       
-                  <div *ngIf="col.field != undefined && col.field !== 'azione' && col.field !== 'priorita' && col.field !== 'anteprima'">
+                  <div *ngIf="col.field != undefined">
                     <p-calendar #calGenz *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." [showButtonBar]="true"
                         [locale]="it" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
                         (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"

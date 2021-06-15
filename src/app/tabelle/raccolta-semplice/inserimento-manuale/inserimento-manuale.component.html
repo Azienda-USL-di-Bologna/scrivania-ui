@@ -39,7 +39,7 @@
             </div>
           </div>
 
-          <!-- seconda riga griglia -->
+          <!-- seconda riga griglia  -->
           <div class="p-fluid p-formgrid p-grid">
             <div class="p-field p-col">
               <label for="applicazione" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Applicazione</label>
@@ -47,8 +47,8 @@
             </div>
             <div class="p-field p-col">
               <label for="tipo-documento" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Tipologia</label>
-              <p-dropdown [options]="tipiDocumento" [(ngModel)]="selectedTipo" placeholder="Scegli tipo documento..."
-                optionLabel="name" [showClear]="true"></p-dropdown>
+              <p-dropdown [options]="tipologieDocumenti$"  placeholder="Scegli tipo documento..."
+                 [showClear]="true"  [(ngModel)]="selectedTipo" appendTo="body"></p-dropdown>
             </div>
           </div>
         </div>
@@ -163,14 +163,16 @@
 
               </p-panel>
             </div>
-            <div class="p-field p-col">
-              <p-blockUI [target]="pnlup" [blocked]="blockedPanelUpload">
-                <i class="pi pi-lock" style="font-size: 3rem"></i>
+            
+            <div class="p-field p-col">             
+              <p-blockUI [target]="pnlup" [blocked]="blockedPanelUpload"> 
+                               
+                <i class="pi pi-lock"></i>
               </p-blockUI>
-              <!-- <p-panel #pnlup header="Carica file" styleClass="p-mt-4"> -->
+              <p-panel #pnlup header="Upload dei file" >
               <form>
                 <div class="form-group">
-                  <p-fileUpload #pnlup #fileInput name="file" multiple="multiple" [showUploadButton]="false"
+                  <p-fileUpload  #fileInput name="file" multiple="multiple" [showUploadButton]="false"
                     [showCancelButton]="false" maxFileSize="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf"
                     chooseLabel="Importa" (onSelect)="onSelect($event)" (onRemove)="onRemove($event)" styleClass="babel-color">
                     <ng-template pTemplate="content">
@@ -191,7 +193,7 @@
                   </p-fileUpload>
                 </div>
               </form>
-              <!-- </p-panel> -->
+              </p-panel> 
             </div>
           </div>
         </div>
