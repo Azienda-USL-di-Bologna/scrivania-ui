@@ -260,9 +260,9 @@
                   <td>{{coinvolto.telefono}}</td>
                   <td>
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
-                      (click)="editProduct(coinvolto)"></button>
+                      (click)="editCoinvolto(coinvolto)"></button>
                     <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-                      (click)="deleteProduct(coinvolto)"></button>
+                      (click)="deleteCoinvolto(coinvolto)"></button>
                   </td>
                 </tr>
               </ng-template>
@@ -413,3 +413,21 @@
     <p-button icon="pi pi-check" (click)="displayModal=false" label="OK" class="p-button-text"></p-button>
   </ng-template>
 </p-dialog>
+
+<p-dialog header="Dati mancanti" [(visible)]="modalError" [modal]="true" [style]="{width: '50vw'}"
+  [baseZIndex]="100000" [draggable]="false" [resizable]="false" (onHide)="chiudiErrore()">
+  <b>ATTENZIONE:</b> non sono stai inseriti tutti i dati necessari
+  <br>
+  <br>
+  Si prega di compilare i seguenti campi:
+  <br>
+  <ul *ngFor="let dato of missingData">
+    <li>{{dato}}</li>
+  </ul>
+  <br>
+  <br>
+  <div class="p-d-flex p-jc-end">
+    <button pButton class="p-button babel-color" label="Conferma" (click)="chiudiErrore()" icon="pi pi-check"></button>
+  </div>
+  
+</p-dialog>  

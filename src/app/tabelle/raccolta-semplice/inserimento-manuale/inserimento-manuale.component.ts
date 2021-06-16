@@ -63,16 +63,15 @@ export class InserimentoManualeComponent implements OnInit {
   public refreshTable: boolean = false;
   public display: boolean = false;
   public uploadedFiles: File[] = [];
-  public selectedValue: string = "Documento Babel";
+  public selectedValue: string;
 
   public blockedPanelDoc: boolean = false;
   public blockedPanelUpload: boolean = false;
   public blockedPanelInserimentoManuale: boolean = false;
-
   public azienda: Azienda;
   public _strutturaInternautaSelezionata: Struttura = new Struttura();
   public _fascicoloArgoSelezionato: FascicoloArgo;
-
+  public modalError: boolean = false;
   public formGroup: FormGroup;
 
   public oggetto: string;
@@ -89,7 +88,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   public optionFascicoli = [];
   public filteredOptions;
-
+  public missingData: string[] = [];
   public selectedFascicolo: FascicoloArgo;
   public filteredFascicoli: FascicoloArgo[];
   public selectedFascicoli: FascicoloArgo[] = [];
@@ -97,7 +96,7 @@ export class InserimentoManualeComponent implements OnInit {
   public selectedDoc: DocumentoArgo;
   public filteredDocs: DocumentoArgo[];
   public selectedDocumentoBabel: DocumentoArgo;
-
+  public additionalControl: boolean;
   public titoloHeader: string;
   public prefixHeader: string;
 
@@ -223,6 +222,11 @@ export class InserimentoManualeComponent implements OnInit {
 
   }
 
+  public chiudiErrore(){
+    this.modalError = false;
+    this.missingData = [];
+  }
+
 
   // apre interfaccia di inserimento con dati prepopolati perchè aperto da Pico, ecc...
   openFromRecord() {
@@ -280,14 +284,14 @@ export class InserimentoManualeComponent implements OnInit {
     if (this.coinvolto.guidInterfaccia) {
       this.coinvolto.tipologia = this.selectedTipoCoinvolto;
       this.coinvolti[this.findIndexByGuid(this.coinvolto.guidInterfaccia)] = this.coinvolto;
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Coinvolto aggiornato', life: 3000 });
     }
     else {
       this.coinvolto.guidInterfaccia = this.createGuid();
       this.coinvolto.tipologia = this.selectedTipoCoinvolto;
 
       this.coinvolti.push(this.coinvolto);
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Coinvolto aggiunto', life: 3000 });
     }
 
 
@@ -296,7 +300,7 @@ export class InserimentoManualeComponent implements OnInit {
     this.coinvolto = new PersonaRS();
   }
 
-  editProduct(coinvolto: PersonaRS) {
+  editCoinvolto(coinvolto: PersonaRS) {
     this.coinvolto = { ...coinvolto };
     this.productDialog = true;
   }
@@ -321,9 +325,9 @@ export class InserimentoManualeComponent implements OnInit {
     return id;
   }
 
-  deleteProduct(persona: PersonaRS) {
+  deleteCoinvolto(persona: PersonaRS) {
     this.confirmationService.confirm({
-      message: 'Comfermare la cancellazione del seguente coinvolto? ' + persona.nomeInterfaccia,
+      message: 'Confermare la cancellazione del seguente coinvolto? ' + persona.nomeInterfaccia,
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
@@ -332,19 +336,6 @@ export class InserimentoManualeComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Coinvolto eliminato', life: 3000 });
       }
     });
-  }
-
-  private checkData() {
-
-    // this.oggetto
-    // this._strutturaInternautaSelezionata
-    // this.selectedTipo
-    // this.selectedFascicoli
-    // this.blockedPanelDoc 
-    //   this.selectedDoc
-    // this.blockedPanelUpload 
-    //   this.uploadedFiles
-
   }
 
   initForm() {
@@ -701,30 +692,41 @@ export class InserimentoManualeComponent implements OnInit {
     }
   }
 
+  public showModalError() {
+    this.modalError = true;
+    this.displayModal = false;
+  }
+
   public delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   public onSubmit() {
+
+    if(!this.check()) {
+      this.modalError = true;
+      console.log("Sono entrato nell'if");
+      return this.showModalError();
+    }
+
+    console.log("Check passato");
     this.creazioneInCorso = true;
     this.showModalDialog();
-
-    // setTimeout(() => {
-    //   this.progressBarEnable = true;
-    //   this.creazioneInCorso = false;
-    //   this.progressBarEnable = false;
-    //   this.esitoCreazioneRS = "Raccolta Semplice creata con successo";
-    //   this.numerazioneRSCreata = "0007/2021";
-    // }, 1000);
     
-     var formData:FormData = this.createFormData();
+    var formData:FormData = this.createFormData();
+
      this.raccoltaService.createRs(formData).subscribe(
      response => {
+      console.log("Inizio resp);") 
       this.creazioneInCorso = false;
       this.progressBarEnable = false;
-      this.esitoCreazioneRS = "Raccolta Semplice creata con successo";
-      this. numerazioneRSCreata = response; },
+      this.esitoCreazioneRS = "Raccolta Semplice creata con successo";    
+      console.log("Pre response");
+      this. numerazioneRSCreata = response;
+      console.log("Finito tutto"); 
+    },
      error => {
+       console.log("Sono nell'errore");
        this.progressBarEnable = false;
        this.creazioneInCorso = false;
        this.messageService.add({
@@ -733,6 +735,8 @@ export class InserimentoManualeComponent implements OnInit {
          detail:error
        });
      });
+
+     console.log("Tutto ok");
   }
 
   public showModalDialog() {
@@ -753,8 +757,61 @@ export class InserimentoManualeComponent implements OnInit {
     return json;
   }
 
+  private check(): boolean {
+    this.additionalControl = true;
+
+    if(this.oggetto == "" || this.oggetto == undefined) {
+      console.log("Oggetto vuoto");
+      this.missingData.push("Oggetto vuoto")
+      this.additionalControl = false;
+    }
+
+    if (!this.blockedPanelDoc) {
+      if(this.selectedDoc == undefined) {
+        console.log("Nessun documento selezionato");
+        this.missingData.push("Nessun documento selezionato")
+        this.additionalControl = false;
+      }
+    }
+
+    if(this.selectedFascicoli.length == 0) {
+      console.log("Fascicoli vuoti");
+      this.missingData.push("Nessun documento fascicolo")
+      this.additionalControl = false;
+    }
+
+    if(this.selectedTipo == undefined) {
+      console.log("Tipo documento non selezionato");
+      this.missingData.push("Tipologia documento non selezionata")
+      this.additionalControl = false;
+    }
+
+    if(this._strutturaInternautaSelezionata == undefined) {
+      console.log("Struttura non selezionata");
+      this.missingData.push("Nessuna struttura selezionato")
+      this.additionalControl = false;
+    }
+
+    if(!this.blockedPanelUpload) {
+      if(this.uploadedFiles.length == 0) {
+        console.log("Nessun file caricato");
+        this.missingData.push("Nessun file caricato")
+        this.additionalControl = false;
+      }
+    }
+
+    if(this.coinvolti.length == 0) {
+      console.log("Nessuna persona selezionata");
+      this.missingData.push("Nessua persona selezionata")
+        this.additionalControl = false;
+    }
+
+    return this.additionalControl;
+  }
+
   private createFormData(): FormData {
 
+    let tipologia = String(this.selectedTipo);
     let formData: FormData = new FormData();
 
     formData.append("applicazione_chiamante", this.azienda.descrizione);
@@ -762,43 +819,23 @@ export class InserimentoManualeComponent implements OnInit {
     formData.append("oggetto", this.oggetto);
 
     if (!this.blockedPanelDoc) {
-      formData.append("numero_documento_origine", this.selectedDoc.numero);
-      formData.append("anno_documento_origine", this.selectedDoc.anno.toString());
-      formData.append("codice_registro_origine", "PG");
-    }
+        formData.append("numero_documento_origine", this.selectedDoc.numero);
+        formData.append("anno_documento_origine", this.selectedDoc.anno.toString());
+        formData.append("codice_registro_origine", "PG");
+      }
 
     var fascicoliStr = this.stringifyFascicoli();
     formData.append("fascicoli_babel", fascicoliStr);
-    formData.append("tipo_documento", this.selectedTipo.value);
+    formData.append("tipo_documento", tipologia);
     formData.append("struttura_responsabile", this._strutturaInternautaSelezionata.id.toString());
-
+    
     if (!this.blockedPanelUpload) {
       for (var file of this.uploadedFiles) {
         formData.append('allegati', file);
       }
     }
 
-    // for (var coinvolto of this.coinvolti) {
-    //   formData.append('allegati', file);
-    // }
     formData.append("persone", JSON.stringify(this.coinvolti));
-
-    // var personeStr: string = JSON.stringify([ 	
-    //   {"descrizione": "persona Test", 
-    //   "nome": "Stanis La Rochelle", 
-    //   "cognome": "Cert",
-    //   "email": "slr@mail.it",
-    //   "tipologia": "FISICA"
-    //   }, 		
-    //   {"descrizione": "azienda Test",
-    //   "ragione_sociale": "Azienda Fa Cose",
-    //   "cognome": "Bologna",
-    //   "email": "azfc@mail.it",
-    //   "tipologia": "GIURIDICA"
-    //   }
-    // ])
-
-    // formData.append("persone", personeStr);
 
     return formData;
   }
