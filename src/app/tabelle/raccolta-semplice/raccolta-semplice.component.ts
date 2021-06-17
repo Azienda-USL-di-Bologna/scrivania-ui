@@ -49,13 +49,12 @@ export class RaccoltaSempliceComponent implements OnInit {
   public mostra = false;
   public dataRange: Date[] = [];
   public datiDocumenti: Document[] = [];
-  public prova: Document[] = [];
   public loading: boolean = false;
   public _rows = 20;
   public subscriptions: Subscription[]=[];
   public loggedUser: UtenteUtilities;
   public exportCsvInProgress: boolean = false;
-  public totalRecords: number = 0;
+  public totalRecords: number = this.datiDocumenti.length;
   public it = LOCAL_IT;
   public dataOggi: Date = new Date();
   public dataInizio: Date = null;
@@ -67,6 +66,7 @@ export class RaccoltaSempliceComponent implements OnInit {
   public filtriRicerca: string[] = [];
   public untouched: boolean;
   public newDate: string;
+  public datiPaginati: Document[] = [];
 
   @ViewChild("tableRaccoltaSemplice") private dataTable: Table;
   @ViewChildren("calGenz") public _calGen: QueryList<Calendar>;
@@ -179,6 +179,9 @@ export class RaccoltaSempliceComponent implements OnInit {
           .subscribe((res: HttpResponse<Document[]>) => {
             this.loading = false;
             this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
+            this.datiPaginati = this.datiDocumenti.slice(0, 10);
+            console.log("Dati paginati: ", this.datiPaginati);
+            console.log("Dati: ", this.datiDocumenti);
           }, error => {
             console.log("error raccoltaSempliceService.getRaccoltaSemplice", error);
             this.loading = false;     
@@ -285,6 +288,12 @@ export class RaccoltaSempliceComponent implements OnInit {
 
     console.log(functionName, "event: ", event);
 
+    if(this.datiDocumenti) {
+      this.datiPaginati = this.datiDocumenti.slice(event.first, (event.first + event.rows))
+      this.loading = false;
+    }
+
+
     if(event.filters.codice?.value != undefined) {
       this.filtri.push(this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'));
       this.filtriRicerca.push("numero");
@@ -364,12 +373,13 @@ export class RaccoltaSempliceComponent implements OnInit {
         console.log("Inserimento: "+ this.filtri.length);
         this.untouched = false;
       }
-      if(this.untouched)
+      if(this.untouched) {
+        this.loading = false;
         return;
+      }
+        
 
       this.sendFilters();
-      console.log("Filtri: "+ this.filtri);
-      console.log("Campi: " + this.filtriRicerca);
       this.filtri = [];
       this.filtriRicerca = [];
       console.log("Svuoto i filtri");  

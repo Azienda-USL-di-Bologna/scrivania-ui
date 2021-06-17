@@ -48,10 +48,12 @@
     <!-- Tabella -->
     <div class="table-wrapper">
       <div class="table-inner">
-        <p-table #tableRaccoltaSemplice [value]="datiDocumenti" [columns]="cols" [rows]="_rows" [autoLayout]="false"
-          [totalRecords]="20" dataKey="id" selectionMode="single" 
+        <p-table #tableRaccoltaSemplice [value]="datiPaginati" [columns]="cols" [rows]="10" [autoLayout]="false"
+          dataKey="id" selectionMode="single" 
+          [totalRecords]="datiDocumenti.length"
           [scrollable]="true" [loading]="loading" 
           csvSeparator=";" scrollHeight="100%"
+           [paginator]="true"
           [exportFilename]="dataInizio ? 'dati-raccolta_semplice_'+ dataInizio.toDateString()+'_'+dataFine.toDateString() : 'dati-raccolta_semplice_'"
           rowExpandMode="single" [lazy]="true" (onLazyLoad)="lazyLoad($event)" >
           <!-- Header tabellla-->
