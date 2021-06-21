@@ -1,5 +1,5 @@
 import { Utente } from "@bds/ng-internauta-model";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Type } from "@angular/core";
 import {Router, ActivatedRoute} from "@angular/router";
 import { SCRIVANIA_ROUTE, BABELMAN_URL} from "../../environments/app-constants";
 import { NtJwtLoginService, LoginType, UtenteUtilities } from "@bds/nt-jwt-login";
@@ -115,7 +115,7 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  showSettings(component, header, width, height, data) {
+  showSettings(component: Type<any>, header: string, width: string, height: string, data: any) {
     const ref = this.dialogService.open(component, {
       data: data,
       header: header,
