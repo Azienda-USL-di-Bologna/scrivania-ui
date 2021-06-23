@@ -68,6 +68,8 @@ export class RaccoltaSempliceComponent implements OnInit {
   public newDate: string;
   public datiPaginati: Document[] = [];
 
+  public recordPerPagina:number = 1;
+
   @ViewChild("tableRaccoltaSemplice") private dataTable: Table;
   @ViewChildren("calGenz") public _calGen: QueryList<Calendar>;
    
@@ -129,8 +131,8 @@ export class RaccoltaSempliceComponent implements OnInit {
       header: "Fascicoli",
       label: "Fascicoli associati al documento",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "200px",
-      height: "100%",
+      // width: "200px",
+      // height: "100%",
       textAlign:"center"
     },
     {
@@ -175,7 +177,7 @@ export class RaccoltaSempliceComponent implements OnInit {
         this.dataFine = new Date(this.dataOggi.toDateString());
       }
       this.subscriptions.push(
-        this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'))
+        this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.recordPerPagina, 0)
           .subscribe((res: HttpResponse<Document[]>) => {
             this.loading = false;
             this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
@@ -280,18 +282,36 @@ export class RaccoltaSempliceComponent implements OnInit {
   }
 
   public lazyLoad(event: LazyLoadEvent) {
-
-
-    const functionName = "lazyLoad";
-
     this.untouched = true;
-
-    console.log(functionName, "event: ", event);
-
-    if(this.datiDocumenti) {
-      this.datiPaginati = this.datiDocumenti.slice(event.first, (event.first + event.rows))
-      this.loading = false;
+    if (this.dataInizio == null) {
+      return;
     }
+    let offset = (event.first / event.rows) * this.recordPerPagina;
+    this.loading = true;
+    this.subscriptions.push(
+      this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.recordPerPagina, offset)
+        .subscribe((res: HttpResponse<Document[]>) => {
+          this.loading = false;
+          this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
+          this.datiPaginati = this.datiDocumenti.slice(0, 10);
+          // for (let item of this.datiPaginati) {
+          //   let fascicoli = item.fascicoli.split(" ");
+          //   console.log("VALORI: ", fascicoli);
+          //   for (let i = 0; i < fascicoli.length; i++) {
+          //     fascicoli[i] = fascicoli[i] + "<br/>";
+          //   }
+          //   item.fascicoli = fascicoli.join("");
+          // }
+          
+          
+          console.log("Dati paginati: ", this.datiPaginati);
+          console.log("Dati: ", this.datiDocumenti);
+        }, error => {
+          console.log("error raccoltaSempliceService.getRaccoltaSemplice", error);
+          this.loading = false;     
+        }
+      )
+    )
 
 
     if(event.filters.codice?.value != undefined) {
@@ -374,10 +394,10 @@ export class RaccoltaSempliceComponent implements OnInit {
         this.untouched = false;
       }
       if(this.untouched) {
-        this.loading = false;
+        // this.loading = false;
         return;
       }
-        
+      
 
       this.sendFilters();
       this.filtri = [];
@@ -484,6 +504,8 @@ export class RaccoltaSempliceComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.recordPerPagina = 3;
+
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       this.loggedUser = u;
       this.azienda = u.getUtente().aziendaLogin;

@@ -325,3 +325,12 @@ fill: #333333 !important;
   p-calendar {
     min-width:      146px;
   }
+
+  .expand-button {
+    border: none !important;
+    background-color: #f4f4f4 !important;
+  }
+
+  .underline-state {
+    text-underline-position: under;
+  }

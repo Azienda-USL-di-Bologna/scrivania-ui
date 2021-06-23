@@ -45,207 +45,205 @@
         </button>
       </div>
     </div>
+
+
     <!-- Tabella -->
-    <div class="table-wrapper">
-      <div class="table-inner">
-        <p-table #tableRaccoltaSemplice [value]="datiPaginati" [columns]="cols" [rows]="10" [autoLayout]="false"
-          dataKey="id" selectionMode="single" 
-          [totalRecords]="datiDocumenti.length"
-          [scrollable]="true" [loading]="loading" 
-          csvSeparator=";" scrollHeight="100%"
-           [paginator]="true"
-          [exportFilename]="dataInizio ? 'dati-raccolta_semplice_'+ dataInizio.toDateString()+'_'+dataFine.toDateString() : 'dati-raccolta_semplice_'"
-          rowExpandMode="single" [lazy]="true" (onLazyLoad)="lazyLoad($event)" >
-          <!-- Header tabellla-->
-          <ng-template pTemplate="header" let-columns>
-            <tr>
-              <th class= "headerEspansione"></th>
-              <th *ngFor="let col of columns" [style.width]="col.width" [style.padding]="col.padding"
-                [pSortableColumn]="col.field" [pTooltip]="col.label"
-                attr.aria-label="Colonna {{col.label}}, {{col.header ? 'Ordinare colonna' : ''}}">
-                {{col.header}}
-                <p-sortIcon [field]="col.field" *ngIf="col.field != undefined"
-                  attr.aria-label="Ordinare colonna {{col.label}}" arialabelasc="Ordinamento ascendente"
-                  arialabeldesc="Ordinamento discendente">
-                </p-sortIcon>
-              </th>
-            </tr>
-            <tr>
-              <td></td>
-              <td *ngFor="let col of columns" 
-                  [ngSwitch]="col.filterWidget" 
-                  class="filters-styles" 
-                  [style.width]="col.width" 
-                  [style.minWidth]="col.minWidth" 
-                  [style.display]="col.display">
-                      
-                  <div *ngIf="col.field != undefined">
-                    <p-calendar #calGenz *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..." [showButtonBar]="true"
-                        [locale]="it" [showIcon]="false" dateFormat="dd/mm/yy" (onSelect)="onCalendarAction($event, col.field, 'select')"
-                        (onClearClick)="onCalendarAction($event, col.field, 'clear')" (onTodayClick)="onCalendarAction($event, col.field, 'today')"
-                        appendTo="body" selectionMode="range" [readonlyInput]="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
-                    </p-calendar>
-                    <input pInputText *ngSwitchDefault
-                          attr.aria-label="Cella filtro per colonna {{col.label}}"
-                          type="text"
-                          (input)="tableRaccoltaSemplice.filter($event.target.value, col.field, col.filterMatchMode.value)"
-                          #filterInputText [disabled]="loading">
-                     </div>     
-              </td>
-            </tr>
-          </ng-template>
+    <!-- <div class="table-wrapper">
+      <div class="table-inner"> -->
+    <p-table #tableRaccoltaSemplice [value]="datiPaginati" [lazy]="true" (onLazyLoad)="lazyLoad($event)"
+      [paginator]="true" [rows]="recordPerPagina" [totalRecords]="30" [columns]="cols" dataKey="id"
+      selectionMode="single" [loading]="loading" csvSeparator=";"
+      [exportFilename]="dataInizio ? 'dati-raccolta_semplice_'+ dataInizio.toDateString()+'_'+dataFine.toDateString() : 'dati-raccolta_semplice_'"
+      rowExpandMode="single">
+      <!-- Header tabellla-->
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th></th>
+          <th *ngFor="let col of columns" [pSortableColumn]="col.field" [pTooltip]="col.label"
+            attr.aria-label="Colonna {{col.label}}, {{col.header ? 'Ordinare colonna' : ''}}">
+            {{col.header}}
+            <p-sortIcon [field]="col.field" *ngIf="col.field != undefined"
+              attr.aria-label="Ordinare colonna {{col.label}}" arialabelasc="Ordinamento ascendente"
+              arialabeldesc="Ordinamento discendente">
+            </p-sortIcon>
+          </th>
+        </tr>
+        <tr>
+          <td></td>
+          <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget" class="filters-styles">
+            <div *ngIf="col.field != undefined">
+              <p-calendar #calGenz *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..."
+                [showButtonBar]="true" [locale]="it" [showIcon]="false" dateFormat="dd/mm/yy"
+                (onSelect)="onCalendarAction($event, col.field, 'select')"
+                (onClearClick)="onCalendarAction($event, col.field, 'clear')"
+                (onTodayClick)="onCalendarAction($event, col.field, 'today')" appendTo="body" selectionMode="range"
+                [readonlyInput]="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
+              </p-calendar>
+              <input pInputText *ngSwitchDefault attr.aria-label="Cella filtro per colonna {{col.label}}" type="text"
+                (input)="tableRaccoltaSemplice.filter($event.target.value, col.field, col.filterMatchMode.value)"
+                #filterInputText [disabled]="loading">
+            </div>
+          </td>
+        </tr>
+      </ng-template>
 
-          
-          <!--Body tabella-->
-          <ng-template pTemplate="body" let-rowRS let-columns="columns">
-            <tr class="row-class">
-              <td class="cellaEspansione">
-                <button type="button" pButton pRipple [pRowToggler]="rowRS"
-                  class="p-button-text p-button-rounded p-button-plain"
-                  [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
-              </td>
-              <td *ngFor="let col of columns" class="column-class" [style.width]="col.width"
-                [style.textAlign]="col.textAlign" [pTooltip]="col.label" [style.overflow]="auto"> 
-                {{rowRS[col.field]}}
-                <div *ngIf= "col.field == 'stato'">
-                  <button pButton class="viewAnnullamento" type="button" (click)="openModal(rowRS.id)" label="Mostra annullamento" iconPos="center" icon="pi pi-ellipsis-h"></button>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-          <!-- Espansione tabella -->
-          <ng-template pTemplate="rowexpansion" let-rowRS>
-            <tr>
-              <td colspan="10">
-                <div class="p-p-3">
-                  <p-table [value]="rowRS.coinvolti" dataKey="id" rowExpandMode="single">
-                    <ng-template pTemplate="header">
-                      <tr>
-                        <th pSortableColumn="name"> Nome <p-sortIcon field="descrizione"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="cf"> CF <p-sortIcon field="CF"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="piva"> P.Iva <p-sortIcon field="partitaIva"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="tipo"> Tipologia <p-sortIcon field="tipo"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="mail"> Email <p-sortIcon field="mail"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="indirizzo"> Indirizzo <p-sortIcon field="indirizzo"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="telefono"> Telefono <p-sortIcon field="telefono"></p-sortIcon>
-                        </th>
-                      </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-dettaglio>
-                      <tr>
-                        <td [style.overflow]="auto">{{dettaglio.descrizione}}</td>
-                        <td [style.overflow]="auto">{{dettaglio.cf}}</td>
-                        <td [style.overflow]="auto">{{dettaglio.piva}}</td>
-                        <td [style.overflow]="auto">{{dettaglio.tipo}}</td>
-                        <td [style.overflow]="auto">{{dettaglio.mail}}</td>
-                        <td [style.overflow]="auto">{{dettaglio.via + " " + dettaglio.civico + " " + dettaglio.comune + " " + dettaglio.cap + " " + dettaglio.provincia + " " + dettaglio.nazione}}</td>
-                        <td [style.overflow]="auto">{{dettaglio.telefono}}</td>
-                      </tr>
-                    </ng-template>
-                  </p-table>
+      <!--Body tabella-->
+      <ng-template pTemplate="body" let-rowRS let-columns="columns">
+        <tr>
+          <td>
+            <button type="button" pButton pRipple [pRowToggler]="rowRS"
+              class="p-button-text p-button-rounded p-button-plain"
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+          </td>
+          <td *ngFor="let col of columns" [style.textAlign]="col.textAlign" [pTooltip]="col.label">
+            <div *ngIf="col.field !== 'stato'">
+              {{rowRS[col.field]}}
+            </div>
+            <div *ngIf="col.field == 'stato'">
+              <p-button *ngIf="rowRS[col.field]==='ATTIVO'" label={{rowRS[col.field]}} styleClass="p-button-success"
+                (click)="openModal(rowRS.id)"></p-button>
+              <p-button *ngIf="rowRS[col.field]==='ANNULLATO'" label={{rowRS[col.field]}} styleClass="p-button-warning"
+                (click)="openModal(rowRS.id)"></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
 
-                  <tr>
-                    <td>
-                      <p-table [value]="rowRS.sottodocumenti" dataKey="id" rowExpandMode="single">
-                        <ng-template pTemplate="header">
-                          <tr>
-                            <th pSortableColumn="nome"> Nome <p-sortIcon field="nome"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="nome_originale"> Nome originale <p-sortIcon field="nomeOriginale"></p-sortIcon>
-                            </th>
-                            <th pSortableColumn="piva"> Mimetype Originale <p-sortIcon field="mimeTypeOriginale"></p-sortIcon>
-                            </th>
-                            <th> Download allegato </th>
-                          </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-sottodocumento>
-                          <tr>
-                            <td [style.overflow]="auto">{{sottodocumento.nome}}</td>
-                            <td [style.overflow]="auto">{{sottodocumento.nomeOriginale}}</td>
-                            <td [style.overflow]="auto">{{sottodocumento.mimeTypeOriginale}}</td>
-                            <td [style.overflow]="auto"> <button pButton class="viewAnnullamento" type="button" (click)="download(sottodocumento.guidSottodocumento, 
-                              sottodocumento.nomeOriginale, sottodocumento.mimeTypeOriginale)" label="Scarica allegato" iconPos="center" icon="pi pi-download"></button></td>
-                          </tr>
-                        </ng-template>
-                      </p-table>
-                    </td>
-                  </tr>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-    </div>
+      <!-- Espansione tabella -->
+      <ng-template pTemplate="rowexpansion" let-rowRS>
+        <tr>
+          <td colspan="11">
+            <div class="p-d-flex p-shadow-1 p-mb-2">
+              <p-table [value]="rowRS.coinvolti" dataKey="id">
+                <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name"> Nome <p-sortIcon field="descrizione"></p-sortIcon>
+          </th>
+          <th pSortableColumn="cf"> CF <p-sortIcon field="CF"></p-sortIcon>
+          </th>
+          <th pSortableColumn="piva"> P.Iva <p-sortIcon field="partitaIva"></p-sortIcon>
+          </th>
+          <th pSortableColumn="tipo"> Tipologia <p-sortIcon field="tipo"></p-sortIcon>
+          </th>
+          <th pSortableColumn="mail"> Email <p-sortIcon field="mail"></p-sortIcon>
+          </th>
+          <th pSortableColumn="indirizzo"> Indirizzo <p-sortIcon field="indirizzo"></p-sortIcon>
+          </th>
+          <th pSortableColumn="telefono"> Telefono <p-sortIcon field="telefono"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dettaglio>
+        <tr>
+          <td [style.overflow]="auto">{{dettaglio.descrizione}}</td>
+          <td [style.overflow]="auto">{{dettaglio.cf}}</td>
+          <td [style.overflow]="auto">{{dettaglio.piva}}</td>
+          <td [style.overflow]="auto">{{dettaglio.tipo}}</td>
+          <td [style.overflow]="auto">{{dettaglio.mail}}</td>
+          <td [style.overflow]="auto">{{dettaglio.via + " " + dettaglio.civico + " " + dettaglio.comune + " " +
+            dettaglio.cap + " " + dettaglio.provincia + " " + dettaglio.nazione}}</td>
+          <td [style.overflow]="auto">{{dettaglio.telefono}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
+  <div class="p-d-flex p-shadow-1">
+    <!-- tabella sottodocumenti -->
+    <p-table [value]="rowRS.sottodocumenti" dataKey="id" [resizableColumns]="true" styleClass="p-datatable-gridlines">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="nome" pResizableColumn> Nome <p-sortIcon field="nome"></p-sortIcon>
+          </th>
+          <th pSortableColumn="nome_originale" pResizableColumn> Nome originale <p-sortIcon field="nomeOriginale">
+            </p-sortIcon>
+          </th>
+          <th pSortableColumn="piva" pResizableColumn> Mimetype Originale <p-sortIcon field="mimeTypeOriginale">
+            </p-sortIcon>
+          </th>
+          <th>Download allegato</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-sottodocumento>
+        <tr>
+          <td>{{sottodocumento.nome}}</td>
+          <td>{{sottodocumento.nomeOriginale}}</td>
+          <td>{{sottodocumento.mimeTypeOriginale}}</td>
+          <td> <button pButton type="button" (click)="download(sottodocumento.guidSottodocumento, 
+                                          sottodocumento.nomeOriginale, sottodocumento.mimeTypeOriginale)"
+              iconPos="center" icon="pi pi-download" class="p-d-flex p-jc-center"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  </td>
+  </tr>
+  </ng-template>
+  </p-table>
+  <!-- </div>
+    </div> -->
+</div>
 </div>
 
-
-<p-dialog header="Dettaglio stato documento" [(visible)]="display" class="modal" (onHide)="onHide()">
-  <h1>Sezione annullamento</h1>
-    <form (ngSubmit)="onSubmit()" [formGroup]="validateForm">
-      Stato documento:       
+<!-- popup stato documento -->
+<p-dialog header="Stato documento" [(visible)]="display" (onHide)="onHide()" [style]="{width: '70vw'}">
+  <div >
+    <div>
       <div *ngIf="lastStato == true">
-        <b>Attivo</b>
-      </div>
-
-      <div *ngIf="lastStato == false">
-        <b>Annullato</b>
-      </div>
-      
-
-      
-      <br>
-      <div *ngIf="lastStato == true">
-
-        <label for="stato">Annulla documento</label>
-      </div> 
-
-      <div *ngIf="lastStato == false">
-        <label for="stato" >Attiva documento</label>
-      </div>
-      <p-radioButton inputId="stato" name="stato" class="radioB" required value="SELECTED" [(ngModel)]="selectedButton" formControlName="stato"></p-radioButton>
-      <br>
-      
-    <p>
-      Motivazione: 
-      <br>
-      <br>
-      <input type="text" [(ngModel)]="testoMotivazione" name="motivazione" class="motivazione" formControlName="motivazione"/>
-      <br>
-      <br>
-      <input type="submit" id="submit" name="subit" value="Aggiorna" class="invio" [disabled]="!validateForm?.valid">
-    </p>
-  </form>
-
-      <br>
-        <div class="table-wrapperDialog">
-            <div class="table-innerDialog">
-                <p-table #tableStorico [value]="storici" class="tableAnnullamento">
-                    <ng-template pTemplate="header">
-                        <tr class="rigaAnnullamento">
-                            <th class="headerAnnullamento"> Utente annullante </th>
-                            <th class="headerAnnullamento"> Motivazione </th>
-                            <th class="headerAnnullamento"> Stato </th>
-                            <th class="headerAnnullamento"> Data</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-storico>
-                        <tr class="rigaAnnullamento">
-                            <td class="cellaAnnullamento">{{storico?.utente}}</td>
-                            <td class="cellaAnnullamento">{{storico?.motivazione}}</td>
-                            <td class="cellaAnnullamento">{{storico?.stato}}</td>
-                            <td class="cellaAnnullamento">{{storico?.data}}</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </div>
+        <div class="badges p-d-flex">
+          <div style="line-height: 1.5; margin-right: 0.5rem;"> Lo stato del documento è </div>
+          <div class="p-tag p-tag-success">Attivo</div>
         </div>
-</p-dialog>
+      </div>
+      <div *ngIf="lastStato == false">
+        <div class="badges p-d-flex p-mb-2">
+          <div style="line-height: 1.5; margin-right: 0.5rem;">Lo stato del documento è </div>
+          <div class="p-tag p-tag-warning">Annullato</div>
+        </div>
+      </div>
+    
+      <form (ngSubmit)="onSubmit()" [formGroup]="validateForm">
+        <div class="p-d-flex p-mb-2">
+          <div>
+            <label *ngIf="lastStato == true" for="stato">Annullare il documento?</label>
+            <label *ngIf="lastStato == false" for="stato">Attivare il documento?</label>
+          </div>
+          <div>
+            <p-radioButton inputId="stato" name="stato" class="radioB" required value="SELECTED" [(ngModel)]="selectedButton" formControlName="stato"></p-radioButton>
+          </div>
+        </div>
+    
+        <div>
+          <h5>Motivazione</h5>
+          <input type="text" pInputText [(ngModel)]="testoMotivazione" name="motivazione" formControlName="motivazione">
+          <input type="submit" id="submit" name="subit" value="Aggiorna" class="invio" [disabled]="!validateForm?.valid">
+        </div>
+      </form>
+    </div>
+    
+    <div>
+          <p-table #tableStorico [value]="storici" class="tableAnnullamento">
+            <ng-template pTemplate="header">
+              <tr class="rigaAnnullamento">
+                <th class="headerAnnullamento"> Utente annullante </th>
+                <th class="headerAnnullamento"> Motivazione </th>
+                <th class="headerAnnullamento"> Stato </th>
+                <th class="headerAnnullamento"> Data</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-storico>
+              <tr class="rigaAnnullamento">
+                <td class="cellaAnnullamento">{{storico?.utente}}</td>
+                <td class="cellaAnnullamento">{{storico?.motivazione}}</td>
+                <td class="cellaAnnullamento">{{storico?.stato}}</td>
+                <td class="cellaAnnullamento">{{storico?.data}}</td>
+              </tr>
+            </ng-template>
+          </p-table>
 
+    </div>
+  </div>
+  
+
+  
+</p-dialog>
