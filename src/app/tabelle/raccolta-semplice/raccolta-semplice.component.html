@@ -186,24 +186,21 @@
 </div>
 
 <!-- popup stato documento -->
-<p-dialog header="Stato documento" [(visible)]="display" (onHide)="onHide()" [style]="{width: '70vw'}">
+<p-dialog header="Stato documento" [(visible)]="display" (onHide)="onHide()" [style]="{width: '50vw'}">
   <div >
     <div>
-      <div *ngIf="lastStato == true">
-        <div class="badges p-d-flex">
+        <div class="badges p-d-flex p-pb-2">
           <div style="line-height: 1.5; margin-right: 0.5rem;"> Lo stato del documento è </div>
-          <div class="p-tag p-tag-success">Attivo</div>
+          <div *ngIf="lastStato == true">
+            <div class="p-tag p-tag-success">Attivo</div>
+          </div>
+          <div *ngIf="lastStato == false">
+            <div class="p-tag p-tag-warning">Annullato</div>
+          </div>
         </div>
-      </div>
-      <div *ngIf="lastStato == false">
-        <div class="badges p-d-flex p-mb-2">
-          <div style="line-height: 1.5; margin-right: 0.5rem;">Lo stato del documento è </div>
-          <div class="p-tag p-tag-warning">Annullato</div>
-        </div>
-      </div>
-    
+      
       <form (ngSubmit)="onSubmit()" [formGroup]="validateForm">
-        <div class="p-d-flex p-mb-2">
+        <div class="p-d-flex p-pb-2">
           <div>
             <label *ngIf="lastStato == true" for="stato">Annullare il documento?</label>
             <label *ngIf="lastStato == false" for="stato">Attivare il documento?</label>
@@ -214,9 +211,14 @@
         </div>
     
         <div>
-          <h5>Motivazione</h5>
-          <input type="text" pInputText [(ngModel)]="testoMotivazione" name="motivazione" formControlName="motivazione">
-          <input type="submit" id="submit" name="subit" value="Aggiorna" class="invio" [disabled]="!validateForm?.valid">
+          <div class="p-pb-2 p-text-bold">Motivazione</div>
+          <div class="p-pb-2">
+            <input type="text" pInputText [(ngModel)]="testoMotivazione" name="motivazione" formControlName="motivazione">
+          </div>
+          <div class="p-pb-2">
+            <button pButton type="submit" class="p-button babel-color" label="Aggiorna" icon="pi pi-check" [disabled]="!validateForm?.valid"></button>
+            <!-- <input type="submit" id="submit" name="subit" value="Aggiorna" class="invio" > -->
+          </div> 
         </div>
       </form>
     </div>

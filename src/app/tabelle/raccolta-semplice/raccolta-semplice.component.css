@@ -334,3 +334,14 @@ fill: #333333 !important;
   .underline-state {
     text-underline-position: under;
   }
+
+  button.babel-color {
+    background-color: #993366 !important;
+    border: white !important;
+    color: white !important;
+  }
+
+  ::ng-deep .p-datatable table{
+    width: unset !important;
+  }
+ 
