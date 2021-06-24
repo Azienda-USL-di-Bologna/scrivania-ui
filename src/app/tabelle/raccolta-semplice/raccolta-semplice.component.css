@@ -341,7 +341,29 @@ fill: #333333 !important;
     color: white !important;
   }
 
-  ::ng-deep .p-datatable table{
+  .dialog-table.p-datatable table{
     width: unset !important;
   }
+
+  .grid-button-success{
+    padding: 0.429rem 0.5rem !important;
+    background-color: #34A835 !important;
+    color: white !important;
+  }
+
+  .grid-button-warning{
+    padding: 0.429rem 0.5rem !important;
+    background-color: #ffba01 !important;
+  }
  
+  .p-col-1-5 {
+    width: 10%;
+  }
+
+  .p-col-0-5 {
+    width: 6%;
+  }
+
+  .p-col-0-7 {
+    width: 8.2%;
+  }

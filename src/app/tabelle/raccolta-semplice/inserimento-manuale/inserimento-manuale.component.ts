@@ -7,7 +7,7 @@ import { FileUpload } from 'primeng-lts/fileupload';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng-lts/api';
 import { ExtendedAllegatoService } from './extended-allegato.service';
 import { HttpClient, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
-import { UtilityFunctions } from '@bds/nt-communicator';
+import { CustomReuseStrategy, UtilityFunctions } from '@bds/nt-communicator';
 import { BatchOperation, BatchOperationTypes, FilterDefinition, FiltersAndSorts, FILTER_TYPES, NextSdrEntity, SortDefinition, SORT_MODES } from '@nfa/next-sdr';
 import { Azienda, BaseUrls, BaseUrlType, Contatto, ContattoService, DettaglioContatto, DettaglioContattoService, ENTITIES_STRUCTURE, Struttura } from '@bds/ng-internauta-model';
 import { FascicoloArgo } from '../fascicolo.model';
@@ -15,7 +15,7 @@ import { RaccoltaSempliceService } from '../raccolta-semplice.service';
 import { FormBuilder, FormControl, FormGroup, SelectMultipleControlValueAccessor } from '@angular/forms';
 import { DocumentoArgo } from '../DocumentoArgo.model';
 import { PersonaRS } from '../personaRS.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
 
 
@@ -146,7 +146,8 @@ export class InserimentoManualeComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private loginService: NtJwtLoginService,
-    private router: Router) {
+    private router: Router,
+    private activatedRoute: ActivatedRoute) {
     this.prefixHeader = "Collega Documento Babel: ";
     this.titoloHeader = this.prefixHeader;
     this.selectedCodiceRegistro = { descrizione: 'Protocollo Generale [PG]', tipo: 'pg' };
@@ -476,6 +477,11 @@ export class InserimentoManualeComponent implements OnInit {
   public saveDocBabel(doc: DocumentoArgo) {
     this.selectedDocumentoBabel = doc;
     this.titoloHeader = this.prefixHeader + ": " + doc.codiceRegistro + doc.numero + "/" + doc.anno
+  }
+
+  public tornaIndietro() {
+    CustomReuseStrategy.componentsReuseList.push("*");
+    this.router.navigate(['../raccoltasemplice'], {relativeTo: this.activatedRoute});
   }
 
   /**

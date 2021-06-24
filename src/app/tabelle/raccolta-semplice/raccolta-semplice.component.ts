@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { HttpResponse } from '@angular/common/http';
 import { Component, ElementRef, Inject, Input, OnInit, QueryList, ViewChild,  ViewChildren } from '@angular/core';
 import { Azienda } from '@bds/ng-internauta-model';
-import { LOCAL_IT } from '@bds/nt-communicator';
+import { CustomReuseStrategy, LOCAL_IT } from '@bds/nt-communicator';
 import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
 import { FILTER_TYPES } from '@nfa/next-sdr';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -19,6 +19,7 @@ import { LazyLoadEvent } from 'primeng-lts/api';
 import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 import { eventNames } from 'process';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-raccolta-semplice',
@@ -26,7 +27,12 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   styleUrls: ['./raccolta-semplice.component.css']
 })
 export class RaccoltaSempliceComponent implements OnInit {
-  constructor(private raccoltaSempliceService: RaccoltaSempliceService, private loginService: NtJwtLoginService, private datePipe: DatePipe, private formBuilder: FormBuilder) { }
+  constructor(private raccoltaSempliceService: RaccoltaSempliceService, 
+    private loginService: NtJwtLoginService, 
+    private datePipe: DatePipe, 
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private activatedRoute: ActivatedRoute) { }
 
   _azienda: Azienda;
   @Input() set azienda(aziendaValue: Azienda) {
@@ -87,7 +93,6 @@ export class RaccoltaSempliceComponent implements OnInit {
     {
       field: "codice",
       header: "Numero",
-      width: "100px",
       label: "Numero Raccolta Semplice",
       textAlign: "center",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
@@ -95,7 +100,6 @@ export class RaccoltaSempliceComponent implements OnInit {
     {
       field: "createTime",
       header: "Registrazione",
-      width: "122px",
       filterMatchMode: '',
       label: "Data registrazione",
       filterWidget: "Calendar",
@@ -106,7 +110,6 @@ export class RaccoltaSempliceComponent implements OnInit {
       field: "applicazioneChiamante",
       header: "Applicazione",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "200px",
       label: "Applicazione del documento",
       textAlign:"center"
     },
@@ -114,7 +117,6 @@ export class RaccoltaSempliceComponent implements OnInit {
       field: "tipoDocumento",
       header: "Tipo documento",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "150px",
       label: "Tipo del documento",
       textAlign:"center"
     },
@@ -123,7 +125,6 @@ export class RaccoltaSempliceComponent implements OnInit {
       header: "Oggetto",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       label: "Oggetto del documento",
-      width: "150px",
       textAlign:"center"
     },
     {
@@ -131,15 +132,12 @@ export class RaccoltaSempliceComponent implements OnInit {
       header: "Fascicoli",
       label: "Fascicoli associati al documento",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      // width: "200px",
-      // height: "100%",
       textAlign:"center"
     },
     {
       field: "documentoBabel",
       header: "Documento Babel",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "200px",
       label: "Documento Babel",
       textAlign:"center"
     },
@@ -147,15 +145,13 @@ export class RaccoltaSempliceComponent implements OnInit {
       field: "creatore",
       header: "Creatore",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "200px",
       label: "Creatore del documento ",
       textAlign:"center"
     },
     {
       field: "descrizioneStruttura",
-      header: "Struttura ",
+      header: "Struttura",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "200px",
       label: "Struttura del creatore ",
       textAlign:"center"
     },
@@ -163,7 +159,6 @@ export class RaccoltaSempliceComponent implements OnInit {
       field: "stato",
       header: "Azione",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "122px",
       label: "Azione",
       textAlign:"center"
     }
@@ -193,6 +188,10 @@ export class RaccoltaSempliceComponent implements OnInit {
     }
 
     this.mostra = true;
+  }
+
+  public openInsert() {
+    this.router.navigate(['../inserimento'], {relativeTo: this.activatedRoute});
   }
 
   handleSelectedAziendaEmit(event: Azienda, type: string) {
