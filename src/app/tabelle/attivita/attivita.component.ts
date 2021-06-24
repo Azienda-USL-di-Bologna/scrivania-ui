@@ -307,7 +307,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   private lazyLoad(event: LazyLoadEvent) {
     const functionName = "lazyLoad";
-    // console.log(functionName, "event: ", event);
+    console.log(functionName, "event: ", event);
     this.loadData(event);
   }
 
@@ -368,7 +368,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     console.log("UTENTE: ", this.loggedUser); */
     this.loading = true;
     const functionName = "loadData";
-    // console.log(this.componentDescription, functionName, "event: ", event);
+    console.log("Ricerca su colonna");
 
     // mi salvo il filtro dell'evento così, se cambio struttura o azienda posso ricaricare i dati applicando quel filtro
     // in alternativa potrei svuotare i filtri al cambio di struttura e azienda
@@ -404,7 +404,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
                 }
               }
             } else if (a.allegati && a.allegati !== "\"forbidden\"" && (a.descrizione === "Redazione" || a.descrizione === "Bozza")) {
-              a["antePrimaNonDisponibile"] = "Non disponibile";
+              a["anteprimaNonDisponibile"] = "Non disponibile";
             }
           });
         }
@@ -509,7 +509,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
         this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa
       }
-      this.listeners[td.id] = [this.renderer.listen(td, "click", (e) => {
+      this.listeners[td.id] = [this.renderer.listen(td, "mousedown", (e) => {
         e.preventDefault();
         e.stopPropagation();
         console.log("fillActionCol td", td);
