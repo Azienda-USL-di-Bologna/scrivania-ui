@@ -277,7 +277,7 @@ export class InserimentoManualeComponent implements OnInit {
     if (this.selectedTipoCoinvolto === "GIURIDICA" && this.coinvolto.ragioneSociale !== undefined && this.coinvolto.ragioneSociale !== "") {
       this.coinvolto.nomeInterfaccia = this.coinvolto.ragioneSociale;
     } else if (this.coinvolto.nome && this.coinvolto.cognome) {
-      this.coinvolto.nomeInterfaccia = this.coinvolto.nome + " " + this.coinvolto.cognome;
+      this.coinvolto.nomeInterfaccia = this.coinvolto.descrizione;
     } else {
       this.coinvolto.nomeInterfaccia = "";
     }

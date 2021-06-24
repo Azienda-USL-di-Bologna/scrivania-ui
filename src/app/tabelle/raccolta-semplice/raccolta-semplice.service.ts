@@ -30,7 +30,7 @@ import { DocumentoArgo } from './DocumentoArgo.model';
       return this.http.get<Storico[]>(url, {responseType: "json", observe: 'response'});
     }
 
-    public ricercaRaccolta(campi: string[], filtri: string[]) : Observable<HttpResponse<Document[]>> {
+    public ricercaRaccolta(campi: string[], filtri: string[], limit: number, offeset:number) : Observable<HttpResponse<Document[]>> {
       let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.RICERCA_RACCOLTA + "?";
       if(campi.length != filtri.length) {
         console.log("Il numero di campi e filtri è diverso");
@@ -47,6 +47,9 @@ import { DocumentoArgo } from './DocumentoArgo.model';
               url = url +"&";
           }
         }
+        url  = url + "&offset="+ offeset;
+        url = url + "&limit=" + limit;
+
         return this.http.get<Document[]>(url, {responseType: "json", observe: 'response'});
       }
     }

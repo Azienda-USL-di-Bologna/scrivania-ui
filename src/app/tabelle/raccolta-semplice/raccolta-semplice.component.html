@@ -48,8 +48,8 @@
 
 
     <!-- Tabella -->
-    <p-table #tableRaccoltaSemplice [value]="datiPaginati" [lazy]="true" (onLazyLoad)="lazyLoad($event)"
-      [paginator]="true" [rows]="recordPerPagina" [totalRecords]="30" [columns]="cols" dataKey="id"
+    <p-table #tableRaccoltaSemplice [value]="datiDocumenti" [lazy]="true" (onLazyLoad)="lazyLoad($event)"
+      [paginator]="true" [rows]="recordPerPagina" [totalRecords]="totalRows" [columns]="cols" dataKey="id"
       selectionMode="single" [loading]="loading" csvSeparator=";"
       [exportFilename]="dataInizio ? 'dati-raccolta_semplice_'+ dataInizio.toDateString()+'_'+dataFine.toDateString() : 'dati-raccolta_semplice_'"
       rowExpandMode="single" [scrollable]="true">
@@ -81,7 +81,7 @@
               </p-calendar>
               <input pInputText *ngSwitchDefault attr.aria-label="Cella filtro per colonna {{col.label}}" type="text"
                 (input)="tableRaccoltaSemplice.filter($event.target.value, col.field, col.filterMatchMode.value)"
-                #filterInputText [disabled]="loading">
+                #filterInputText [ngModel]="prova" [disabled]="loading">
             </div>
           </td>
         </tr>
