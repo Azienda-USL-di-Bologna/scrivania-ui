@@ -1,7 +1,7 @@
 <div class="p-d-flex p-jc-end p-col-12">
   <div class="p-mr-2">
     <button type="button" label="Annulla" pButton [routerLink]="'/raccoltasemplice'" class="p-button babel-color"
-  aria-label="Vai a lista Raccolta Semplice"></button>
+      aria-label="Vai a lista Raccolta Semplice"></button>
   </div>
   <div class="p-mr-2">
     <button pButton class="p-button babel-color" label="Conferma" (click)="onSubmit()"></button>
@@ -47,8 +47,8 @@
             </div>
             <div class="p-field p-col">
               <label for="tipo-documento" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Tipologia</label>
-              <p-dropdown [options]="tipologieDocumenti$"  placeholder="Scegli tipo documento..."
-                 [showClear]="true"  [(ngModel)]="selectedTipo" appendTo="body"></p-dropdown>
+              <p-dropdown [options]="tipologieDocumenti$" placeholder="Scegli tipo documento..." [showClear]="true"
+                [(ngModel)]="selectedTipo" appendTo="body"></p-dropdown>
             </div>
           </div>
         </div>
@@ -163,37 +163,38 @@
 
               </p-panel>
             </div>
-            
-            <div class="p-field p-col">             
-              <p-blockUI [target]="pnlup" [blocked]="blockedPanelUpload"> 
-                               
+
+            <div class="p-field p-col">
+              <p-blockUI [target]="pnlup" [blocked]="blockedPanelUpload">
+
                 <i class="pi pi-lock"></i>
               </p-blockUI>
-              <p-panel #pnlup header="Upload dei file" >
-              <form>
-                <div class="form-group">
-                  <p-fileUpload  #fileInput name="file" multiple="multiple" [showUploadButton]="false"
-                    [showCancelButton]="false" maxFileSize="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf"
-                    chooseLabel="Importa" (onSelect)="onSelect($event)" (onRemove)="onRemove($event)" styleClass="babel-color">
-                    <ng-template pTemplate="content">
-                      <p *ngIf="this.uploadedFiles.length<=0" class="content-message">lista file da caricare</p>
-                      <div class="ui-fileupload-row" *ngFor="let file of attachments; let i = index;">
-                        <div>
-                          <img [src]="file.objectURL" *ngIf="uploadService.isImage(file)" />
+              <p-panel #pnlup header="Upload dei file">
+                <form>
+                  <div class="form-group">
+                    <p-fileUpload #fileInput name="file" multiple="multiple" [showUploadButton]="false"
+                      [showCancelButton]="false" maxFileSize="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf"
+                      chooseLabel="Importa" (onSelect)="onSelect($event)" (onRemove)="onRemove($event)"
+                      styleClass="babel-color">
+                      <ng-template pTemplate="content">
+                        <p *ngIf="this.uploadedFiles.length<=0" class="content-message">lista file da caricare</p>
+                        <div class="ui-fileupload-row" *ngFor="let file of attachments; let i = index;">
+                          <div>
+                            <img [src]="file.objectURL" *ngIf="uploadService.isImage(file)" />
+                          </div>
+                          <div class="uploaded-file" (click)="uploadService.downloadFile(attachments, i)">
+                            {{file.uploadname}}
+                          </div>
+                          <div>
+                            <button type="button" class="btn-xs btn-danger confirm-btn"
+                              (click)="deleteFile(attachments, i)">Delete</button>
+                          </div>
                         </div>
-                        <div class="uploaded-file" (click)="uploadService.downloadFile(attachments, i)">
-                          {{file.uploadname}}
-                        </div>
-                        <div>
-                          <button type="button" class="btn-xs btn-danger confirm-btn"
-                            (click)="deleteFile(attachments, i)">Delete</button>
-                        </div>
-                      </div>
-                    </ng-template>
-                  </p-fileUpload>
-                </div>
-              </form>
-              </p-panel> 
+                      </ng-template>
+                    </p-fileUpload>
+                  </div>
+                </form>
+              </p-panel>
             </div>
           </div>
         </div>
@@ -229,7 +230,7 @@
           </div>
 
           <div class="p-field p-col-12">
-            <p-table [value]="coinvolti" [rowHover]="true" dataKey="id" >
+            <p-table [value]="coinvolti" [rowHover]="true" dataKey="id">
               <ng-template pTemplate="header">
                 <tr>
                   <th pSortableColumn="nome">Coinvolto<p-sortIcon field="nome"></p-sortIcon>
@@ -268,9 +269,9 @@
               </ng-template>
               <ng-template pTemplate="summary">
                 <div class="p-d-flex p-ai-center p-jc-between">
-                  <span *ngIf="coinvolti.length>0">Totali: {{coinvolti ? coinvolti.length : 0 }}</span> 
-                  <span *ngIf="coinvolti.length<=0">Inserisci nuovi coinvolti o aggiungili dalla rubrica</span> 
-                  
+                  <span *ngIf="coinvolti.length>0">Totali: {{coinvolti ? coinvolti.length : 0 }}</span>
+                  <span *ngIf="coinvolti.length<=0">Inserisci nuovi coinvolti o aggiungili dalla rubrica</span>
+
                 </div>
               </ng-template>
             </p-table>
@@ -363,33 +364,43 @@
 
           <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 
-          <p-dialog appendTo="body" [(visible)]="displayRubricaPopup" [modal]="true" header="Cerca Contatto">
+          <p-dialog appendTo="body" [(visible)]="displayRubricaPopup" [modal]="true" header="Cerca Contatto" [style]="{width: '50vw'}"> 
 
-            <p-autoComplete id="contatto" #autocompleteContatto [disabled]="disabledContatto" ariaLabel="contatto"
-              [(ngModel)]="selectedContatto" (onSelect)="saveContatto($event)" [suggestions]="filteredContatti"
-              (completeMethod)="searchContatto($event)" field="descrizione" appendTo="body" class="p-col" dropdown=true
-              placeholder="Cerca contatto..." emptyMessage="Nessun riferimento trovato">
-              <ng-template let-contatto pTemplate="itemContatto">
-                <div>[{{contatto.descrizione}}] {{contatto.tipo}} {{contatto.categoria}}</div>
-              </ng-template>
-            </p-autoComplete>
-            <button pButton icon="pi pi-times" class="p-button" (click)="removeContatto()"></button>
-            <p-table [value]="filteredDettagliContatti">
-              <ng-template pTemplate="header">
-                <tr>
-                  <th>Dettagli contatto</th>
-                  <th></th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-dettaglio let-i="rowIndex">
-                <tr>
-                  <td>[{{dettaglio.tipo}}] {{dettaglio.descrizione}}</td>
-                  <td>
-                    <button pButton icon="pi pi-save" class="p-button" (click)="insertContatto(dettaglio)"></button>
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
+            <div class="p-d-flex p-pb-2">
+              <p-autoComplete id="contatto" #autocompleteContatto [disabled]="disabledContatto" ariaLabel="contatto"
+                [(ngModel)]="selectedContatto" (onSelect)="saveContatto($event)" [suggestions]="filteredContatti"
+                (completeMethod)="searchContatto($event)" field="descrizione" appendTo="body" class="p-pr-3 "
+                dropdown=true placeholder="Cerca contatto..." emptyMessage="Nessun riferimento trovato">
+                <ng-template let-contatto pTemplate="itemContatto">
+                  <div>[{{contatto.descrizione}}] {{contatto.tipo}} {{contatto.categoria}}</div>
+                </ng-template>
+              </p-autoComplete>
+              <button type="button" pButton icon="pi pi-times" class="interaction-button" (click)="removeContatto()"></button>
+            </div>
+
+            <div>
+              <p-table [value]="filteredDettagliContatti" >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Dettagli</th>
+                    <th class="p-col-1"></th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-dettaglio let-i="rowIndex">
+                  <tr>
+                    <td [ngSwitch]="dettaglio.tipo">
+                      <div *ngSwitchCase="'EMAIL'"><i class="pi pi-envelope p-pr-1"></i> {{dettaglio.descrizione}}</div>
+                      <div *ngSwitchCase="'INDIRIZZO_FISICO'"><i class="pi pi-map-marker p-pr-1"></i> {{dettaglio.descrizione}}</div>
+                      <div *ngSwitchCase="'TELEFONO'"><i class="fas fa-phone-alt p-pr-1"></i> {{dettaglio.descrizione}}</div>
+                    </td>
+                    <td class="p-col-1">
+                      <button pButton pTooltip="scegli il dettaglio contatto" icon="pi pi-reply" class="interaction-button" (click)="insertContatto(dettaglio)"></button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+            
           </p-dialog>
         </div>
       </mat-expansion-panel>
@@ -414,8 +425,8 @@
   </ng-template>
 </p-dialog>
 
-<p-dialog header="Dati mancanti" [(visible)]="modalError" [modal]="true" [style]="{width: '50vw'}"
-  [baseZIndex]="100000" [draggable]="false" [resizable]="false" (onHide)="chiudiErrore()">
+<p-dialog header="Dati mancanti" [(visible)]="modalError" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="100000"
+  [draggable]="false" [resizable]="false" (onHide)="chiudiErrore()">
   <b>ATTENZIONE:</b> non sono stai inseriti tutti i dati necessari
   <br>
   <br>
@@ -429,5 +440,5 @@
   <div class="p-d-flex p-jc-end">
     <button pButton class="p-button babel-color" label="Conferma" (click)="chiudiErrore()" icon="pi pi-check"></button>
   </div>
-  
-</p-dialog>  
+
+</p-dialog>
