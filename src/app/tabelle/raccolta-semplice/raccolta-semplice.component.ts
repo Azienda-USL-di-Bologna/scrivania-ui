@@ -76,6 +76,7 @@ export class RaccoltaSempliceComponent implements OnInit {
   public prova: string[];
   public totalRows: number;
   public recordPerPagina:number = 1;
+  public coinvoltiPerPagina:number = 4;
 
   @ViewChild("tableRaccoltaSemplice") private dataTable: Table;
   @ViewChildren("calGenz") public _calGen: QueryList<Calendar>;
