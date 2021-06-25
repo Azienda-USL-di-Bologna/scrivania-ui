@@ -197,9 +197,9 @@ export class InserimentoManualeComponent implements OnInit {
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       this.loggedUser = u;
       this.azienda = u.getUtente().aziendaLogin;
-      this.username = u.getUtente().username;
+      this.username = u.getUtente().fk_idPersona.id.toString();
+      console.log("Utente: ", this.username)
       console.log("Azienda: ",u.getUtente().aziendaLogin);
-      console.log("this.azienda ", this.azienda);
       // la funzione atob server per decodificare la stringa base64 con cui viene passato dataForRubricaInternauta per evitare problemi coi caratteri strambi
       if (!!sessionStorage.getItem("dataForInsertRaccoltaSemplice")) {
         console.log("dataForInsertRaccoltaSemplice trovati");

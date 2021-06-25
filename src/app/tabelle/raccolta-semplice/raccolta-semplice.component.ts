@@ -178,10 +178,13 @@ export class RaccoltaSempliceComponent implements OnInit {
       this.subscriptions.push(
         this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.recordPerPagina, 0)
           .subscribe((res: HttpResponse<Document[]>) => {
-            this.loading = false;
             this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
-            this.totalRows = this.datiDocumenti[0].rows;
+            if(this.datiDocumenti.length > 0)
+              this.totalRows = this.datiDocumenti[0].rows;
+            else
+              this.totalRows = 0;
             console.log("Dati: ", this.datiDocumenti);
+            this.loading = false;
           }, error => {
             console.log("error raccoltaSempliceService.getRaccoltaSemplice", error);
             this.loading = false;     
@@ -382,11 +385,11 @@ export class RaccoltaSempliceComponent implements OnInit {
         this.subscriptions.push(
           this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.recordPerPagina, this.offset)
             .subscribe((res: HttpResponse<Document[]>) => {
-              this.loading = false;
               this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
               console.log("Dati: ", this.datiDocumenti);
               this.filtri = [];
               this.filtriRicerca = [];
+              this.loading = false;
               return; 
             }, error => {
               console.log("error raccoltaSempliceService.getRaccoltaSemplice", error);
@@ -413,16 +416,24 @@ export class RaccoltaSempliceComponent implements OnInit {
 
 
   public sendFilters(offset: number) {
+    this.dataInizio = null;
     this.datiDocumenti = [];
     this.loading = true;
     console.log("Sono nella send filters");
     this.subscriptions.push(
       this.raccoltaSempliceService.ricercaRaccolta(this.filtri, this.filtriRicerca, this.recordPerPagina, offset)
         .subscribe((res: HttpResponse<Document[]>) => {
-          
           this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
-          this.totalRows = this.datiDocumenti[0].rows;
-          this.loading = false;
+          if(this.datiDocumenti.length > 0) {
+            this.totalRows = this.datiDocumenti[0].rows;
+            this.loading = false
+          }
+          else {
+            console.log("Ora non si blocca");
+            this.totalRows = 0;
+            this.loading = false;
+          }
+          ;
         }, error => {
           console.log("error raccoltaSempliceService.ricercaRaccolta", error);
           this.loading = false;     
@@ -431,6 +442,7 @@ export class RaccoltaSempliceComponent implements OnInit {
     )
     this.filtri = [];
     this.filtriRicerca = [];
+    
   }
 
   public downLoadFile(data: any, type: string, filename: string, preview: boolean = false) {

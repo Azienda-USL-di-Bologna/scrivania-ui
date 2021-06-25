@@ -71,6 +71,7 @@ import { DocumentoArgo } from './DocumentoArgo.model';
 
    public createRs(formData: FormData): Observable<any> {
     const options = { 'response-type': 'text'}  
+    console.log("Form Data: ", formData);
     let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.CREATE_RS
     return this.http.post(url, formData, { responseType: 'text'});
    }
