@@ -185,6 +185,7 @@ export class RaccoltaSempliceComponent implements OnInit {
             else
               this.totalRows = 0;
             console.log("Dati: ", this.datiDocumenti);
+            this.totalRecords = this.datiDocumenti.length;
             this.loading = false;
           }, error => {
             console.log("error raccoltaSempliceService.getRaccoltaSemplice", error);
@@ -229,6 +230,7 @@ export class RaccoltaSempliceComponent implements OnInit {
         tableTemp.value = this.datiDocumenti;
         const extractor = new CsvExtractor();
         extractor.exportCsv(tableTemp);
+        console.log(extractor.exportCsv(tableTemp));
         this.exportCsvInProgress = false;
       } catch (e) {
         console.log("exportToCsv error: ", e);
@@ -428,6 +430,7 @@ export class RaccoltaSempliceComponent implements OnInit {
           if(this.datiDocumenti.length > 0) {
             this.totalRows = this.datiDocumenti[0].rows;
             this.loading = false
+            this.totalRecords = this.datiDocumenti.length
           }
           else {
             console.log("Ora non si blocca");
