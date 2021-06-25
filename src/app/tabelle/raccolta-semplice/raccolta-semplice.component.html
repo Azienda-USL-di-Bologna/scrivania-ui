@@ -57,15 +57,15 @@
       <ng-template pTemplate="header" let-columns>
         <tr>
           <th style="width: 5%;"></th>
-          <th *ngFor="let col of columns" [pSortableColumn]="col.field" [pTooltip]="col.label"
+          <th *ngFor="let col of columns"  [pTooltip]="col.label"
           [ngClass]="{'descrizioneStruttura' : 'p-col-2', 'documentoBabel' : 'p-col-1-5', 
             'fascicoli':'p-col-0-5','createTime':'p-col-0-7', 'tipoDocumento':'p-col-0-7'}[col.field]"     
             attr.aria-label="Colonna {{col.label}}, {{col.header ? 'Ordinare colonna' : ''}}">
             {{col.header}}
-            <p-sortIcon [field]="col.field" *ngIf="col.field != undefined"
+            <!-- <p-sortIcon [field]="col.field" *ngIf="col.field != undefined"
               attr.aria-label="Ordinare colonna {{col.label}}" arialabelasc="Ordinamento ascendente"
               arialabeldesc="Ordinamento discendente">
-            </p-sortIcon>
+            </p-sortIcon> -->
           </th>
         </tr>
         <tr>
