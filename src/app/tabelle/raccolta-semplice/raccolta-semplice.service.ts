@@ -56,7 +56,7 @@ import { DocumentoArgo } from './DocumentoArgo.model';
 
     public updateAnnullamento(body: JSON): Observable<any> {
         let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.ANNULLAMENTO_URL;
-        return this.http.post(url, body);
+        return this.http.post(url, body,{ responseType: 'text'});
     }
 
     public getFascicoliArgo(azienda: string, idUtente:string, value: string) : Observable<HttpResponse<FascicoloArgo[]>>{

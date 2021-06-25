@@ -561,7 +561,7 @@ export class RaccoltaSempliceComponent implements OnInit {
                               '", "motivazione":"'+this.testoMotivazione+'", "azienda":"'+this._azienda.codice+'" }';
     let jsonBody = JSON.parse(stringJSON);
     console.log("Body: "+ stringJSON);
-    this.raccoltaSempliceService.updateAnnullamento(jsonBody).subscribe(x=> this.onTableRefresh());
+    this.raccoltaSempliceService.updateAnnullamento(jsonBody).subscribe(() => {console.log("fine update");this.onLoadRaccoltaSemplice()});
     this.display = false;
     this.radioStato = "";
     this.testoMotivazione = "";
