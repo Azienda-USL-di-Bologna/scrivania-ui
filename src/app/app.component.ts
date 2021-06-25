@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone } from "@angular/core";
+import { Component, OnInit, OnDestroy, NgZone, Type } from "@angular/core";
 import { NtJwtLoginService, UtenteUtilities, UtilityFunctions, SessionManager} from "@bds/nt-jwt-login";
 import { SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router } from "@angular/router";
@@ -96,18 +96,18 @@ export class AppComponent implements OnInit, OnDestroy {
 
   }
 
-  showSettings(component, header, width, height, data) {
+  showSettings(component: Type<any>, header: string, width: string, height: string, data: any) {
     const ref = this.dialogService.open(component, {
       data: data,
       header: header,
       width: width,
       styleClass: "dialog-class",
-      contentStyle: {"max-height": "450px", "min-height": "250px", "overflow": "auto", "height": height, }
+      contentStyle: {"max-height": "450px", "min-height": "250px", "overflow": "auto", "height": height }
     });
   }
 
   // crea l'utente a partire dai dati "grezzi" UserInfo della risposta
-  public buildLoggedUser(userInfo: any): Utente {
+  /* public buildLoggedUser(userInfo: any): Utente {
     const loggedUser: Utente = new Utente();
     for (const key in userInfo) {
       if (userInfo.hasOwnProperty(key)) {
@@ -115,7 +115,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     }
     return loggedUser;
-  }
+  } */
 
   ngOnDestroy(): void {
     if (this.subscriptions && this.subscriptions.length > 0) {

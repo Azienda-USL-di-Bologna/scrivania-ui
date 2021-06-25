@@ -1,20 +1,14 @@
-import { Component, OnInit, ViewChild, ViewChildren, ElementRef, QueryList, OnDestroy, HostListener, AfterViewInit } from "@angular/core";
-import { DomSanitizer } from "@angular/platform-browser";
-import { Attivita, Menu, ImpostazioniApplicazioni, UrlsGenerationStrategy, ItemMenu, CommandType, BaseUrls } from "@bds/ng-internauta-model";
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, AfterViewInit } from "@angular/core";
+import { Attivita, UrlsGenerationStrategy, ItemMenu, CommandType } from "@bds/ng-internauta-model";
 import { Dropdown } from "primeng-lts/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
-import { NO_LIMIT, SORT_MODES } from "@bds/nt-communicator";
-import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
-import { PROJECTIONS, MAX_CHARS_100, LOCALHOST_PDD_PORT, COMMANDS, ATTIVITA_STATICHE_DESCRIPTION } from "../../../environments/app-constants";
+import { MAX_CHARS_100 } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
 import { ApplicationCustiomization } from "src/environments/application_customization";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ConfirmationService } from "primeng-lts/api";
-import { stringify } from "querystring";
-import { BaseUrlType, ParametroAziende } from "@bds/ng-internauta-model";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs/internal/Observable";
+import { ParametroAziende } from "@bds/ng-internauta-model";
 import { ConfigurazioneService} from "@bds/ng-internauta-model";
 
 @Component({
