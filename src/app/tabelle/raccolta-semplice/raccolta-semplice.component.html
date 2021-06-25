@@ -22,10 +22,13 @@
         </button>
       </div>
       <h3 class="crono-label">Raccolta Semplice</h3>
+      
       <div class="p-grid p-align-center p-nogutter">
         <lib-aziende-autocomplete [azienda]="_azienda" (aziendaChange)="handleSelectedAziendaEmit($event, 'Azienda')"
           [filterByRole]="true">
         </lib-aziende-autocomplete>
+        <input type="text" pInputText [(ngModel)]="codiceFiscale" placeholder="Codice Fiscale" style="width: 15%;" class="p-mr-1"> 
+        <input type="text" pInputText [(ngModel)]="piva" placeholder="P.IVA" style="width: 15%;" class="p-mr-1">
         <span>Da:</span>
         <p-calendar [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showButtonBar]="true"
           yearRange="1000:4000" [locale]="it" [required]="true" dateFormat="dd/mm/yy" [hideOnDateTimeSelect]="true"
@@ -46,6 +49,12 @@
       </div>
     </div>
 
+    <!-- <div class="p-d-flex p-jc-end">
+      <div class="p-d-flex">
+        <input type="text" pInputText [(ngModel)]="value1" placeholder="Codice Fiscale" class="p-mr-3"> 
+        <input type="text" pInputText [(ngModel)]="value2" placeholder="P.IVA" class="p-ml-3 p-mr-1">
+      </div>
+    </div> -->
 
     <!-- Tabella -->
     <p-table #tableRaccoltaSemplice [value]="datiDocumenti" [lazy]="true" (onLazyLoad)="lazyLoad($event)"
@@ -85,7 +94,13 @@
           </td>
         </tr>
       </ng-template>
-
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td>
+            selezionare i criteri di ricerca per iniziare la consultazione
+          </td>
+        </tr>
+      </ng-template>
       <!--Body tabella-->
       <ng-template pTemplate="body" let-rowRS let-columns="columns">
         <tr>

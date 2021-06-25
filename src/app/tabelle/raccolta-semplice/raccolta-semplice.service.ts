@@ -20,8 +20,10 @@ import { DocumentoArgo } from './DocumentoArgo.model';
   
     constructor(protected http: HttpClient, protected datepipe: DatePipe) {}
 
-    public getRaccoltaSemplice(aziendaCodice: string, dataInizio: string, dataFine: string, limit: number, offeset:number) : Observable<HttpResponse<Document[]>>{
-        let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.GET_DATI_RACCOLTA_SEMPLICE + "?codiceAzienda=" + aziendaCodice+"&from="+dataInizio+"&to="+dataFine+"&limit="+limit+"&offset="+offeset;
+    public getRaccoltaSemplice(aziendaCodice: string, dataInizio: string, dataFine: string, cf:string, piva:string, limit: number, offeset:number) : Observable<HttpResponse<Document[]>>{
+        if (cf==undefined) {cf=null;}
+        if (piva==undefined) {piva=null;}
+        let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.GET_DATI_RACCOLTA_SEMPLICE + "?codiceAzienda=" + aziendaCodice+"&from="+dataInizio+"&to="+dataFine+"&cf="+cf+"&piva="+piva+"&limit="+limit+"&offset="+offeset;
         return this.http.get<Document[]>(url, {responseType: "json", observe: 'response'});
     }
 

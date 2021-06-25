@@ -78,6 +78,9 @@ export class RaccoltaSempliceComponent implements OnInit {
   public recordPerPagina:number = 1;
   public coinvoltiPerPagina:number = 4;
 
+  public codiceFiscale: string;
+  public piva: string;
+
   @ViewChild("tableRaccoltaSemplice") private dataTable: Table;
   @ViewChildren("calGenz") public _calGen: QueryList<Calendar>;
    
@@ -171,13 +174,13 @@ export class RaccoltaSempliceComponent implements OnInit {
     this.datiDocumenti = [];
     this.filtri = [];
     this.filtriRicerca = [];
-    if (!!this._azienda && !!this.dataInizio && this.dataInizio instanceof Date) {
+    if ((!!this._azienda && !!this.dataInizio && this.dataInizio instanceof Date) || (!!this._azienda && (!!this.codiceFiscale || !!this.piva))) {
       this.loading = true;
       if (!(!!this.dataFine && this.dataInizio instanceof Date)) {
         this.dataFine = new Date(this.dataOggi.toDateString());
       }
       this.subscriptions.push(
-        this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.recordPerPagina, 0)
+        this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.codiceFiscale,this.piva,this.recordPerPagina, 0)
           .subscribe((res: HttpResponse<Document[]>) => {
             this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
             if(this.datiDocumenti.length > 0)
@@ -386,7 +389,7 @@ export class RaccoltaSempliceComponent implements OnInit {
         this.loading = true;
         console.log("Sono nell'if");
         this.subscriptions.push(
-          this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.recordPerPagina, this.offset)
+          this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.codiceFiscale, this.piva, this.recordPerPagina, this.offset)
             .subscribe((res: HttpResponse<Document[]>) => {
               this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
               console.log("Dati: ", this.datiDocumenti);
