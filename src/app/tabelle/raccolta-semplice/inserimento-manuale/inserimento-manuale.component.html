@@ -178,11 +178,11 @@
                       styleClass="babel-color">
                       <ng-template pTemplate="content">
                         <p *ngIf="this.uploadedFiles.length<=0" class="content-message">lista file da caricare</p>
-                        <div class="ui-fileupload-row" *ngFor="let file of attachments; let i = index;">
+                        <div class="ui-fileupload-row p-d-flex" *ngFor="let file of attachments; let i = index;">
                           <div>
                             <img [src]="file.objectURL" *ngIf="uploadService.isImage(file)" />
                           </div>
-                          <div class="uploaded-file" (click)="uploadService.downloadFile(attachments, i)">
+                          <div class="uploaded-file p-col-1" (click)="uploadService.downloadFile(attachments, i)">
                             {{file.uploadname}}
                           </div>
                           <div>
@@ -421,7 +421,7 @@
   <p *ngIf="!creazioneInCorso && numerazioneRSCreata===''"><b>Errore nella creazione del documento. Contattare
       babelcare</b> </p>
   <ng-template pTemplate="footer">
-    <p-button icon="pi pi-check" (click)="displayModal=false" label="OK" class="p-button-text"></p-button>
+    <p-button icon="pi pi-check" (click)="closeConfirm()" label="OK" class="p-button-text"></p-button>
   </ng-template>
 </p-dialog>
 

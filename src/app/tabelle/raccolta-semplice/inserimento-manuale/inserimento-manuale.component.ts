@@ -189,6 +189,10 @@ export class InserimentoManualeComponent implements OnInit {
 
   }
 
+  
+  public resetFields(): void {
+
+  }
 
 
   ngOnInit(): void {
@@ -706,6 +710,14 @@ export class InserimentoManualeComponent implements OnInit {
     this.modalError = true;
     this.displayModal = false;
   }
+
+  public closeConfirm() {
+    this.displayModal=false;
+
+    // ricarica la pagina
+    window.location.reload();
+  }
+  
 
   public delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
