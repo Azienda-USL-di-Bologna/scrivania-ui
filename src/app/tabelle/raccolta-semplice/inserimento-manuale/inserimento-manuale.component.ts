@@ -29,6 +29,7 @@ interface ExternalAppDataRS {
   protocollo: string;
   anno: string;
   codiceAzienda: string;
+  fascicoli: string;
 }
 
 interface Registro {
@@ -136,7 +137,7 @@ export class InserimentoManualeComponent implements OnInit {
   public creazioneInCorso: boolean = true;
 
   public username: string;
- 
+
   constructor(private messageService: MessageService,
     private allegatoService: ExtendedAllegatoService,
     private raccoltaService: RaccoltaSempliceService,
@@ -159,7 +160,7 @@ export class InserimentoManualeComponent implements OnInit {
 
     this.disabledDettaglioContatto = true;
     this.disabledContatto = false;
-    
+
 
   }
 
@@ -189,7 +190,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   }
 
-  
+
   public resetFields(): void {
 
   }
@@ -203,7 +204,7 @@ export class InserimentoManualeComponent implements OnInit {
       this.azienda = u.getUtente().aziendaLogin;
       this.username = u.getUtente().username;
       console.log("Utente: ", this.username)
-      console.log("Azienda: ",u.getUtente().aziendaLogin);
+      console.log("Azienda: ", u.getUtente().aziendaLogin);
       // la funzione atob server per decodificare la stringa base64 con cui viene passato dataForRubricaInternauta per evitare problemi coi caratteri strambi
       if (!!sessionStorage.getItem("dataForInsertRaccoltaSemplice")) {
         console.log("dataForInsertRaccoltaSemplice trovati");
@@ -212,22 +213,21 @@ export class InserimentoManualeComponent implements OnInit {
       } else {
         console.log("dataForInsertRaccoltaSemplice NON trovati");
       }
-      } 
-      ))
-      
-      this.raccoltaService.getTipologia(this.azienda.codice).subscribe(tipo => {
-        tipo.body.forEach(elem =>
-          {
-            let select = {label: elem, value: elem}
-            this.tipologieDocumenti$.push(select);
-            
-          })
-      });
+    }
+    ))
+
+    this.raccoltaService.getTipologia(this.azienda.codice).subscribe(tipo => {
+      tipo.body.forEach(elem => {
+        let select = { label: elem, value: elem }
+        this.tipologieDocumenti$.push(select);
+
+      })
+    });
 
 
   }
 
-  public chiudiErrore(){
+  public chiudiErrore() {
     this.modalError = false;
     this.missingData = [];
   }
@@ -238,11 +238,22 @@ export class InserimentoManualeComponent implements OnInit {
     if (this._callerData) {
       const codice: string = "100" + this.azienda.codice;
       const docToSearch = this._callerData.protocollo + "/" + this._callerData.anno;
+
+      if (this._callerData.fascicoli.length > 0 && this.selectedFascicoli.length==0) {
+        for (let i = 0; i < this._callerData.fascicoli.length; i++) {
+          // setta, se ci sono, i fascicoli del documento
+          var fasc: FascicoloArgo = new FascicoloArgo();
+          fasc.numerazioneGerarchica = this._callerData.fascicoli[i];
+          this.selectedFascicoli.push(fasc);
+        }
+      }
+
+
+
       this.raccoltaService.getDocumentiArgo(codice, this.username, 'PG', docToSearch).subscribe(res => {
         this.selectedDoc = res.body[0];
         this.oggetto = this.selectedDoc.oggetto;
-  });
-
+      });
 
       console.log("protocollo: ", this._callerData.protocollo);
       console.log("codiceAzienda: ", this._callerData.codiceAzienda);
@@ -489,7 +500,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   public tornaIndietro() {
     CustomReuseStrategy.componentsReuseList.push("*");
-    this.router.navigate(['../raccoltasemplice'], {relativeTo: this.activatedRoute});
+    this.router.navigate(['../raccoltasemplice'], { relativeTo: this.activatedRoute });
   }
 
   /**
@@ -541,17 +552,17 @@ export class InserimentoManualeComponent implements OnInit {
   }
 
   public loadTipologie(azienda: string): string[] {
-    let tipologie : string[]; 
+    let tipologie: string[];
 
     this.subscriptions.push(this.raccoltaService.getTipologia(this.azienda.codice)
-        .subscribe((res: HttpResponse<string[]>) => {
-          tipologie = res.body;
-          console.log("loadTipo: ", tipologie);
-        }) 
-      )
+      .subscribe((res: HttpResponse<string[]>) => {
+        tipologie = res.body;
+        console.log("loadTipo: ", tipologie);
+      })
+    )
 
-	return tipologie;
-}
+    return tipologie;
+  }
 
   private buildFormData(event: any): FormData {
     this.uploadedFiles = event.files;
@@ -712,12 +723,12 @@ export class InserimentoManualeComponent implements OnInit {
   }
 
   public closeConfirm() {
-    this.displayModal=false;
+    this.displayModal = false;
 
     // ricarica la pagina
     window.location.reload();
   }
-  
+
 
   public delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -725,7 +736,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   public onSubmit() {
 
-    if(!this.check()) {
+    if (!this.check()) {
       this.modalError = true;
       console.log("Sono entrato nell'if");
       return this.showModalError();
@@ -734,31 +745,31 @@ export class InserimentoManualeComponent implements OnInit {
     console.log("Check passato");
     this.creazioneInCorso = true;
     this.showModalDialog();
-    
-    var formData:FormData = this.createFormData();
 
-     this.raccoltaService.createRs(formData).subscribe(
-     response => {
-      console.log("Inizio resp);") 
-      this.creazioneInCorso = false;
-      this.progressBarEnable = false;
-      this.esitoCreazioneRS = "Raccolta Semplice creata con successo";    
-      console.log("Pre response");
-      this. numerazioneRSCreata = response;
-      console.log("Finito tutto"); 
-    },
-     error => {
-       console.log("Sono nell'errore");
-       this.progressBarEnable = false;
-       this.creazioneInCorso = false;
-       this.messageService.add({
-         severity:'error', 
-         summary:'Creazione Raccolta Semplice', 
-         detail:error
-       });
-     });
+    var formData: FormData = this.createFormData();
 
-     console.log("Tutto ok");
+    this.raccoltaService.createRs(formData).subscribe(
+      response => {
+        console.log("Inizio resp);")
+        this.creazioneInCorso = false;
+        this.progressBarEnable = false;
+        this.esitoCreazioneRS = "Raccolta Semplice creata con successo";
+        console.log("Pre response");
+        this.numerazioneRSCreata = response;
+        console.log("Finito tutto");
+      },
+      error => {
+        console.log("Sono nell'errore");
+        this.progressBarEnable = false;
+        this.creazioneInCorso = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Creazione Raccolta Semplice',
+          detail: error
+        });
+      });
+
+    console.log("Tutto ok");
   }
 
   public showModalDialog() {
@@ -782,50 +793,50 @@ export class InserimentoManualeComponent implements OnInit {
   private check(): boolean {
     this.additionalControl = true;
 
-    if(this.oggetto == "" || this.oggetto == undefined) {
+    if (this.oggetto == "" || this.oggetto == undefined) {
       console.log("Oggetto vuoto");
       this.missingData.push("Oggetto vuoto")
       this.additionalControl = false;
     }
 
     if (!this.blockedPanelDoc) {
-      if(this.selectedDoc == undefined) {
+      if (this.selectedDoc == undefined) {
         console.log("Nessun documento selezionato");
         this.missingData.push("Nessun documento selezionato")
         this.additionalControl = false;
       }
     }
 
-    if(this.selectedFascicoli.length == 0) {
+    if (this.selectedFascicoli.length == 0) {
       console.log("Fascicoli vuoti");
       this.missingData.push("Nessun documento fascicolo")
       this.additionalControl = false;
     }
 
-    if(this.selectedTipo == undefined) {
+    if (this.selectedTipo == undefined) {
       console.log("Tipo documento non selezionato");
       this.missingData.push("Tipologia documento non selezionata")
       this.additionalControl = false;
     }
 
-    if(this._strutturaInternautaSelezionata == undefined) {
+    if (this._strutturaInternautaSelezionata == undefined) {
       console.log("Struttura non selezionata");
       this.missingData.push("Nessuna struttura selezionato")
       this.additionalControl = false;
     }
 
-    if(!this.blockedPanelUpload) {
-      if(this.uploadedFiles.length == 0) {
+    if (!this.blockedPanelUpload) {
+      if (this.uploadedFiles.length == 0) {
         console.log("Nessun file caricato");
         this.missingData.push("Nessun file caricato")
         this.additionalControl = false;
       }
     }
 
-    if(this.coinvolti.length == 0) {
+    if (this.coinvolti.length == 0) {
       console.log("Nessuna persona selezionata");
       this.missingData.push("Nessua persona selezionata")
-        this.additionalControl = false;
+      this.additionalControl = false;
     }
 
     return this.additionalControl;
@@ -841,16 +852,16 @@ export class InserimentoManualeComponent implements OnInit {
     formData.append("oggetto", this.oggetto);
 
     if (!this.blockedPanelDoc) {
-        formData.append("numero_documento_origine", this.selectedDoc.numero);
-        formData.append("anno_documento_origine", this.selectedDoc.anno.toString());
-        formData.append("codice_registro_origine", "PG");
-      }
+      formData.append("numero_documento_origine", this.selectedDoc.numero);
+      formData.append("anno_documento_origine", this.selectedDoc.anno.toString());
+      formData.append("codice_registro_origine", "PG");
+    }
 
     var fascicoliStr = this.stringifyFascicoli();
     formData.append("fascicoli_babel", fascicoliStr);
     formData.append("tipo_documento", tipologia);
     formData.append("struttura_responsabile", this._strutturaInternautaSelezionata.id.toString());
-    
+
     if (!this.blockedPanelUpload) {
       for (var file of this.uploadedFiles) {
         formData.append('allegati', file);
