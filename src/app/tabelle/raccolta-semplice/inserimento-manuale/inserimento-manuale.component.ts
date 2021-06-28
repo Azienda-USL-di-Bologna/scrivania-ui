@@ -56,7 +56,7 @@ export class InserimentoManualeComponent implements OnInit {
   public selectedTipoCoinvolto: string;
   public selectedCodiceRegistro: Registro;
 
-  public applicazione: string = 'INTERNAUTA';
+  public applicazione: string = 'ARPAL UMBRIA';
   public _doc: Document;
   public selectedAllegato: Allegato;
   public progress: number = 0;
@@ -197,7 +197,7 @@ export class InserimentoManualeComponent implements OnInit {
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       this.loggedUser = u;
       this.azienda = u.getUtente().aziendaLogin;
-      this.username = u.getUtente().fk_idPersona.id.toString();
+      this.username = u.getUtente().username;
       console.log("Utente: ", this.username)
       console.log("Azienda: ",u.getUtente().aziendaLogin);
       // la funzione atob server per decodificare la stringa base64 con cui viene passato dataForRubricaInternauta per evitare problemi coi caratteri strambi
