@@ -277,7 +277,9 @@ export class InserimentoManualeComponent implements OnInit {
     if (this.selectedTipoCoinvolto === "GIURIDICA" && this.coinvolto.ragioneSociale !== undefined && this.coinvolto.ragioneSociale !== "") {
       this.coinvolto.nomeInterfaccia = this.coinvolto.ragioneSociale;
     } else if (this.coinvolto.nome && this.coinvolto.cognome) {
-      this.coinvolto.nomeInterfaccia = this.coinvolto.descrizione;
+      this.coinvolto.nomeInterfaccia = this.coinvolto.nome + " " + this.coinvolto.cognome;
+    } else if (this.coinvolto.nome) {
+      this.coinvolto.nomeInterfaccia = this.coinvolto.nome;
     } else {
       this.coinvolto.nomeInterfaccia = "";
     }
@@ -328,9 +330,11 @@ export class InserimentoManualeComponent implements OnInit {
 
   deleteCoinvolto(persona: PersonaRS) {
     this.confirmationService.confirm({
-      message: 'Confermare la cancellazione del seguente coinvolto? ' + persona.nomeInterfaccia,
-      header: 'Confirm',
+      message: 'Confermare la cancellazione del seguente coinvolto? <b>' + persona.nomeInterfaccia + '</b>',
+      header: 'Elimina coinvolto',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: "Si",
+      rejectLabel: "Annulla",
       accept: () => {
         this.coinvolti = this.coinvolti.filter(val => val.id !== persona.id);
         this.coinvolto = new PersonaRS();
