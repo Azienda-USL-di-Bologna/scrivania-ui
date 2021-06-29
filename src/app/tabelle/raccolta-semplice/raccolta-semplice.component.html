@@ -111,7 +111,7 @@
           </td>
           <td *ngFor="let col of columns" [style.textAlign]="col.textAlign" [pTooltip]="col.label" [ngClass]="{'descrizioneStruttura' : 'p-col-2', 'documentoBabel' : 'p-col-1-5', 
           'createTime':'p-col-0-7', 'fascicoli':'p-col-0-5', 'tipoDocumento':'p-col-0-7'}[col.field]" class="text-content">
-            <div *ngIf="col.field !== 'stato'">
+            <div *ngIf="col.field !== 'stato' && col.field !== 'createTime'">
               {{rowRS[col.field]}}
             </div>
             <div *ngIf="col.field == 'stato'">
@@ -119,6 +119,9 @@
                 class="grid-button-success" (click)="openModal(rowRS.id)"></button>
               <button pButton *ngIf="rowRS[col.field]==='ANNULLATO'" type="button" label={{rowRS[col.field]}}
                 class=" grid-button-warning" (click)="openModal(rowRS.id)"></button>
+            </div>
+            <div *ngIf="col.field == 'createTime'">
+              {{rowRS[col.field] | date: 'dd/MM/yyyy'}}
             </div>
           </td>
         </tr>
