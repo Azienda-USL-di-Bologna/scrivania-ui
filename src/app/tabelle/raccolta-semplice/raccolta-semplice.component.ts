@@ -298,6 +298,20 @@ export class RaccoltaSempliceComponent implements OnInit {
     this.untouched = true;
     this.offset = (event.first / event.rows) * this.recordPerPagina;
 
+    if(this.codiceFiscale != undefined) {
+      this.filtri.push(this.codiceFiscale.trim());
+      this.filtriRicerca.push("cf");
+      console.log("Inserito il codice fiscale");
+      this.untouched = false;
+    }
+
+    if(this.piva != undefined) {
+      this.filtri.push(this.piva.trim())
+      this.filtriRicerca.push("piva");
+      console.log("Ho inserito la piva")
+      this.untouched = false;
+    }
+
     if(event.filters.codice?.value != undefined) {
       this.filtri.push(this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'));
       this.filtriRicerca.push("numero");
