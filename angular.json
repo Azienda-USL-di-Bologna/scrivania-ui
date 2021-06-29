@@ -50,7 +50,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
@@ -80,9 +80,9 @@
             },
             "development": {
               "browserTarget": "Babel-internauta:build:development"
-            },
-            "defaultConfiguration": "development"
-          }
+            }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
