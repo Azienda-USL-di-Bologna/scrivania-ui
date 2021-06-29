@@ -11,7 +11,12 @@
       "sourceRoot": "src",
       "projectType": "application",
       "prefix": "app",
-      "schematics": {},
+      "schematics": {
+        "schematics": {
+          "@schematics/angular:component": {
+            "style": "scss"
+          }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -44,15 +49,24 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -62,7 +76,11 @@
           "configurations": {
             "production": {
               "browserTarget": "Babel-internauta:build:production"
-            }
+            },
+            "development": {
+              "browserTarget": "Babel-internauta:build:development"
+            },
+            "defaultConfiguration": "development"
           }
         },
         "extract-i18n": {
