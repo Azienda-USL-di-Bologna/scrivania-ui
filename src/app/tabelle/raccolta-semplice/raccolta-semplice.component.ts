@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { HttpResponse } from '@angular/common/http';
 import { Component, ElementRef, Inject, Input, OnInit, QueryList, ViewChild,  ViewChildren } from '@angular/core';
 import { Azienda } from '@bds/ng-internauta-model';
-import { CustomReuseStrategy, LOCAL_IT } from '@bds/nt-communicator';
+import { LOCAL_IT } from '@bds/nt-communicator';
 import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
 import { FILTER_TYPES } from '@nfa/next-sdr';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -11,14 +11,10 @@ import { Document } from './documento.model';
 import { Table } from 'primeng/table';
 import { CsvExtractor } from '@bds/primeng-plugin';
 import { Calendar } from 'primeng/calendar';
-import { FilterUtils } from "primeng/utils";
+import { FilterService } from "primeng/api";
 import { Storico } from './dettaglio-annullamento/modal/storico';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { getSupportedInputTypes } from '@angular/cdk/platform';
 import { LazyLoadEvent } from 'primeng/api';
-import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
-import { eventNames } from 'process';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -32,7 +28,8 @@ export class RaccoltaSempliceComponent implements OnInit {
     private datePipe: DatePipe, 
     private formBuilder: FormBuilder,
     private router: Router,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute,
+    private filterService: FilterService) { }
 
   _azienda: Azienda;
   @Input() set azienda(aziendaValue: Azienda) {
@@ -425,7 +422,7 @@ export class RaccoltaSempliceComponent implements OnInit {
         this.sendFilters(this.offset);
   }
 
-  private download(idSottodocumento: string, name: string, mimetype: string): void {
+  public download(idSottodocumento: string, name: string, mimetype: string): void {
     let index = mimetype.indexOf("/");
     let extension = mimetype.substr(index + 1);
     let fileName = name + "." + extension;
@@ -544,7 +541,7 @@ export class RaccoltaSempliceComponent implements OnInit {
       this.azienda = u.getUtente().aziendaLogin;
       console.log("Azienda: ",u.getUtente());
     }));
-    FilterUtils['dateRangeFilter'] = (value: Date, filter: [Date, Date]): boolean => {
+    this.filterService.register("dateRangeFilter",(value: Date, filter: [Date, Date]): boolean => {
       var v = new Date(value);
       // get the from/start value
       var s = filter[0].getTime();
@@ -559,7 +556,7 @@ export class RaccoltaSempliceComponent implements OnInit {
       }
       // compare it to the actual values
       return v.getTime() >= s && v.getTime() <= e;
-    }
+    });
   }
 
   onHide() : void {

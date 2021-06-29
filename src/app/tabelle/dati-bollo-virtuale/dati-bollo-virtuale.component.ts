@@ -12,7 +12,7 @@ import { Table } from 'primeng/table';
 import { CsvExtractor } from '@bds/primeng-plugin';
 import { LOCAL_IT } from '@bds/nt-communicator';
 import { Calendar } from 'primeng/calendar';
-import { FilterUtils } from "primeng/utils";
+import { FilterService } from "primeng/api";
 
 @Component({
   selector: 'app-dati-bollo-virtuale',
@@ -147,7 +147,11 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
     }
   ];
 
-  constructor(private bolloVirtualeService: BolloVirtualeService, private loginService: NtJwtLoginService, private datePipe: DatePipe) { }
+  constructor(
+      private bolloVirtualeService: BolloVirtualeService, 
+      private loginService: NtJwtLoginService, 
+      private datePipe: DatePipe,
+      private filterService: FilterService) { }
 
   ngOnInit() {
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
@@ -155,7 +159,8 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       this.azienda = u.getUtente().aziendaLogin;
       console.log("Azienda: ",u.getUtente());
     }));
-    FilterUtils['dateRangeFilter'] = (value: Date, filter: [Date, Date]): boolean => {
+    
+    this.filterService.register("dateRangeFilter", (value: Date, filter: [Date, Date]): boolean => {
       var v = new Date(value);
       // get the from/start value
       var s = filter[0].getTime();
@@ -170,7 +175,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       }
       // compare it to the actual values
       return v.getTime() >= s && v.getTime() <= e;
-    }
+    });
   }
 
   handleSelectedAziendaEmit(event: Azienda, type: string) {

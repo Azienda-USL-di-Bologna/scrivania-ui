@@ -77,7 +77,7 @@
               <p-autoComplete id="fascicoli" #autocompleteFascicoli ariaLabel="fascicoli"
                 [(ngModel)]="selectedFascicolo" (onSelect)="saveFascicolo($event)" [suggestions]="filteredFascicoli"
                 (completeMethod)="searchFascicolo($event)" field="nomeFascicolo" appendTo="body" class="p-col"
-                dropdown=true placeholder="Cerca fascicolo..." emptyMessage="Nessun riferimento trovato">
+                [dropdown]=true placeholder="Cerca fascicolo..." emptyMessage="Nessun riferimento trovato">
                 <ng-template let-fascicolo pTemplate="item">
                   <div>[{{fascicolo.numerazioneGerarchica}}] {{fascicolo.nomeFascicolo}}</div>
                 </ng-template>
@@ -151,7 +151,7 @@
                   <div class="p-field">
                     <p-autoComplete id="docbabel" #autocompletedocbabel ariaLabel="docbabel" [(ngModel)]="selectedDoc"
                       (onSelect)="saveDocBabel($event)" [suggestions]="filteredDocs"
-                      (completeMethod)="searchDocBabel($event)" field="codiceBabel" appendTo="body" dropdown=true
+                      (completeMethod)="searchDocBabel($event)" field="codiceBabel" appendTo="body" [dropdown]=true
                       (onClear)="onClear()" type="search" placeholder="Cerca documento..."
                       emptyMessage="Nessun riferimento trovato">
                       <ng-template let-documento pTemplate="item">
@@ -172,11 +172,12 @@
               <p-panel #pnlup header="Upload dei file">
                 <form>
                   <div class="form-group">
-                    <p-fileUpload #fileInput name="file" multiple="multiple" [showUploadButton]="false"
-                      [showCancelButton]="false" maxFileSize="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf"
+                    <p-fileUpload #fileInput name="file" [multiple]="true" [showUploadButton]="false"
+                      [showCancelButton]="false" [maxFileSize]="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf"
                       chooseLabel="Importa" (onSelect)="onSelect($event)" (onRemove)="onRemove($event)"
                       styleClass="babel-color">
-                      <ng-template pTemplate="content">
+                      <!-- Hola Umbria! Qui usate gli attachments. la la proprità non esiste -->
+                      <!-- <ng-template pTemplate="content">
                         <p *ngIf="this.uploadedFiles.length<=0" class="content-message">lista file da caricare</p>
                         <div class="ui-fileupload-row p-d-flex" *ngFor="let file of attachments; let i = index;">
                           <div>
@@ -190,7 +191,7 @@
                               (click)="deleteFile(attachments, i)">Delete</button>
                           </div>
                         </div>
-                      </ng-template>
+                      </ng-template> -->
                     </p-fileUpload>
                   </div>
                 </form>
@@ -370,7 +371,7 @@
               <p-autoComplete id="contatto" #autocompleteContatto [disabled]="disabledContatto" ariaLabel="contatto"
                 [(ngModel)]="selectedContatto" (onSelect)="saveContatto($event)" [suggestions]="filteredContatti"
                 (completeMethod)="searchContatto($event)" field="descrizione" appendTo="body" class="p-pr-3 "
-                dropdown=true placeholder="Cerca contatto..." emptyMessage="Nessun riferimento trovato">
+                [dropdown]=true placeholder="Cerca contatto..." emptyMessage="Nessun riferimento trovato">
                 <ng-template let-contatto pTemplate="itemContatto">
                   <div>[{{contatto.descrizione}}] {{contatto.tipo}} {{contatto.categoria}}</div>
                 </ng-template>

@@ -88,8 +88,8 @@
                 [readonlyInput]="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
               </p-calendar>
               <input pInputText *ngSwitchDefault attr.aria-label="Cella filtro per colonna {{col.label}}" type="text"
-                (input)="tableRaccoltaSemplice.filter($event.target.value, col.field, col.filterMatchMode.value)"
-                #filterInputText [ngModel]="prova" [disabled]="loading">
+                (input)="tableRaccoltaSemplice.filter($event.target['value'], col.field, col.filterMatchMode.value)"
+                #filterInputText [ngModel]="prova" [disabled]="loading"><!-- Hola Umbria! Qui c'era  $event.target.value e ho messo $event.target['value'] se value esiste non ci sono problemi. Se non esiste.. problemi :) -->
             </div>
           </td>
         </tr>
@@ -105,9 +105,13 @@
       <ng-template pTemplate="body" let-rowRS let-columns="columns">
         <tr>
           <td style="width: 5%;">
-            <button type="button" pButton pRipple [pRowToggler]="rowRS"
+            <button 
+              type="button" 
+              pButton pRipple 
+              [pRowToggler]="rowRS"
               class="p-button-text p-button-rounded p-button-plain"
-              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+              ><!-- Hola Umbria: Qui avete messo [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'", ma expanded che proprietà sarebbe? -->
+            </button>
           </td>
           <td *ngFor="let col of columns" [style.textAlign]="col.textAlign" [pTooltip]="col.label" [ngClass]="{'descrizioneStruttura' : 'p-col-2', 'documentoBabel' : 'p-col-1-5', 
           'createTime':'p-col-0-7', 'fascicoli':'p-col-0-5', 'tipoDocumento':'p-col-0-7'}[col.field]">
@@ -150,14 +154,14 @@
       </ng-template>
       <ng-template pTemplate="body" let-dettaglio>
         <tr>
-          <td [style.overflow]="auto">{{dettaglio.descrizione}}</td>
-          <td [style.overflow]="auto">{{dettaglio.cf}}</td>
-          <td [style.overflow]="auto">{{dettaglio.piva}}</td>
-          <td [style.overflow]="auto">{{dettaglio.tipo}}</td>
-          <td [style.overflow]="auto">{{dettaglio.mail}}</td>
-          <td [style.overflow]="auto">{{dettaglio.via + " " + dettaglio.civico + " " + dettaglio.comune + " " +
+          <td [style.overflow]="'auto'">{{dettaglio.descrizione}}</td>
+          <td [style.overflow]="'auto'">{{dettaglio.cf}}</td>
+          <td [style.overflow]="'auto'">{{dettaglio.piva}}</td>
+          <td [style.overflow]="'auto'">{{dettaglio.tipo}}</td>
+          <td [style.overflow]="'auto'">{{dettaglio.mail}}</td>
+          <td [style.overflow]="'auto'">{{dettaglio.via + " " + dettaglio.civico + " " + dettaglio.comune + " " +
             dettaglio.cap + " " + dettaglio.provincia + " " + dettaglio.nazione}}</td>
-          <td [style.overflow]="auto">{{dettaglio.telefono}}</td>
+          <td [style.overflow]="'auto'">{{dettaglio.telefono}}</td>
         </tr>
       </ng-template>
     </p-table>
@@ -183,10 +187,14 @@
           <td>{{sottodocumento.nome}}</td>
           <td>{{sottodocumento.nomeOriginale}}</td>
           <td>{{sottodocumento.mimeTypeOriginale}}</td>
-          <td class="p-col-1 p-text-center"> <button pButton type="button" (click)="download(sottodocumento.guidSottodocumento, 
-                                          sottodocumento.nomeOriginale, sottodocumento.mimeTypeOriginale)"
-              iconPos="center" icon="pi pi-download"></button>
-          </td>
+          <td class="p-col-1 p-text-center"> 
+            <button 
+              pButton 
+              type="button" 
+              (click)="download(sottodocumento.guidSottodocumento, sottodocumento.nomeOriginale, sottodocumento.mimeTypeOriginale)"
+              icon="pi pi-download">
+            </button>
+          </td> <!-- Hola Umbria! Vi ho tolto questo  iconPos="center" perché center non lo potete usare. le opzioni sono:  '"left" | "right" | "top" | "bottom"' -->
         </tr>
       </ng-template>
     </p-table>
