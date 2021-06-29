@@ -8,17 +8,14 @@ import { FILTER_TYPES } from '@nfa/next-sdr';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { RaccoltaSempliceService } from './raccolta-semplice.service';
 import { Document } from './documento.model';
-import { Table } from 'primeng-lts/table';
+import { Table } from 'primeng/table';
 import { CsvExtractor } from '@bds/primeng-plugin';
-import { Calendar } from 'primeng-lts/calendar';
-import { FilterUtils } from "primeng-lts/utils";
+import { Calendar } from 'primeng/calendar';
+import { FilterService } from "primeng/api";
 import { Storico } from './dettaglio-annullamento/modal/storico';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { getSupportedInputTypes } from '@angular/cdk/platform';
-import { LazyLoadEvent } from 'primeng-lts/api';
-import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
-import { eventNames } from 'process';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { LazyLoadEvent } from 'primeng/api';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-raccolta-semplice',
@@ -26,7 +23,13 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   styleUrls: ['./raccolta-semplice.component.css']
 })
 export class RaccoltaSempliceComponent implements OnInit {
-  constructor(private raccoltaSempliceService: RaccoltaSempliceService, private loginService: NtJwtLoginService, private datePipe: DatePipe, private formBuilder: FormBuilder) { }
+  constructor(private raccoltaSempliceService: RaccoltaSempliceService, 
+    private loginService: NtJwtLoginService, 
+    private datePipe: DatePipe, 
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private filterService: FilterService) { }
 
   _azienda: Azienda;
   @Input() set azienda(aziendaValue: Azienda) {
@@ -49,13 +52,12 @@ export class RaccoltaSempliceComponent implements OnInit {
   public mostra = false;
   public dataRange: Date[] = [];
   public datiDocumenti: Document[] = [];
-  public prova: Document[] = [];
   public loading: boolean = false;
   public _rows = 20;
   public subscriptions: Subscription[]=[];
   public loggedUser: UtenteUtilities;
   public exportCsvInProgress: boolean = false;
-  public totalRecords: number = 0;
+  public totalRecords: number = this.datiDocumenti.length;
   public it = LOCAL_IT;
   public dataOggi: Date = new Date();
   public dataInizio: Date = null;
@@ -66,9 +68,18 @@ export class RaccoltaSempliceComponent implements OnInit {
   public filtri: string[] = [];
   public filtriRicerca: string[] = [];
   public untouched: boolean;
+  public newDate: string;
+  public offset: number;
+  public prova: string[];
+  public totalRows: number;
+  public recordPerPagina:number = 1;
+  public coinvoltiPerPagina:number = 4;
+
+  public codiceFiscale: string;
+  public piva: string;
 
   @ViewChild("tableRaccoltaSemplice") private dataTable: Table;
-  @ViewChildren("calGenz") private _calGen: QueryList<Calendar>;
+  @ViewChildren("calGenz") public _calGen: QueryList<Calendar>;
    
 
 
@@ -79,23 +90,11 @@ export class RaccoltaSempliceComponent implements OnInit {
   ]
 
 
-  public ricerca: any[] = [
-    {
-      field: "codice"
-    },
-    {
-      field: "createTime"
-    }
-  ]
-    
-
-
 
   public cols: any[] = [
     {
       field: "codice",
       header: "Numero",
-      width: "100px",
       label: "Numero Raccolta Semplice",
       textAlign: "center",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
@@ -103,18 +102,16 @@ export class RaccoltaSempliceComponent implements OnInit {
     {
       field: "createTime",
       header: "Registrazione",
-      width: "122px",
-      filterMatchMode: FILTER_TYPES.not_string.equals,
+      filterMatchMode: '',
       label: "Data registrazione",
       filterWidget: "Calendar",
-      fieldType: "DateTime",
+      fieldType: "'DateTime'",
       textAlign:"center"
     },
     {
       field: "applicazioneChiamante",
       header: "Applicazione",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "200px",
       label: "Applicazione del documento",
       textAlign:"center"
     },
@@ -122,7 +119,6 @@ export class RaccoltaSempliceComponent implements OnInit {
       field: "tipoDocumento",
       header: "Tipo documento",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "150px",
       label: "Tipo del documento",
       textAlign:"center"
     },
@@ -131,7 +127,6 @@ export class RaccoltaSempliceComponent implements OnInit {
       header: "Oggetto",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       label: "Oggetto del documento",
-      width: "150px",
       textAlign:"center"
     },
     {
@@ -139,15 +134,12 @@ export class RaccoltaSempliceComponent implements OnInit {
       header: "Fascicoli",
       label: "Fascicoli associati al documento",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "200px",
-      height: "100%",
       textAlign:"center"
     },
     {
       field: "documentoBabel",
       header: "Documento Babel",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "200px",
       label: "Documento Babel",
       textAlign:"center"
     },
@@ -155,15 +147,13 @@ export class RaccoltaSempliceComponent implements OnInit {
       field: "creatore",
       header: "Creatore",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "200px",
       label: "Creatore del documento ",
       textAlign:"center"
     },
     {
       field: "descrizioneStruttura",
-      header: "Struttura ",
+      header: "Struttura",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "200px",
       label: "Struttura del creatore ",
       textAlign:"center"
     },
@@ -171,24 +161,32 @@ export class RaccoltaSempliceComponent implements OnInit {
       field: "stato",
       header: "Azione",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "122px",
       label: "Azione",
       textAlign:"center"
     }
   ];
 
   onLoadRaccoltaSemplice() {
+    this.prova = [];
     this.datiDocumenti = [];
-    if (!!this._azienda && !!this.dataInizio && this.dataInizio instanceof Date) {
+    this.filtri = [];
+    this.filtriRicerca = [];
+    if ((!!this._azienda && !!this.dataInizio && this.dataInizio instanceof Date) || (!!this._azienda && (!!this.codiceFiscale || !!this.piva))) {
       this.loading = true;
       if (!(!!this.dataFine && this.dataInizio instanceof Date)) {
         this.dataFine = new Date(this.dataOggi.toDateString());
       }
       this.subscriptions.push(
-        this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'))
+        this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.codiceFiscale,this.piva,this.recordPerPagina, 0)
           .subscribe((res: HttpResponse<Document[]>) => {
-            this.loading = false;
             this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
+            if(this.datiDocumenti.length > 0)
+              this.totalRows = this.datiDocumenti[0].rows;
+            else
+              this.totalRows = 0;
+            console.log("Dati: ", this.datiDocumenti);
+            this.totalRecords = this.datiDocumenti.length;
+            this.loading = false;
           }, error => {
             console.log("error raccoltaSempliceService.getRaccoltaSemplice", error);
             this.loading = false;     
@@ -198,6 +196,10 @@ export class RaccoltaSempliceComponent implements OnInit {
     }
 
     this.mostra = true;
+  }
+
+  public openInsert() {
+    this.router.navigate(['../inserimento'], {relativeTo: this.activatedRoute});
   }
 
   handleSelectedAziendaEmit(event: Azienda, type: string) {
@@ -228,6 +230,7 @@ export class RaccoltaSempliceComponent implements OnInit {
         tableTemp.value = this.datiDocumenti;
         const extractor = new CsvExtractor();
         extractor.exportCsv(tableTemp);
+        console.log(extractor.exportCsv(tableTemp));
         this.exportCsvInProgress = false;
       } catch (e) {
         console.log("exportToCsv error: ", e);
@@ -240,6 +243,8 @@ export class RaccoltaSempliceComponent implements OnInit {
     let calSel: Calendar = null;
     switch (action) {
       case "today":
+        this.newDate = event.toLocaleDateString();
+        console.log("NewDate:", this.newDate);
         calSel = this._calGen.find(e => e.inputId === "CalInput_" + field);
         if (calSel) {
           calSel.overlayVisible = false;
@@ -252,6 +257,9 @@ export class RaccoltaSempliceComponent implements OnInit {
 
       case "select":
         if (this._calGen) {
+          
+          this.newDate = event.toLocaleDateString();
+          console.log("NewDate:", this.newDate);
           calSel = this._calGen.find(a => a.inputId === "CalInput_" + field);
           if (calSel && this.dataRange && this.dataRange[field].length === 2
             && this.dataRange[field][0] && this.dataRange[field][1]) {
@@ -282,24 +290,32 @@ export class RaccoltaSempliceComponent implements OnInit {
   }
 
   public lazyLoad(event: LazyLoadEvent) {
-
-
-    const functionName = "lazyLoad";
-
+    console.log("Evento: ", event);
+    console.log("Filtri count:", event.filters.length)
     this.untouched = true;
+    this.offset = (event.first / event.rows) * this.recordPerPagina;
 
-    console.log(functionName, "event: ", event);
+    if(this.codiceFiscale != undefined) {
+      this.filtri.push(this.codiceFiscale.trim());
+      this.filtriRicerca.push("cf");
+      console.log("Inserito il codice fiscale");
+      this.untouched = false;
+    }
 
-    console.log("Filtro numero: "+ event.filters.numero?.value.toString());
+    if(this.piva != undefined) {
+      this.filtri.push(this.piva.trim())
+      this.filtriRicerca.push("piva");
+      console.log("Ho inserito la piva")
+      this.untouched = false;
+    }
+
     if(event.filters.codice?.value != undefined) {
-      this.filtri.push(event.filters.codice?.value.toString());
+      this.filtri.push(this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'));
       this.filtriRicerca.push("numero");
       console.log("Inserimento: "+ this.filtri.length);
       this.untouched = false;
     }
 
-
-    //console.log("Filtro applicazione: " + event.filters.applicazioneChiamante?.value.toString());
     if(event.filters.applicazioneChiamante?.value != undefined) {
       this.filtri.push(event.filters.applicazioneChiamante?.value.toString());
       this.filtriRicerca.push("applicazioneChiamante");
@@ -307,10 +323,18 @@ export class RaccoltaSempliceComponent implements OnInit {
       this.untouched = false;
     }
 
+    if(event.filters.createTime?.value != undefined) {
+      this.filtri.push(this.newDate);
+      this.filtriRicerca.push("createTime");
+      console.log("Inserimento: "+ this.filtri.length);
+      this.untouched = false;
+    }
 
 
-    //console.log("Filtro oggetto: " + event.filters.oggetto?.value);
+
+    
     if(event.filters.oggetto?.value != undefined) {
+      console.log("Filtro oggetto: " + event.filters.oggetto?.value);
       this.filtri.push(event.filters.oggetto?.value.toString());
       this.filtriRicerca.push("oggetto")
       console.log("Inserimento: "+ this.filtri.length);
@@ -318,8 +342,9 @@ export class RaccoltaSempliceComponent implements OnInit {
     }
 
 
-      //console.log("Filtro creatore: " + event.filters.creatore?.value);
+      //
       if(event.filters.creatore?.value != undefined) {
+        console.log("Filtro creatore: " + event.filters.creatore?.value);
         this.filtri.push(event.filters.creatore?.value.toString());
         this.filtriRicerca.push("creatore");
         console.log("Inserimento: "+ this.filtri.length);
@@ -327,56 +352,77 @@ export class RaccoltaSempliceComponent implements OnInit {
       }
 
       
-      //console.log("Filtro registrazione" + event.filters.registrazione?.value);
+      //
       if(event.filters.registrazione?.value != undefined) {
+        console.log("Filtro registrazione" + event.filters.registrazione?.value);
         this.filtri.push(event.filters.registrazione?.value.toString());
         console.log("Inserimento: "+ this.filtri.length);
         this.untouched = false;
       }
 
-     // console.log("Tipo documento: " + event.filters.tipoDocumento?.value);
+     // 
       if(event.filters.tipoDocumento?.value != undefined) {
+        console.log("Tipo documento: " + event.filters.tipoDocumento?.value);
         this.filtri.push(event.filters.tipoDocumento?.value.toString());
         this.filtriRicerca.push("tipoDocumento");
         console.log("Inserimento: "+ this.filtri.length);
         this.untouched = false;
       }
 
-      //console.log("Fascicoli: " + event.filters.fascicoli?.value);
+      //
       if(event.filters.fascicoli?.value != undefined) {
+        console.log("Fascicoli: " + event.filters.fascicoli?.value);
         this.filtri.push(event.filters.fascicoli?.value.toString());
         this.filtriRicerca.push("fascicoli");
         console.log("Inserimento: "+ this.filtri.length);
         this.untouched = false;
       }
 
-      //console.log("Documento Babel: " + event.filters.documentoBabel?.value);
+      //
       if(event.filters.documentoBabel?.value != undefined) {
+        console.log("Documento Babel: " + event.filters.documentoBabel?.value);
         this.filtriRicerca.push("documentoBabel");
         this.filtri.push(event.filters.documentoBabel?.value.toString());
         console.log("Inserimento: "+ this.filtri.length);
         this.untouched = false;
       }
 
-      //console.log("Struttura: " + event.filters.descrizioneStruttura?.value);
+      //
       if(event.filters.descrizioneStruttura?.value != undefined) {
+        console.log("Struttura: " + event.filters.descrizioneStruttura?.value);
         this.filtriRicerca.push("struttura");
         this.filtri.push(event.filters.descrizioneStruttura?.value.toString());
         console.log("Inserimento: "+ this.filtri.length);
         this.untouched = false;
       }
-      if(this.untouched)
-        return;
 
-      this.sendFilters();
-      console.log("Filtri: "+ this.filtri);
-      console.log("Campi: " + this.filtriRicerca);
-      this.filtri = [];
-      this.filtriRicerca = [];
-      console.log("Svuoto i filtri");  
+      if(this.untouched) {
+        this.loading = true;
+        console.log("Sono nell'if");
+        this.subscriptions.push(
+          this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.codiceFiscale, this.piva, this.recordPerPagina, this.offset)
+            .subscribe((res: HttpResponse<Document[]>) => {
+              this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
+              console.log("Dati: ", this.datiDocumenti);
+              this.filtri = [];
+              this.filtriRicerca = [];
+              this.loading = false;
+              return; 
+            }, error => {
+              console.log("error raccoltaSempliceService.getRaccoltaSemplice", error);
+              this.loading = false;
+              this.filtri = [];
+              this.filtriRicerca = [];
+              return;     
+            }
+          )
+        )
+      }
+      else
+        this.sendFilters(this.offset);
   }
 
-  private download(idSottodocumento: string, name: string, mimetype: string): void {
+  public download(idSottodocumento: string, name: string, mimetype: string): void {
     let index = mimetype.indexOf("/");
     let extension = mimetype.substr(index + 1);
     let fileName = name + "." + extension;
@@ -386,22 +432,35 @@ export class RaccoltaSempliceComponent implements OnInit {
 }
 
 
-  public sendFilters() {
+  public sendFilters(offset: number) {
+    this.dataInizio = null;
     this.datiDocumenti = [];
     this.loading = true;
     console.log("Sono nella send filters");
     this.subscriptions.push(
-      this.raccoltaSempliceService.ricercaRaccolta(this.filtri, this.filtriRicerca)
+      this.raccoltaSempliceService.ricercaRaccolta(this.filtri, this.filtriRicerca, this.recordPerPagina, offset)
         .subscribe((res: HttpResponse<Document[]>) => {
-          
           this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
-          this.loading = false;
+          if(this.datiDocumenti.length > 0) {
+            this.totalRows = this.datiDocumenti[0].rows;
+            this.loading = false
+            this.totalRecords = this.datiDocumenti.length
+          }
+          else {
+            console.log("Ora non si blocca");
+            this.totalRows = 0;
+            this.loading = false;
+          }
+          ;
         }, error => {
           console.log("error raccoltaSempliceService.ricercaRaccolta", error);
           this.loading = false;     
         }
       )
     )
+    this.filtri = [];
+    this.filtriRicerca = [];
+    
   }
 
   public downLoadFile(data: any, type: string, filename: string, preview: boolean = false) {
@@ -475,12 +534,14 @@ export class RaccoltaSempliceComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.recordPerPagina = 10;
+
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       this.loggedUser = u;
       this.azienda = u.getUtente().aziendaLogin;
       console.log("Azienda: ",u.getUtente());
     }));
-    FilterUtils['dateRangeFilter'] = (value: Date, filter: [Date, Date]): boolean => {
+    this.filterService.register("dateRangeFilter",(value: Date, filter: [Date, Date]): boolean => {
       var v = new Date(value);
       // get the from/start value
       var s = filter[0].getTime();
@@ -495,7 +556,7 @@ export class RaccoltaSempliceComponent implements OnInit {
       }
       // compare it to the actual values
       return v.getTime() >= s && v.getTime() <= e;
-    }
+    });
   }
 
   onHide() : void {
@@ -518,7 +579,7 @@ export class RaccoltaSempliceComponent implements OnInit {
                               '", "motivazione":"'+this.testoMotivazione+'", "azienda":"'+this._azienda.codice+'" }';
     let jsonBody = JSON.parse(stringJSON);
     console.log("Body: "+ stringJSON);
-    this.raccoltaSempliceService.updateAnnullamento(jsonBody);
+    this.raccoltaSempliceService.updateAnnullamento(jsonBody).subscribe(() => {console.log("fine update");this.onLoadRaccoltaSemplice()});
     this.display = false;
     this.radioStato = "";
     this.testoMotivazione = "";

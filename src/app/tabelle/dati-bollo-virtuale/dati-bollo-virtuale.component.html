@@ -158,7 +158,7 @@
                               (onTodayClick)="onCalendarAction($event, col.field, 'today')"
                               appendTo="body" 
                               selectionMode="range" 
-                              readonlyInput="true" 
+                              [readonlyInput]="true" 
                               [pTooltip]="calendarTooltip(col.field)" 
                               inputId="CalInput_{{col.field}}"> 
                             </p-calendar>

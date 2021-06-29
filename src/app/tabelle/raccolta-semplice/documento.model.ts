@@ -23,4 +23,5 @@ export class Document {
     public coinvolti: PersonaRS[] = [];
     public sottodocumenti: Sottodocumento[] = [];
     public allegati: Allegato[];
+    public rows: number;
 }

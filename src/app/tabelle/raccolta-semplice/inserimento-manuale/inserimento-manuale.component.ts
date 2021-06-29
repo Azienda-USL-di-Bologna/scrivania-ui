@@ -1,22 +1,24 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Document } from '../documento.model';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Allegato } from './allegato';
 import { DettaglioAllegato } from './dettaglio-allegato';
-import { FileUpload } from 'primeng-lts/fileupload';
-import { ConfirmationService, MessageService, SelectItem } from 'primeng-lts/api';
+import { FileUpload } from 'primeng/fileupload';
+import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { ExtendedAllegatoService } from './extended-allegato.service';
-import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
-import { UtilityFunctions } from '@bds/nt-communicator';
+import { HttpClient, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
+import { CustomReuseStrategy, UtilityFunctions } from '@bds/nt-communicator';
 import { BatchOperation, BatchOperationTypes, FilterDefinition, FiltersAndSorts, FILTER_TYPES, NextSdrEntity, SortDefinition, SORT_MODES } from '@nfa/next-sdr';
 import { Azienda, BaseUrls, BaseUrlType, Contatto, ContattoService, DettaglioContatto, DettaglioContattoService, ENTITIES_STRUCTURE, Struttura } from '@bds/ng-internauta-model';
 import { FascicoloArgo } from '../fascicolo.model';
 import { RaccoltaSempliceService } from '../raccolta-semplice.service';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, SelectMultipleControlValueAccessor } from '@angular/forms';
 import { DocumentoArgo } from '../DocumentoArgo.model';
 import { PersonaRS } from '../personaRS.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
+
+
 
 interface TipoDocumento {
   name: string,
@@ -27,6 +29,7 @@ interface ExternalAppDataRS {
   protocollo: string;
   anno: string;
   codiceAzienda: string;
+  fascicoli: string;
 }
 
 interface Registro {
@@ -41,28 +44,20 @@ interface Registro {
 })
 export class InserimentoManualeComponent implements OnInit {
 
-  // _azienda: Azienda;
-  // @Input() set azienda(aziendaValue: Azienda) {
-  //   if (aziendaValue) {
-  //     this._azienda = aziendaValue;
-  //   }
-  // }
-
   public _callerData: ExternalAppDataRS;
 
   @ViewChild('fileInput') fileInput: FileUpload;
   public subscriptions: Subscription[] = [];
   public actualPrincipale: Allegato;
 
-  public tipiDocumento: TipoDocumento[];
   public tipiCoinvolti: SelectItem[];
   public codiciRegistriAmmessi: Registro[];
 
-  public selectedTipo: TipoDocumento;
+  public selectedTipo: SelectItem;
   public selectedTipoCoinvolto: string;
   public selectedCodiceRegistro: Registro;
 
-  public applicazione: string = 'INTERNAUTA';
+  public applicazione: string = 'ARPAL UMBRIA';
   public _doc: Document;
   public selectedAllegato: Allegato;
   public progress: number = 0;
@@ -74,11 +69,10 @@ export class InserimentoManualeComponent implements OnInit {
   public blockedPanelDoc: boolean = false;
   public blockedPanelUpload: boolean = false;
   public blockedPanelInserimentoManuale: boolean = false;
-
   public azienda: Azienda;
-  public _strutturaInternautaSelezionata: Struttura;
+  public _strutturaInternautaSelezionata: Struttura = new Struttura();
   public _fascicoloArgoSelezionato: FascicoloArgo;
-
+  public modalError: boolean = false;
   public formGroup: FormGroup;
 
   public oggetto: string;
@@ -95,7 +89,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   public optionFascicoli = [];
   public filteredOptions;
-
+  public missingData: string[] = [];
   public selectedFascicolo: FascicoloArgo;
   public filteredFascicoli: FascicoloArgo[];
   public selectedFascicoli: FascicoloArgo[] = [];
@@ -103,7 +97,7 @@ export class InserimentoManualeComponent implements OnInit {
   public selectedDoc: DocumentoArgo;
   public filteredDocs: DocumentoArgo[];
   public selectedDocumentoBabel: DocumentoArgo;
-
+  public additionalControl: boolean;
   public titoloHeader: string;
   public prefixHeader: string;
 
@@ -133,6 +127,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   public panelOpenStateDati: string = "Incompleto"
   public panelOpenState: boolean = true;
+  public tipologieDocumenti$: SelectItem[] = [];
 
   public displayRubricaPopup = false;
   public progressBarEnable = false;
@@ -142,7 +137,7 @@ export class InserimentoManualeComponent implements OnInit {
   public creazioneInCorso: boolean = true;
 
   public username: string;
- 
+
   constructor(private messageService: MessageService,
     private allegatoService: ExtendedAllegatoService,
     private raccoltaService: RaccoltaSempliceService,
@@ -152,17 +147,11 @@ export class InserimentoManualeComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private loginService: NtJwtLoginService,
-    private router: Router) {
+    private router: Router,
+    private activatedRoute: ActivatedRoute) {
     this.prefixHeader = "Collega Documento Babel: ";
     this.titoloHeader = this.prefixHeader;
     this.selectedCodiceRegistro = { descrizione: 'Protocollo Generale [PG]', tipo: 'pg' };
-
-    this.tipiDocumento = [
-      { name: 'Raccoglitore', code: 'raccoglitore' },
-      { name: 'Contatto', code: 'contatto' },
-      { name: 'CV', code: 'cv' },
-      { name: 'Documento', code: 'documento' }
-    ];
 
     this.tipiCoinvolti = [
       { label: "Fisica", value: "FISICA" },
@@ -171,6 +160,7 @@ export class InserimentoManualeComponent implements OnInit {
 
     this.disabledDettaglioContatto = true;
     this.disabledContatto = false;
+
 
   }
 
@@ -188,7 +178,8 @@ export class InserimentoManualeComponent implements OnInit {
   }
 
   blocca(value: string) {
-    console.log(value)
+    console.log(value);
+    console.log(this.selectedValue);
     if (value === "doc") {
       this.blockedPanelDoc = false;
       this.blockedPanelUpload = true;
@@ -199,6 +190,12 @@ export class InserimentoManualeComponent implements OnInit {
 
   }
 
+
+  public resetFields(): void {
+
+  }
+
+
   ngOnInit(): void {
     this.coinvolti = [];
 
@@ -206,8 +203,8 @@ export class InserimentoManualeComponent implements OnInit {
       this.loggedUser = u;
       this.azienda = u.getUtente().aziendaLogin;
       this.username = u.getUtente().username;
-      console.log("Azienda: ",u.getUtente().aziendaLogin);
-      console.log("this.azienda ", this.azienda);
+      console.log("Utente: ", this.username)
+      console.log("Azienda: ", u.getUtente().aziendaLogin);
       // la funzione atob server per decodificare la stringa base64 con cui viene passato dataForRubricaInternauta per evitare problemi coi caratteri strambi
       if (!!sessionStorage.getItem("dataForInsertRaccoltaSemplice")) {
         console.log("dataForInsertRaccoltaSemplice trovati");
@@ -216,8 +213,23 @@ export class InserimentoManualeComponent implements OnInit {
       } else {
         console.log("dataForInsertRaccoltaSemplice NON trovati");
       }
-    }));
+    }
+    ))
 
+    this.raccoltaService.getTipologia(this.azienda.codice).subscribe(tipo => {
+      tipo.body.forEach(elem => {
+        let select = { label: elem, value: elem }
+        this.tipologieDocumenti$.push(select);
+
+      })
+    });
+
+
+  }
+
+  public chiudiErrore() {
+    this.modalError = false;
+    this.missingData = [];
   }
 
 
@@ -226,11 +238,22 @@ export class InserimentoManualeComponent implements OnInit {
     if (this._callerData) {
       const codice: string = "100" + this.azienda.codice;
       const docToSearch = this._callerData.protocollo + "/" + this._callerData.anno;
+
+      if (this._callerData.fascicoli.length > 0 && this.selectedFascicoli.length==0) {
+        for (let i = 0; i < this._callerData.fascicoli.length; i++) {
+          // setta, se ci sono, i fascicoli del documento
+          var fasc: FascicoloArgo = new FascicoloArgo();
+          fasc.numerazioneGerarchica = this._callerData.fascicoli[i];
+          this.selectedFascicoli.push(fasc);
+        }
+      }
+
+
+
       this.raccoltaService.getDocumentiArgo(codice, this.username, 'PG', docToSearch).subscribe(res => {
         this.selectedDoc = res.body[0];
         this.oggetto = this.selectedDoc.oggetto;
-  });
-
+      });
 
       console.log("protocollo: ", this._callerData.protocollo);
       console.log("codiceAzienda: ", this._callerData.codiceAzienda);
@@ -270,6 +293,8 @@ export class InserimentoManualeComponent implements OnInit {
       this.coinvolto.nomeInterfaccia = this.coinvolto.ragioneSociale;
     } else if (this.coinvolto.nome && this.coinvolto.cognome) {
       this.coinvolto.nomeInterfaccia = this.coinvolto.nome + " " + this.coinvolto.cognome;
+    } else if (this.coinvolto.nome) {
+      this.coinvolto.nomeInterfaccia = this.coinvolto.nome;
     } else {
       this.coinvolto.nomeInterfaccia = "";
     }
@@ -277,14 +302,14 @@ export class InserimentoManualeComponent implements OnInit {
     if (this.coinvolto.guidInterfaccia) {
       this.coinvolto.tipologia = this.selectedTipoCoinvolto;
       this.coinvolti[this.findIndexByGuid(this.coinvolto.guidInterfaccia)] = this.coinvolto;
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Coinvolto aggiornato', life: 3000 });
     }
     else {
       this.coinvolto.guidInterfaccia = this.createGuid();
       this.coinvolto.tipologia = this.selectedTipoCoinvolto;
 
       this.coinvolti.push(this.coinvolto);
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Coinvolto aggiunto', life: 3000 });
     }
 
 
@@ -293,7 +318,7 @@ export class InserimentoManualeComponent implements OnInit {
     this.coinvolto = new PersonaRS();
   }
 
-  editProduct(coinvolto: PersonaRS) {
+  editCoinvolto(coinvolto: PersonaRS) {
     this.coinvolto = { ...coinvolto };
     this.productDialog = true;
   }
@@ -318,30 +343,19 @@ export class InserimentoManualeComponent implements OnInit {
     return id;
   }
 
-  deleteProduct(persona: PersonaRS) {
+  deleteCoinvolto(persona: PersonaRS) {
     this.confirmationService.confirm({
-      message: 'Comfermare la cancellazione del seguente coinvolto? ' + persona.nomeInterfaccia,
-      header: 'Confirm',
+      message: 'Confermare la cancellazione del seguente coinvolto? <b>' + persona.nomeInterfaccia + '</b>',
+      header: 'Elimina coinvolto',
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: "Si",
+      rejectLabel: "Annulla",
       accept: () => {
         this.coinvolti = this.coinvolti.filter(val => val.id !== persona.id);
         this.coinvolto = new PersonaRS();
         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Coinvolto eliminato', life: 3000 });
       }
     });
-  }
-
-  private checkData() {
-
-    // this.oggetto
-    // this._strutturaInternautaSelezionata
-    // this.selectedTipo
-    // this.selectedFascicoli
-    // this.blockedPanelDoc 
-    //   this.selectedDoc
-    // this.blockedPanelUpload 
-    //   this.uploadedFiles
-
   }
 
   initForm() {
@@ -484,6 +498,11 @@ export class InserimentoManualeComponent implements OnInit {
     this.titoloHeader = this.prefixHeader + ": " + doc.codiceRegistro + doc.numero + "/" + doc.anno
   }
 
+  public tornaIndietro() {
+    CustomReuseStrategy.componentsReuseList.push("*");
+    this.router.navigate(['../raccoltasemplice'], { relativeTo: this.activatedRoute });
+  }
+
   /**
    * @param event 
    */
@@ -530,6 +549,19 @@ export class InserimentoManualeComponent implements OnInit {
     }));
 
     this.messageService.add({ severity: 'info', summary: 'File caricato', detail: '' });
+  }
+
+  public loadTipologie(azienda: string): string[] {
+    let tipologie: string[];
+
+    this.subscriptions.push(this.raccoltaService.getTipologia(this.azienda.codice)
+      .subscribe((res: HttpResponse<string[]>) => {
+        tipologie = res.body;
+        console.log("loadTipo: ", tipologie);
+      })
+    )
+
+    return tipologie;
   }
 
   private buildFormData(event: any): FormData {
@@ -685,38 +717,59 @@ export class InserimentoManualeComponent implements OnInit {
     }
   }
 
+  public showModalError() {
+    this.modalError = true;
+    this.displayModal = false;
+  }
+
+  public closeConfirm() {
+    this.displayModal = false;
+
+    // ricarica la pagina
+    window.location.reload();
+  }
+
+
   public delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   public onSubmit() {
+
+    if (!this.check()) {
+      this.modalError = true;
+      console.log("Sono entrato nell'if");
+      return this.showModalError();
+    }
+
+    console.log("Check passato");
     this.creazioneInCorso = true;
     this.showModalDialog();
 
-    // setTimeout(() => {
-    //   this.progressBarEnable = true;
-    //   this.creazioneInCorso = false;
-    //   this.progressBarEnable = false;
-    //   this.esitoCreazioneRS = "Raccolta Semplice creata con successo";
-    //   this.numerazioneRSCreata = "0007/2021";
-    // }, 1000);
-    
-     var formData:FormData = this.createFormData();
-     this.raccoltaService.createRs(formData).subscribe(
-     response => {
-      this.creazioneInCorso = false;
-      this.progressBarEnable = false;
-      this.esitoCreazioneRS = "Raccolta Semplice creata con successo";
-      this. numerazioneRSCreata = response; },
-     error => {
-       this.progressBarEnable = false;
-       this.creazioneInCorso = false;
-       this.messageService.add({
-         severity:'error', 
-         summary:'Creazione Raccolta Semplice', 
-         detail:error
-       });
-     });
+    var formData: FormData = this.createFormData();
+
+    this.raccoltaService.createRs(formData).subscribe(
+      response => {
+        console.log("Inizio resp);")
+        this.creazioneInCorso = false;
+        this.progressBarEnable = false;
+        this.esitoCreazioneRS = "Raccolta Semplice creata con successo";
+        console.log("Pre response");
+        this.numerazioneRSCreata = response;
+        console.log("Finito tutto");
+      },
+      error => {
+        console.log("Sono nell'errore");
+        this.progressBarEnable = false;
+        this.creazioneInCorso = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Creazione Raccolta Semplice',
+          detail: error
+        });
+      });
+
+    console.log("Tutto ok");
   }
 
   public showModalDialog() {
@@ -737,8 +790,61 @@ export class InserimentoManualeComponent implements OnInit {
     return json;
   }
 
+  private check(): boolean {
+    this.additionalControl = true;
+
+    if (this.oggetto == "" || this.oggetto == undefined) {
+      console.log("Oggetto vuoto");
+      this.missingData.push("Oggetto vuoto")
+      this.additionalControl = false;
+    }
+
+    if (!this.blockedPanelDoc) {
+      if (this.selectedDoc == undefined) {
+        console.log("Nessun documento selezionato");
+        this.missingData.push("Nessun documento selezionato")
+        this.additionalControl = false;
+      }
+    }
+
+    if (this.selectedFascicoli.length == 0) {
+      console.log("Fascicoli vuoti");
+      this.missingData.push("Nessun documento fascicolo")
+      this.additionalControl = false;
+    }
+
+    if (this.selectedTipo == undefined) {
+      console.log("Tipo documento non selezionato");
+      this.missingData.push("Tipologia documento non selezionata")
+      this.additionalControl = false;
+    }
+
+    if (this._strutturaInternautaSelezionata == undefined) {
+      console.log("Struttura non selezionata");
+      this.missingData.push("Nessuna struttura selezionato")
+      this.additionalControl = false;
+    }
+
+    if (!this.blockedPanelUpload) {
+      if (this.uploadedFiles.length == 0) {
+        console.log("Nessun file caricato");
+        this.missingData.push("Nessun file caricato")
+        this.additionalControl = false;
+      }
+    }
+
+    if (this.coinvolti.length == 0) {
+      console.log("Nessuna persona selezionata");
+      this.missingData.push("Nessua persona selezionata")
+      this.additionalControl = false;
+    }
+
+    return this.additionalControl;
+  }
+
   private createFormData(): FormData {
 
+    let tipologia = String(this.selectedTipo);
     let formData: FormData = new FormData();
 
     formData.append("applicazione_chiamante", this.azienda.descrizione);
@@ -753,7 +859,7 @@ export class InserimentoManualeComponent implements OnInit {
 
     var fascicoliStr = this.stringifyFascicoli();
     formData.append("fascicoli_babel", fascicoliStr);
-    formData.append("tipo_documento", this.selectedTipo.code);
+    formData.append("tipo_documento", tipologia);
     formData.append("struttura_responsabile", this._strutturaInternautaSelezionata.id.toString());
 
     if (!this.blockedPanelUpload) {
@@ -762,27 +868,7 @@ export class InserimentoManualeComponent implements OnInit {
       }
     }
 
-    // for (var coinvolto of this.coinvolti) {
-    //   formData.append('allegati', file);
-    // }
     formData.append("persone", JSON.stringify(this.coinvolti));
-
-    // var personeStr: string = JSON.stringify([ 	
-    //   {"descrizione": "persona Test", 
-    //   "nome": "Stanis La Rochelle", 
-    //   "cognome": "Cert",
-    //   "email": "slr@mail.it",
-    //   "tipologia": "FISICA"
-    //   }, 		
-    //   {"descrizione": "azienda Test",
-    //   "ragione_sociale": "Azienda Fa Cose",
-    //   "cognome": "Bologna",
-    //   "email": "azfc@mail.it",
-    //   "tipologia": "GIURIDICA"
-    //   }
-    // ])
-
-    // formData.append("persone", personeStr);
 
     return formData;
   }
