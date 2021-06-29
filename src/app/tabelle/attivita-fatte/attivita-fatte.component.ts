@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList, ViewChild } from "@angular/core";
 import { DatePipe } from "@angular/common";
-import { LazyLoadEvent } from "primeng-lts/api";
+import { LazyLoadEvent } from "primeng/api";
 import { FILTER_TYPES, SORT_MODES, LOCAL_IT } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts, buildPagingConf } from "@bds/primeng-plugin";
 import { AttivitaFatteService } from "./attivita-fatte.service";
@@ -9,8 +9,8 @@ import { AttivitaFatta } from "@bds/ng-internauta-model";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Subscription } from "rxjs";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
-import { Calendar } from "primeng-lts/calendar";
-import { Table } from "primeng-lts/table";
+import { Calendar } from "primeng/calendar";
+import { Table } from "primeng/table";
 
 @Component({
   selector: "app-attivita-fatte",

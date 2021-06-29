@@ -8,11 +8,11 @@ import { Subscription } from 'rxjs';
 import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
 import { HttpResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-import { Table } from 'primeng-lts/table';
+import { Table } from 'primeng/table';
 import { CsvExtractor } from '@bds/primeng-plugin';
 import { LOCAL_IT } from '@bds/nt-communicator';
-import { Calendar } from 'primeng-lts/calendar';
-import { FilterUtils } from "primeng-lts/utils";
+import { Calendar } from 'primeng/calendar';
+import { FilterUtils } from "primeng/utils";
 
 @Component({
   selector: 'app-dati-bollo-virtuale',
