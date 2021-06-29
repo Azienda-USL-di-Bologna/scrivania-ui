@@ -59,6 +59,11 @@
   border: white;
 }
 
+.interaction-button {
+  background-color: #203142;
+}
+
+
 /* cambio colore pulsante upload */
 ::ng-deep .p-fileupload-choose  {
   background-color: #993366;
@@ -70,3 +75,11 @@
   background-color: #993366;
   border: white;
 }
+
+::ng-deep .p-fileupload .p-button.p-button-icon-only{
+  background-color: #203142 !important;
+  padding: 0.429rem 0.5rem !important;
+}
+
+
+

@@ -6,6 +6,8 @@ import {rootRouterConfig} from "./app.routes";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { HttpModule } from "@angular/http";
+import { RouteReuseStrategy } from '@angular/router';
+import { CustomReuseStrategy } from '@bds/nt-communicator';
 
 /* Custom component */
 import { AppComponent } from "./app.component";
@@ -17,6 +19,7 @@ import { CambioUtenteComponent } from "./header/cambio-utente/cambio-utente.comp
 import { AttivitaFatteComponent } from "./tabelle/attivita-fatte/attivita-fatte.component";
 import { DropdownAziendeComponent } from "./components/dropdown-aziende/dropdown-aziende.component";
 import { LoadingComponent } from "./pagine/loading/loading.component";
+
 
 // import {  HeaderComponent as PPHeader,
 //           HeaderFeaturesComponent as PPHeaderFeaturesComponent,
@@ -150,7 +153,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
   ],
   providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService,
     ImpostazioniService, DialogService, ConfirmationService,
-    BolloVirtualeService, RaccoltaSempliceService, ExtendedAllegatoService
+    BolloVirtualeService, RaccoltaSempliceService, ExtendedAllegatoService,
+    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
   ],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent, ProfiloComponent]

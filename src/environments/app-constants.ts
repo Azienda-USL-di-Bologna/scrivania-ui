@@ -94,7 +94,8 @@ export const CONTROLLERS_ENDPOINT = {
     ANNULLAMENTO_URL: "/annullamento",
     RICERCA_RACCOLTA: "/ricerca",
     CREATE_RS: "/createRS",
-    DOWNLOAD: "/downloadAllegato"
+    DOWNLOAD: "/downloadAllegato",
+    TIPOLOGIE: "/getTipologia"
 };
 
 export const COMMANDS = {

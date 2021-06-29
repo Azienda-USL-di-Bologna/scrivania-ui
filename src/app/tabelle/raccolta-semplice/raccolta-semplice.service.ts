@@ -20,8 +20,10 @@ import { DocumentoArgo } from './DocumentoArgo.model';
   
     constructor(protected http: HttpClient, protected datepipe: DatePipe) {}
 
-    public getRaccoltaSemplice(aziendaCodice: string, dataInizio: string, dataFine: string) : Observable<HttpResponse<Document[]>>{
-        let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.GET_DATI_RACCOLTA_SEMPLICE + "?codiceAzienda=" + aziendaCodice+"&from="+dataInizio+"&to="+dataFine;
+    public getRaccoltaSemplice(aziendaCodice: string, dataInizio: string, dataFine: string, cf:string, piva:string, limit: number, offeset:number) : Observable<HttpResponse<Document[]>>{
+        if (cf==undefined) {cf=null;}
+        if (piva==undefined) {piva=null;}
+        let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.GET_DATI_RACCOLTA_SEMPLICE + "?codiceAzienda=" + aziendaCodice+"&from="+dataInizio+"&to="+dataFine+"&cf="+cf+"&piva="+piva+"&limit="+limit+"&offset="+offeset;
         return this.http.get<Document[]>(url, {responseType: "json", observe: 'response'});
     }
 
@@ -30,7 +32,7 @@ import { DocumentoArgo } from './DocumentoArgo.model';
       return this.http.get<Storico[]>(url, {responseType: "json", observe: 'response'});
     }
 
-    public ricercaRaccolta(campi: string[], filtri: string[]) : Observable<HttpResponse<Document[]>> {
+    public ricercaRaccolta(campi: string[], filtri: string[], limit: number, offeset:number) : Observable<HttpResponse<Document[]>> {
       let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.RICERCA_RACCOLTA + "?";
       if(campi.length != filtri.length) {
         console.log("Il numero di campi e filtri è diverso");
@@ -47,13 +49,16 @@ import { DocumentoArgo } from './DocumentoArgo.model';
               url = url +"&";
           }
         }
+        url  = url + "&offset="+ offeset;
+        url = url + "&limit=" + limit;
+
         return this.http.get<Document[]>(url, {responseType: "json", observe: 'response'});
       }
     }
 
-    public updateAnnullamento(body: JSON): any {
+    public updateAnnullamento(body: JSON): Observable<any> {
         let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.ANNULLAMENTO_URL;
-        return this.http.post(url, body).subscribe(res => console.log(res));
+        return this.http.post(url, body,{ responseType: 'text'});
     }
 
     public getFascicoliArgo(azienda: string, idUtente:string, value: string) : Observable<HttpResponse<FascicoloArgo[]>>{
@@ -67,11 +72,16 @@ import { DocumentoArgo } from './DocumentoArgo.model';
     }
 
    public createRs(formData: FormData): Observable<any> {
-    const headers = { 'content-type': 'application/json'}  
-
+    const options = { 'response-type': 'text'}  
+    console.log("Form Data: ", formData);
     let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.CREATE_RS
-  
-    return this.http.post(url, formData);
+    return this.http.post(url, formData, { responseType: 'text'});
+   }
+
+   public getTipologia(azienda: string) : Observable<HttpResponse<string[]>> {
+    let url = getInternautaUrl(BaseUrlType.Scrivania) +CONTROLLERS_ENDPOINT.TIPOLOGIE + "?azienda=" + azienda;
+    console.log("Url tipologie: ", url);
+    return this.http.get<string[]>(url, {responseType: "json", observe: 'response'});
    }
 
    public downloadAllegato(azienda: String, idSottodocumento: String) : Observable<any> {
