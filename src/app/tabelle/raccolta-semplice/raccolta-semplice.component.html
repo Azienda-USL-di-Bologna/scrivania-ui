@@ -88,7 +88,7 @@
                 [readonlyInput]="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
               </p-calendar>
               <input pInputText *ngSwitchDefault attr.aria-label="Cella filtro per colonna {{col.label}}" type="text"
-                (input)="tableRaccoltaSemplice.filter($event.target.value, col.field, col.filterMatchMode.value)"
+                (keyup.enter)="tableRaccoltaSemplice.filter($event.target.value, col.field, col.filterMatchMode.value)"
                 #filterInputText [ngModel]="prova" [disabled]="loading">
             </div>
           </td>
@@ -110,7 +110,7 @@
               [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
           </td>
           <td *ngFor="let col of columns" [style.textAlign]="col.textAlign" [pTooltip]="col.label" [ngClass]="{'descrizioneStruttura' : 'p-col-2', 'documentoBabel' : 'p-col-1-5', 
-          'createTime':'p-col-0-7', 'fascicoli':'p-col-0-5', 'tipoDocumento':'p-col-0-7'}[col.field]">
+          'createTime':'p-col-0-7', 'fascicoli':'p-col-0-5', 'tipoDocumento':'p-col-0-7'}[col.field]" class="text-content">
             <div *ngIf="col.field !== 'stato'">
               {{rowRS[col.field]}}
             </div>
@@ -150,14 +150,14 @@
       </ng-template>
       <ng-template pTemplate="body" let-dettaglio>
         <tr>
-          <td [style.overflow]="auto">{{dettaglio.descrizione}}</td>
-          <td [style.overflow]="auto">{{dettaglio.cf}}</td>
-          <td [style.overflow]="auto">{{dettaglio.piva}}</td>
-          <td [style.overflow]="auto">{{dettaglio.tipo}}</td>
-          <td [style.overflow]="auto">{{dettaglio.mail}}</td>
-          <td [style.overflow]="auto">{{dettaglio.via + " " + dettaglio.civico + " " + dettaglio.comune + " " +
+          <td [style.overflow]="auto" class="text-content">{{dettaglio.descrizione}}</td>
+          <td [style.overflow]="auto" class="text-content">{{dettaglio.cf}}</td>
+          <td [style.overflow]="auto" class="text-content">{{dettaglio.piva}}</td>
+          <td [style.overflow]="auto" class="text-content">{{dettaglio.tipo}}</td>
+          <td [style.overflow]="auto" class="text-content">{{dettaglio.mail}}</td>
+          <td [style.overflow]="auto" class="text-content">{{dettaglio.via + " " + dettaglio.civico + " " + dettaglio.comune + " " +
             dettaglio.cap + " " + dettaglio.provincia + " " + dettaglio.nazione}}</td>
-          <td [style.overflow]="auto">{{dettaglio.telefono}}</td>
+          <td [style.overflow]="auto" class="text-content">{{dettaglio.telefono}}</td>
         </tr>
       </ng-template>
     </p-table>
@@ -180,10 +180,10 @@
       </ng-template>
       <ng-template pTemplate="body" let-sottodocumento>
         <tr>
-          <td>{{sottodocumento.nome}}</td>
-          <td>{{sottodocumento.nomeOriginale}}</td>
-          <td>{{sottodocumento.mimeTypeOriginale}}</td>
-          <td class="p-col-1 p-text-center"> <button pButton type="button" (click)="download(sottodocumento.guidSottodocumento, 
+          <td class="text-content">{{sottodocumento.nome}}</td>
+          <td class="text-content">{{sottodocumento.nomeOriginale}}</td>
+          <td class="text-content">{{sottodocumento.mimeTypeOriginale}}</td>
+          <td class="p-col-1 p-text-center text-content"> <button pButton type="button" (click)="download(sottodocumento.guidSottodocumento, 
                                           sottodocumento.nomeOriginale, sottodocumento.mimeTypeOriginale)"
               iconPos="center" icon="pi pi-download"></button>
           </td>
@@ -253,10 +253,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-storico>
           <tr>
-            <td>{{storico?.utente}}</td>
-            <td>{{storico?.motivazione}}</td>
-            <td>{{storico?.stato}}</td>
-            <td>{{storico?.data}}</td>
+            <td class="text-content">{{storico?.motivazione}}</td>
+            <td class="text-content">{{storico?.stato}}</td>
+            <td class="text-content">{{storico?.data}}</td>
           </tr>
         </ng-template>
       </p-table>

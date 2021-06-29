@@ -110,7 +110,7 @@ export class InserimentoManualeComponent implements OnInit {
   public loggedUser: UtenteUtilities;
 
   // parte coinvolti
-  public productDialog: boolean;
+  public coinvoltoDialog: boolean;
   public coinvolti: PersonaRS[];
   public coinvolto: PersonaRS;
   public submitted: boolean;
@@ -264,7 +264,7 @@ export class InserimentoManualeComponent implements OnInit {
   openNew() {
     this.coinvolto = new PersonaRS();
     this.submitted = false;
-    this.productDialog = true;
+    this.coinvoltoDialog = true;
   }
 
   /**
@@ -281,7 +281,7 @@ export class InserimentoManualeComponent implements OnInit {
   }
 
   hideDialog() {
-    this.productDialog = false;
+    this.coinvoltoDialog = false;
     this.submitted = false;
   }
 
@@ -314,13 +314,13 @@ export class InserimentoManualeComponent implements OnInit {
 
 
     this.coinvolti = [...this.coinvolti];
-    this.productDialog = false;
+    this.coinvoltoDialog = false;
     this.coinvolto = new PersonaRS();
   }
 
   editCoinvolto(coinvolto: PersonaRS) {
     this.coinvolto = { ...coinvolto };
-    this.productDialog = true;
+    this.coinvoltoDialog = true;
   }
 
   findIndexByGuid(guid: string): number {
@@ -477,7 +477,7 @@ export class InserimentoManualeComponent implements OnInit {
       }
       this.coinvolti.push(nuovoCoinvolto);
       this.coinvolti = [...this.coinvolti];
-      this.productDialog = false;
+      this.coinvoltoDialog = false;
       this.displayRubricaPopup = false;
       this.coinvolto = new PersonaRS();
     } else {

@@ -252,13 +252,13 @@
               </ng-template>
               <ng-template pTemplate="body" let-coinvolto>
                 <tr>
-                  <td>{{coinvolto.nomeInterfaccia}}</td>
-                  <td>{{coinvolto.cf}}</td>
-                  <td>{{coinvolto.partitaIva}}</td>
-                  <td>{{coinvolto.tipo}}</td>
-                  <td>{{coinvolto.mail}}</td>
-                  <td>{{coinvolto.via}}</td>
-                  <td>{{coinvolto.telefono}}</td>
+                  <td class="text-content">{{coinvolto.nomeInterfaccia}}</td>
+                  <td class="text-content">{{coinvolto.cf}}</td>
+                  <td class="text-content">{{coinvolto.partitaIva}}</td>
+                  <td class="text-content">{{coinvolto.tipo}}</td>
+                  <td class="text-content">{{coinvolto.mail}}</td>
+                  <td class="text-content">{{coinvolto.via}}</td>
+                  <td class="text-content">{{coinvolto.telefono}}</td>
                   <td>
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
                       (click)="editCoinvolto(coinvolto)"></button>
@@ -279,7 +279,7 @@
           </div>
 
 
-          <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Nuovo Coinvolto" [modal]="true"
+          <p-dialog [(visible)]="coinvoltoDialog" [style]="{width: '450px'}" header="Nuovo Coinvolto" [modal]="true"
             styleClass="p-fluid">
             <ng-template pTemplate="content">
               <div class="p-formgrid p-grid">

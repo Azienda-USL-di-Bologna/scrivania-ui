@@ -362,3 +362,10 @@ fill: #333333 !important;
   .p-col-0-7 {
     width: 8.2%;
   }
+
+.text-content {
+  word-break: break-word;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+  
