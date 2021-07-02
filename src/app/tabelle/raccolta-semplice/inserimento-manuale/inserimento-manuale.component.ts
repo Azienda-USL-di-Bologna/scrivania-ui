@@ -30,6 +30,8 @@ interface ExternalAppDataRS {
   anno: string;
   codiceAzienda: string;
   fascicoli: string;
+  struttura: string;
+  nome: string;
 }
 
 interface Registro {
@@ -87,6 +89,7 @@ export class InserimentoManualeComponent implements OnInit {
     }
   ];
 
+  public s : Struttura = new Struttura();
   public optionFascicoli = [];
   public filteredOptions;
   public missingData: string[] = [];
@@ -171,6 +174,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   strutturaSelezionata(struttura: Struttura) {
     this._strutturaInternautaSelezionata = struttura;
+    console.log("Struttura 2: ", this._strutturaInternautaSelezionata)
   }
 
   fascicoloSelezionato(fascicolo: FascicoloArgo) {
@@ -198,6 +202,10 @@ export class InserimentoManualeComponent implements OnInit {
 
   ngOnInit(): void {
     this.coinvolti = [];
+    
+    
+    console.log("Struttura: ", this._strutturaInternautaSelezionata)
+
 
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       this.loggedUser = u;
@@ -247,8 +255,8 @@ export class InserimentoManualeComponent implements OnInit {
           this.selectedFascicoli.push(fasc);
         }
       }
-
-
+     this._strutturaInternautaSelezionata.id = parseInt(this._callerData.struttura);
+      this.s["campoDaMostrare"] = this._callerData.nome;
 
       this.raccoltaService.getDocumentiArgo(codice, this.username, 'PG', docToSearch).subscribe(res => {
         this.selectedDoc = res.body[0];
