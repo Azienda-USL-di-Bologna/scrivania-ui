@@ -203,7 +203,7 @@ export class InserimentoManualeComponent implements OnInit {
   ngOnInit(): void {
     this.coinvolti = [];
     
-    
+    this.s = null;
     console.log("Struttura: ", this._strutturaInternautaSelezionata)
 
 
