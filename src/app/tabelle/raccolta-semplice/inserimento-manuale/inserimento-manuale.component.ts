@@ -203,7 +203,8 @@ export class InserimentoManualeComponent implements OnInit {
   ngOnInit(): void {
     this.coinvolti = [];
     
-    this.s = null;
+    //this.s = this._strutturaInternautaSelezionata;
+    this.s["campoDaMostrare"] = " ";
     console.log("Struttura: ", this._strutturaInternautaSelezionata)
 
 
@@ -246,13 +247,15 @@ export class InserimentoManualeComponent implements OnInit {
     if (this._callerData) {
       const codice: string = "100" + this.azienda.codice;
       const docToSearch = this._callerData.protocollo + "/" + this._callerData.anno;
-
-      if (this._callerData.fascicoli.length > 0 && this.selectedFascicoli.length==0) {
-        for (let i = 0; i < this._callerData.fascicoli.length; i++) {
-          // setta, se ci sono, i fascicoli del documento
-          var fasc: FascicoloArgo = new FascicoloArgo();
-          fasc.numerazioneGerarchica = this._callerData.fascicoli[i];
-          this.selectedFascicoli.push(fasc);
+      
+      if(this._callerData.fascicoli != null) {
+        if (this._callerData.fascicoli.length > 0 && this.selectedFascicoli.length==0) {
+          for (let i = 0; i < this._callerData.fascicoli.length; i++) {
+            // setta, se ci sono, i fascicoli del documento
+            var fasc: FascicoloArgo = new FascicoloArgo();
+            fasc.numerazioneGerarchica = this._callerData.fascicoli[i];
+            this.selectedFascicoli.push(fasc);
+          }
         }
       }
      this._strutturaInternautaSelezionata.id = parseInt(this._callerData.struttura);
