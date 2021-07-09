@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { DynamicDialogRef } from 'primeng-lts/dynamicdialog';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Impostazioni } from "./impostazioni";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";

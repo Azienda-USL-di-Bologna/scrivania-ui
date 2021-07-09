@@ -3,8 +3,8 @@ import { NtJwtLoginService, UtenteUtilities, UtilityFunctions, SessionManager} f
 import { SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { Utente, getInternautaUrl, BaseUrlType } from "@bds/ng-internauta-model";
-import { MenuItem } from "primeng-lts/api";
-import { DialogService } from "primeng-lts/dynamicdialog";
+import { MenuItem } from "primeng/api";
+import { DialogService } from "primeng/dynamicdialog";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService } from "@bds/nt-communicator";
 import { HeaderFeaturesConfig } from "@bds/primeng-plugin";

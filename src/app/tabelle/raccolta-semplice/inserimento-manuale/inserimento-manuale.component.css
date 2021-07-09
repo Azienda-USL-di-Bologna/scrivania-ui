@@ -76,3 +76,10 @@
   border: white;
 }
 
+::ng-deep .p-fileupload .p-button.p-button-icon-only{
+  background-color: #203142 !important;
+  padding: 0.429rem 0.5rem !important;
+}
+
+
+

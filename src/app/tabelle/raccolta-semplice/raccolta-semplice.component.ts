@@ -2,23 +2,19 @@ import { DatePipe } from '@angular/common';
 import { HttpResponse } from '@angular/common/http';
 import { Component, ElementRef, Inject, Input, OnInit, QueryList, ViewChild,  ViewChildren } from '@angular/core';
 import { Azienda } from '@bds/ng-internauta-model';
-import { CustomReuseStrategy, LOCAL_IT } from '@bds/nt-communicator';
+import { LOCAL_IT } from '@bds/nt-communicator';
 import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
 import { FILTER_TYPES } from '@nfa/next-sdr';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { RaccoltaSempliceService } from './raccolta-semplice.service';
 import { Document } from './documento.model';
-import { Table } from 'primeng-lts/table';
+import { Table } from 'primeng/table';
 import { CsvExtractor } from '@bds/primeng-plugin';
-import { Calendar } from 'primeng-lts/calendar';
-import { FilterUtils } from "primeng-lts/utils";
+import { Calendar } from 'primeng/calendar';
+import { FilterService } from "primeng/api";
 import { Storico } from './dettaglio-annullamento/modal/storico';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { getSupportedInputTypes } from '@angular/cdk/platform';
-import { LazyLoadEvent } from 'primeng-lts/api';
-import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
-import { eventNames } from 'process';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { LazyLoadEvent } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -32,7 +28,8 @@ export class RaccoltaSempliceComponent implements OnInit {
     private datePipe: DatePipe, 
     private formBuilder: FormBuilder,
     private router: Router,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute,
+    private filterService: FilterService) { }
 
   _azienda: Azienda;
   @Input() set azienda(aziendaValue: Azienda) {
@@ -76,6 +73,10 @@ export class RaccoltaSempliceComponent implements OnInit {
   public prova: string[];
   public totalRows: number;
   public recordPerPagina:number = 1;
+  public coinvoltiPerPagina:number = 4;
+
+  public codiceFiscale: string;
+  public piva: string;
 
   @ViewChild("tableRaccoltaSemplice") private dataTable: Table;
   @ViewChildren("calGenz") public _calGen: QueryList<Calendar>;
@@ -170,18 +171,22 @@ export class RaccoltaSempliceComponent implements OnInit {
     this.datiDocumenti = [];
     this.filtri = [];
     this.filtriRicerca = [];
-    if (!!this._azienda && !!this.dataInizio && this.dataInizio instanceof Date) {
+    if ((!!this._azienda && !!this.dataInizio && this.dataInizio instanceof Date) || (!!this._azienda && (!!this.codiceFiscale || !!this.piva))) {
       this.loading = true;
       if (!(!!this.dataFine && this.dataInizio instanceof Date)) {
         this.dataFine = new Date(this.dataOggi.toDateString());
       }
       this.subscriptions.push(
-        this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.recordPerPagina, 0)
+        this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.codiceFiscale,this.piva,this.recordPerPagina, 0)
           .subscribe((res: HttpResponse<Document[]>) => {
-            this.loading = false;
             this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
-            this.totalRows = this.datiDocumenti[0].rows;
+            if(this.datiDocumenti.length > 0)
+              this.totalRows = this.datiDocumenti[0].rows;
+            else
+              this.totalRows = 0;
             console.log("Dati: ", this.datiDocumenti);
+            this.totalRecords = this.datiDocumenti.length;
+            this.loading = false;
           }, error => {
             console.log("error raccoltaSempliceService.getRaccoltaSemplice", error);
             this.loading = false;     
@@ -225,6 +230,7 @@ export class RaccoltaSempliceComponent implements OnInit {
         tableTemp.value = this.datiDocumenti;
         const extractor = new CsvExtractor();
         extractor.exportCsv(tableTemp);
+        console.log(extractor.exportCsv(tableTemp));
         this.exportCsvInProgress = false;
       } catch (e) {
         console.log("exportToCsv error: ", e);
@@ -288,6 +294,20 @@ export class RaccoltaSempliceComponent implements OnInit {
     console.log("Filtri count:", event.filters.length)
     this.untouched = true;
     this.offset = (event.first / event.rows) * this.recordPerPagina;
+
+    if(this.codiceFiscale != undefined) {
+      this.filtri.push(this.codiceFiscale.trim());
+      this.filtriRicerca.push("cf");
+      console.log("Inserito il codice fiscale");
+      this.untouched = false;
+    }
+
+    if(this.piva != undefined) {
+      this.filtri.push(this.piva.trim())
+      this.filtriRicerca.push("piva");
+      console.log("Ho inserito la piva")
+      this.untouched = false;
+    }
 
     if(event.filters.codice?.value != undefined) {
       this.filtri.push(this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'));
@@ -380,13 +400,13 @@ export class RaccoltaSempliceComponent implements OnInit {
         this.loading = true;
         console.log("Sono nell'if");
         this.subscriptions.push(
-          this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.recordPerPagina, this.offset)
+          this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.codiceFiscale, this.piva, this.recordPerPagina, this.offset)
             .subscribe((res: HttpResponse<Document[]>) => {
-              this.loading = false;
               this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
               console.log("Dati: ", this.datiDocumenti);
               this.filtri = [];
               this.filtriRicerca = [];
+              this.loading = false;
               return; 
             }, error => {
               console.log("error raccoltaSempliceService.getRaccoltaSemplice", error);
@@ -402,7 +422,7 @@ export class RaccoltaSempliceComponent implements OnInit {
         this.sendFilters(this.offset);
   }
 
-  private download(idSottodocumento: string, name: string, mimetype: string): void {
+  public download(idSottodocumento: string, name: string, mimetype: string): void {
     let index = mimetype.indexOf("/");
     let extension = mimetype.substr(index + 1);
     let fileName = name + "." + extension;
@@ -413,16 +433,25 @@ export class RaccoltaSempliceComponent implements OnInit {
 
 
   public sendFilters(offset: number) {
+    this.dataInizio = null;
     this.datiDocumenti = [];
     this.loading = true;
     console.log("Sono nella send filters");
     this.subscriptions.push(
       this.raccoltaSempliceService.ricercaRaccolta(this.filtri, this.filtriRicerca, this.recordPerPagina, offset)
         .subscribe((res: HttpResponse<Document[]>) => {
-          
           this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
-          this.totalRows = this.datiDocumenti[0].rows;
-          this.loading = false;
+          if(this.datiDocumenti.length > 0) {
+            this.totalRows = this.datiDocumenti[0].rows;
+            this.loading = false
+            this.totalRecords = this.datiDocumenti.length
+          }
+          else {
+            console.log("Ora non si blocca");
+            this.totalRows = 0;
+            this.loading = false;
+          }
+          ;
         }, error => {
           console.log("error raccoltaSempliceService.ricercaRaccolta", error);
           this.loading = false;     
@@ -431,6 +460,7 @@ export class RaccoltaSempliceComponent implements OnInit {
     )
     this.filtri = [];
     this.filtriRicerca = [];
+    
   }
 
   public downLoadFile(data: any, type: string, filename: string, preview: boolean = false) {
@@ -511,7 +541,7 @@ export class RaccoltaSempliceComponent implements OnInit {
       this.azienda = u.getUtente().aziendaLogin;
       console.log("Azienda: ",u.getUtente());
     }));
-    FilterUtils['dateRangeFilter'] = (value: Date, filter: [Date, Date]): boolean => {
+    this.filterService.register("dateRangeFilter",(value: Date, filter: [Date, Date]): boolean => {
       var v = new Date(value);
       // get the from/start value
       var s = filter[0].getTime();
@@ -526,7 +556,7 @@ export class RaccoltaSempliceComponent implements OnInit {
       }
       // compare it to the actual values
       return v.getTime() >= s && v.getTime() <= e;
-    }
+    });
   }
 
   onHide() : void {
@@ -549,7 +579,7 @@ export class RaccoltaSempliceComponent implements OnInit {
                               '", "motivazione":"'+this.testoMotivazione+'", "azienda":"'+this._azienda.codice+'" }';
     let jsonBody = JSON.parse(stringJSON);
     console.log("Body: "+ stringJSON);
-    this.raccoltaSempliceService.updateAnnullamento(jsonBody).subscribe(x=> this.onTableRefresh());
+    this.raccoltaSempliceService.updateAnnullamento(jsonBody).subscribe(() => {console.log("fine update");this.onLoadRaccoltaSemplice()});
     this.display = false;
     this.radioStato = "";
     this.testoMotivazione = "";

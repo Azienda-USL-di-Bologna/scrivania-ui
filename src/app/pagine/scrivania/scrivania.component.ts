@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, AfterViewInit } from "@angular/core";
 import { Attivita, UrlsGenerationStrategy, ItemMenu, CommandType } from "@bds/ng-internauta-model";
-import { Dropdown } from "primeng-lts/dropdown";
+import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { MAX_CHARS_100 } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
 import { ApplicationCustiomization } from "src/environments/application_customization";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
-import { ConfirmationService } from "primeng-lts/api";
+import { ConfirmationService } from "primeng/api";
 import { ParametroAziende } from "@bds/ng-internauta-model";
 import { ConfigurazioneService} from "@bds/ng-internauta-model";
 

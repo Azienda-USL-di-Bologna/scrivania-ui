@@ -3,7 +3,7 @@ import { FiltersAndSorts, FilterDefinition, FILTER_TYPES, SortDefinition, SORT_M
 import {PROJECTIONS, AFFERENZA_STRUTTURA} from "../../../environments/app-constants";
 import { CambioUtenteService } from "./cambio-utente.service";
 import { Persona, Utente } from "@bds/ng-internauta-model";
-import { AutoComplete } from "primeng-lts/autocomplete";
+import { AutoComplete } from "primeng/autocomplete";
 
 @Component({
   selector: "app-cambio-utente",
