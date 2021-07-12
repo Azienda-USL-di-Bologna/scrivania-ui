@@ -76,6 +76,7 @@ export class InserimentoManualeComponent implements OnInit {
   public _fascicoloArgoSelezionato: FascicoloArgo;
   public modalError: boolean = false;
   public formGroup: FormGroup;
+  public visualizzaCoinvolti: boolean = false;
 
   public oggetto: string;
 

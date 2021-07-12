@@ -219,7 +219,7 @@
           <p-toast></p-toast>
 
           <div class="p-d-flex p-col-12">
-            <div class="p-mr-2">
+            <div class="p-mr-2" *ngIf="visualizzaCoinvolti">
               <button pButton pRipple label="Aggiungi Coinvolti" icon="pi pi-plus" class="p-button babel-color"
                 (click)="openNew()"></button>
             </div>
