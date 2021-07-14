@@ -42,7 +42,7 @@ export class DropdownAziendeComponent implements OnInit, OnDestroy {
     }
   }
 
-  onValueChange(event) {
+  onValueChange(event: any) {
     const idAzienda: number = event.value.label;
     this.aziendaEmitter.emit(idAzienda);
   }

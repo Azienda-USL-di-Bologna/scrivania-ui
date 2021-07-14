@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { NtJwtLoginService, UtenteUtilities, UtilityFunctions } from "@bds/nt-jwt-login";
 import { GlobalService } from "src/app/services/global.service";
-import { ImpostazioniApplicazioni, Applicazione } from "@bds/ng-internauta-model";
+import { ImpostazioniApplicazioni, Applicazione, Azienda } from "@bds/ng-internauta-model";
 import { ApplicationCustiomization, ScrivaniaVersion } from "src/environments/application_customization";
 import { COMMON_PARAMETERS, ATTIVITA_ROUTE } from "src/environments/app-constants";
 
@@ -33,7 +33,7 @@ export class LoadingComponent implements OnInit {
                       baseUrl = window.location.protocol + "//" + "localhost:8080";
                   } else {
                       // baseUrl = window.location.protocol + "//" + window.location.host;
-                      baseUrl = utenteUtilities.getUtente().aziendaLogin["baseUrl"];
+                      baseUrl = utenteUtilities.getUtente().aziendaLogin["baseUrl" as keyof Azienda];
                   }
 
                   const babelUrl = baseUrl + babelApplication.baseUrl + "/" + babelApplication.indexPage +

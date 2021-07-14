@@ -1,10 +1,10 @@
 import { Utente } from "@bds/ng-internauta-model";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Type } from "@angular/core";
 import {Router, ActivatedRoute} from "@angular/router";
 import { SCRIVANIA_ROUTE, BABELMAN_URL} from "../../environments/app-constants";
 import { NtJwtLoginService, LoginType, UtenteUtilities } from "@bds/nt-jwt-login";
-import { MenuItem } from "primeng-lts/api";
-import { DialogService } from "primeng-lts/dynamicdialog";
+import { MenuItem } from "primeng/api";
+import { DialogService } from "primeng/dynamicdialog";
 import { HttpClient } from "@angular/common/http";
 import { ImpostazioniComponent } from "../impostazioni/impostazioni.component";
 // import { ProfiloComponent } from "./profilo/profilo.component";
@@ -115,7 +115,7 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  showSettings(component, header, width, height, data) {
+  showSettings(component: Type<any>, header: string, width: string, height: string, data: any) {
     const ref = this.dialogService.open(component, {
       data: data,
       header: header,

@@ -6,6 +6,8 @@ import {rootRouterConfig} from "./app.routes";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { HttpModule } from "@angular/http";
+import { RouteReuseStrategy } from '@angular/router';
+import { CustomReuseStrategy } from '@bds/nt-communicator';
 
 /* Custom component */
 import { AppComponent } from "./app.component";
@@ -18,6 +20,7 @@ import { AttivitaFatteComponent } from "./tabelle/attivita-fatte/attivita-fatte.
 import { DropdownAziendeComponent } from "./components/dropdown-aziende/dropdown-aziende.component";
 import { LoadingComponent } from "./pagine/loading/loading.component";
 
+
 // import {  HeaderComponent as PPHeader,
 //           HeaderFeaturesComponent as PPHeaderFeaturesComponent,
 //           CambioUtenteComponent as PPCambioUtenteComponent } from "@bds/primeng-plugin";
@@ -26,42 +29,42 @@ import { PrimengPluginModule, ProfiloComponent } from "@bds/primeng-plugin";
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
 import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
-import { MessageService } from "primeng-lts/api";
-import { DialogService } from "primeng-lts/dynamicdialog";
+import { MessageService } from "primeng/api";
+import { DialogService } from "primeng/dynamicdialog";
 import { RaccoltaSempliceService } from './tabelle/raccolta-semplice/raccolta-semplice.service';
 import { ExtendedAllegatoService } from "./tabelle/raccolta-semplice/inserimento-manuale/extended-allegato.service";
 import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtuale.service";
 
 /* PrimeNG component */
-import { RadioButtonModule } from 'primeng-lts/radiobutton';
-import { AccordionModule } from "primeng-lts/accordion";
-import { LightboxModule } from "primeng-lts/lightbox";
-import { PanelModule } from "primeng-lts/panel";
-import { DropdownModule } from "primeng-lts/dropdown";
-import { TableModule } from "primeng-lts/table";
-import { CalendarModule } from "primeng-lts/calendar";
-import { TooltipModule } from "primeng-lts/tooltip";
-import { InputSwitchModule } from "primeng-lts/inputswitch";
-import { MenubarModule } from "primeng-lts/menubar";
-import { SlideMenuModule } from "primeng-lts/slidemenu";
-import { DynamicDialogModule } from "primeng-lts/dynamicdialog";
-import { ContextMenuModule } from "primeng-lts/contextmenu";
-import { InputTextModule } from "primeng-lts/inputtext";
-import { OverlayPanelModule } from "primeng-lts/overlaypanel";
-import { TieredMenuModule } from "primeng-lts/tieredmenu";
-import { DialogModule } from "primeng-lts/dialog";
-import { AutoCompleteModule } from "primeng-lts/autocomplete";
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { AccordionModule } from "primeng/accordion";
+import { LightboxModule } from "primeng/lightbox";
+import { PanelModule } from "primeng/panel";
+import { DropdownModule } from "primeng/dropdown";
+import { TableModule } from "primeng/table";
+import { CalendarModule } from "primeng/calendar";
+import { TooltipModule } from "primeng/tooltip";
+import { InputSwitchModule } from "primeng/inputswitch";
+import { MenubarModule } from "primeng/menubar";
+import { SlideMenuModule } from "primeng/slidemenu";
+import { DynamicDialogModule } from "primeng/dynamicdialog";
+import { ContextMenuModule } from "primeng/contextmenu";
+import { InputTextModule } from "primeng/inputtext";
+import { OverlayPanelModule } from "primeng/overlaypanel";
+import { TieredMenuModule } from "primeng/tieredmenu";
+import { DialogModule } from "primeng/dialog";
+import { AutoCompleteModule } from "primeng/autocomplete";
 import { DatePipe } from "@angular/common";
-import { ToastModule } from "primeng-lts/toast";
-import { CardModule } from "primeng-lts/card";
-import { ConfirmDialogModule } from "primeng-lts/confirmdialog";
-import { ConfirmationService } from "primeng-lts/api";
-import { ProgressSpinnerModule } from "primeng-lts/progressspinner";
-import { FileUploadModule } from 'primeng-lts/fileupload';
-import {BlockUIModule} from 'primeng-lts/blockui';
-import {ListboxModule} from 'primeng-lts/listbox';
-import {FieldsetModule} from 'primeng-lts/fieldset';
-import {ScrollPanelModule} from 'primeng-lts/scrollpanel';
+import { ToastModule } from "primeng/toast";
+import { CardModule } from "primeng/card";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { ConfirmationService } from "primeng/api";
+import { ProgressSpinnerModule } from "primeng/progressspinner";
+import { FileUploadModule } from 'primeng/fileupload';
+import {BlockUIModule} from 'primeng/blockui';
+import {ListboxModule} from 'primeng/listbox';
+import {FieldsetModule} from 'primeng/fieldset';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
@@ -150,7 +153,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
   ],
   providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService,
     ImpostazioniService, DialogService, ConfirmationService,
-    BolloVirtualeService, RaccoltaSempliceService, ExtendedAllegatoService
+    BolloVirtualeService, RaccoltaSempliceService, ExtendedAllegatoService,
+    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
   ],
   bootstrap: [AppComponent],
   entryComponents: [ImpostazioniComponent, ProfiloComponent]

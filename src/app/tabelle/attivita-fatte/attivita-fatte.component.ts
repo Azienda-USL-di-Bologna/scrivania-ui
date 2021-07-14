@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList, ViewChild } from "@angular/core";
 import { DatePipe } from "@angular/common";
-import { LazyLoadEvent } from "primeng-lts/api";
+import { LazyLoadEvent } from "primeng/api";
 import { FILTER_TYPES, SORT_MODES, LOCAL_IT } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts, buildPagingConf } from "@bds/primeng-plugin";
 import { AttivitaFatteService } from "./attivita-fatte.service";
@@ -9,8 +9,8 @@ import { AttivitaFatta } from "@bds/ng-internauta-model";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Subscription } from "rxjs";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
-import { Calendar } from "primeng-lts/calendar";
-import { Table } from "primeng-lts/table";
+import { Calendar } from "primeng/calendar";
+import { Table } from "primeng/table";
 
 @Component({
   selector: "app-attivita-fatte",
@@ -170,17 +170,13 @@ export class AttivitaFatteComponent implements OnInit {
           this.totalRecords = data.page.totalElements;
           this.attivitaFatte.forEach(a => {
             if (a.tipo === "notifica") {
-              a["iconaAttivita"] =
-                "assets/images/baseline-notifications_none-24px.svg";
+              a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
             } else if (!a.priorita || a.priorita === 3) {
-              a["iconaAttivita"] =
-                "assets/images/baseline-outlined_flag-24px.3.svg";
+              a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
             } else if (a.priorita === 2) {
-              a["iconaAttivita"] =
-                "assets/images/baseline-outlined_flag-24px.2.svg";
+              a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.2.svg";
             } else if (a.priorita === 1) {
-              a["iconaAttivita"] =
-                "assets/images/baseline-outlined_flag-24px.1.svg";
+              a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.1.svg";
             }
           });
         }
@@ -189,7 +185,7 @@ export class AttivitaFatteComponent implements OnInit {
   }
 
   // TODO: toglierla e usare quella in primeng-plugin dopo opportuno refactoring
-  private buildPageConf(event): PagingConf {
+  private buildPageConf(event: any): PagingConf {
     let page = 0;
     let size = this._rows;
     if (event) {
@@ -315,4 +311,8 @@ export class AttivitaFatteComponent implements OnInit {
   //   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   // }
 
+}
+
+export class AttivitaFattaCustom extends AttivitaFatta {
+  iconaAttivita: string;
 }
