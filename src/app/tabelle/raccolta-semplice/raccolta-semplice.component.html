@@ -88,8 +88,8 @@
                 [readonlyInput]="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
               </p-calendar>
               <input pInputText *ngSwitchDefault attr.aria-label="Cella filtro per colonna {{col.label}}" type="text"
-                (keyup.enter)="tableRaccoltaSemplice.filter($event.target.value, col.field, col.filterMatchMode.value)"
-                #filterInputText [ngModel]="prova" [disabled]="loading">
+                (keyup)="tableRaccoltaSemplice.filter($event.target.value, col.field, col.filterMatchMode.value)"
+                #filterInputText [disabled]="loading">
             </div>
           </td>
         </tr>
@@ -97,7 +97,7 @@
       <ng-template pTemplate="emptymessage" let-columns>
         <tr>
           <td>
-            selezionare i criteri di ricerca per iniziare la consultazione
+            Selezionare i criteri di ricerca per iniziare la consultazione
           </td>
         </tr>
       </ng-template>
@@ -256,6 +256,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-storico>
           <tr>
+            <td class="text-content">{{storico?.utente}}</td>
             <td class="text-content">{{storico?.motivazione}}</td>
             <td class="text-content">{{storico?.stato}}</td>
             <td class="text-content">{{storico?.data}}</td>

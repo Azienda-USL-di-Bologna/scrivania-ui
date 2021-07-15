@@ -14,12 +14,10 @@ import { Calendar } from 'primeng-lts/calendar';
 import { FilterUtils } from "primeng-lts/utils";
 import { Storico } from './dettaglio-annullamento/modal/storico';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { getSupportedInputTypes } from '@angular/cdk/platform';
 import { LazyLoadEvent } from 'primeng-lts/api';
-import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
-import { eventNames } from 'process';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as _ from 'underscore';
+
 
 @Component({
   selector: 'app-raccolta-semplice',
@@ -32,7 +30,9 @@ export class RaccoltaSempliceComponent implements OnInit {
     private datePipe: DatePipe, 
     private formBuilder: FormBuilder,
     private router: Router,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute) {
+      this.sendFilters = _.debounce(this.sendFilters, 1200)
+     }
 
   _azienda: Azienda;
   @Input() set azienda(aziendaValue: Azienda) {
@@ -73,17 +73,18 @@ export class RaccoltaSempliceComponent implements OnInit {
   public untouched: boolean;
   public newDate: string;
   public offset: number;
-  public prova: string[];
   public totalRows: number;
   public recordPerPagina:number = 1;
   public coinvoltiPerPagina:number = 4;
-
+  public prova: string[] = [];
   public codiceFiscale: string;
   public piva: string;
+  public source: any;
+  public filtriMap: Map<string, string> = new Map();
 
   @ViewChild("tableRaccoltaSemplice") private dataTable: Table;
   @ViewChildren("calGenz") public _calGen: QueryList<Calendar>;
-   
+  @ViewChild("filterInputText") public input: ElementRef;
 
 
   public colsDetail: any[] = [
@@ -170,8 +171,8 @@ export class RaccoltaSempliceComponent implements OnInit {
   ];
 
   onLoadRaccoltaSemplice() {
-    this.prova = [];
     this.datiDocumenti = [];
+    this.filtriMap = new Map();
     this.filtri = [];
     this.filtriRicerca = [];
     if ((!!this._azienda && !!this.dataInizio && this.dataInizio instanceof Date) || (!!this._azienda && (!!this.codiceFiscale || !!this.piva))) {
@@ -216,7 +217,9 @@ export class RaccoltaSempliceComponent implements OnInit {
   onTableRefresh() {
     if (!!this._azienda && !!this.dataInizio && this.dataInizio instanceof Date) {
       console.log("Table Refresh");
+      
       this.filtri = [];
+      this.filtriRicerca = [];
       this.onLoadRaccoltaSemplice();
     }
   }
@@ -293,134 +296,124 @@ export class RaccoltaSempliceComponent implements OnInit {
   }
 
   public lazyLoad(event: LazyLoadEvent) {
+
     console.log("Evento: ", event);
-    console.log("Filtri count:", event.filters.length)
     this.untouched = true;
     this.offset = (event.first / event.rows) * this.recordPerPagina;
 
     if(this.codiceFiscale != undefined) {
-      this.filtri.push(this.codiceFiscale.trim());
-      this.filtriRicerca.push("cf");
+      this.filtriMap.set("cf", this.codiceFiscale.trim());
       this.untouched = false;
     }
+    else
+      this.filtriMap.delete("cf");
 
     if(this.piva != undefined) {
-      this.filtri.push(this.piva.trim());
-      this.filtriRicerca.push("piva");
+      this.filtriMap.set("piva", this.piva.trim());
       this.untouched = false;
     }
+    else
+      this.filtriMap.delete("piva");
 
     if(event.filters.codice?.value != undefined) {
-      this.filtri.push(event.filters.codice?.value.toString());
-      this.filtriRicerca.push("numero");
-      console.log("Inserimento: "+ this.filtri.length);
+      this.filtriMap.set("numero", event.filters.codice?.value.toString());
+      console.log("Inserimento: "+ this.filtriMap.size);
       this.untouched = false;
     }
+    else
+    this.filtriMap.delete("numero");
 
     if(event.filters.applicazioneChiamante?.value != undefined) {
-      this.filtri.push(event.filters.applicazioneChiamante?.value.toString());
-      this.filtriRicerca.push("applicazioneChiamante");
-      console.log("Inserimento: "+ this.filtri.length);
+      this.filtriMap.set("applicazioneChiamante", event.filters.applicazioneChiamante?.value.toString());
+      console.log("Inserimento: "+ this.filtriMap.size);
       this.untouched = false;
     }
+    else
+      this.filtriMap.delete("applicazioneChiamante");
 
     if(event.filters.createTime?.value != undefined) {
-      this.filtri.push(this.newDate);
-      this.filtriRicerca.push("createTime");
-      console.log("Inserimento: "+ this.filtri.length);
+      this.filtriMap.set("createTime", event.filters.createTime?.value.toString());
+      console.log("Inserimento: "+ this.filtriMap.size);
       this.untouched = false;
     }
+    else
+      this.filtriMap.delete("createTime");
 
-
-
-    
     if(event.filters.oggetto?.value != undefined) {
-      console.log("Filtro oggetto: " + event.filters.oggetto?.value);
-      this.filtri.push(event.filters.oggetto?.value.toString());
-      this.filtriRicerca.push("oggetto")
-      console.log("Inserimento: "+ this.filtri.length);
+      this.filtriMap.set("oggetto", event.filters.oggetto?.value.toString());
+      console.log("Inserimento: "+ this.filtriMap.size);
       this.untouched = false;
     }
+    else
+      this.filtriMap.delete("oggetto");
 
+    if(event.filters.creatore?.value != undefined) {
+      this.filtriMap.set("creatore", event.filters.creatore?.value.toString());
+      console.log("Inserimento: "+ this.filtriMap.size);
+      this.untouched = false;
+    }
+    else
+      this.filtriMap.delete("creatore");
 
-      //
-      if(event.filters.creatore?.value != undefined) {
-        console.log("Filtro creatore: " + event.filters.creatore?.value);
-        this.filtri.push(event.filters.creatore?.value.toString());
-        this.filtriRicerca.push("creatore");
-        console.log("Inserimento: "+ this.filtri.length);
-        this.untouched = false;
-      }
+    if(event.filters.tipoDocumento?.value != undefined) {
+      this.filtriMap.set("tipoDocumento", event.filters.tipoDocumento?.value.toString());
+      console.log("Inserimento: "+ this.filtriMap.size);
+      this.untouched = false;
+    }
+    else
+      this.filtriMap.delete("tipoDocumento");
 
       
-      //
-      if(event.filters.registrazione?.value != undefined) {
-        console.log("Filtro registrazione" + event.filters.registrazione?.value);
-        this.filtri.push(event.filters.registrazione?.value.toString());
-        console.log("Inserimento: "+ this.filtri.length);
-        this.untouched = false;
-      }
+    if(event.filters.fascicoli?.value != undefined) {
+      this.filtriMap.set("fascicoli", event.filters.fascicoli?.value.toString());
+      console.log("Inserimento: "+ this.filtriMap.size);
+      this.untouched = false;
+    }
+    else
+      this.filtriMap.delete("fascicoli");
 
-     // 
-      if(event.filters.tipoDocumento?.value != undefined) {
-        console.log("Tipo documento: " + event.filters.tipoDocumento?.value);
-        this.filtri.push(event.filters.tipoDocumento?.value.toString());
-        this.filtriRicerca.push("tipoDocumento");
-        console.log("Inserimento: "+ this.filtri.length);
-        this.untouched = false;
-      }
+      
+    if(event.filters.documentoBabel?.value != undefined) {
+      this.filtriMap.set("documentoBabel", event.filters.documentoBabel?.value.toString());
+      console.log("Inserimento: "+ this.filtriMap.size);
+      this.untouched = false;
+    }
+    else
+      this.filtriMap.delete("documentoBabel");
 
-      //
-      if(event.filters.fascicoli?.value != undefined) {
-        console.log("Fascicoli: " + event.filters.fascicoli?.value);
-        this.filtri.push(event.filters.fascicoli?.value.toString());
-        this.filtriRicerca.push("fascicoli");
-        console.log("Inserimento: "+ this.filtri.length);
-        this.untouched = false;
-      }
+    
+    if(event.filters.descrizioneStruttura?.value != undefined) {
+      this.filtriMap.set("descrizioneStruttura", event.filters.descrizioneStruttura?.value.toString());
+      console.log("Inserimento: "+ this.filtriMap.size);
+      this.untouched = false;
+    }
+    else
+      this.filtriMap.delete("descrizioneStruttura");
 
-      //
-      if(event.filters.documentoBabel?.value != undefined) {
-        console.log("Documento Babel: " + event.filters.documentoBabel?.value);
-        this.filtriRicerca.push("documentoBabel");
-        this.filtri.push(event.filters.documentoBabel?.value.toString());
-        console.log("Inserimento: "+ this.filtri.length);
-        this.untouched = false;
-      }
-
-      //
-      if(event.filters.descrizioneStruttura?.value != undefined) {
-        console.log("Struttura: " + event.filters.descrizioneStruttura?.value);
-        this.filtriRicerca.push("struttura");
-        this.filtri.push(event.filters.descrizioneStruttura?.value.toString());
-        console.log("Inserimento: "+ this.filtri.length);
-        this.untouched = false;
-      }
-
-      if(this.untouched) {
-        this.loading = true;
-        console.log("Sono nell'if");
-        this.subscriptions.push(
-          this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.codiceFiscale, this.piva, this.recordPerPagina, this.offset)
-            .subscribe((res: HttpResponse<Document[]>) => {
-              this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
-              console.log("Dati: ", this.datiDocumenti);
-              this.filtri = [];
-              this.filtriRicerca = [];
-              this.loading = false;
-              return; 
-            }, error => {
-              console.log("error raccoltaSempliceService.getRaccoltaSemplice", error);
-              this.loading = false;
-              this.filtri = [];
-              this.filtriRicerca = [];
-              return;     
-            }
-          )
+    if(this.untouched) {
+      console.log("Sono nell'if");
+      this.loading = true;
+      this.subscriptions.push(
+        this.raccoltaSempliceService.getRaccoltaSemplice(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'), this.codiceFiscale, this.piva, this.recordPerPagina, this.offset)
+          .subscribe((res: HttpResponse<Document[]>) => {
+            this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
+            console.log("Dati: ", this.datiDocumenti);
+            this.filtri = [];
+            this.filtriRicerca = [];
+            this.loading = false;
+            return; 
+          }, error => {
+            console.log("error raccoltaSempliceService.getRaccoltaSemplice", error);
+            this.loading = false;
+            this.filtri = [];
+            this.filtriRicerca = [];
+            return;     
+          }
         )
-      }
-      else
-        this.sendFilters(this.offset);
+      )
+    }
+    else
+      this.sendFilters(this.offset);
   }
 
   private download(idSottodocumento: string, name: string, mimetype: string): void {
@@ -432,6 +425,10 @@ export class RaccoltaSempliceComponent implements OnInit {
   });
 }
 
+public delayFiltri(event: LazyLoadEvent) {
+
+}
+
 
   public sendFilters(offset: number) {
     this.dataInizio = null;
@@ -439,7 +436,7 @@ export class RaccoltaSempliceComponent implements OnInit {
     this.loading = true;
     console.log("Sono nella send filters");
     this.subscriptions.push(
-      this.raccoltaSempliceService.ricercaRaccolta(this.filtri, this.filtriRicerca, this.recordPerPagina, offset)
+      this.raccoltaSempliceService.ricercaRaccolta(this.filtriMap, this.recordPerPagina, offset)
         .subscribe((res: HttpResponse<Document[]>) => {
           this.datiDocumenti = res.body.map(document => { return ({ ...document,  date: (this.datePipe.transform(document.createTime, 'dd/MM/yyyy')) } as Document)});
           if(this.datiDocumenti.length > 0) {
