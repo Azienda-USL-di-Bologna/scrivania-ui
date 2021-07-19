@@ -332,7 +332,7 @@ export class RaccoltaSempliceComponent implements OnInit {
       this.filtriMap.delete("applicazioneChiamante");
 
     if(event.filters.createTime?.value != undefined) {
-      this.filtriMap.set("createTime", event.filters.createTime?.value.toString());
+      this.filtriMap.set("createTime", this.newDate);
       console.log("Inserimento: "+ this.filtriMap.size);
       this.untouched = false;
     }
@@ -445,7 +445,6 @@ public delayFiltri(event: LazyLoadEvent) {
             this.totalRecords = this.datiDocumenti.length
           }
           else {
-            console.log("Ora non si blocca");
             this.totalRows = 0;
             this.loading = false;
           }
