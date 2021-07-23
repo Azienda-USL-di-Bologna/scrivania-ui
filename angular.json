@@ -68,8 +68,8 @@
                 "vendor": false
               },
               "aot": true,
-              "buildOptimizer": false,
-              "optimization": false
+              "buildOptimizer": true,
+              "optimization": true
             },
             "development": {
               "buildOptimizer": false,
