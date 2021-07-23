@@ -97,7 +97,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       this.hidePreview = newSettings[ApplicationCustiomization.scrivania.hidePreview] === "true";
     }));
     this.subscriptions.push(this.scrivaniaService.getMenuScrivania().subscribe((items: ItemMenu[]) => {
-      console.log("items", items)
+      console.log("items", items);
       this.menuItems = items;
     }));
     
