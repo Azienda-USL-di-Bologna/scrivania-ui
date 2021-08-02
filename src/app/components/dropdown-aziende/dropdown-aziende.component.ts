@@ -23,6 +23,7 @@ export class DropdownAziendeComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       if (u) {
         this.loggedUser = u;
+        this.filtriApribili = [];
         const aziende: Azienda[] = this.loggedUser.getUtente().aziende;
         if (aziende.length > 1) { // Il -1 equivale a mostra per tutte le aziende
           this.filtriApribili.push(new DropdownRecord(-1, "Tutti"));
