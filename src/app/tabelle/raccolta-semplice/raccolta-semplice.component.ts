@@ -372,6 +372,14 @@ export class RaccoltaSempliceComponent implements OnInit {
     else
       this.filtriMap.delete("fascicoli");
 
+    if(event.filters.stato?.value != undefined) {
+      this.filtriMap.set("stato", event.filters.stato?.value.toString());
+      console.log("Inserimento: "+ this.filtriMap.size);
+      this.untouched = false;
+    }
+    else
+      this.filtriMap.delete("stato");  
+
       
     if(event.filters.documentoBabel?.value != undefined) {
       this.filtriMap.set("documentoBabel", event.filters.documentoBabel?.value.toString());
@@ -389,6 +397,31 @@ export class RaccoltaSempliceComponent implements OnInit {
     }
     else
       this.filtriMap.delete("descrizioneStruttura");
+
+      
+      
+
+    if(this.piva != undefined) {
+      console.log("Piva:", this.piva);
+      if(this.piva.trim() != "") {
+        this.filtriMap.set("piva", this.piva);
+        console.log("Inserimento: "+ this.filtriMap.size);
+        this.untouched = false;
+      }
+    }
+    else
+      this.filtriMap.delete("piva");
+
+    if(this.codiceFiscale != undefined) {
+      console.log("CF:", this.codiceFiscale);
+      if(this.codiceFiscale.trim() != "") {
+        this.filtriMap.set("cf", this.codiceFiscale);
+        console.log("Inserimento: "+ this.filtriMap.size);
+        this.untouched = false;
+        }
+      }
+      else
+        this.filtriMap.delete("cf");  
 
     if(this.untouched) {
       console.log("Sono nell'if");
