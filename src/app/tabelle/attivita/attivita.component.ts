@@ -445,8 +445,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     event.stopPropagation();
     const response = this.attivitaService.delete(attivita);
     response.subscribe(res => {
-      const index = this.attivita.findIndex(element => element === attivita);
-      this.attivita.splice(index, 1);
         setTimeout(() => { // this will make the execution after the above boolean has changed
         const selectedRow = this.tableRows.toArray()[0];
         selectedRow.nativeElement.focus();
