@@ -92,7 +92,9 @@ export class ScrivaniaService extends NextSDREntityProvider {
   }
 
   public getMenuScrivania(): Observable<ItemMenu[]> {
+    console.log("Sono qui per chiedere il menu della scrivania");
     const url: string = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.GET_MENU_SCRIVANIA;
+    console.log("url: " + url);
     return this.http.get(url) as Observable<ItemMenu[]>;
   }
 }
