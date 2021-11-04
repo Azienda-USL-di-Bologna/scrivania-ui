@@ -9,10 +9,23 @@
             <span class="si-no">{{ model.hidePreview ? 'Sì': 'No' }}</span>
           </div>
         </li>
+        <li class="item">
+          <label for="hidePreview">Notifica attività via mail:</label>
+          <div class="right">
+            <p-inplace #inplace [closable]="true" [active]="thereIsEmail" (onDeactivate)="deleteEmailToNotify()" [style]="{'min-height':'33px'}">
+              <ng-template pTemplate="display">
+                Clicca qui per inserire la mail per la notofica
+              </ng-template>
+              <ng-template pTemplate="content">
+                  <input type="text" [formControl]="mail" placeholder="Scrivi la mail" [(ngModel)]="model.emailToNotify" pInputText>
+              </ng-template>
+          </p-inplace>
+          </div>
+        </li>
       </ul>
     </div>
     <div class="p-grid button-wrapper">
-        <button pButton class="button-styles" label="Salva" (click)="saveSettings()"></button>
+        <button pButton class="button-styles" label="Salva" [disabled]="disabledIf()" (click)="saveSettings()"></button>
         <button pButton class="button-styles button-margin-left" label="Annulla" (click)="onClose()"></button>
     </div>
   </form>

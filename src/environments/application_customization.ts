@@ -7,6 +7,7 @@ export const ApplicationCustiomization = {
             offsetWidth: "scrivania.rigthside.offsetWidth"
         },
         hidePreview: "scrivania.hidePreview",
+        emailToNotify: "scrivania.emailToNotify",
         version: "scrivania.version"
     }
 };
