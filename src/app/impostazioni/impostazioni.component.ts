@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from "@angular/core";
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Impostazioni } from "./impostazioni";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { Subscription } from "rxjs";
 import { FormControl, Validators } from '@angular/forms';
+import { Inplace } from 'primeng/inplace';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { FormControl, Validators } from '@angular/forms';
   templateUrl: "./impostazioni.component.html",
   styleUrls: ["./impostazioni.component.scss"]
 })
-export class ImpostazioniComponent implements OnInit, OnDestroy {
+export class ImpostazioniComponent implements OnInit, OnDestroy, AfterViewInit {
 
   checked: boolean;
   model: Impostazioni;
@@ -20,11 +21,11 @@ export class ImpostazioniComponent implements OnInit, OnDestroy {
   thereIsEmail: boolean;
   private subscription: Subscription;
   @ViewChild('inplace')
-  public inplace: any;
+  public inplace: Inplace;
 
   emailRegex = new RegExp(/^(([^&#!?'òùàèéì%+*§$£<>()\[\]\.,;:\s@\"]+(\.[^<>&#!?'òùàèéì%+*§$£()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()&#!?'%òùàèéì+*§$£[\]\.,;:'\s@\"]+\.)+[^<>&#!?%'òùàèéì+*§$£()[\]\.,;:'\s@\"]{2,})$/);
 
-  public mail = new FormControl('' , Validators.pattern(this.emailRegex));
+  public mail = new FormControl('', Validators.pattern(this.emailRegex));
 
   constructor(public ref: DynamicDialogRef, private loginService: NtJwtLoginService, private impostazioniService: ImpostazioniService) { }
 
@@ -54,14 +55,18 @@ export class ImpostazioniComponent implements OnInit, OnDestroy {
     this.impostazioniService.setEmailToNotify(this.model.emailToNotify.toString());
     this.subscription =
       this.loggedUser.setImpostazioniApplicazione(this.loginService, this.impostazioniService.getImpostazioniVisualizzazione())
-      .subscribe((newSettings) => {
-        this.impostazioniService.doNotify(newSettings);
-        this.onClose();
-      });
-    }
+        .subscribe((newSettings) => {
+          this.impostazioniService.doNotify(newSettings);
+          this.onClose();
+        });
+  }
 
   onClose() {
     this.ref.close();
+  }
+
+  ngAfterViewInit() {
+
   }
 
   ngOnDestroy() {
@@ -70,14 +75,17 @@ export class ImpostazioniComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteEmailToNotify(){
-    this.model.emailToNotify='';
+  deleteEmailToNotify() {
+    this.model.emailToNotify = '';
   }
 
-  disabledIf(){
-    if(this.mail.status == 'VALID'){
-      return false;
+  disabledIf() {
+    if (this.inplace && this.inplace.active) {
+      if (this.mail.status == 'VALID' && this.mail.value != '') {
+        return false;
+      }
+      return true;
     }
-    return true;
+    return false;
   }
 }
