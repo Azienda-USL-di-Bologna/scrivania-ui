@@ -65,6 +65,7 @@ import {BlockUIModule} from 'primeng/blockui';
 import {ListboxModule} from 'primeng/listbox';
 import {FieldsetModule} from 'primeng/fieldset';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
+import { InplaceModule } from 'primeng/inplace';
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
@@ -149,7 +150,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     ListboxModule,
     FieldsetModule,
     MatExpansionModule,
-    ScrollPanelModule
+    ScrollPanelModule,
+    InplaceModule
   ],
   providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService,
     ImpostazioniService, DialogService, ConfirmationService,
