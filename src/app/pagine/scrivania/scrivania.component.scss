@@ -45,16 +45,20 @@
 .buttons-bar{
     display: flex;
     flex-direction: row;
+    height: 34.6px;
 }
 .buttons-bar > button {
     margin: 0 6px 0 0;
     border: 1px solid #d2d2d2 !important;
     color: #333333 !important;
     background-color: #f4f4f4 !important;
+
 }
 
 .icon-custom {
-    padding-left: 5px;
+    // padding-left: 5px;
+    display: flex !important;
+    align-items: center;
     padding-top: 2.5px;
     width: 34.1px;
 }
@@ -338,3 +342,4 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
     position: absolute;
     margin: auto;
 }
+
