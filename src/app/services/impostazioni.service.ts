@@ -48,6 +48,14 @@ export class ImpostazioniService {
   setHidePreview(hidePreviewValue: string) {
     this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.hidePreview] = hidePreviewValue;
   }
+  
+  getEmailToNotify() {
+    return this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.emailToNotify];
+  }
+
+  setEmailToNotify(emailToNotify: string) {
+    this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.emailToNotify] = emailToNotify;
+  }
 
   /**
    * Lancia la notifica di cambiamento delle impostazioni ai sottoscrittori
