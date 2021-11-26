@@ -197,7 +197,7 @@ export class AttivitaFatteComponent implements OnInit {
         page: page,
         size: size
       },
-      mode: "PAGE"
+      mode: "PAGE_NO_COUNT"
     };
     return pageConf;
   }
