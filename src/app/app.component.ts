@@ -1,14 +1,13 @@
-import { Component, OnInit, OnDestroy, NgZone, Type } from "@angular/core";
-import { NtJwtLoginService, UtenteUtilities, UtilityFunctions, SessionManager} from "@bds/nt-jwt-login";
+import { Component, OnInit, OnDestroy, Type } from "@angular/core";
+import { NtJwtLoginService, UtenteUtilities, UtilityFunctions} from "@bds/nt-jwt-login";
 import { SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { Utente, getInternautaUrl, BaseUrlType } from "@bds/ng-internauta-model";
+import { getInternautaUrl, BaseUrlType } from "@bds/ng-internauta-model";
 import { MenuItem } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService } from "@bds/nt-communicator";
-import { HeaderFeaturesConfig } from "@bds/primeng-plugin";
-import { PopupMessaggiService } from "@bds/common-components";
+import { PopupMessaggiService, HeaderFeaturesConfig } from "@bds/common-components";
 import { Subscription } from "rxjs";
 
 @Component({

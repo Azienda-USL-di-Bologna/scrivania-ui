@@ -19,12 +19,8 @@ import { CambioUtenteComponent } from "./header/cambio-utente/cambio-utente.comp
 import { AttivitaFatteComponent } from "./tabelle/attivita-fatte/attivita-fatte.component";
 import { DropdownAziendeComponent } from "./components/dropdown-aziende/dropdown-aziende.component";
 import { LoadingComponent } from "./pagine/loading/loading.component";
-
-
-// import {  HeaderComponent as PPHeader,
-//           HeaderFeaturesComponent as PPHeaderFeaturesComponent,
-//           CambioUtenteComponent as PPCambioUtenteComponent } from "@bds/primeng-plugin";
-import { PrimengPluginModule, ProfiloComponent } from "@bds/primeng-plugin";
+import { PrimengPluginModule } from "@bds/primeng-plugin";
+import { ProfiloComponent } from "@bds/common-components";
 
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";

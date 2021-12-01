@@ -4,7 +4,7 @@ import { ScrivaniaComponent } from "./pagine/scrivania/scrivania.component";
 import { NtJwtLoginComponent } from "@bds/nt-jwt-login";
 import { NoLoginGuard, LoginGuard, RefreshLoggedUserGuard } from "@bds/nt-jwt-login";
 import { LoadingComponent } from "./pagine/loading/loading.component";
-import { SmartWorkingComponent } from "@bds/primeng-plugin";
+import { SmartWorkingComponent } from "@bds/common-components";
 import { DatiBolloVirtualeComponent } from "./tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component";
 import { CODICI_RUOLO } from "@bds/ng-internauta-model";
 import { RaccoltaSempliceComponent } from "./tabelle/raccolta-semplice/raccolta-semplice.component";
