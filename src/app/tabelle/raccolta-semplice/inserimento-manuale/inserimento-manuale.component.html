@@ -190,7 +190,7 @@
                               (click)="deleteFile(attachments, i)">Delete</button>
                           </div>
                         </div>
-                      </ng-template>
+                      </ng-template>-
                     </p-fileUpload>
                   </div>
                 </form>
@@ -372,7 +372,7 @@
                 (completeMethod)="searchContatto($event)" field="descrizione" appendTo="body" class="p-pr-3 "
                 dropdown=true placeholder="Cerca contatto..." emptyMessage="Nessun riferimento trovato">
                 <ng-template let-contatto pTemplate="itemContatto">
-                  <div>[{{contatto.descrizione}}] {{contatto.tipo}} {{contatto.categoria}}</div>
+                  <div>[{{contatto.descrizione}} ({{contatto.codiceFiscale}}{{contatto.partitaIva}})] {{contatto.tipo}} {{contatto.categoria}} </div>
                 </ng-template>
               </p-autoComplete>
               <button type="button" pButton icon="pi pi-times" class="interaction-button" (click)="removeContatto()"></button>

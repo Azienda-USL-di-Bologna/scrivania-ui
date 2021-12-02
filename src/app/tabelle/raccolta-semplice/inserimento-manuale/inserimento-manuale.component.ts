@@ -301,6 +301,8 @@ export class InserimentoManualeComponent implements OnInit {
     this.submitted = true;
     console.log("tipo: " + this.selectedTipoCoinvolto);
 
+    console.log("Coinvolto:", this.coinvolto);
+    console.log("Dettaglio:", this.selectedDettaglioContatto.id);
     if (this.selectedTipoCoinvolto === "GIURIDICA" && this.coinvolto.ragioneSociale !== undefined && this.coinvolto.ragioneSociale !== "") {
       this.coinvolto.nomeInterfaccia = this.coinvolto.ragioneSociale;
     } else if (this.coinvolto.nome && this.coinvolto.cognome) {
@@ -386,7 +388,8 @@ export class InserimentoManualeComponent implements OnInit {
   }
 
   public searchFascicolo(event: any) {
-    this.raccoltaService.getFascicoliArgo('100999', 'andrea.marcomini', event.query).subscribe(res => {
+    console.log("Utente:", this.loggedUser.getUtente());
+    this.raccoltaService.getFascicoliArgo('100999', this.loggedUser.getUtente().username, event.query).subscribe(res => {
       this.filteredFascicoli = res.body;
     });
   }
@@ -449,7 +452,7 @@ export class InserimentoManualeComponent implements OnInit {
 
   public insertContatto(dettaglio: DettaglioContatto) {
     console.log(dettaglio);
-
+    this.selectedDettaglioContatto = dettaglio;
     if (!this.alreadyInserted(this.selectedContatto.id)) {
       const nuovoCoinvolto: PersonaRS = new PersonaRS();
       nuovoCoinvolto.id = this.selectedContatto.id;

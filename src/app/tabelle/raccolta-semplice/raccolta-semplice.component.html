@@ -84,7 +84,7 @@
                 [showButtonBar]="true" [locale]="it" [showIcon]="false" dateFormat="dd/mm/yy"
                 (onSelect)="onCalendarAction($event, col.field, 'select')"
                 (onClearClick)="onCalendarAction($event, col.field, 'clear')"
-                (onTodayClick)="onCalendarAction($event, col.field, 'today')" appendTo="body" selectionMode="range"
+                (onTodayClick)="onCalendarAction($event, col.field, 'today')" appendTo="body"
                 [readonlyInput]="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
               </p-calendar>
               <input pInputText *ngSwitchDefault attr.aria-label="Cella filtro per colonna {{col.label}}" type="text"
