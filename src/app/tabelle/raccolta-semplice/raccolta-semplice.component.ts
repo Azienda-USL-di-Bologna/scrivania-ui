@@ -450,11 +450,11 @@ export class RaccoltaSempliceComponent implements OnInit {
   }
 
   private download(idSottodocumento: string, name: string, mimetype: string): void {
-    let index = mimetype.indexOf("/");
-    let extension = mimetype.substr(index + 1);
-    let fileName = name + "." + extension;
+    //let index = mimetype.indexOf("/");
+    //let extension = mimetype.substr(index + 1);
+    //let fileName = name;
     this.raccoltaSempliceService.downloadAllegato(this._azienda.codice, idSottodocumento).subscribe(response => {
-    this.downLoadFile(response, mimetype, fileName, false );
+    this.downLoadFile(response, mimetype, name, false );
   });
 }
 
