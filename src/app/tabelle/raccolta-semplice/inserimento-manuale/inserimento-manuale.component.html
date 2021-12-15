@@ -227,6 +227,11 @@
               <button pButton pRipple label="Aggiungi da Rubrica" icon="pi pi-plus" class="p-button babel-color"
                 (click)="onOpenRubricaPopup()"></button>
             </div>
+            <div class="p-mr-2">
+              <button pButton pRipple label="Aggiungi nuovo coinvolto" icon="pi pi-plus" class="p-button babel-color"
+                (click)="newContatto()"></button>
+            </div>
+
           </div>
 
           <div class="p-field p-col-12">
@@ -285,12 +290,12 @@
               <div class="p-formgrid p-grid">
                 <div class="p-field p-col">
                   <label for="nome">Nome</label>
-                  <input type="text" pInputText id="nome" [(ngModel)]="coinvolto.nome" required autofocus />
+                  <input type="text" pInputText id="nome" [(ngModel)]="coinvolto.nome" required autofocus [disabled]="isOldContatto"/>
                   <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.nome">Nome is required.</small> -->
                 </div>
                 <div class="p-field p-col">
                   <label for="cognome">Cognome</label>
-                  <input type="text" pInputText id="cognome" [(ngModel)]="coinvolto.cognome" required autofocus />
+                  <input type="text" pInputText id="cognome" [(ngModel)]="coinvolto.cognome" required autofocus [disabled]="isOldContatto"/>
                   <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cognome">Cognome is required.</small> -->
                 </div>
               </div>
@@ -298,23 +303,23 @@
               <div class="p-field">
                 <label for="ragioneSociale">Ragione Sociale</label>
                 <input type="text" pInputText id="ragioneSociale" [(ngModel)]="coinvolto.ragioneSociale" required
-                  autofocus />
+                  autofocus [disabled]="isOldContatto"/>
                 <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.ragioneSociale">Ragione Sociale is required.</small> -->
               </div>
               <div class="p-field">
                 <label for="cf">Codice Fiscale</label>
-                <input type="text" pInputText id="cf" [(ngModel)]="coinvolto.cf" required autofocus />
+                <input type="text" pInputText id="cf" [(ngModel)]="coinvolto.cf" required autofocus [disabled]="isOldContatto"/>
                 <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cf">CF is required.</small> -->
               </div>
               <div class="p-field">
                 <label for="partitaIva">Partita IVA</label>
-                <input type="text" pInputText id="partitaIva" [(ngModel)]="coinvolto.partitaIva" required autofocus />
+                <input type="text" pInputText id="partitaIva" [(ngModel)]="coinvolto.partitaIva" required autofocus [disabled]="isOldContatto"/>
                 <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.partitaIva">partitaIva is required.</small> -->
               </div>
               <div class="p-field">
                 <label for="partitaIva">Tipologia</label>
                 <p-dropdown [options]="tipiCoinvolti" [(ngModel)]="selectedTipoCoinvolto" placeholder="tipologia..."
-                  [showClear]="true"></p-dropdown>
+                  [showClear]="true" [disabled]="isOldContatto"></p-dropdown>
               </div>
 
               <div class="p-field">
@@ -357,7 +362,9 @@
             <ng-template pTemplate="footer">
               <button pButton pRipple label="Cancella" icon="pi pi-times" class="p-button-text"
                 (click)="hideDialog()"></button>
-              <button pButton pRipple label="Salva" icon="pi pi-check" class="p-button-text"
+                <button pButton pRipple label="Salva in rubrica" icon="pi pi-check" class="p-button-text" [disabled]="isOldContatto" 
+                (click)="addNewContatto()"></button>
+              <button pButton pRipple label="Aggiorna" icon="pi pi-check" class="p-button-text" [disabled]="!isOldContatto" 
                 (click)="saveCoinvoltoCreato()"></button>
             </ng-template>
           </p-dialog>

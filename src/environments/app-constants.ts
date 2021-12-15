@@ -82,6 +82,7 @@ export const ENTITIES = {
 };
 
 export const CONTROLLERS_ENDPOINT = {
+    EDIT_RUBRICA: "/editRubrica",
     FIRMONE_URLS: "/getFirmoneUrls",
     PRENDONE_URLS: "/getPrendoneUrls",
     CANCELLA_NOTIFICHE: "/cancellaNotifiche",
@@ -95,7 +96,8 @@ export const CONTROLLERS_ENDPOINT = {
     RICERCA_RACCOLTA: "/ricerca",
     CREATE_RS: "/createRS",
     DOWNLOAD: "/downloadAllegato",
-    TIPOLOGIE: "/getTipologia"
+    TIPOLOGIE: "/getTipologia",
+    ADD_CONTATTO: "/personaRS"
 };
 
 export const COMMANDS = {

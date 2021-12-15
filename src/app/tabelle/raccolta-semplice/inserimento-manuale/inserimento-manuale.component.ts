@@ -97,7 +97,7 @@ export class InserimentoManualeComponent implements OnInit {
   public selectedFascicolo: FascicoloArgo;
   public filteredFascicoli: FascicoloArgo[];
   public selectedFascicoli: FascicoloArgo[] = [];
-
+  public isOldContatto = true;
   public selectedDoc: DocumentoArgo;
   public filteredDocs: DocumentoArgo[];
   public selectedDocumentoBabel: DocumentoArgo;
@@ -118,21 +118,21 @@ export class InserimentoManualeComponent implements OnInit {
   public coinvolti: PersonaRS[];
   public coinvolto: PersonaRS;
   public submitted: boolean;
-
+  public oldContatto: Contatto;
   public selectedContatto: Contatto;
   public selectedContatti: Contatto[] = [];
   public filteredContatti: Contatto[];
   public disabledContatto: boolean;
-
+  public oldDettagliContatti: DettaglioContatto[]; 
   public selectedDettaglioContatto: DettaglioContatto;
   public selectedDettagliContatti: DettaglioContatto[] = [];
   public filteredDettagliContatti: DettaglioContatto[];
   public disabledDettaglioContatto: boolean;
-
+  public mapEditCoinvolto: Map<string, string> = new Map;
   public panelOpenStateDati: string = "Incompleto"
   public panelOpenState: boolean = true;
   public tipologieDocumenti$: SelectItem[] = [];
-
+  public mapNewContatto: Map<string, string>;
   public displayRubricaPopup = false;
   public progressBarEnable = false;
   public displayModal: boolean;
@@ -192,7 +192,6 @@ export class InserimentoManualeComponent implements OnInit {
       this.blockedPanelDoc = true;
       this.blockedPanelUpload = false;
     }
-
   }
 
 
@@ -292,9 +291,135 @@ export class InserimentoManualeComponent implements OnInit {
     this.displayRubricaPopup = false;
   }
 
+  notEmptyText(s: string) : boolean {
+    if(s != null && s.trim() != "")
+      return true;
+    else
+      return false;
+  }
+
   hideDialog() {
     this.coinvoltoDialog = false;
     this.submitted = false;
+  }
+
+  addNewContatto() {
+    this.mapNewContatto = new Map<string, string>();
+    let warning = false;
+    let missingPart = "";
+    this.coinvolto.tipologia = this.selectedTipoCoinvolto;
+    if((this.coinvolto.tipologia != "GIURIDICA" 
+    && this.coinvolto.tipologia != "FISICA") || this.coinvolto.tipologia == null 
+    || this.coinvolto == undefined) {
+      warning = true;
+      missingPart = missingPart + "Tipologia" ;
+    }
+    if((this.coinvolto.tipologia == "FISICA") && this.coinvolto.nome.trim() == "" ) {
+      warning = true;
+      missingPart = missingPart + "Nome " ;
+    }
+    if((this.coinvolto.tipologia == "FISICA") && this.coinvolto.cognome.trim() == "" ) {
+      warning = true;
+      missingPart = missingPart + "Cognome ";
+    }
+    if((this.coinvolto.tipologia == "FISICA") && this.coinvolto.cf.trim() == "" ) {
+      warning = true;
+      missingPart = missingPart + "CF" + "\n";
+    }
+    if((this.coinvolto.tipologia == "GIURIDICA") && this.coinvolto.ragioneSociale.trim() == "" ) {
+      warning = true;
+      missingPart = missingPart + "Ragione sociale ";
+    }
+    if((this.coinvolto.tipologia == "GIURIDICA") && this.coinvolto.partitaIva.trim() == "" ) {
+      warning = true;
+      missingPart = missingPart + "P.IVA ";
+    }
+    if(warning) {
+      this.messageService.add({ severity: 'warn', summary: 'Attenzione', detail: 'Parti necessarie: ' + missingPart, life: 3000 });
+      missingPart = "";
+    }
+    else {
+      if(this.coinvolto.tipologia == "FISICA") {
+        this.mapNewContatto.set("nome", this.coinvolto.nome);
+        this.mapNewContatto.set("cognome", this.coinvolto.cognome);
+        this.mapNewContatto.set("codice_fiscale", this.coinvolto.cf);
+        this.mapNewContatto.set("descrizione", this.coinvolto.nome + " " + this.coinvolto.cognome);
+      }
+      else {
+        this.mapNewContatto.set("ragione_sociale", this.coinvolto.ragioneSociale);
+        this.mapNewContatto.set("p_iva", this.coinvolto.partitaIva);
+        this.mapNewContatto.set("descrizione", this.coinvolto.ragioneSociale);
+      }
+        this.mapNewContatto.set("tipologia", this.coinvolto.tipologia);
+        this.mapNewContatto.set("provenienza", "Raccolta Semplice");
+        
+        if(this.notEmptyText(this.coinvolto.mail)) {
+          this.mapNewContatto.set("email", this.coinvolto.mail);
+        }
+    
+        if(this.notEmptyText(this.coinvolto.telefono)) {
+          this.mapNewContatto.set("telefono", this.coinvolto.telefono);
+        }
+    
+        if(this.notEmptyText(this.coinvolto.via) || this.notEmptyText(this.coinvolto.civico) ||
+        this.notEmptyText(this.coinvolto.cap) ||  this.notEmptyText(this.coinvolto.comune) ||
+        this.notEmptyText(this.coinvolto.provincia) || this.notEmptyText(this.coinvolto.nazione)) {
+          this.mapNewContatto.set("via", this.coinvolto.via);
+          this.mapNewContatto.set("civico", this.coinvolto.civico);
+          this.mapNewContatto.set("cap", this.coinvolto.cap);
+          this.mapNewContatto.set("comune", this.coinvolto.comune);
+          this.mapNewContatto.set("provincia", this.coinvolto.provincia);
+          this.mapNewContatto.set("provincia", this.coinvolto.provincia);
+        }
+        let count = 0;
+        let stringBody = "[{ ";
+        for(let key of this.mapNewContatto.keys()) {
+          stringBody = stringBody + "\"" + key + "\":\"" + this.mapNewContatto.get(key) + "\"";
+          if(count < (this.mapNewContatto.size - 1)) 
+            stringBody = stringBody + ","
+            count++;
+        }
+        
+        stringBody = stringBody + " }]";
+        let body: JSON = JSON.parse(stringBody);
+        this.subscriptions.push(
+          this.raccoltaService.addContatto(this.azienda.codice, body)
+            .subscribe((res: string) => {
+              console.log("RES: ", res);
+              this.coinvolto.id = Number(res);
+            }
+            )
+          );
+          console.log("Coinvolto:", this.coinvolto.id);
+          if (this.selectedTipoCoinvolto === "GIURIDICA" && this.coinvolto.ragioneSociale !== undefined && this.coinvolto.ragioneSociale !== "") {
+            this.coinvolto.nomeInterfaccia = this.coinvolto.ragioneSociale;
+          } else if (this.coinvolto.nome && this.coinvolto.cognome) {
+            this.coinvolto.nomeInterfaccia = this.coinvolto.nome + " " + this.coinvolto.cognome;
+          } else if (this.coinvolto.nome) {
+            this.coinvolto.nomeInterfaccia = this.coinvolto.nome;
+          } else {
+            this.coinvolto.nomeInterfaccia = "";
+          }
+      
+          if (this.coinvolto.guidInterfaccia) {
+            this.coinvolto.tipologia = this.selectedTipoCoinvolto;
+            this.coinvolti[this.findIndexByGuid(this.coinvolto.guidInterfaccia)] = this.coinvolto;
+            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Coinvolto aggiornato', life: 3000 });
+          }
+          else {
+            this.coinvolto.guidInterfaccia = this.createGuid();
+            this.coinvolto.tipologia = this.selectedTipoCoinvolto;
+      
+            this.coinvolti.push(this.coinvolto);
+            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Coinvolto aggiunto', life: 3000 });
+          }
+          
+
+        console.log("Body:", body);
+        this.coinvoltoDialog = false;
+        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Coinvolto inserito in rubrica', life: 3000 });       
+    } 
+
   }
 
   saveCoinvoltoCreato() {
@@ -325,8 +450,202 @@ export class InserimentoManualeComponent implements OnInit {
       this.coinvolti.push(this.coinvolto);
       this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Coinvolto aggiunto', life: 3000 });
     }
+    console.log("OldDettagliContatto: ", this.oldDettagliContatti);
+    // let listaMezzi : string = "";
+    
+    switch(this.selectedDettaglioContatto.tipo) {
+      case "EMAIL" :{
+        if(this.selectedDettaglioContatto.descrizione != this.coinvolto.mail && (this.notEmptyText(this.coinvolto.mail))) {
+          this.mapEditCoinvolto.set("idMail", this.selectedDettaglioContatto.id.toString());
+          this.mapEditCoinvolto.set("mail", this.coinvolto.mail);
+          console.log("Aggiornato mail :", this.coinvolto.mail)
+         }
+         break;
+      }
+      case "TELEFONO": {
+        if(this.selectedDettaglioContatto.descrizione != this.coinvolto.telefono && (this.notEmptyText(this.coinvolto.telefono))) {
+          console.log("Dentro al case telefono")
+          this.mapEditCoinvolto.set("telefono", this.coinvolto.telefono);
+          this.mapEditCoinvolto.set("idTelefono", this.selectedDettaglioContatto.id.toString());
+          console.log("Aggiornato telefono: ", this.coinvolto.telefono)
+         }
+         break;
+      }
+      case "INDIRIZZO_FISICO" : {
+        if(this.notEmptyText(this.coinvolto.via) || this.notEmptyText(this.coinvolto.civico) ||
+        this.notEmptyText(this.coinvolto.cap) ||  this.notEmptyText(this.coinvolto.comune) ||
+        this.notEmptyText(this.coinvolto.provincia) || this.notEmptyText(this.coinvolto.nazione)){
+         if(this.selectedDettaglioContatto.descrizione.replace(",", " ").trim() != (this.coinvolto.via + this.coinvolto.civico + 
+         this.coinvolto.cap +  this.coinvolto.comune + this.coinvolto.provincia + this.coinvolto.nazione).trim()) {
+           if(this.notEmptyText(this.coinvolto.via)) {
+             this.mapEditCoinvolto.set("via", this.coinvolto.via)
+           }
+           else{
+             this.coinvolto.via = ""
+             this.mapEditCoinvolto.set("via", this.coinvolto.via)
+           }
+
+           if(this.notEmptyText(this.coinvolto.civico)) {
+             this.mapEditCoinvolto.set("civico", this.coinvolto.civico)
+           }
+           else{
+             this.coinvolto.civico = ""
+             this.mapEditCoinvolto.set("civico", this.coinvolto.civico)
+           }
+
+           if(this.notEmptyText(this.coinvolto.cap)) {
+             this.mapEditCoinvolto.set("cap", this.coinvolto.cap)
+           }
+           else{
+             this.coinvolto.cap = ""
+             this.mapEditCoinvolto.set("cap", this.coinvolto.cap)
+           }
+           
+           if(this.notEmptyText(this.coinvolto.comune)) {
+             this.mapEditCoinvolto.set("comune", this.coinvolto.comune)
+           }
+           else{
+             this.coinvolto.comune = ""
+             this.mapEditCoinvolto.set("comune", this.coinvolto.comune)
+           }
+
+           if(this.notEmptyText(this.coinvolto.provincia)) {
+             this.mapEditCoinvolto.set("provincia", this.coinvolto.provincia)
+           }
+           else{
+             this.coinvolto.provincia = ""
+             this.mapEditCoinvolto.set("provincia", this.coinvolto.provincia)
+           }
+
+           if(this.notEmptyText(this.coinvolto.nazione)) {
+             this.mapEditCoinvolto.set("nazione", this.coinvolto.nazione)
+           }
+           else{
+             this.coinvolto.nazione = ""
+             this.mapEditCoinvolto.set("nazione", this.coinvolto.nazione)
+           }
+           this.mapEditCoinvolto.set("idIndirizzo", this.selectedDettaglioContatto.id.toString());
+           console.log("Indirizzo editato: ", this.coinvolto.via)
+           break;
+         }   
+        }
+      }
+    }
 
 
+    this.oldDettagliContatti.forEach((dettaglio: DettaglioContatto) => {
+    //  switch(dettaglio.tipo){
+    //    case "EMAIL" :{
+    //      if(dettaglio.descrizione != this.coinvolto.mail && (this.notEmptyText(this.coinvolto.mail))) {
+    //       this.mapEditCoinvolto.set("idMail", dettaglio.id.toString());
+    //       this.mapEditCoinvolto.set("mail", this.coinvolto.mail);
+    //       console.log("Aggiornato mail :", this.coinvolto.mail)
+    //      }
+    //      break;
+    //    }
+    //    case "TELEFONO":{
+    //      if(dettaglio.descrizione != this.coinvolto.telefono && (this.notEmptyText(this.coinvolto.telefono))) {
+    //       console.log("Dentro al case telefono")
+    //       this.mapEditCoinvolto.set("telefono", this.coinvolto.telefono);
+    //       this.mapEditCoinvolto.set("idTelefono", dettaglio.id.toString());
+    //       console.log("Aggiornato telefono: ", this.coinvolto.telefono)
+    //      }
+    //      break;
+    //    }
+    //    case "INDIRIZZO_FISICO" : {
+    //      if(this.notEmptyText(this.coinvolto.via) || this.notEmptyText(this.coinvolto.civico) ||
+    //      this.notEmptyText(this.coinvolto.cap) ||  this.notEmptyText(this.coinvolto.comune) ||
+    //      this.notEmptyText(this.coinvolto.provincia) || this.notEmptyText(this.coinvolto.nazione)){
+    //       if(dettaglio.descrizione.replace(",", " ").trim() != (this.coinvolto.via + this.coinvolto.civico + 
+    //       this.coinvolto.cap +  this.coinvolto.comune + this.coinvolto.provincia + this.coinvolto.nazione).trim()) {
+    //         if(this.notEmptyText(this.coinvolto.via)) {
+    //           this.mapEditCoinvolto.set("via", this.coinvolto.via)
+    //         }
+    //         else{
+    //           this.coinvolto.via = ""
+    //           this.mapEditCoinvolto.set("via", this.coinvolto.via)
+    //         }
+
+    //         if(this.notEmptyText(this.coinvolto.civico)) {
+    //           this.mapEditCoinvolto.set("civico", this.coinvolto.civico)
+    //         }
+    //         else{
+    //           this.coinvolto.civico = ""
+    //           this.mapEditCoinvolto.set("civico", this.coinvolto.civico)
+    //         }
+
+    //         if(this.notEmptyText(this.coinvolto.cap)) {
+    //           this.mapEditCoinvolto.set("cap", this.coinvolto.cap)
+    //         }
+    //         else{
+    //           this.coinvolto.cap = ""
+    //           this.mapEditCoinvolto.set("cap", this.coinvolto.cap)
+    //         }
+            
+    //         if(this.notEmptyText(this.coinvolto.comune)) {
+    //           this.mapEditCoinvolto.set("comune", this.coinvolto.comune)
+    //         }
+    //         else{
+    //           this.coinvolto.comune = ""
+    //           this.mapEditCoinvolto.set("comune", this.coinvolto.comune)
+    //         }
+
+    //         if(this.notEmptyText(this.coinvolto.provincia)) {
+    //           this.mapEditCoinvolto.set("provincia", this.coinvolto.provincia)
+    //         }
+    //         else{
+    //           this.coinvolto.provincia = ""
+    //           this.mapEditCoinvolto.set("provincia", this.coinvolto.provincia)
+    //         }
+
+    //         if(this.notEmptyText(this.coinvolto.nazione)) {
+    //           this.mapEditCoinvolto.set("nazione", this.coinvolto.nazione)
+    //         }
+    //         else{
+    //           this.coinvolto.nazione = ""
+    //           this.mapEditCoinvolto.set("nazione", this.coinvolto.nazione)
+    //         }
+    //         this.mapEditCoinvolto.set("idIndirizzo", dettaglio.id.toString());
+    //         console.log("Indirizzo editato: ", this.coinvolto.via)
+    //         break;
+    //       }   
+    //      }
+    //    }
+    //  }
+    //  console.log("Dettaglio: ", dettaglio.descrizione, "ID: ", dettaglio.id, "Mezzo: ", dettaglio.tipo);
+    //  listaMezzi = listaMezzi + dettaglio.tipo + ",";
+    });
+
+    if(this.notEmptyText(this.coinvolto.mail)) {
+      this.mapEditCoinvolto.set("mail", this.coinvolto.mail);
+    }
+
+    if(this.notEmptyText(this.coinvolto.telefono)) {
+      this.mapEditCoinvolto.set("telefono", this.coinvolto.telefono);
+    }
+
+    if(this.notEmptyText(this.coinvolto.via) || this.notEmptyText(this.coinvolto.civico) ||
+    this.notEmptyText(this.coinvolto.cap) ||  this.notEmptyText(this.coinvolto.comune) ||
+    this.notEmptyText(this.coinvolto.provincia) || this.notEmptyText(this.coinvolto.nazione)) {
+      this.mapEditCoinvolto.set("via", this.coinvolto.via);
+      this.mapEditCoinvolto.set("civico", this.coinvolto.civico);
+      this.mapEditCoinvolto.set("cap", this.coinvolto.cap);
+      this.mapEditCoinvolto.set("comune", this.coinvolto.comune);
+      this.mapEditCoinvolto.set("provincia", this.coinvolto.provincia);
+      this.mapEditCoinvolto.set("provincia", this.coinvolto.provincia);
+    }
+
+    console.log("Map prima dell'edit: ", this.mapEditCoinvolto)
+    this.subscriptions.push(
+      this.raccoltaService.editRubrica(this.azienda.codice, this.coinvolto, this.mapEditCoinvolto)
+        .subscribe((res: string) => {
+          console.log("RES: ", res);
+
+        }
+        )
+      )
+    this.mapEditCoinvolto = new Map;
+    console.log("Map post edit", this.mapEditCoinvolto);
     this.coinvolti = [...this.coinvolti];
     this.coinvoltoDialog = false;
     this.coinvolto = new PersonaRS();
@@ -334,8 +653,23 @@ export class InserimentoManualeComponent implements OnInit {
 
   editCoinvolto(coinvolto: PersonaRS) {
     this.coinvolto = { ...coinvolto };
+    this.isOldContatto = true;
+    console.log("Conivolto dentro editCoinvolto: ", coinvolto);
     this.coinvoltoDialog = true;
   }
+
+  newContatto() {
+    this.isOldContatto = false;
+    this.coinvolto = new PersonaRS();
+    this.coinvolto.nome = "";
+    this.coinvolto.cognome = "";
+    this.coinvolto.ragioneSociale = "";
+    this.coinvolto.partitaIva = "";
+    this.coinvolto.cf = "";
+    this.coinvoltoDialog = true;
+  }
+
+
 
   findIndexByGuid(guid: string): number {
     let index = -1;
@@ -401,6 +735,7 @@ export class InserimentoManualeComponent implements OnInit {
   public saveContatto(contatto: Contatto) {
     //this.selectedContatti.push(contatto);
     this.selectedContatto = contatto;
+    this.oldContatto = this.selectedContatto;
     this.disabledDettaglioContatto = false;
     this.disabledContatto = true;
     this.searchDettaglioContatto(contatto.id);
@@ -424,6 +759,7 @@ export class InserimentoManualeComponent implements OnInit {
     this.dettaglioContattoService.getData(null, filter).subscribe(res => {
       if (res) {
         this.filteredDettagliContatti = res.results;
+        this.oldDettagliContatti = this.filteredDettagliContatti;
       }
     });
   }
