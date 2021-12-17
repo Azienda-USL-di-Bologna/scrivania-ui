@@ -52,7 +52,9 @@ export class ImpostazioniComponent implements OnInit, OnDestroy, AfterViewInit {
 
   saveSettings() {
     this.impostazioniService.setHidePreview(this.model.hidePreview.toString());
-    this.impostazioniService.setEmailToNotify(this.model.emailToNotify.toString());
+    if(this.model.emailToNotify){
+      this.impostazioniService.setEmailToNotify(this.model.emailToNotify.toString());
+    }
     this.subscription =
       this.loggedUser.setImpostazioniApplicazione(this.loginService, this.impostazioniService.getImpostazioniVisualizzazione())
         .subscribe((newSettings) => {
