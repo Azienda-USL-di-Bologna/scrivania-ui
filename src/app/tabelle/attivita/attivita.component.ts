@@ -720,8 +720,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         this.loading= true;
         this.attivitaService.eliminaAttivitaDemiurgo(attivita).subscribe(
           res => {
-            // this.loadData;
-            this.attivitaEmitter.emit(null);
+            this.loadData;
+            // this.attivitaEmitter.emit(null);
             this.messageService.add({
               severity: "success",
               key : "attivitaToast",
