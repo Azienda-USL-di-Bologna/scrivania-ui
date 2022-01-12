@@ -711,6 +711,39 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     });
   }
 
+  public confermaEliminaAttivita(attivita: Attivita, event: Event): void {
+    this.confirmationService.confirm({
+      key: "confirm-popup",
+      target: event.target,
+      message: "Stai eliminando questa attività, vuoi proseguire?",
+      accept: () => {
+        this.loading= true;
+        this.attivitaService.eliminaAttivitaDemiurgo(attivita).subscribe(
+          res => {
+            // this.loadData;
+            this.attivitaEmitter.emit(null);
+            this.messageService.add({
+              severity: "success",
+              key : "attivitaToast",
+              summary: "OK",
+              detail: `Attività rimossa dalla scrivania con successo! `
+            });
+            this.loading = false;
+            console.log(res);
+          },
+          err => {
+            this.messageService.add({
+              severity: "warn",
+              key : "attivitaToast",
+              summary: "Attenzione",
+              detail: `Si è verificato un errore nell'eliminazione dell'attività, contattare il servizio di supporto`
+            });
+          }
+        );
+      }
+    });
+  }
+
   ngOnDestroy(): void {
     if (this.subscriptions && this.subscriptions.length > 0) {
       while (this.subscriptions.length > 0) {

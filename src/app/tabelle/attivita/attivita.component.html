@@ -90,6 +90,7 @@
             </td>
             <td aria-label="Colonna elimina notifica" [style.width]="cols[9].width" [style.minWidth]="cols[9].minWidth" class="p0 columns-icon">
                 <span role="button" tabindex="0" *ngIf="attivita.tipo === 'notifica'" class="pi pi-trash" pTooltip="Elimina notifica" aria-label="icona elimina" (click)="deleteAttivita($event, rowData)"></span>
+                <span role="button" tabindex="0" *ngIf="attivita.tipo !== 'notifica' && this.loggedUser.isSD()" class="pi pi-times" pTooltip="Elimina attivita" aria-label="icona elimina" (click)="confermaEliminaAttivita(rowData, $event)" style="color:#993366 "></span>
             </td>
             <td aria-label="Colonna note" [style.width]="cols[10].width" [style.minWidth]="cols[10].minWidth" class="p0">
                 <img tabindex="0" *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="noteClicckato(attivita, $event)" alt="Leggi note" role="button" class="img-table" pTooltip="Leggi note">
@@ -147,3 +148,6 @@
         <button type="button" pButton icon="" label="No" (click)="confermaSalvataggio.reject()"></button>
     </p-footer>
 </p-confirmDialog>
+
+<p-toast key="attivitaToast"></p-toast>
+<p-confirmPopup key="confirm-popup"></p-confirmPopup>
