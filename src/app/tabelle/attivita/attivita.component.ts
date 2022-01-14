@@ -713,6 +713,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   refreshAttivitaCaller(): void {
+    console.log('scatta evento');
     this.refreshAttivita.next('refresh');
   }
 
@@ -725,8 +726,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         this.loading= true;
         this.attivitaService.eliminaAttivitaDemiurgo(attivita).subscribe(
           res => {
-            this.loadData;
-            this.refreshAttivitaCaller;
+            this.refreshAttivitaCaller();
             this.messageService.add({
               severity: "success",
               key : "attivitaToast",
