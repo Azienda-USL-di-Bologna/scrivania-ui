@@ -44,7 +44,7 @@ export class AttivitaService extends NextSDREntityProvider {
     const url = getInternautaUrl(BaseUrlType.Scrivania) + "/" + CUSTOM_SERVER_METHODS.cancellaattivita;
     const datiAggiuntiviJson = JSON.parse(JSON.stringify(elementToDelete.datiAggiuntivi));
     let formData: FormData = new FormData();
-    formData.append("id_attivita", datiAggiuntiviJson.id_attivita_babel);
+    formData.append("id_attivita", datiAggiuntiviJson.id_attivita_babel.toString());
     formData.append("id_applicazione", "babel");
     formData.append("id_azienda", elementToDelete.idAzienda.id.toString());
     console.log(formData);
