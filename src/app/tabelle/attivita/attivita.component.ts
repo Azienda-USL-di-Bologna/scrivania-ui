@@ -95,6 +95,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
+  @Output("refreshAttivita") private refreshAttivita: EventEmitter<string> = new EventEmitter();
   @ViewChild("dt") private dataTable: Table;
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
   @ViewChildren("tableRows") tableRows: QueryList<ElementRef>;
@@ -711,6 +712,10 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     });
   }
 
+  refreshAttivitaCaller(): void {
+    this.refreshAttivita.next('refresh');
+  }
+
   public confermaEliminaAttivita(attivita: Attivita, event: Event): void {
     this.confirmationService.confirm({
       key: "confirm-popup",
@@ -721,7 +726,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         this.attivitaService.eliminaAttivitaDemiurgo(attivita).subscribe(
           res => {
             this.loadData;
-            // this.attivitaEmitter.emit(null);
+            this.refreshAttivitaCaller;
             this.messageService.add({
               severity: "success",
               key : "attivitaToast",
