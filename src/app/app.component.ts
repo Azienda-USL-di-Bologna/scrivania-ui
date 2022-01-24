@@ -3,10 +3,10 @@ import { NtJwtLoginService, UtenteUtilities, UtilityFunctions} from "@bds/nt-jwt
 import { SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { getInternautaUrl, BaseUrlType } from "@bds/ng-internauta-model";
-import { MenuItem } from "primeng/api";
+import { MenuItem, PrimeNGConfig } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
-import { IntimusClientService } from "@bds/nt-communicator";
+import { IntimusClientService, PRIMENG_ITA_TRANSALATION } from "@bds/nt-communicator";
 import { PopupMessaggiService, HeaderFeaturesConfig } from "@bds/common-components";
 import { Subscription } from "rxjs";
 
@@ -26,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private loginService: NtJwtLoginService,
+    private config: PrimeNGConfig,
     private route: ActivatedRoute,
     private router: Router,
     public dialogService: DialogService,
@@ -34,7 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
     ) {}
 
   ngOnInit() {
-
+    this.config.setTranslation(PRIMENG_ITA_TRANSALATION);
     this.headerFeaturesConfig = new HeaderFeaturesConfig();
     this.headerFeaturesConfig.showCambioUtente = true;
     this.headerFeaturesConfig.showLogOut = true;

@@ -62,6 +62,7 @@ import {ListboxModule} from 'primeng/listbox';
 import {FieldsetModule} from 'primeng/fieldset';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import { InplaceModule } from 'primeng/inplace';
+import {ConfirmPopupModule} from "primeng/confirmpopup";
 
 /* Login */
 import { NtJwtLoginModule } from "@bds/nt-jwt-login";
@@ -144,6 +145,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatInputModule,
     MatAutocompleteModule,
     ListboxModule,
+    ConfirmPopupModule,
     FieldsetModule,
     MatExpansionModule,
     ScrollPanelModule,

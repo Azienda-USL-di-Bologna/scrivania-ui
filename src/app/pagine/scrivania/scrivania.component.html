@@ -99,7 +99,7 @@
     <div class="table-wrapper">
         <div class="table-inner">
             <app-attivita *ngIf="!mostraStorico"  (attivitaEmitter)="attivitaClicked($event)" [refresh]="tabellaDaRefreshare"
-            (onAttivitaNoteEmitter)="onNoteClick($event)" [idAzienda]="idAzienda" [changeColOrder]="changeColOrder"></app-attivita>
+            (onAttivitaNoteEmitter)="onNoteClick($event)" [idAzienda]="idAzienda"  (refreshAttivita)="ricarica()" [changeColOrder]="changeColOrder"></app-attivita>
             <app-attivita-fatte *ngIf="mostraStorico" (onAttivitaNoteEmitter)="onNoteClick($event)" [idAzienda]="idAzienda" [refresh]="tabellaDaRefreshare"></app-attivita-fatte>
         </div>
     </div>
