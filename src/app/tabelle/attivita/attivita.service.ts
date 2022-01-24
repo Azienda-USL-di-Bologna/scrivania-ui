@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType } from "../../../environments/app-constants";
+import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType, CUSTOM_SERVER_METHODS, COMMON_PARAMETERS } from "../../../environments/app-constants";
 import { Attivita, ENTITIES_STRUCTURE, Azienda, Applicazione } from "@bds/ng-internauta-model";
 import { NextSDREntityProvider } from "@nfa/next-sdr";
 import { Observable } from "rxjs";
@@ -38,5 +38,16 @@ export class AttivitaService extends NextSDREntityProvider {
     // console.log(this.classDescriptionLocal, functioName, "elementToDelete", elementToDelete);
     // elementToDelete.datiAggiuntivi = JSON.stringify(elementToDelete.datiAggiuntivi);
     return this.deleteHttpCall(elementToDelete.id);
+  }
+
+  public eliminaAttivitaDemiurgo(elementToDelete: Attivita): Observable<any> {
+    const url = getInternautaUrl(BaseUrlType.Scrivania) + "/" + CUSTOM_SERVER_METHODS.cancellaattivita;
+    const datiAggiuntiviJson = JSON.parse(JSON.stringify(elementToDelete.datiAggiuntivi));
+    let formData: FormData = new FormData();
+    formData.append("id_attivita", datiAggiuntiviJson.id_attivita_babel.toString());
+    formData.append("id_applicazione", "babel");
+    formData.append("id_azienda", elementToDelete.idAzienda.id.toString());
+    console.log(formData);
+    return this.http.post(url, formData);
   }
 }
