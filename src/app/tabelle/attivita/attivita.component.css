@@ -102,3 +102,11 @@
     /* cursor: not-allowed !important; */
     opacity: 0.4 !important;
 }
+
+.iconaEliminaAttivita{
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: auto;
+    
+}

@@ -209,7 +209,8 @@ export const COMMON_PARAMETERS = {
 export const CUSTOM_SERVER_METHODS = {
     saveAllegato: "saveAllegato",
     downloadAttachment: "downloadAttachment",
-    downloadAllAttachments: "downloadAllAttachments"
+    downloadAllAttachments: "downloadAllAttachments",
+    cancellaattivita: "cancellaattivita"
   };
 
 
