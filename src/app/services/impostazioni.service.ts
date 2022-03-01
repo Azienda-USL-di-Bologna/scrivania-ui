@@ -17,7 +17,7 @@ export class ImpostazioniService {
       if (utente) {
         if (!this.loggedUser || utente.getUtente().id !== this.loggedUser.getUtente().id) {
           this.loggedUser = utente;
-          if (this.loggedUser.getImpostazioniApplicazione()) {
+          if (this.loggedUser && this.loggedUser.getImpostazioniApplicazione()) {
             this.impostazioniVisualizzazione = JSON.parse(this.loggedUser.getImpostazioniApplicazione().impostazioniVisualizzazione);
           } else {
             this.impostazioniVisualizzazione = {};
