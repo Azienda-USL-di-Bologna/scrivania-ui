@@ -20,12 +20,12 @@ export class ImpostazioniComponent implements OnInit, OnDestroy, AfterViewInit {
   loggedUser: UtenteUtilities;
   thereIsEmail: boolean;
   private subscription: Subscription;
-  @ViewChild('inplace')
+  @ViewChild("inplace")
   public inplace: Inplace;
 
   emailRegex = new RegExp(/^(([^&#!?'òùàèéì%+*§$£<>()\[\]\.,;:\s@\"]+(\.[^<>&#!?'òùàèéì%+*§$£()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()&#!?'%òùàèéì+*§$£[\]\.,;:'\s@\"]+\.)+[^<>&#!?%'òùàèéì+*§$£()[\]\.,;:'\s@\"]{2,})$/);
 
-  public mail = new FormControl('', Validators.pattern(this.emailRegex));
+  public mail = new FormControl("", Validators.pattern(this.emailRegex));
 
   constructor(public ref: DynamicDialogRef, private loginService: NtJwtLoginService, private impostazioniService: ImpostazioniService) { }
 
@@ -44,7 +44,7 @@ export class ImpostazioniComponent implements OnInit, OnDestroy, AfterViewInit {
     this.model = new Impostazioni();
     this.model.hidePreview = this.impostazioniService.getHidePreview() === "true";
     this.model.emailToNotify = this.impostazioniService.getEmailToNotify();
-    this.thereIsEmail = this.model.emailToNotify != '' ? true : false;
+    this.thereIsEmail = this.model.emailToNotify != "" ? true : false;
     if (this.model.hidePreview === null || this.model.hidePreview === undefined) {
       this.model.hidePreview = false;
     }
@@ -52,15 +52,17 @@ export class ImpostazioniComponent implements OnInit, OnDestroy, AfterViewInit {
 
   saveSettings() {
     this.impostazioniService.setHidePreview(this.model.hidePreview.toString());
-    if(this.model.emailToNotify){
+    if(this.model.emailToNotify != null && this.model.emailToNotify != undefined){
       this.impostazioniService.setEmailToNotify(this.model.emailToNotify.toString());
-    }
+    } 
+    // console.log(this.impostazioniService.getImpostazioniVisualizzazione());
     this.subscription =
-      this.loggedUser.setImpostazioniApplicazione(this.loginService, this.impostazioniService.getImpostazioniVisualizzazione())
+      this.loggedUser.setImpostazioniApplicazione(this.loginService,this.impostazioniService.getImpostazioniVisualizzazione())
         .subscribe((newSettings) => {
           this.impostazioniService.doNotify(newSettings);
           this.onClose();
         });
+    
   }
 
   onClose() {
@@ -78,12 +80,12 @@ export class ImpostazioniComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   deleteEmailToNotify() {
-    this.model.emailToNotify = '';
+    this.model.emailToNotify = "";
   }
 
   disabledIf() {
     if (this.inplace && this.inplace.active) {
-      if (this.mail.status == 'VALID' && this.mail.value != '') {
+      if (this.mail.status == "VALID" && this.mail.value != "") {
         return false;
       }
       return true;
