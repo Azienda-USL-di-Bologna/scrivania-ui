@@ -13,7 +13,7 @@
 .custom-header{
     background-color: #993366;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
 }
 .margin0{
     margin: 0;
