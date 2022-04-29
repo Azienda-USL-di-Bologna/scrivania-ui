@@ -61,7 +61,7 @@
       [paginator]="true" [rows]="recordPerPagina" [totalRecords]="totalRows" [columns]="cols" dataKey="id"
       selectionMode="single" [loading]="loading" csvSeparator=";"
       [exportFilename]="dataInizio ? 'dati-raccolta_semplice_'+ dataInizio.toDateString()+'_'+dataFine.toDateString() : 'dati-raccolta_semplice_'"
-      rowExpandMode="single" [scrollable]="true">
+      rowExpandMode="single" [scrollable]="true" scrollHeight="flex">
       <!-- Header tabellla-->
       <ng-template pTemplate="header" let-columns>
         <tr>
@@ -77,9 +77,9 @@
           </th>
         </tr>
         <tr>
-          <td style="width: 5%;"> </td>
-          <td *ngFor="let col of columns" [ngSwitch]="col.filterWidget" class="filters-styles">
-            <div *ngIf="col.field != undefined">
+          <th style="width: 5%;"> </th>
+          <th *ngFor="let col of columns" [ngSwitch]="col.filterWidget" class="filters-styles">
+            <div *ngIf="col.field != undefined" style="width: 100%">
               <p-calendar #calGenz *ngSwitchCase="'Calendar'" [(ngModel)]="dataRange[col.field]" placeholder="Scegli..."
                 [showButtonBar]="true" [locale]="it" [showIcon]="false" dateFormat="dd/mm/yy"
                 (onSelect)="onCalendarAction($event, col.field, 'select')"
@@ -91,7 +91,7 @@
                 (input)="tableRaccoltaSemplice.filter($event.target['value'], col.field, col.filterMatchMode.value)"
                 #filterInputText [ngModel]="prova" [disabled]="loading"><!-- Hola Umbria! Qui c'era  $event.target.value e ho messo $event.target['value'] se value esiste non ci sono problemi. Se non esiste.. problemi :) -->
             </div>
-          </td>
+          </th>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage" let-columns>

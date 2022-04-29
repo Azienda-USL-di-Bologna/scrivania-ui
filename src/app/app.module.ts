@@ -5,7 +5,6 @@ import {RouterModule} from "@angular/router";
 import {rootRouterConfig} from "./app.routes";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
-import { HttpModule } from "@angular/http";
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomReuseStrategy } from '@bds/nt-communicator';
 
@@ -76,17 +75,12 @@ import { DatiBolloVirtualeComponent } from './tabelle/dati-bollo-virtuale/dati-b
 import { RaccoltaSempliceComponent } from './tabelle/raccolta-semplice/raccolta-semplice.component';
 import { InserimentoManualeComponent } from './tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component';
 
-
 /* Angular Material Module */
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatExpansionModule} from '@angular/material/expansion';
-
-
-
-
 
 @NgModule({
   declarations: [
@@ -109,7 +103,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    HttpModule,
     AccordionModule,
     LightboxModule,
     PanelModule,

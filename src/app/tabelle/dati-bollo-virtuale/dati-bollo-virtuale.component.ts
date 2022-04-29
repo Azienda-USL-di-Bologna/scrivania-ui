@@ -96,6 +96,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       header: "Oggetto",
       filterMatchMode: FILTER_TYPES.string.contains,
       label: "oggetto",
+      minWidth: "200px"
     },
     {
       field: "redattoreDoc",

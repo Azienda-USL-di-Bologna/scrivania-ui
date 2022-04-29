@@ -15,12 +15,12 @@ import { NoLoginGuard, LoginGuard, RefreshLoggedUserGuard } from "@bds/nt-jwt-lo
 */
 
 export const rootRouterConfig: Routes = [
-    {path: "", redirectTo: "homepage", pathMatch: "full"},
+    {path: "", redirectTo: "attivita", pathMatch: "full"},
     {path: "login", component: NtJwtLoginComponent, canActivate: [NoLoginGuard], data: {}},
     {path: "scrivania", component: LoadingComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard]},
     {path: "attivita", component: ScrivaniaComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard]},
     {path: "bollo", component: DatiBolloVirtualeComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard], data: { roles: [CODICI_RUOLO.CA] }},
-    {path: "homepage", component: HomepageComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard]},
+    {path: "homepage", redirectTo: "attivita"},
     {path: "smart-working", component: SmartWorkingComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard]},
     {path: "raccoltasemplice", component: RaccoltaSempliceComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard]},
     {path: "inserimento", component: InserimentoManualeComponent, canActivate: [RefreshLoggedUserGuard, LoginGuard]}
