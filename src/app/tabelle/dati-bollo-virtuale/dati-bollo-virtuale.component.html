@@ -1,5 +1,4 @@
 <div class="p-grid attivita-wrapper position-relative">
-
   <div class="p-col content-left" #leftSide>
     <div class="option-bar">
       <div class="buttons-bar">
@@ -14,7 +13,6 @@
           aria-label="Vai alla tabella delle attivita">
         </button>
         <div class="separator-class"></div>
-        
         <button type="button" 
           pButton 
           pTooltip="Aggiorna tabella" 
@@ -25,7 +23,6 @@
           class="ui-button-secondary icon-style" 
           aria-label="Aggiorna la tabella dei bolli virtuali">
         </button>
-        
         <button type="button" 
           pButton 
           pTooltip="Esporta in CSV tutti i dati" 
@@ -47,9 +44,7 @@
           </p-progressSpinner>
         </span>
       </div>
-      
       <h3 class="crono-label">Bollo Virtuale</h3>
-      
       <div class="p-grid p-align-center p-nogutter">
         <lib-aziende-autocomplete
           [azienda]="_azienda"
@@ -94,7 +89,6 @@
           placeholder="Data di fine"
           pTooltip="Dati bolli virtuali fino al">
         </p-calendar>
-        
         <button type="button" 
           pButton 
           pTooltip="Estrai" 
@@ -107,12 +101,9 @@
           aria-label="Estrai">
         </button>
       </div>
-
     </div>
-
     <div class="table-wrapper">
       <div class="table-inner">
-          
           <p-table #tableBolliVirtuali
             [value]="datiBolliVirtuali"
             [columns]="cols"
@@ -122,16 +113,17 @@
             selectionMode="single"
             (onRowSelect)="handleEvent('onRowSelect', $event)"
             [scrollable]="true"
+            scrollHeight="flex"
             [loading]="loading"
             (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
             (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
             csvSeparator=";"
             [exportFilename]="dataInizio ? 'dati-bolli-virtuali_'+ dataInizio.toDateString()+'_'+dataFine.toDateString() : 'dati-bolli-virtuali_'">
-  
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <th *ngFor="let col of columns"  
-                        [style.width]="col.width" 
+                        [style.maxWidth]="col.width" 
+                        [style.minWidth]="col.minWidth ? col.minWidth : col.width" 
                         [style.padding]="col.padding" 
                         [pSortableColumn]="col.field"
                         [pTooltip]="col.label" 
@@ -143,8 +135,11 @@
                     </th>
                 </tr>
                 <tr>
-                    <td *ngFor="let col of columns" [ngSwitch]="col.fieldType" [style.width]="col.width" >
-                        <div *ngIf="col.field != undefined && col.field !== 'priorita'">
+                    <th *ngFor="let col of columns" 
+                      [ngSwitch]="col.fieldType" 
+                      [style.maxWidth]="col.width" 
+                      [style.minWidth]="col.minWidth ? col.minWidth : col.width" >
+                        <div *ngIf="col.field != undefined && col.field !== 'priorita'" style="width: 100%">
                             <p-calendar #calGen 
                               *ngSwitchCase="'DateTime'"
                               [(ngModel)]="dataRange[col.field]"
@@ -168,25 +163,24 @@
                                 (input)="tableBolliVirtuali.filter($event.target['value'].trim(), col.field, col.filterMatchMode)"
                                 #filterInputText>
                         </div>
-                    </td>
+                    </th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowBollo let-columns="columns">
               <tr class="row-class">
                 <td *ngFor="let col of columns" 
                   class="column-class" 
-                  [style.width]="col.width" 
+                  [style.maxWidth]="col.width" 
+                  [style.minWidth]="col.minWidth ? col.minWidth : col.width" 
                   [style.textAlign]="col.textAlign" 
                   [pTooltip]="col.label">
                   {{ col.field != "dataNumeroDoc" ? rowBollo[col.field] : rowBollo[col.field] | date: 'dd/MM/yyyy'}}
                 </td>
               </tr>
             </ng-template>
-
         </p-table>
       </div>
     </div>
-    
     <footer class="p-grid" style="margin-right: 17px; flex-wrap: nowrap; overflow-x: auto; font-weight: bold;">
       <div class="p-col" style="text-align: center; min-width: 568px;">Totale</div>
       <div #totalFacciateBolloRef class="p-col-fixed" style="width: 122px; text-align: center;">{{totalFacciateBollo}}</div>
@@ -197,7 +191,5 @@
         <span #totalImportoAltriBolloRef>{{totalImportoAltriBollo}}</span>
       </div>
     </footer>
-
   </div>
-
 </div>
