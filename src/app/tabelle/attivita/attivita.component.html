@@ -33,7 +33,7 @@
                     <!-- ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente" -->
                 </p-sortIcon>
             </th>
-            <th *ngIf="cols[11].visibility==='visible' && !!!hidePreview" aria-label="Colonna Apri Anteprima"></th>
+            <th *ngIf="cols[11].visibility==='visible'" aria-label="Colonna Apri Anteprima"></th>
         </tr>
         <tr>
             <th *ngFor="let col of columns" 

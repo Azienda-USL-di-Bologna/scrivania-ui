@@ -25,7 +25,7 @@
     "@bds/rubrint": "3.0.0-alfa",
     "@bds/ng-internauta-model": "3.0.12",
     "@bds/nt-communicator": "3.0.0-alfa",
-    "@bds/nt-jwt-login": "3.0.0-alfa",
+    "@bds/nt-jwt-login": "3.0.1",
     "@bds/primeng-plugin": "3.0.0-alfa",
     "@nfa/core": "5.0.0-alfa",
     "@nfa/next-sdr": "5.0.0-alfa",
