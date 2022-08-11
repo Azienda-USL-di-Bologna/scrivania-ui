@@ -85,7 +85,7 @@ export const ColumnsNormal = [
     minWidth: "30px",
     label: "note",
   },
-  {
+  /* {
     // colonna anteprima
     field: "anteprima",
     width: "32px",
@@ -93,7 +93,7 @@ export const ColumnsNormal = [
     label: "anteprima",
     visibility: "visible",
     display: "",
-  },
+  }, */
 ];
 
 export const ColumnsReordered = [
@@ -181,7 +181,7 @@ export const ColumnsReordered = [
     minWidth: "30px",
     label: "note",
   },
-  {
+  /* {
     // colonna anteprima
     field: "anteprima",
     width: "32px",
@@ -189,5 +189,5 @@ export const ColumnsReordered = [
     label: "anteprima",
     visibility: "visible",
     display: "none",
-  }
+  } */
 ];

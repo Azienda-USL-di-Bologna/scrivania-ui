@@ -2,23 +2,20 @@ import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDe
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
 import { FILTER_TYPES, SORT_MODES, LOCAL_IT, RefreshAttivitaParams } from "@bds/nt-communicator";
-import { buildLazyEventFiltersAndSorts, buildPagingConf } from "@bds/primeng-plugin";
+import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { PROJECTIONS } from "../../../environments/app-constants";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
-import { Attivita, Utente, Applicazione, UrlsGenerationStrategy } from "@bds/ng-internauta-model";
+import { Attivita, UrlsGenerationStrategy } from "@bds/ng-internauta-model";
 import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
 import { IntimusClientService, IntimusCommand, IntimusCommands } from "@bds/nt-communicator";
-import { Dialog } from "primeng/dialog";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
 import { HttpClient } from "@angular/common/http";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
-import { ApplicationCustiomization } from "src/environments/application_customization";
-import { Logs } from "selenium-webdriver";
 import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 
 @Component({
@@ -175,12 +172,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     this.hidePreview = this.impostazioniService.getHidePreview() === "true";
     console.log("Se hidePreview è true, 'anteprima' deve essere hidden = false;  se false, anteprima deve essere hidden = true ", this.hidePreview);
 
-    this.setVisibilityColumnAnteprima(!this.hidePreview);
+    //this.setVisibilityColumnAnteprima(!this.hidePreview);
     console.log("!! this.cols", this.cols);
 
   }
 
-  private setVisibilityColumnAnteprima(hidden: boolean) {
+  /* private setVisibilityColumnAnteprima(hidden: boolean) {
     console.log("SETTO VISIBILITA COLONNA ANTEPRIMA", hidden);
 
     this.cols.forEach(element => {
@@ -189,7 +186,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         element.display = hidden ? "none" : "";
       }
     });
-  }
+  } */
 
   private parseIntimusCommand(command: IntimusCommand) {
     // console.log("ricevuto comando in Attivita: ", command);
