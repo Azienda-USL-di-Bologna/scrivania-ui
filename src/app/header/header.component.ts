@@ -1,8 +1,8 @@
-import { Utente } from "@bds/ng-internauta-model";
+import { Utente } from "@bds/internauta-model";
 import { Component, OnInit, Type } from "@angular/core";
 import {Router, ActivatedRoute} from "@angular/router";
 import { SCRIVANIA_ROUTE, BABELMAN_URL} from "../../environments/app-constants";
-import { NtJwtLoginService, LoginType, UtenteUtilities } from "@bds/nt-jwt-login";
+import { JwtLoginService, LoginType, UtenteUtilities } from "@bds/jwt-login";
 import { MenuItem } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
 import { HttpClient } from "@angular/common/http";
@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
   private logoutUrlTemplate: string;
   public itemsMenu: MenuItem[];
 
-  constructor(public router: Router, private loginService: NtJwtLoginService, public dialogService: DialogService) { }
+  constructor(public router: Router, private loginService: JwtLoginService, public dialogService: DialogService) { }
 
 
   onCambioUtenteClick() {

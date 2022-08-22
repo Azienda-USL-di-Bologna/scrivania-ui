@@ -1,4 +1,4 @@
-import { NextSdrEntity } from "@nfa/next-sdr";
+import { NextSdrEntity } from "@bds/next-sdr";
 import { DettaglioAllegato } from "./DettaglioAllegato";
 import { Doc } from "./Doc";
 export declare class Allegato implements NextSdrEntity {

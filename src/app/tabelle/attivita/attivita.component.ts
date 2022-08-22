@@ -1,19 +1,17 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2, ElementRef } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
-import { FILTER_TYPES, SORT_MODES, LOCAL_IT, RefreshAttivitaParams } from "@bds/nt-communicator";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
-import { PROJECTIONS } from "../../../environments/app-constants";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
-import { Attivita, UrlsGenerationStrategy } from "@bds/ng-internauta-model";
-import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
+import { Attivita, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
-import { IntimusClientService, IntimusCommand, IntimusCommands } from "@bds/nt-communicator";
-import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
+import { IntimusClientService, IntimusCommand, IntimusCommands, LOCAL_IT, RefreshAttivitaParams } from "@bds/common-tools";
+import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
 import { HttpClient } from "@angular/common/http";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
@@ -101,7 +99,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   constructor(
     private datepipe: DatePipe,
     private attivitaService: AttivitaService,
-    private loginService: NtJwtLoginService,
+    private loginService: JwtLoginService,
     private renderer: Renderer2,
     private messageService: MessageService,
     private intimusClientService: IntimusClientService,
@@ -198,7 +196,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       filterById.addFilter(new FilterDefinition("id", FILTER_TYPES.not_string.equals, idAttivitaToRefresh));
       switch (operation) {
         case "INSERT":
-          this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, filterById)
+          this.attivitaService.getData(ENTITIES_STRUCTURE.scrivania.attivita.customProjections.AttivitaWithIdApplicazioneAndIdAziendaAndTransientFields, filterById)
           .subscribe((data: any) => {
             if (data) {
               data = data.results[0];
@@ -209,7 +207,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           });
         break;
         case "UPDATE":
-          this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields, filterById)
+          this.attivitaService.getData(ENTITIES_STRUCTURE.scrivania.attivita.customProjections.AttivitaWithIdApplicazioneAndIdAziendaAndTransientFields, filterById)
           .subscribe((data: any) => {
               if (data) {
                 console.log("DATA", data);
@@ -378,7 +376,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
     const pageConfing: PagingConf = this.buildPageConf(event);
 
-    this.attivitaService.getData(PROJECTIONS.attivita.customProjections.attivitaWithIdApplicazioneAndIdAziendaAndTransientFields,
+    this.attivitaService.getData(ENTITIES_STRUCTURE.scrivania.attivita.customProjections.AttivitaWithIdApplicazioneAndIdAziendaAndTransientFields,
         this.initialFiltersAndSorts,
         this.lazyLoadFiltersAndSorts,
         pageConfing).subscribe(data => {

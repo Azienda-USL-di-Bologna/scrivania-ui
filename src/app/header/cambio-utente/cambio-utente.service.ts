@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
-import { HttpAbstractService } from "@bds/nt-communicator";
 import { HttpClient } from "@angular/common/http";
 import { DatePipe } from "@angular/common";
-import { ENTITIES_CONFIGURATION, getInternautaUrl, BaseUrlType } from "../../../environments/app-constants";
+import { NextSDREntityProvider } from "@bds/next-sdr";
+import { BaseUrlType, ENTITIES_STRUCTURE, getInternautaUrl } from "@bds/internauta-model";
 
 @Injectable({
   providedIn: "root"
 })
-export class CambioUtenteService extends HttpAbstractService {
+export class CambioUtenteService extends NextSDREntityProvider {
 
-  constructor(private httpClient: HttpClient, private datePipe: DatePipe) {
-    super(httpClient, datePipe, ENTITIES_CONFIGURATION.utente, getInternautaUrl(BaseUrlType.Baborg));
+  constructor(protected _http: HttpClient, protected _datepipe: DatePipe) {
+    super(_http, _datepipe, ENTITIES_STRUCTURE.baborg.utente, getInternautaUrl(BaseUrlType.Baborg));
    }
 }

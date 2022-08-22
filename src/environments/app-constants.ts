@@ -1,4 +1,3 @@
-import { EntitiesConfiguration } from "@bds/nt-communicator";
 
 // ========================= Url =====================================
 // export const ODATA_BASE_URL: string = environment.odataStoreRootUrl;
@@ -24,7 +23,7 @@ export const MAX_CHARS_100 = 100;
 export const BABELMAN_URL = "https://babelman-auslbo.avec.emr.it/";
 export const APPLICATION = "scrivania";
 
-export enum BaseUrlType {
+/* export enum BaseUrlType {
     Scrivania,
     ScrivaniaCommonParameters,
     Baborg,
@@ -70,16 +69,16 @@ export function getInternautaUrl(type: BaseUrlType): string {
     console.log(out);
 
     return out;
-}
+} */
 
 
-export const ENTITIES = {
+/* export const ENTITIES = {
     azienda: "azienda",
     attivita: "attivita",
     applicazione: "applicazione",
     menu: "menu",
     attivitaFatta: "attivitafatta"
-};
+}; */
 
 export const CONTROLLERS_ENDPOINT = {
     FIRMONE_URLS: "/getFirmoneUrls",
@@ -119,7 +118,7 @@ export const ATTIVITA_STATICHE_DESCRIPTION = {
     nuovo_protocollo_in_entrata: "Nuovo Protocollo In Entrata",
 }
 
-export const PROJECTIONS = {
+/* export const PROJECTIONS = {
     azienda: {
         standardProjections: {
             aziendaWithPlainFields: "AziendaWithPlainFields",
@@ -172,9 +171,9 @@ export const PROJECTIONS = {
         },
         customProjections: {}
     }  
-}
+} */
 
-export const ENTITIES_CONFIGURATION: EntitiesConfiguration = {
+/* export const ENTITIES_CONFIGURATION: EntitiesConfiguration = {
     azienda: {
         path: "azienda"
     },
@@ -193,7 +192,7 @@ export const ENTITIES_CONFIGURATION: EntitiesConfiguration = {
     utente: {
         path: "utente"
     }
-};
+}; */
 
 export const AFFERENZA_STRUTTURA = {
     DIRETTA: 1,
@@ -212,5 +211,3 @@ export const CUSTOM_SERVER_METHODS = {
     downloadAllAttachments: "downloadAllAttachments",
     cancellaattivita: "cancellaattivita"
   };
-
-
