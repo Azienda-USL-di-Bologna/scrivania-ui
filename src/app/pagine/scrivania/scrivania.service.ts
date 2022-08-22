@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { DatePipe } from "@angular/common";
-import { Attivita, ENTITIES_STRUCTURE, ItemMenu } from "@bds/ng-internauta-model";
-import { HttpAbstractService } from "@bds/nt-communicator";
-import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType, COMMANDS, CONTROLLERS_ENDPOINT } from "../../../environments/app-constants";
+import { Attivita, BaseUrlType, ENTITIES_STRUCTURE, getInternautaUrl, ItemMenu } from "@bds/internauta-model";
+import { CONTROLLERS_ENDPOINT } from "../../../environments/app-constants";
 import { Observable, Subscriber } from "rxjs";
-import { NtJwtLoginService } from "@bds/nt-jwt-login";
-import { NextSDREntityProvider } from "@nfa/next-sdr";
+import { JwtLoginService } from "@bds/jwt-login";
+import { NextSDREntityProvider } from "@bds/next-sdr";
 
 @Injectable({
   providedIn: "root"
@@ -16,7 +15,7 @@ export class ScrivaniaService extends NextSDREntityProvider {
   private getAnteprimaServlet: string = "getAnteprima";
   // private blobEmitter: BehaviorSubject<any> = new BehaviorSubject(new URL("http:// localhost:4200/assets/images/no_anteprima.png"));
 
-  constructor(protected http: HttpClient, protected datepipe: DatePipe, private loginService: NtJwtLoginService) {
+  constructor(protected http: HttpClient, protected datepipe: DatePipe, private loginService: JwtLoginService) {
     super(http, datepipe, ENTITIES_STRUCTURE.scrivania.menu, getInternautaUrl(BaseUrlType.Scrivania));
   }
 

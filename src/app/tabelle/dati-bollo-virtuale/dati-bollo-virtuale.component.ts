@@ -1,16 +1,14 @@
 import { Component, OnInit, Input, OnDestroy, ElementRef, ViewChild, ViewChildren, QueryList  } from '@angular/core';
-import { Azienda } from '@bds/ng-internauta-model';
+import { Azienda } from '@bds/internauta-model';
 import { BolloVirtuale } from './bollo.model';
 import { BolloVirtualeService } from './bollo-virtuale.service';
-import { FILTER_TYPES, FiltersAndSorts, SortDefinition, FilterDefinition, SORT_MODES, AdditionalDataDefinition } from '@nfa/next-sdr';
-import { PROJECTIONS } from 'src/environments/app-constants';
+import { FILTER_TYPES } from '@bds/next-sdr';
 import { Subscription } from 'rxjs';
-import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
+import { JwtLoginService, UtenteUtilities } from '@bds/jwt-login';
 import { HttpResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { Table } from 'primeng/table';
-import { CsvExtractor } from '@bds/primeng-plugin';
-import { LOCAL_IT } from '@bds/nt-communicator';
+import { CsvExtractor, LOCAL_IT } from '@bds/common-tools';
 import { Calendar } from 'primeng/calendar';
 import { FilterService } from "primeng/api";
 
@@ -150,7 +148,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
 
   constructor(
       private bolloVirtualeService: BolloVirtualeService, 
-      private loginService: NtJwtLoginService, 
+      private loginService: JwtLoginService, 
       private datePipe: DatePipe,
       private filterService: FilterService) { }
 

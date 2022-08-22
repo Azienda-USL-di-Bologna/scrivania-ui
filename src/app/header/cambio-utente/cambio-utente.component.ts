@@ -1,9 +1,9 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild } from "@angular/core";
-import { FiltersAndSorts, FilterDefinition, FILTER_TYPES, SortDefinition, SORT_MODES } from "@bds/nt-communicator";
-import {PROJECTIONS, AFFERENZA_STRUTTURA} from "../../../environments/app-constants";
+import { AFFERENZA_STRUTTURA} from "../../../environments/app-constants";
 import { CambioUtenteService } from "./cambio-utente.service";
-import { Persona, Utente } from "@bds/ng-internauta-model";
+import { ENTITIES_STRUCTURE, Utente } from "@bds/internauta-model";
 import { AutoComplete } from "primeng/autocomplete";
+import { FilterDefinition, FiltersAndSorts, FILTER_TYPES, SortDefinition, SORT_MODES } from "@bds/next-sdr";
 
 @Component({
   selector: "app-cambio-utente",
@@ -36,8 +36,8 @@ export class CambioUtenteComponent implements OnInit {
     const filter: FiltersAndSorts = new FiltersAndSorts();
     filter.addFilter(new FilterDefinition("idPersona.descrizione", FILTER_TYPES.string.startsWithIgnoreCase, str));
     this.cambioUtenteService
-      .getData(PROJECTIONS.utente.standardProjections.utenteWithIdAziendaAndIdPersona, this.initialFilter, filter)
-      .then(k => {
+      .getData(ENTITIES_STRUCTURE.baborg.utente.standardProjections.UtenteWithIdAziendaAndIdPersona, this.initialFilter, filter)
+      .subscribe(k => {
         this.onClear();
         if (k && k._embedded && k._embedded.utente) {
         this.personeSuggestions = k._embedded.utente;

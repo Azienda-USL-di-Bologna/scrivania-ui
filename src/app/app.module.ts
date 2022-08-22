@@ -6,7 +6,7 @@ import {rootRouterConfig} from "./app.routes";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { RouteReuseStrategy } from '@angular/router';
-import { CustomReuseStrategy } from '@bds/nt-communicator';
+import { CommonToolsModule, CustomReuseStrategy } from '@bds/common-tools';
 
 /* Custom component */
 import { AppComponent } from "./app.component";
@@ -64,12 +64,11 @@ import { InplaceModule } from 'primeng/inplace';
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 
 /* Login */
-import { NtJwtLoginModule } from "@bds/nt-jwt-login";
+import { JwtLoginModule } from "@bds/jwt-login";
 import { loginModuleConfig } from "./config/module-config";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
 
-import { NtCommunicatorModule } from "@bds/nt-communicator";
 import { CommonComponentsModule } from "@bds/common-components";
 import { DatiBolloVirtualeComponent } from './tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component';
 import { RaccoltaSempliceComponent } from './tabelle/raccolta-semplice/raccolta-semplice.component';
@@ -99,7 +98,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
     InserimentoManualeComponent
   ],
   imports: [
-    NtJwtLoginModule.forRoot(loginModuleConfig),
+    JwtLoginModule.forRoot(loginModuleConfig),
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
@@ -128,7 +127,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
     CardModule,
     ConfirmDialogModule,
     PrimengPluginModule,
-    NtCommunicatorModule,
+    CommonToolsModule,
     CommonComponentsModule,
     ProgressSpinnerModule,
     MatMenuModule,

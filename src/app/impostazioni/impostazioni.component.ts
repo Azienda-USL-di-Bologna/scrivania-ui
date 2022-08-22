@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from "@angular/core";
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Impostazioni } from "./impostazioni";
-import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
+import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { Subscription } from "rxjs";
 import { FormControl, Validators } from '@angular/forms';
@@ -27,7 +27,7 @@ export class ImpostazioniComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public mail = new FormControl("", Validators.pattern(this.emailRegex));
 
-  constructor(public ref: DynamicDialogRef, private loginService: NtJwtLoginService, private impostazioniService: ImpostazioniService) { }
+  constructor(public ref: DynamicDialogRef, private loginService: JwtLoginService, private impostazioniService: ImpostazioniService) { }
 
   ngOnInit() {
     this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {

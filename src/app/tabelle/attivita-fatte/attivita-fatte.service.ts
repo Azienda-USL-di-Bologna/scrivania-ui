@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { getInternautaUrl, BaseUrlType } from '../../../environments/app-constants';
-import { AttivitaFatta, ENTITIES_STRUCTURE } from '@bds/ng-internauta-model';
-import { NextSDREntityProvider } from '@nfa/next-sdr';
+import { AttivitaFatta, BaseUrlType, ENTITIES_STRUCTURE, getInternautaUrl } from '@bds/internauta-model';
+import { NextSDREntityProvider } from '@bds/next-sdr';
 import { Observable } from 'rxjs';
 
 @Injectable()

@@ -7,16 +7,16 @@ import { FileUpload } from 'primeng/fileupload';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { ExtendedAllegatoService } from './extended-allegato.service';
 import { HttpClient, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
-import { CustomReuseStrategy, UtilityFunctions } from '@bds/nt-communicator';
-import { BatchOperation, BatchOperationTypes, FilterDefinition, FiltersAndSorts, FILTER_TYPES, NextSdrEntity, SortDefinition, SORT_MODES } from '@nfa/next-sdr';
-import { Azienda, BaseUrls, BaseUrlType, Contatto, ContattoService, DettaglioContatto, DettaglioContattoService, ENTITIES_STRUCTURE, Struttura } from '@bds/ng-internauta-model';
+import { CustomReuseStrategy, UtilityFunctions } from '@bds/common-tools';
+import { BatchOperation, BatchOperationTypes, FilterDefinition, FiltersAndSorts, FILTER_TYPES, NextSdrEntity, SortDefinition, SORT_MODES } from '@bds/next-sdr';
+import { Azienda, BaseUrls, BaseUrlType, Contatto, ContattoService, DettaglioContatto, DettaglioContattoService, ENTITIES_STRUCTURE, Struttura } from '@bds/internauta-model';
 import { FascicoloArgo } from '../fascicolo.model';
 import { RaccoltaSempliceService } from '../raccolta-semplice.service';
 import { FormBuilder, FormControl, FormGroup, SelectMultipleControlValueAccessor } from '@angular/forms';
 import { DocumentoArgo } from '../DocumentoArgo.model';
 import { PersonaRS } from '../personaRS.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
+import { JwtLoginService, UtenteUtilities } from '@bds/jwt-login';
 
 
 
@@ -146,7 +146,7 @@ export class InserimentoManualeComponent implements OnInit {
     private dettaglioContattoService: DettaglioContattoService,
     private fb: FormBuilder,
     private http: HttpClient,
-    private loginService: NtJwtLoginService,
+    private loginService: JwtLoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute) {
     this.prefixHeader = "Collega Documento Babel: ";

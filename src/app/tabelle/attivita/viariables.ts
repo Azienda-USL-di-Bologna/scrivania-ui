@@ -1,4 +1,4 @@
-import { FILTER_TYPES } from "@bds/nt-communicator";
+import { FILTER_TYPES } from "@bds/next-sdr";
 
 export const ColumnsNormal = [
   {
