@@ -12,9 +12,6 @@ import { CommonToolsModule, CustomReuseStrategy } from '@bds/common-tools';
 import { AppComponent } from "./app.component";
 import { TabellaAttivitaComponent } from "./tabelle/attivita/attivita.component";
 import { ScrivaniaComponent } from "./pagine/scrivania/scrivania.component";
-import { HomepageComponent } from "./pagine/homepage/homepage.component";
-import { HeaderComponent } from "./header/header.component";
-import { CambioUtenteComponent } from "./header/cambio-utente/cambio-utente.component";
 import { AttivitaFatteComponent } from "./tabelle/attivita-fatte/attivita-fatte.component";
 import { DropdownAziendeComponent } from "./components/dropdown-aziende/dropdown-aziende.component";
 import { LoadingComponent } from "./pagine/loading/loading.component";
@@ -86,9 +83,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
     AppComponent,
     TabellaAttivitaComponent,
     ScrivaniaComponent,
-    HomepageComponent,
-    HeaderComponent,
-    CambioUtenteComponent,
     AttivitaFatteComponent,
     DropdownAziendeComponent,
     LoadingComponent,
