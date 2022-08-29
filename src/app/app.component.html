@@ -1,8 +1,19 @@
-<div class="p-grid p-nogutter page-wrapper"> <!---->
-  <prp-header class="p-col-12 ui-g-nopad custom-header" [addToRight]="headerTemplate" [appName]="'Babel Internauta'" [logoPath]="'assets/images/logo.png'"></prp-header>
-    <ng-template #headerTemplate>
-      <prp-header-features [params]="headerFeaturesConfig" [addToMenu]="addToMenu"></prp-header-features>
+<div class="p-grid p-nogutter page-wrapper">
+  <!-- HEADER -->
+  <prp-header 
+    class="p-col-12 ui-g-nopad custom-header" 
+    [addToRight]="headerTemplate" 
+    appName="Babel Internauta" 
+    logoPath="assets/images/logo.png">
+  </prp-header>
+  <ng-template #headerTemplate>
+    <prp-header-features 
+      [params]="headerFeaturesConfig" 
+      [addToMenu]="addToMenu">
+    </prp-header-features>
   </ng-template>
+  
+  <!-- CONTENT -->
   <div class="content-wrapper ui-fluid">
       <router-outlet></router-outlet>
   </div>

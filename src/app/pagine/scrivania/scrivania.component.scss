@@ -32,13 +32,13 @@
     display: inline;
 }
 
->>> .p-fluid .p-dialog-footer .p-button {
+::ng-deep .p-fluid .p-dialog-footer .p-button {
     width: 62px;
 }
 
 /* BUTTON STYLES */
 
->>> .p-fluid .p-button {
+::ng-deep .p-fluid .p-button {
     width: 80px; /* Senza dava problemi su firefox */
 }
 
@@ -70,23 +70,23 @@
     width: 21px;
 }
 
-:host >>> .icon-style > span:first-child {
+:host ::ng-deep .icon-style > span:first-child {
     font-size: 1em;
 }
-:host >>> .icon-style > img:first-child {
+:host ::ng-deep .icon-style > img:first-child {
    fill: #333333 !important;
 }
 
-:host >>> .p-button.p-state-default.p-button-secondary:enabled:focus, body .p-buttonset.p-button-secondary > .p-button.p-state-default:enabled:focus {
+:host ::ng-deep .p-button.p-state-default.p-button-secondary:enabled:focus, body .p-buttonset.p-button-secondary > .p-button.p-state-default:enabled:focus {
     box-shadow: 0 0 0 1px #9E9E9E;
 }
-:host >>> .p-button.p-state-default.p-button-secondary, 
+:host ::ng-deep .p-button.p-state-default.p-button-secondary, 
 body .p-buttonset.p-button-secondary > .p-button.p-state-default {
     border: 1px solid #d2d2d2 !important;
     color: #333333 !important;
     background-color: #f4f4f4 !important;
 }
-/* :host>>> .button-indietro{
+/* :host::ng-deep .button-indietro{
     background-color: #e2e2e2;
     height: 33px;
 } */
@@ -107,16 +107,16 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
     right: 0;
     //padding-bottom: 33px;
 }
-:host>>> .p-table,
-:host>>> .p-table-scrollable-wrapper,
-:host>>> .p-table-scrollable-view{
+:host::ng-deep .p-table,
+:host::ng-deep .p-table-scrollable-wrapper,
+:host::ng-deep .p-table-scrollable-view{
     height: 100%;
 }
-:host>>> .p-table-scrollable-view{
+:host::ng-deep .p-table-scrollable-view{
     display: flex;
     flex-direction: column;
 }
-:host>>> .p-table-scrollable-body{
+:host::ng-deep .p-table-scrollable-body{
     flex: 1;
 }
 /* .preview-wrapper{
@@ -201,7 +201,7 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
     font-weight: bold;
     padding: 4px 8px;
 }
-:host>>>.clMenuPosition > .p-tieredmenu{
+:host::ng-deep.clMenuPosition > .p-tieredmenu{
     //top: 43px !important;
 }
 .clMenu:enabled{
@@ -215,44 +215,44 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
 .clMenu > img {
     float: left;
 }
-:host>>>.clMenu > span {
+:host::ng-deep.clMenu > span {
     padding: 0 0 0 8px !important;
     margin: 2px 0;
     float: right;
 }
-:host>>>.p-tieredmenu,
-:host>>>.p-tieredmenu .p-submenu-list {
+:host::ng-deep.p-tieredmenu,
+:host::ng-deep.p-tieredmenu .p-submenu-list {
     /* background-color:#737272; */
     /* background-color:#203244; */
     background-color:  rgba(32, 50, 68, 0.980392) !important;
 }
-:host>>>.p-tieredmenu .p-menuitem-link .p-menuitem-text,
-:host>>>.p-submenu-icon {
+:host::ng-deep.p-tieredmenu .p-menuitem-link .p-menuitem-text,
+:host::ng-deep.p-submenu-icon {
     color: #f4f4f4;
     top: 21px !important;
     /* color: #999; */
 }
 
-:host>>>.p-tieredmenu .p-menuitem-link {
+:host::ng-deep.p-tieredmenu .p-menuitem-link {
     padding: 0.4em 0.85em;
 }
 
-:host>>>.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link {
+:host::ng-deep.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link {
     /* background-color:#7e7e7e;#d3d3d3b0;    */
     background-color:  #f4f4f4;
 }
 
-:host>>>.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text,
-:host>>>.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
+:host::ng-deep.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text,
+:host::ng-deep.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
     color: #203142;
     font-weight: bold;
     /* font-size: 101%; */
 }
-:host>>>.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
+:host::ng-deep.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
     padding-left: 9px;
 }
 
-:host>>>.p-tieredmenu .p-menuitem-link .p-submenu-icon{
+:host::ng-deep.p-tieredmenu .p-menuitem-link .p-submenu-icon{
     margin-top: -.8em;
 }
 
@@ -293,7 +293,7 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
 .d-inline{
     display: inline;
 }
-:host>>>.clMenu{
+:host::ng-deep.clMenu{
     top: auto !important;
 }
 
@@ -310,7 +310,7 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
 .allegati-dropdown > p-dropdown{
     flex-grow: 1;
 }
-:host>>> .allegati-dropdown > p-dropdown > div{
+:host::ng-deep .allegati-dropdown > p-dropdown > div{
     width: 100% !important;
 }
 .flex-grow-1{
@@ -331,7 +331,7 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
 ::ng-deep .p-tooltip {
     max-width: 20.5em;
 }
-:host>>> .centerIconVertically{
+:host::ng-deep .centerIconVertically{
     display: flex;
     align-items: center;
 }

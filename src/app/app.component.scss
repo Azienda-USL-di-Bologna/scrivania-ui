@@ -24,61 +24,61 @@
     height: 100%;
 }
 
-/* :host>>>.ui-state-highlight{
+/* :host::ng-deep.ui-state-highlight{
     background-color: GoldenRod !important;
     color: black !important;
 } */
 
 /*
-:host>>>.row-class{
+:host::ng-deep.row-class{
     height: 60px;
     cursor: default !important;
 }
 */
 
->>> body .ui-table .ui-table-tbody > tr.ui-state-highlight {
+::ng-deep body .ui-table .ui-table-tbody > tr.ui-state-highlight {
     /* background-color: #f68b20;
     background-color: rgb(255, 192, 87);  */
     background-color: #FCF9BF;
     color: black;
 }
 
->>> body .ui-table .ui-table-tbody > tr:nth-child(even).ui-state-highlight {
+::ng-deep body .ui-table .ui-table-tbody > tr:nth-child(even).ui-state-highlight {
     /* background-color: #f68b20;
     background-color: rgb(255, 192, 87);  */
     background-color: #FCF9BF;
     color: black;
 }
 
->>> body .ui-table .ui-sortable-column.ui-state-highlight >>> body .ui-table .ui-sortable-column.ui-state-highlight a {
+::ng-deep body .ui-table .ui-sortable-column.ui-state-highlight ::ng-deep body .ui-table .ui-sortable-column.ui-state-highlight a {
     background-color: #e0e0e0;
     color: black;
 }
 
-/* >>> body .ui-table .ui-sortable-column.ui-state-highlight a {
+/* ::ng-deep body .ui-table .ui-sortable-column.ui-state-highlight a {
     color: black;
 } */
 
->>> body .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a,
->>> body .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active:hover a,
->>> body .ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-active,
->>> body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item.ui-state-highlight,
->>> body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item-group.ui-state-highlight {
+::ng-deep body .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a,
+::ng-deep body .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active:hover a,
+::ng-deep body .ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-active,
+::ng-deep body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item.ui-state-highlight,
+::ng-deep body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item-group.ui-state-highlight {
     background-color: #848484;
     border: 1px solid #848484;
     color: #ffffff;
 }
 
->>> * {
+::ng-deep * {
     outline: none;
 }
->>> body .ui-dialog .ui-dialog-titlebar, .titolo-popup {
+::ng-deep body .ui-dialog .ui-dialog-titlebar, .titolo-popup {
     background-color: #993366 !important;
     color: white !important;
 }
->>> body .ui-dialog .ui-dialog-titlebar {
+::ng-deep body .ui-dialog .ui-dialog-titlebar {
     border: none;
 }
->>> body .ui-dialog{
+::ng-deep body .ui-dialog{
     min-width: 443px;
 }

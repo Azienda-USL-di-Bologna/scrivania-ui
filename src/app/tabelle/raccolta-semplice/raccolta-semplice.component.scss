@@ -167,31 +167,31 @@ left: 15%;
 width: 21px;
 }
   
-:host >>> .icon-style > span:first-child {
+:host ::ng-deep .icon-style > span:first-child {
 font-size: 1.7em;
 }
-:host >>> .icon-style > img:first-child {
+:host ::ng-deep .icon-style > img:first-child {
 fill: #333333 !important;
 }
   
-  :host >>> .ui-button.ui-state-default.ui-button-secondary:enabled:focus, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default:enabled:focus {
+  :host ::ng-deep .ui-button.ui-state-default.ui-button-secondary:enabled:focus, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default:enabled:focus {
     box-shadow: 0 0 0 1px #9E9E9E;
   }
-  :host >>> .ui-button.ui-state-default.ui-button-secondary, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default {
+  :host ::ng-deep .ui-button.ui-state-default.ui-button-secondary, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default {
     border: 1px solid #d2d2d2;
   }
 
-  :host>>> .ui-table,
-  :host>>> .ui-table-scrollable-wrapper,
-  :host>>> .ui-table-scrollable-view{
+  :host::ng-deep .ui-table,
+  :host::ng-deep .ui-table-scrollable-wrapper,
+  :host::ng-deep .ui-table-scrollable-view{
     height: 100%;
     width: 100%;
   }
-  :host>>> .ui-table-scrollable-view{
+  :host::ng-deep .ui-table-scrollable-view{
     display: flex;
 
   }
-  :host>>> .ui-table-scrollable-body{
+  :host::ng-deep .ui-table-scrollable-body{
     flex: 1;
   }
   /* .preview-wrapper{
