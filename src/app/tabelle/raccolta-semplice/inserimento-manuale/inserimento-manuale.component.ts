@@ -40,7 +40,7 @@ interface Registro {
 @Component({
   selector: 'app-inserimento-manuale',
   templateUrl: './inserimento-manuale.component.html',
-  styleUrls: ['./inserimento-manuale.component.css']
+  styleUrls: ['./inserimento-manuale.component.scss']
 })
 export class InserimentoManualeComponent implements OnInit {
 

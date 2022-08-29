@@ -9,7 +9,7 @@ import { COMMON_PARAMETERS, ATTIVITA_ROUTE } from "src/environments/app-constant
 @Component({
   selector: "app-loading",
   templateUrl: "./loading.component.html",
-  styleUrls: ["./loading.component.css"]
+  styleUrls: ["./loading.component.scss"]
 })
 export class LoadingComponent implements OnInit {
 

@@ -14,7 +14,7 @@ import { Table } from "primeng/table";
 @Component({
   selector: "app-attivita-fatte",
   templateUrl: "./attivita-fatte.component.html",
-  styleUrls: ["./attivita-fatte.component.css"],
+  styleUrls: ["./attivita-fatte.component.scss"],
   providers: [DatePipe]
 })
 export class AttivitaFatteComponent implements OnInit {

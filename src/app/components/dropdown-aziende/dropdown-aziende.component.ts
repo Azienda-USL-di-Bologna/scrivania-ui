@@ -6,7 +6,7 @@ import { Azienda } from "@bds/internauta-model";
 @Component({
   selector: "app-dropdown-aziende",
   templateUrl: "./dropdown-aziende.component.html",
-  styleUrls: ["./dropdown-aziende.component.css"]
+  styleUrls: ["./dropdown-aziende.component.scss"]
 })
 export class DropdownAziendeComponent implements OnInit, OnDestroy {
 

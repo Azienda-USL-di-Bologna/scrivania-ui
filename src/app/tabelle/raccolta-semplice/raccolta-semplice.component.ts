@@ -19,7 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-raccolta-semplice',
   templateUrl: './raccolta-semplice.component.html',
-  styleUrls: ['./raccolta-semplice.component.css']
+  styleUrls: ['./raccolta-semplice.component.scss']
 })
 export class RaccoltaSempliceComponent implements OnInit {
   constructor(private raccoltaSempliceService: RaccoltaSempliceService, 

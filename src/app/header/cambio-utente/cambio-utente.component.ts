@@ -8,7 +8,7 @@ import { FilterDefinition, FiltersAndSorts, FILTER_TYPES, SortDefinition, SORT_M
 @Component({
   selector: "app-cambio-utente",
   templateUrl: "./cambio-utente.component.html",
-  styleUrls: ["./cambio-utente.component.css"]
+  styleUrls: ["./cambio-utente.component.scss"]
 })
 export class CambioUtenteComponent implements OnInit {
 

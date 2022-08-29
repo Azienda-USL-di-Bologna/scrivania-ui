@@ -19,7 +19,7 @@ import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 @Component({
   selector: "app-attivita",
   templateUrl: "./attivita.component.html",
-  styleUrls: ["./attivita.component.css"],
+  styleUrls: ["./attivita.component.scss"],
   providers: [DatePipe]
 })
 export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewInit {

@@ -15,7 +15,7 @@ import { FilterService } from "primeng/api";
 @Component({
   selector: 'app-dati-bollo-virtuale',
   templateUrl: './dati-bollo-virtuale.component.html',
-  styleUrls: ['./dati-bollo-virtuale.component.css']
+  styleUrls: ['./dati-bollo-virtuale.component.scss']
 })
 export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
   _azienda: Azienda;
