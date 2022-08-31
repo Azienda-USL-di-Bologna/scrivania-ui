@@ -1,8 +1,8 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from "@angular/core";
-import {RouterModule} from "@angular/router";
-import {rootRouterConfig} from "./app.routes";
+import { RouterModule } from "@angular/router";
+import { rootRouterConfig } from "./app.routes";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { RouteReuseStrategy } from '@angular/router';
@@ -16,7 +16,6 @@ import { AttivitaFatteComponent } from "./tabelle/attivita-fatte/attivita-fatte.
 import { DropdownAziendeComponent } from "./components/dropdown-aziende/dropdown-aziende.component";
 import { LoadingComponent } from "./pagine/loading/loading.component";
 import { PrimengPluginModule } from "@bds/primeng-plugin";
-import { ProfiloComponent } from "@bds/common-components";
 
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
@@ -66,7 +65,7 @@ import { loginModuleConfig } from "./config/module-config";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
 
-import { CommonComponentsModule } from "@bds/common-components";
+import { CommonComponentsModule, HeaderModule, HeaderFeaturesModule } from "@bds/common-components";
 import { DatiBolloVirtualeComponent } from './tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component';
 import { RaccoltaSempliceComponent } from './tabelle/raccolta-semplice/raccolta-semplice.component';
 import { InserimentoManualeComponent } from './tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component';
@@ -123,6 +122,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     PrimengPluginModule,
     CommonToolsModule,
     CommonComponentsModule,
+    HeaderModule, 
+    HeaderFeaturesModule, 
     ProgressSpinnerModule,
     MatMenuModule,
     MatIconModule,
@@ -143,6 +144,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ImpostazioniComponent, ProfiloComponent]
+  entryComponents: [ImpostazioniComponent]
 })
 export class AppModule { }
