@@ -1,21 +1,20 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList, ViewChild } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
-import { FILTER_TYPES, SORT_MODES, LOCAL_IT } from "@bds/nt-communicator";
+import { LOCAL_IT } from "@bds/common-tools";
 import { buildLazyEventFiltersAndSorts, buildPagingConf } from "@bds/primeng-plugin";
 import { AttivitaFatteService } from "./attivita-fatte.service";
-import { PROJECTIONS } from "../../../environments/app-constants";
-import { AttivitaFatta } from "@bds/ng-internauta-model";
-import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
+import { AttivitaFatta, ENTITIES_STRUCTURE } from "@bds/internauta-model";
+import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Subscription } from "rxjs";
-import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
+import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
 import { Calendar } from "primeng/calendar";
 import { Table } from "primeng/table";
 
 @Component({
   selector: "app-attivita-fatte",
   templateUrl: "./attivita-fatte.component.html",
-  styleUrls: ["./attivita-fatte.component.css"],
+  styleUrls: ["./attivita-fatte.component.scss"],
   providers: [DatePipe]
 })
 export class AttivitaFatteComponent implements OnInit {
@@ -125,7 +124,7 @@ export class AttivitaFatteComponent implements OnInit {
     },
   ];
 
-  constructor(private datepipe: DatePipe, private attivitaFatteService: AttivitaFatteService, private loginService: NtJwtLoginService) { }
+  constructor(private datepipe: DatePipe, private attivitaFatteService: AttivitaFatteService, private loginService: JwtLoginService) { }
 
   ngOnInit() {
     this.subscriptions = [];
@@ -151,8 +150,8 @@ export class AttivitaFatteComponent implements OnInit {
 
     this.attivitaFatteService
       .getData(
-        PROJECTIONS.attivitaFatta.customProjections
-          .attivitaFattaWithIdApplicazioneAndIdAziendaAndTransientFields,
+        ENTITIES_STRUCTURE.scrivania.attivitafatta.customProjections
+          .AttivitaFattaWithIdApplicazioneAndIdAziendaAndTransientFields,
         this.initialFiltersAndSorts,
         this.lazyLoadFiltersAndSorts,
         pageConfing

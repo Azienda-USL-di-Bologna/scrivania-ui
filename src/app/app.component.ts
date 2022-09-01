@@ -1,37 +1,33 @@
 import { Component, OnInit, OnDestroy, Type } from "@angular/core";
-import { NtJwtLoginService, UtenteUtilities, UtilityFunctions} from "@bds/nt-jwt-login";
+import { JwtLoginService, UtenteUtilities, UtilityFunctions} from "@bds/jwt-login";
 import { SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { getInternautaUrl, BaseUrlType } from "@bds/ng-internauta-model";
+import { getInternautaUrl, BaseUrlType } from "@bds/internauta-model";
 import { MenuItem, PrimeNGConfig } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
-import { IntimusClientService, PRIMENG_ITA_TRANSALATION } from "@bds/nt-communicator";
-import { PopupMessaggiService, HeaderFeaturesConfig } from "@bds/common-components";
+import { IntimusClientService, PRIMENG_ITA_TRANSALATION } from "@bds/common-tools";
+import { HeaderFeaturesConfig } from "@bds/common-components";
 import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.css"]
+  styleUrls: ["./app.component.scss"]
 })
 export class AppComponent implements OnInit, OnDestroy {
-
-  title = "Babel-Internauta";
-  private deletedImpersonatedUserQueryParams = false;
-  public addToMenu: MenuItem[] = [];
+  public addToMenu: MenuItem[] = []; // E' il menu che si aprirà nell'header
+  public headerFeaturesConfig: HeaderFeaturesConfig; 
   public utenteConnesso: UtenteUtilities;
-  public headerFeaturesConfig: HeaderFeaturesConfig;
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private loginService: NtJwtLoginService,
+    private loginService: JwtLoginService,
     private config: PrimeNGConfig,
     private route: ActivatedRoute,
     private router: Router,
     public dialogService: DialogService,
-    private intimusClient: IntimusClientService,
-    private popupMessaggiService: PopupMessaggiService
+    private intimusClient: IntimusClientService
     ) {}
 
   ngOnInit() {
@@ -63,26 +59,6 @@ export class AppComponent implements OnInit, OnDestroy {
           this.utenteConnesso.getUtente().idPersona.id,
           this.utenteConnesso.getUtente().aziendaLogin.id,
           this.utenteConnesso.getUtente().aziende.map(a => a.id));
-        // if (!this.onTimeOutWarningSubscribbed) {
-        // this.subscriptions.push(this.sessionManager.onTimeOutWarning.subscribe(
-        //   (countdown: number) => {
-        //     this.logoutCountdown = countdown;
-        //     this.messageService.clear("logoutWarning");
-        //     this.messageService.add({
-        //       severity: "warn",
-        //       summary: "Attenzione",
-        //       detail: `Uscita tra ${this.logoutCountdown} secondi...`,
-        //       key: "logoutWarning",
-        //       sticky: true,
-        //       closable: true
-        //     });
-        //   }));
-        //   this.subscriptions.push(this.sessionManager.onIdleEnd.subscribe(
-        //     () => {
-        //       this.messageService.clear("logoutWarning");
-        //   }));
-        //   this.onTimeOutWarningSubscribbed = true;
-        // }
       }
     }));
 
@@ -93,10 +69,18 @@ export class AppComponent implements OnInit, OnDestroy {
       command: () => { this.showSettings(ImpostazioniComponent, "Impostazioni utente", "480px", "200px", null); }
     });
     this.addToMenu = Object.assign([], this.addToMenu);
-
   }
 
-  showSettings(component: Type<any>, header: string, width: string, height: string, data: any) {
+  /**
+   * Questa funzione viene passata all'header come comando di risposta al click sulla volce impostazioni.
+   * Si occupa di aprire un dialog dinamico di primeng in cui è caricato il componente passato (ImpostazioniComponent)
+   * @param component 
+   * @param header 
+   * @param width 
+   * @param height 
+   * @param data 
+   */
+  private showSettings(component: Type<any>, header: string, width: string, height: string, data: any) {
     const ref = this.dialogService.open(component, {
       data: data,
       header: header,
@@ -105,17 +89,6 @@ export class AppComponent implements OnInit, OnDestroy {
       contentStyle: {"max-height": "450px", "min-height": "250px", "overflow": "auto", "height": height }
     });
   }
-
-  // crea l'utente a partire dai dati "grezzi" UserInfo della risposta
-  /* public buildLoggedUser(userInfo: any): Utente {
-    const loggedUser: Utente = new Utente();
-    for (const key in userInfo) {
-      if (userInfo.hasOwnProperty(key)) {
-        loggedUser[key] = userInfo[key];
-      }
-    }
-    return loggedUser;
-  } */
 
   ngOnDestroy(): void {
     if (this.subscriptions && this.subscriptions.length > 0) {

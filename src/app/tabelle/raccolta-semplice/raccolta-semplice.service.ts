@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-import { getInternautaUrl, BaseUrlType } from '@bds/ng-internauta-model';
+import { getInternautaUrl, BaseUrlType } from '@bds/internauta-model';
 import { CONTROLLERS_ENDPOINT } from 'src/environments/app-constants';
 import { Document } from './documento.model';
 import { Observable } from 'rxjs';

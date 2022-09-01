@@ -19,7 +19,7 @@
     [contextMenu]="cm">
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th  *ngFor="let col of columns"
+            <th *ngFor="let col of columns"
                 tabindex="0" 
                 [id]="col.field || col.label"  
                 [style.display]="col.display"
@@ -33,7 +33,10 @@
                     <!-- ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente" -->
                 </p-sortIcon>
             </th>
-            <th *ngIf="cols[11].visibility==='visible'" aria-label="Colonna Apri Anteprima"></th>
+            <th *ngIf="hidePreview" 
+                aria-label="Colonna Apri Anteprima"
+                style="max-width: 32px; min-width: 32px; width: 32px;">
+            </th>
         </tr>
         <tr>
             <th *ngFor="let col of columns" 
@@ -55,7 +58,10 @@
                         #filterInputText>
                 </div>
             </th>
-            <th *ngIf="cols[11].visibility==='visible' && !!!hidePreview" aria-label="Colonna Apri Anteprima"></th>
+            <th *ngIf="hidePreview" 
+                aria-label="Colonna Apri Anteprima"
+                style="max-width: 32px; min-width: 32px; width: 32px;">
+            </th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
@@ -100,14 +106,14 @@
                 <img tabindex="0" *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="noteClicckato(attivita, $event)" alt="Leggi note" role="button" class="img-table" pTooltip="Leggi note">
                 <img tabindex="0" *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="noteClicckato(attivita, $event)" alt="Inserisci note" role="button"  class="img-table" pTooltip="Inserisci note">
             </td>
-            <td *ngIf="cols[11].visibility==='visible'" 
+            <td *ngIf="hidePreview" 
                 aria-label="Colonna Apri Anteprima" 
                 headers="anteprima" 
-                [style.maxWidth]="cols[11].width" 
+                style="max-width: 32px; min-width: 32px; width: 32px;"
                 [style.opacity]="!attivita.allegatoDaMostrare ? 0 : 100"
                 [style.cursor]="!attivita.allegatoDaMostrare ? 'auto' : 'pointer'" 
                 class="p0 columns-icon" 
-                [style.minWidth]="cols[11].minWidth"
+                
                 [ngClass]="{'td-pos-relative' : attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza')}"
                 >
                 <img tabindex="0" *ngIf="attivita.allegatoDaMostrare && attivita.descrizione !== 'Redazione' && attivita.descrizione !== 'Bozza'" src="assets/images/pdf-file.svg"

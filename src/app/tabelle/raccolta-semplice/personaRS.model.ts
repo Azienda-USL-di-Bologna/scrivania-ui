@@ -1,4 +1,4 @@
-import { Contatto, Indirizzo } from "@bds/ng-internauta-model";
+import { Contatto, Indirizzo } from "@bds/internauta-model";
 
 export class PersonaRS {
     public id: number;
