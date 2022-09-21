@@ -1,0 +1,85 @@
+.box {
+  background-color: var(--surface-e);
+  text-align: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+}
+
+.box-stretched {
+  height: 100%;
+}
+
+.vertical-container {
+  margin: 0;
+  height: 200px;
+  background: var(--surface-d);
+  border-radius: 4px;
+}
+
+.nested-grid .p-col-4 {
+  padding-bottom: 1rem;
+}
+
+.input-autocomplete {
+  border-bottom: solid;
+}
+
+.container {
+  margin: 100px;
+}
+
+.expansion-header{
+  background-color: darkgrey;
+  height: 2em;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  background-color: white !important;
+  color: black;
+}
+
+.expansion-single-box {
+  margin-bottom: 0.5em;
+  
+}
+
+.custom-grid {
+  height: 6em;  
+}
+
+.align-table {
+  margin-top: 1.4em;
+}
+
+.babel-color {
+  background-color: #993366;
+  border: white;
+}
+
+.interaction-button {
+  background-color: #203142;
+}
+
+
+/* cambio colore pulsante upload */
+::ng-deep .p-fileupload-choose  {
+  background-color: #993366;
+  border: white;
+}
+
+/* cambio colore pulsante upload con hover*/
+::ng-deep .p-fileupload-choose:not(.p-disabled):hover {
+  background-color: #993366;
+  border: white;
+}
+
+::ng-deep .p-fileupload .p-button.p-button-icon-only{
+  background-color: #203142 !important;
+  padding: 0.429rem 0.5rem !important;
+}
+
+
+

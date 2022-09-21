@@ -1,15 +1,14 @@
 import { DatePipe } from '@angular/common';
 import { HttpResponse } from '@angular/common/http';
 import { Component, ElementRef, Inject, Input, OnInit, QueryList, ViewChild,  ViewChildren } from '@angular/core';
-import { Azienda } from '@bds/ng-internauta-model';
-import { LOCAL_IT } from '@bds/nt-communicator';
-import { NtJwtLoginService, UtenteUtilities } from '@bds/nt-jwt-login';
-import { FILTER_TYPES } from '@nfa/next-sdr';
+import { Azienda } from '@bds/internauta-model';
+import { CsvExtractor, LOCAL_IT } from '@bds/common-tools';
+import { JwtLoginService, UtenteUtilities } from '@bds/jwt-login';
+import { FILTER_TYPES } from '@bds/next-sdr';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { RaccoltaSempliceService } from './raccolta-semplice.service';
 import { Document } from './documento.model';
 import { Table } from 'primeng/table';
-import { CsvExtractor } from '@bds/primeng-plugin';
 import { Calendar } from 'primeng/calendar';
 import { FilterService } from "primeng/api";
 import { Storico } from './dettaglio-annullamento/modal/storico';
@@ -20,11 +19,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-raccolta-semplice',
   templateUrl: './raccolta-semplice.component.html',
-  styleUrls: ['./raccolta-semplice.component.css']
+  styleUrls: ['./raccolta-semplice.component.scss']
 })
 export class RaccoltaSempliceComponent implements OnInit {
   constructor(private raccoltaSempliceService: RaccoltaSempliceService, 
-    private loginService: NtJwtLoginService, 
+    private loginService: JwtLoginService, 
     private datePipe: DatePipe, 
     private formBuilder: FormBuilder,
     private router: Router,

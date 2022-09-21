@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-import { NextSDREntityProvider, FiltersAndSorts } from '@nfa/next-sdr';
-import { ENTITIES_STRUCTURE, getInternautaUrl, Azienda, BaseUrlType } from '@bds/ng-internauta-model';
+import { NextSDREntityProvider, FiltersAndSorts } from '@bds/next-sdr';
+import { ENTITIES_STRUCTURE, getInternautaUrl, Azienda, BaseUrlType } from '@bds/internauta-model';
 import { CONTROLLERS_ENDPOINT } from 'src/environments/app-constants';
 import { BolloVirtuale } from './bollo.model';
 import { Observable } from 'rxjs';

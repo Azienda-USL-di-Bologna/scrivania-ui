@@ -17,13 +17,13 @@
 .p0{
     padding: 0 !important;
 }
-:host>>>table.ui-table-scrollable-body-table{
+:host::ng-deeptable.ui-table-scrollable-body-table{
     table-layout: auto;
 }
-:host>>>table.ui-table-scrollable-header-table{
+:host::ng-deeptable.ui-table-scrollable-header-table{
     table-layout: auto;
 }
-:host>>> .ui-table .ui-table-tbody > tr > td {
+:host::ng-deep .ui-table .ui-table-tbody > tr > td {
     padding: 10px;
 }
 .column-class-f {
@@ -45,15 +45,15 @@
     border-right-style: solid;
     border-width: 1px;
 }
-:host>>> .ui-table .ui-table-tbody > tr.ui-contextmenu-selected {
+:host::ng-deep .ui-table .ui-table-tbody > tr.ui-contextmenu-selected {
     background-color: #ffffff !important;
     color: black !important;
 }
-:host>>> .clContextMenu .ui-contextmenu,
-:host>>> .clContextMenu .ui-menuitem-link{
+:host::ng-deep .clContextMenu .ui-contextmenu,
+:host::ng-deep .clContextMenu .ui-menuitem-link{
     background-color: #203244fa !important;
 }
-:host>>> .clContextMenu span{
+:host::ng-deep .clContextMenu span{
     color: #ffffff !important;
 }
 .columns-icon{
@@ -62,7 +62,7 @@
 .columns-icon > span{
     font-size: 24px;
 }
-:host>>> .clToast .ui-toast-message-info{
+:host::ng-deep .clToast .ui-toast-message-info{
     background-color:#283948 !important;
     color: #ffffff !important;
 }

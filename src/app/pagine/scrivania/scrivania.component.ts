@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, AfterViewInit } from "@angular/core";
-import { Attivita, UrlsGenerationStrategy, ItemMenu, CommandType } from "@bds/ng-internauta-model";
+import { Attivita, UrlsGenerationStrategy, ItemMenu, CommandType } from "@bds/internauta-model";
 import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
-import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
+import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { MAX_CHARS_100 } from "../../../environments/app-constants";
 import { Subscription } from "rxjs";
 import { ApplicationCustiomization } from "src/environments/application_customization";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ConfirmationService } from "primeng/api";
-import { ParametroAziende } from "@bds/ng-internauta-model";
-import { ConfigurazioneService} from "@bds/ng-internauta-model";
+import { ParametroAziende } from "@bds/internauta-model";
+import { ConfigurazioneService} from "@bds/internauta-model";
 
 @Component({
   selector: "app-scrivania",
@@ -69,7 +69,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public showBolli: boolean = false;
   public showRaccoltaSemplice: boolean = false;
   public tabellaDaRefreshare: any = { name: "" };
-  constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: NtJwtLoginService,
+  constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: JwtLoginService,
     private confirmationService: ConfirmationService, private configurazioneService: ConfigurazioneService) {
   }
 
@@ -264,7 +264,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       this.allegati = [];
       this.allegatiDropDown.clear(null);
       let allegatiAttivita: any[] = null;
-      if (this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
+      if (this.attivitaSelezionata.allegati && this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
         allegatiAttivita = JSON.parse(this.attivitaSelezionata.allegati);
       }
       if (allegatiAttivita) {

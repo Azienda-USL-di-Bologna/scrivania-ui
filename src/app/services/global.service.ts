@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { getInternautaUrl, BaseUrlType } from "src/environments/app-constants";
 import { Observable } from "rxjs";
+import { BaseUrlType, getInternautaUrl } from "@bds/internauta-model";
 
 @Injectable({
   providedIn: "root"

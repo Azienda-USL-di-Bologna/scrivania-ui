@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType, CUSTOM_SERVER_METHODS, COMMON_PARAMETERS } from "../../../environments/app-constants";
-import { Attivita, ENTITIES_STRUCTURE, Azienda, Applicazione } from "@bds/ng-internauta-model";
-import { NextSDREntityProvider } from "@nfa/next-sdr";
+import { CUSTOM_SERVER_METHODS } from "../../../environments/app-constants";
+import { Attivita, ENTITIES_STRUCTURE, Azienda, Applicazione, getInternautaUrl, BaseUrlType } from "@bds/internauta-model";
+import { NextSDREntityProvider } from "@bds/next-sdr";
 import { Observable } from "rxjs";
 
 @Injectable()

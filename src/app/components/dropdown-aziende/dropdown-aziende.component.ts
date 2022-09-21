@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from "@angular/core";
-import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
+import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Subscription } from "rxjs";
-import { Azienda } from "@bds/ng-internauta-model";
+import { Azienda } from "@bds/internauta-model";
 
 @Component({
   selector: "app-dropdown-aziende",
   templateUrl: "./dropdown-aziende.component.html",
-  styleUrls: ["./dropdown-aziende.component.css"]
+  styleUrls: ["./dropdown-aziende.component.scss"]
 })
 export class DropdownAziendeComponent implements OnInit, OnDestroy {
 
@@ -16,7 +16,7 @@ export class DropdownAziendeComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   @Output("aziendaEmitter") private aziendaEmitter: EventEmitter<number> = new EventEmitter();
 
-  constructor(private loginService: NtJwtLoginService) {
+  constructor(private loginService: JwtLoginService) {
   }
 
   ngOnInit() {
