@@ -7,7 +7,7 @@ import { MenuItem, PrimeNGConfig } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService, PRIMENG_ITA_TRANSALATION } from "@bds/common-tools";
-import { HeaderFeaturesConfig } from "@bds/common-components";
+import { HeaderFeaturesConfig, PopupMessaggiService } from "@bds/common-components";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -26,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private config: PrimeNGConfig,
     private route: ActivatedRoute,
     private router: Router,
+    private popupMessaggiService: PopupMessaggiService,
     public dialogService: DialogService,
     private intimusClient: IntimusClientService
     ) {}
