@@ -2,24 +2,53 @@
   <form #form="ngForm">
     <div>
       <ul class="settings-items">
-        <li class="item">
+        <li class="hide-preview-box">
           <label for="hidePreview">Nascondi anteprima</label>
           <div class="right">
-            <p-inputSwitch id="hidePreview" [(ngModel)]="model.hidePreview" styleClass="switch-class" name="hidePreview"></p-inputSwitch>
+            <p-inputSwitch 
+              id="hidePreview" 
+              [(ngModel)]="model.hidePreview" 
+              styleClass="switch-class" 
+              name="hidePreview">
+            </p-inputSwitch>
             <span class="si-no">{{ model.hidePreview ? 'Sì': 'No' }}</span>
           </div>
         </li>
-         <li class="item">
-          <label for="hidePreview">Notifica attività via mail:</label>
-          <div class="right">
-            <p-inplace #inplace [closable]="true" [active]="thereIsEmail" (onDeactivate)="deleteEmailToNotify()" [style]="{'min-height':'33px'}">
-              <ng-template pTemplate="display">
-                Clicca qui per inserire la mail per la notifica
-              </ng-template>
-              <ng-template pTemplate="content">
-                  <input type="text" [formControl]="mail" placeholder="Scrivi la mail" [(ngModel)]="model.emailToNotify" pInputText>
-              </ng-template>
+        <p-divider></p-divider>
+         <li class="email-attivita-box">
+          <h4>Notifica attività via mail</h4>
+          <p-inplace #inplace 
+            [closable]="true" 
+            [active]="thereIsEmail" 
+            (onDeactivate)="deleteEmailToNotify()" 
+            [style]="{'min-height':'33px'}">
+            <ng-template pTemplate="display">
+              Clicca qui per inserire la mail per la notifica
+            </ng-template>
+            <ng-template pTemplate="content">
+              <input 
+                type="text" 
+                [formControl]="mail" 
+                placeholder="Scrivi la mail" 
+                [(ngModel)]="model.emailToNotify" 
+                pInputText>
+            </ng-template>
           </p-inplace>
+          <div class="field-checkbox">
+            <p-checkbox 
+              [binary]="true"
+              [ngModelOptions]="{standalone: true}"
+              [(ngModel)]="model.emailGiornaliera">
+            </p-checkbox>
+            <label for="binary">Ricevi riepilogo giornaliero</label>
+          </div>
+          <div class="field-checkbox">
+            <p-checkbox 
+              [binary]="true"
+              [ngModelOptions]="{standalone: true}"
+              [(ngModel)]="model.emailPerSingolaAttivita">
+            </p-checkbox>
+            <label for="binary">Ricevi email per singola attività</label>
           </div>
         </li> 
       </ul>

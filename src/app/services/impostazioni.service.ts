@@ -57,6 +57,22 @@ export class ImpostazioniService {
     this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.emailToNotify] = emailToNotify;
   }
 
+  getEmailGiornaliera(): boolean {
+    return this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.emailGiornaliera];
+  }
+
+  setEmailGiornaliera(emailGiornaliera: boolean) {
+    this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.emailGiornaliera] = emailGiornaliera;
+  }
+
+  getEmailPerSingolaAttivita(): boolean {
+    return this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.emailPerSingolaAttivita];
+  }
+
+  setEmailPerSingolaAttivita(emailPerSingolaAttivita: boolean) {
+    this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.emailPerSingolaAttivita] = emailPerSingolaAttivita;
+  }
+
   /**
    * Lancia la notifica di cambiamento delle impostazioni ai sottoscrittori
    * @param settings L'oggetto che contiene le nuove impostazioni

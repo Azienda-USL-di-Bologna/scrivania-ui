@@ -58,6 +58,9 @@ import {FieldsetModule} from 'primeng/fieldset';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import { InplaceModule } from 'primeng/inplace';
 import {ConfirmPopupModule} from "primeng/confirmpopup";
+import {DividerModule} from 'primeng/divider';
+import {CheckboxModule} from 'primeng/checkbox';
+
 
 /* Login */
 import { JwtLoginModule } from "@bds/jwt-login";
@@ -136,7 +139,9 @@ import {MatExpansionModule} from '@angular/material/expansion';
     FieldsetModule,
     MatExpansionModule,
     ScrollPanelModule,
-    InplaceModule
+    InplaceModule,
+    DividerModule,
+    CheckboxModule
   ],
   providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService,
     ImpostazioniService, DialogService, ConfirmationService,
