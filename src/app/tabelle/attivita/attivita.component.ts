@@ -248,8 +248,16 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   handleContextMenu(attivitaSelezionata: Attivita) {
     // this.messageService.add({ severity: "info", summary: "Car Selected", detail: attivitaSelezionata.oggetto });
-    attivitaSelezionata.aperta = !attivitaSelezionata.aperta;
-    this.attivitaService.update(attivitaSelezionata).subscribe();
+    // attivitaSelezionata.aperta = !attivitaSelezionata.aperta;
+    const attivitaToUpdate: Attivita = new Attivita();
+    attivitaToUpdate.id = attivitaSelezionata.id;
+    attivitaToUpdate.aperta = !attivitaSelezionata.aperta;
+    attivitaToUpdate.version = attivitaSelezionata.version;
+    this.attivitaService.patchHttpCall(attivitaToUpdate, attivitaToUpdate.id).subscribe( (attivitaAggiornata: Attivita) => {
+      const indexAttivitaToReplace: number = this.attivita.findIndex(a => a.id === attivitaAggiornata.id);
+      this.attivita[indexAttivitaToReplace].aperta = attivitaToUpdate.aperta;
+      this.attivita[indexAttivitaToReplace].version = attivitaAggiornata.version;
+    });
   }
 
   public attivitaEmitterHandler() {
@@ -317,7 +325,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const attivitaSelezionata: Attivita = this.attivita[this.selectedRowIndex];
     if (!attivitaSelezionata.aperta) { // se l'attivita non è letta la metto come letta
       attivitaSelezionata.aperta = !attivitaSelezionata.aperta;
-      this.attivitaService.update(attivitaSelezionata).subscribe();
+      this.attivitaService.update(attivitaSelezionata).subscribe( (a: Attivita) => {
+          this.attivita[this.selectedRowIndex].version = a.version;
+          attivitaSelezionata.version = a.version;
+        }
+      );
     }
     this.attivitaEmitter.emit(this.dataTable.selection);
   }
@@ -440,11 +452,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public deleteAttivita(event: MouseEvent, attivita: Attivita) {
     event.stopPropagation();
     const response = this.attivitaService.delete(attivita);
+    this.loading = true;
     response.subscribe(res => {
-        setTimeout(() => { // this will make the execution after the above boolean has changed
-        const selectedRow = this.tableRows.toArray()[0];
-        selectedRow.nativeElement.focus();
-      }, 0);
+      this.refreshAttivitaCaller();
       this.messageService.add({ severity: "info", summary: "Eliminazione", detail: "Notifica eliminata con successo!" });
     }, err => {
       this.messageService.add({ severity: "error", summary: "Eliminazione", detail: "Non è stato possibile eliminare la notifica. Contattare BabelCare" });
