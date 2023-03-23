@@ -1,60 +1,52 @@
-/* ::ng-deep.switch-class {
-    position: absolute;
-    right: 10%;
-    margin-top: -2.3px;
+:host ::ng-deep .p-inplace .p-inplace-display{
+    display: flex!important;
 }
- */
-
- :host ::ng-deep .p-inplace .p-inplace-display{
-     display: flex!important;
- }
-
- :host ::ng-deep .p-inplace .p-inplace-content {
+:host ::ng-deep .p-inplace .p-inplace-content {
     display: flex;
     .p-button.p-button-icon-only {
         width: 3.357rem;
     }
 }
-
 .settings-items {
     list-style: none;
     padding: 10px;
     margin: 0;
     display: inline;
-    .item {
+    .hide-preview-box {
         margin: 10px;
         display: flex;
         justify-content: center;
         height: 45px;
-        label {
-
-        }
         .right {
             width: 180px;
             display: flex;
             justify-content: space-evenly;
             align-items: center;
-            .switch-class {
-
-            }
-            .si-no {
-
+            .switch-class {}
+            .si-no {}
+        }
+    }
+    .email-attivita-box {
+        h4 {
+            margin-bottom: 7px;
+        }
+        .field-checkbox {
+            margin-top: 7px;
+            label {
+                margin-left: 3px;
             }
         }
     }
 }
-
 .button-styles {
     width: 100px;
     margin: 10px;
 }
-
 .button-wrapper {
     position: absolute;
     bottom: 5px;
     left: 21%;
 }
-
 .button-margin-left {
     margin-left: 70px;
 }

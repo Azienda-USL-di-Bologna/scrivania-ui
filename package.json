@@ -21,9 +21,9 @@
     "@angular/platform-browser": "12.2.16",
     "@angular/platform-browser-dynamic": "12.2.16",
     "@angular/router": "12.2.16",
-    "@bds/common-components": "3.2.5",
-    "@bds/common-tools": "3.2.0",
-    "@bds/internauta-model": "3.2.2",
+    "@bds/common-components": "3.2.15",
+    "@bds/common-tools": "3.2.1",
+    "@bds/internauta-model": "3.2.10",
     "@bds/jwt-login": "3.2.0",
     "@bds/next-sdr": "6.0.0",
     "@bds/primeng-plugin": "3.2.0",
@@ -37,7 +37,8 @@
     "primeicons": "5.0.0",
     "primeng": "13.3.2",
     "rxjs": "7.5.5",
-    "zone.js": "0.11.5"
+    "zone.js": "0.11.5",
+    "quill": "1.3.7"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "12.2.17",
