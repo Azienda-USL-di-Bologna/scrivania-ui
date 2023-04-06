@@ -8,6 +8,8 @@ export const ApplicationCustiomization = {
         },
         hidePreview: "scrivania.hidePreview",
         emailToNotify: "scrivania.emailToNotify",
+        emailGiornaliera: "scrivania.emailGiornaliera",
+        emailPerSingolaAttivita: "scrivania.emailPerSingolaAttivita",
         version: "scrivania.version"
     }
 };

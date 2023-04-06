@@ -7,14 +7,12 @@ import { Subscription } from "rxjs";
 import { FormControl, Validators } from '@angular/forms';
 import { Inplace } from 'primeng/inplace';
 
-
 @Component({
   selector: "app-impostazioni",
   templateUrl: "./impostazioni.component.html",
   styleUrls: ["./impostazioni.component.scss"]
 })
-export class ImpostazioniComponent implements OnInit, OnDestroy, AfterViewInit {
-
+export class ImpostazioniComponent implements OnInit, OnDestroy {
   checked: boolean;
   model: Impostazioni;
   loggedUser: UtenteUtilities;
@@ -27,7 +25,11 @@ export class ImpostazioniComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public mail = new FormControl("", Validators.pattern(this.emailRegex));
 
-  constructor(public ref: DynamicDialogRef, private loginService: JwtLoginService, private impostazioniService: ImpostazioniService) { }
+  constructor(
+    public ref: DynamicDialogRef, 
+    private loginService: JwtLoginService, 
+    private impostazioniService: ImpostazioniService
+    ) { }
 
   ngOnInit() {
     this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
@@ -44,6 +46,8 @@ export class ImpostazioniComponent implements OnInit, OnDestroy, AfterViewInit {
     this.model = new Impostazioni();
     this.model.hidePreview = this.impostazioniService.getHidePreview() === "true";
     this.model.emailToNotify = this.impostazioniService.getEmailToNotify();
+    this.model.emailGiornaliera = this.impostazioniService.getEmailGiornaliera();
+    this.model.emailPerSingolaAttivita = this.impostazioniService.getEmailPerSingolaAttivita();
     this.thereIsEmail = this.model.emailToNotify != "" ? true : false;
     if (this.model.hidePreview === null || this.model.hidePreview === undefined) {
       this.model.hidePreview = false;
@@ -52,9 +56,11 @@ export class ImpostazioniComponent implements OnInit, OnDestroy, AfterViewInit {
 
   saveSettings() {
     this.impostazioniService.setHidePreview(this.model.hidePreview.toString());
-    if(this.model.emailToNotify != null && this.model.emailToNotify != undefined){
+    if (this.model.emailToNotify){
       this.impostazioniService.setEmailToNotify(this.model.emailToNotify.toString());
-    } 
+    }
+    this.impostazioniService.setEmailGiornaliera(this.model.emailGiornaliera);
+    this.impostazioniService.setEmailPerSingolaAttivita(this.model.emailPerSingolaAttivita);
     // console.log(this.impostazioniService.getImpostazioniVisualizzazione());
     this.subscription =
       this.loggedUser.setImpostazioniApplicazione(this.loginService,this.impostazioniService.getImpostazioniVisualizzazione())
@@ -62,15 +68,10 @@ export class ImpostazioniComponent implements OnInit, OnDestroy, AfterViewInit {
           this.impostazioniService.doNotify(newSettings);
           this.onClose();
         });
-    
   }
 
   onClose() {
     this.ref.close();
-  }
-
-  ngAfterViewInit() {
-
   }
 
   ngOnDestroy() {

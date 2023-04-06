@@ -67,7 +67,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.addToMenu.push({
       label: "Impostazioni",
       icon: "pi pi-fw pi-cog slide-icon",
-      command: () => { this.showSettings(ImpostazioniComponent, "Impostazioni utente", "480px", "200px", null); }
+      command: () => { this.showSettings(ImpostazioniComponent, "Impostazioni utente", "480px", "350px", null); }
     });
     this.addToMenu = Object.assign([], this.addToMenu);
   }
