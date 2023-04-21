@@ -33,11 +33,8 @@
             <div class="p-field p-col">
               <label for="struttura-responsabile">Struttura Responsabile</label>
               <!-- autocomplete delle struttura internauta -->
-              <lib-structures-autocomplete 
-              [enabled]="true" 
-              [azienda]="azienda" 
-              [clearEnabled]="true"
-              (strutturaSelezionataEmit)="strutturaSelezionata($event)">
+              <lib-structures-autocomplete [strutturaIniziale] = "s" [enabled]="true" [azienda]="azienda" [clearEnabled]="true"
+                (strutturaSelezionataEmit)="strutturaSelezionata($event)">
               </lib-structures-autocomplete>
             </div>
           </div>
@@ -176,7 +173,7 @@
                 <form>
                   <div class="form-group">
                     <p-fileUpload #fileInput name="file" [multiple]="true" [showUploadButton]="false"
-                      [showCancelButton]="false" [maxFileSize]="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf"
+                      [showCancelButton]="false" [maxFileSize]="20000000" accept="image/*,.csv,.xml,.doc,.docx,.pdf,.xls,.xlsx,.txt,.odt"
                       chooseLabel="Importa" (onSelect)="onSelect($event)" (onRemove)="onRemove($event)"
                       styleClass="babel-color">
                       <!-- Hola Umbria! Qui usate gli attachments. la la proprità non esiste -->
@@ -223,7 +220,7 @@
           <p-toast></p-toast>
 
           <div class="p-d-flex p-col-12">
-            <div class="p-mr-2">
+            <div class="p-mr-2" *ngIf="visualizzaCoinvolti">
               <button pButton pRipple label="Aggiungi Coinvolti" icon="pi pi-plus" class="p-button babel-color"
                 (click)="openNew()"></button>
             </div>
@@ -231,6 +228,11 @@
               <button pButton pRipple label="Aggiungi da Rubrica" icon="pi pi-plus" class="p-button babel-color"
                 (click)="onOpenRubricaPopup()"></button>
             </div>
+            <div class="p-mr-2">
+              <button pButton pRipple label="Aggiungi nuovo coinvolto" icon="pi pi-plus" class="p-button babel-color"
+                (click)="newContatto()"></button>
+            </div>
+
           </div>
 
           <div class="p-field p-col-12">
@@ -256,13 +258,13 @@
               </ng-template>
               <ng-template pTemplate="body" let-coinvolto>
                 <tr>
-                  <td>{{coinvolto.nomeInterfaccia}}</td>
-                  <td>{{coinvolto.cf}}</td>
-                  <td>{{coinvolto.partitaIva}}</td>
-                  <td>{{coinvolto.tipo}}</td>
-                  <td>{{coinvolto.mail}}</td>
-                  <td>{{coinvolto.via}}</td>
-                  <td>{{coinvolto.telefono}}</td>
+                  <td class="text-content">{{coinvolto.nomeInterfaccia}}</td>
+                  <td class="text-content">{{coinvolto.cf}}</td>
+                  <td class="text-content">{{coinvolto.partitaIva}}</td>
+                  <td class="text-content">{{coinvolto.tipo}}</td>
+                  <td class="text-content">{{coinvolto.mail}}</td>
+                  <td class="text-content">{{coinvolto.via}}</td>
+                  <td class="text-content">{{coinvolto.telefono}}</td>
                   <td>
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
                       (click)="editCoinvolto(coinvolto)"></button>
@@ -283,18 +285,18 @@
           </div>
 
 
-          <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Nuovo Coinvolto" [modal]="true"
+          <p-dialog [(visible)]="coinvoltoDialog" [style]="{width: '450px'}" header="Nuovo Coinvolto" [modal]="true"
             styleClass="p-fluid">
             <ng-template pTemplate="content">
               <div class="p-formgrid p-grid">
                 <div class="p-field p-col">
                   <label for="nome">Nome</label>
-                  <input type="text" pInputText id="nome" [(ngModel)]="coinvolto.nome" required autofocus />
+                  <input type="text" pInputText id="nome" [(ngModel)]="coinvolto.nome" required autofocus [disabled]="isOldContatto"/>
                   <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.nome">Nome is required.</small> -->
                 </div>
                 <div class="p-field p-col">
                   <label for="cognome">Cognome</label>
-                  <input type="text" pInputText id="cognome" [(ngModel)]="coinvolto.cognome" required autofocus />
+                  <input type="text" pInputText id="cognome" [(ngModel)]="coinvolto.cognome" required autofocus [disabled]="isOldContatto"/>
                   <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cognome">Cognome is required.</small> -->
                 </div>
               </div>
@@ -302,23 +304,23 @@
               <div class="p-field">
                 <label for="ragioneSociale">Ragione Sociale</label>
                 <input type="text" pInputText id="ragioneSociale" [(ngModel)]="coinvolto.ragioneSociale" required
-                  autofocus />
+                  autofocus [disabled]="isOldContatto"/>
                 <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.ragioneSociale">Ragione Sociale is required.</small> -->
               </div>
               <div class="p-field">
                 <label for="cf">Codice Fiscale</label>
-                <input type="text" pInputText id="cf" [(ngModel)]="coinvolto.cf" required autofocus />
+                <input type="text" pInputText id="cf" [(ngModel)]="coinvolto.cf" required autofocus [disabled]="isOldContatto"/>
                 <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cf">CF is required.</small> -->
               </div>
               <div class="p-field">
                 <label for="partitaIva">Partita IVA</label>
-                <input type="text" pInputText id="partitaIva" [(ngModel)]="coinvolto.partitaIva" required autofocus />
+                <input type="text" pInputText id="partitaIva" [(ngModel)]="coinvolto.partitaIva" required autofocus [disabled]="isOldContatto"/>
                 <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.partitaIva">partitaIva is required.</small> -->
               </div>
               <div class="p-field">
                 <label for="partitaIva">Tipologia</label>
                 <p-dropdown [options]="tipiCoinvolti" [(ngModel)]="selectedTipoCoinvolto" placeholder="tipologia..."
-                  [showClear]="true"></p-dropdown>
+                  [showClear]="true" [disabled]="isOldContatto"></p-dropdown>
               </div>
 
               <div class="p-field">
@@ -361,7 +363,9 @@
             <ng-template pTemplate="footer">
               <button pButton pRipple label="Cancella" icon="pi pi-times" class="p-button-text"
                 (click)="hideDialog()"></button>
-              <button pButton pRipple label="Salva" icon="pi pi-check" class="p-button-text"
+                <button pButton pRipple label="Salva in rubrica" icon="pi pi-check" class="p-button-text" [disabled]="isOldContatto" 
+                (click)="addNewContatto()"></button>
+              <button pButton pRipple label="Aggiorna" icon="pi pi-check" class="p-button-text" [disabled]="!isOldContatto" 
                 (click)="saveCoinvoltoCreato()"></button>
             </ng-template>
           </p-dialog>
@@ -376,7 +380,7 @@
                 (completeMethod)="searchContatto($event)" field="descrizione" appendTo="body" class="p-pr-3 "
                 [dropdown]=true placeholder="Cerca contatto..." emptyMessage="Nessun riferimento trovato">
                 <ng-template let-contatto pTemplate="itemContatto">
-                  <div>[{{contatto.descrizione}}] {{contatto.tipo}} {{contatto.categoria}}</div>
+                  <div>[{{contatto.descrizione}} ({{contatto.codiceFiscale}}{{contatto.partitaIva}})] {{contatto.tipo}} {{contatto.categoria}} </div>
                 </ng-template>
               </p-autoComplete>
               <button type="button" pButton icon="pi pi-times" class="interaction-button" (click)="removeContatto()"></button>

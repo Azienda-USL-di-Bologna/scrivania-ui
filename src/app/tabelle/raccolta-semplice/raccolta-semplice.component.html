@@ -84,7 +84,7 @@
                 [showButtonBar]="true" [locale]="it" [showIcon]="false" dateFormat="dd/mm/yy"
                 (onSelect)="onCalendarAction($event, col.field, 'select')"
                 (onClearClick)="onCalendarAction($event, col.field, 'clear')"
-                (onTodayClick)="onCalendarAction($event, col.field, 'today')" appendTo="body" selectionMode="range"
+                (onTodayClick)="onCalendarAction($event, col.field, 'today')" appendTo="body"
                 [readonlyInput]="true" [pTooltip]="calendarTooltip(col.field)" inputId="CalInput_{{col.field}}">
               </p-calendar>
               <input pInputText *ngSwitchDefault attr.aria-label="Cella filtro per colonna {{col.label}}" type="text"
@@ -97,7 +97,7 @@
       <ng-template pTemplate="emptymessage" let-columns>
         <tr>
           <td>
-            selezionare i criteri di ricerca per iniziare la consultazione
+            Selezionare i criteri di ricerca per iniziare la consultazione
           </td>
         </tr>
       </ng-template>
@@ -114,8 +114,8 @@
             </button>
           </td>
           <td *ngFor="let col of columns" [style.textAlign]="col.textAlign" [pTooltip]="col.label" [ngClass]="{'descrizioneStruttura' : 'p-col-2', 'documentoBabel' : 'p-col-1-5', 
-          'createTime':'p-col-0-7', 'fascicoli':'p-col-0-5', 'tipoDocumento':'p-col-0-7'}[col.field]">
-            <div *ngIf="col.field !== 'stato'">
+          'createTime':'p-col-0-7', 'fascicoli':'p-col-0-5', 'tipoDocumento':'p-col-0-7'}[col.field]" class="text-content">
+            <div *ngIf="col.field !== 'stato' && col.field !== 'createTime'">
               {{rowRS[col.field]}}
             </div>
             <div *ngIf="col.field == 'stato'">
@@ -123,6 +123,9 @@
                 class="grid-button-success" (click)="openModal(rowRS.id)"></button>
               <button pButton *ngIf="rowRS[col.field]==='ANNULLATO'" type="button" label={{rowRS[col.field]}}
                 class=" grid-button-warning" (click)="openModal(rowRS.id)"></button>
+            </div>
+            <div *ngIf="col.field == 'createTime'">
+              {{rowRS[col.field] | date: 'dd/MM/yyyy'}}
             </div>
           </td>
         </tr>
@@ -261,10 +264,10 @@
         </ng-template>
         <ng-template pTemplate="body" let-storico>
           <tr>
-            <td>{{storico?.utente}}</td>
-            <td>{{storico?.motivazione}}</td>
-            <td>{{storico?.stato}}</td>
-            <td>{{storico?.data}}</td>
+            <td class="text-content">{{storico?.utente}}</td>
+            <td class="text-content">{{storico?.motivazione}}</td>
+            <td class="text-content">{{storico?.stato}}</td>
+            <td class="text-content">{{storico?.data}}</td>
           </tr>
         </ng-template>
       </p-table>
