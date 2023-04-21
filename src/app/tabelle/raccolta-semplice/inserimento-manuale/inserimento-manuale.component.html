@@ -380,7 +380,22 @@
                 (completeMethod)="searchContatto($event)" field="descrizione" appendTo="body" class="p-pr-3 "
                 [dropdown]=true placeholder="Cerca contatto..." emptyMessage="Nessun riferimento trovato">
                 <ng-template let-contatto pTemplate="itemContatto">
-                  <div>[{{contatto.descrizione}} ({{contatto.codiceFiscale}}{{contatto.partitaIva}})] {{contatto.tipo}} {{contatto.categoria}} </div>
+                  <div>
+                    <em class="material-icons-outlined icon" tooltipPosition="top" [pTooltip]="
+                      contatto.categoria === 'ESTERNO' ? 'Esterno' : 
+                      contatto.categoria === 'PERSONA' ? 'Utente' : 
+                      contatto.categoria === 'STRUTTURA' ? 'Struttura' : 'Gruppo'
+                    ">
+                      {{
+                        contatto.categoria === 'ESTERNO' ? 'perm_identity' :
+                        contatto.categoria === 'PERSONA' ? 'face' :
+                        contatto.categoria === 'STRUTTURA' ? 'account_balance' : 'people'
+                      }}
+                    </em>
+                    {{contatto.descrizione}}
+                    ({{contatto.codiceFiscale}}{{contatto.partitaIva}}) - 
+                    {{contatto.tipo.toLowerCase().split('_').join(' ')}}
+                  </div>
                 </ng-template>
               </p-autoComplete>
               <button type="button" pButton icon="pi pi-times" class="interaction-button" (click)="removeContatto()"></button>
