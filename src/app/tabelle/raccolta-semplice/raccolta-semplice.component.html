@@ -102,7 +102,12 @@
         </tr>
       </ng-template>
       <!--Body tabella-->
-      <ng-template pTemplate="body" let-rowRS let-columns="columns">
+      <ng-template
+        pTemplate="body"
+        let-rowRS
+        let-columns="columns"
+        let-expanded="expanded"
+        >
         <tr>
           <td style="width: 5%;">
             <button 
@@ -110,7 +115,8 @@
               pButton pRipple 
               [pRowToggler]="rowRS"
               class="p-button-text p-button-rounded p-button-plain"
-              ><!-- Hola Umbria: Qui avete messo [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'", ma expanded che proprietà sarebbe? -->
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+              >
             </button>
           </td>
           <td *ngFor="let col of columns" [style.textAlign]="col.textAlign" [pTooltip]="col.label" [ngClass]="{'descrizioneStruttura' : 'p-col-2', 'documentoBabel' : 'p-col-1-5', 
