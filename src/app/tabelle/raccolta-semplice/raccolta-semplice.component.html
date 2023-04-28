@@ -57,11 +57,22 @@
     </div> -->
 
     <!-- Tabella -->
-    <p-table #tableRaccoltaSemplice [value]="datiDocumenti" [lazy]="true" (onLazyLoad)="lazyLoad($event)"
-      [paginator]="true" [rows]="recordPerPagina" [totalRecords]="totalRows" [columns]="cols" dataKey="id"
-      selectionMode="single" [loading]="loading" csvSeparator=";"
-      [exportFilename]="dataInizio ? 'dati-raccolta_semplice_'+ dataInizio.toDateString()+'_'+dataFine.toDateString() : 'dati-raccolta_semplice_'"
-      rowExpandMode="single" [scrollable]="true" scrollHeight="flex">
+    <p-table #tableRaccoltaSemplice
+    [value]="datiDocumenti"
+    [lazy]="true"
+    (onLazyLoad)="lazyLoad($event)"
+    [paginator]="true"
+    [rows]="recordPerPagina"
+    [totalRecords]="totalRows"
+    [columns]="cols"
+    dataKey="id"
+    selectionMode="single"
+    [loading]="loading"
+    csvSeparator=";"
+    [exportFilename]="dataInizio ? 'dati-raccolta_semplice_'+ dataInizio.toDateString()+'_'+dataFine.toDateString() : 'dati-raccolta_semplice_'"
+    rowExpandMode="single"
+    [scrollable]="true" 
+    scrollHeight="flex">
       <!-- Header tabellla-->
       <ng-template pTemplate="header" let-columns>
         <tr>
@@ -140,82 +151,93 @@
       <!-- Espansione tabella -->
       <ng-template pTemplate="rowexpansion" let-rowRS>
         <tr>
-          <td colspan="11">
-            <div class="p-d-flex p-shadow-1 p-mb-2">
-              <p-table [value]="rowRS.coinvolti" dataKey="id"  [paginator]="true" [rows]="3">
+          <td colspan="11" style="border-bottom: transparent;">
+            <!-- <div class="p-d-flex p-shadow-1 p-mb-2 tabella-estesa"> -->
+              <p-table class="tabella-estesa"
+              [value]="rowRS.coinvolti"
+              dataKey="id"
+              [paginator]="true"
+              [rows]="3">
                 <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="name"> Nome <p-sortIcon field="descrizione"></p-sortIcon>
-          </th>
-          <th pSortableColumn="cf"> CF <p-sortIcon field="CF"></p-sortIcon>
-          </th>
-          <th pSortableColumn="piva"> P.Iva <p-sortIcon field="partitaIva"></p-sortIcon>
-          </th>
-          <th pSortableColumn="tipo"> Tipologia <p-sortIcon field="tipo"></p-sortIcon>
-          </th>
-          <th pSortableColumn="mail"> Email <p-sortIcon field="mail"></p-sortIcon>
-          </th>
-          <th pSortableColumn="indirizzo"> Indirizzo <p-sortIcon field="indirizzo"></p-sortIcon>
-          </th>
-          <th pSortableColumn="telefono"> Telefono <p-sortIcon field="telefono"></p-sortIcon>
-          </th>
+                  <tr>
+                    <th pSortableColumn="name"> Nome <p-sortIcon field="descrizione"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="cf"> CF <p-sortIcon field="CF"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="piva"> P.Iva <p-sortIcon field="partitaIva"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="tipo"> Tipologia <p-sortIcon field="tipo"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="mail"> Email <p-sortIcon field="mail"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="indirizzo"> Indirizzo <p-sortIcon field="indirizzo"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="telefono"> Telefono <p-sortIcon field="telefono"></p-sortIcon>
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-dettaglio>
+                  <tr>
+                    <td [style.overflow]="'auto'">{{dettaglio.descrizione}}</td>
+                    <td [style.overflow]="'auto'">{{dettaglio.cf}}</td>
+                    <td [style.overflow]="'auto'">{{dettaglio.piva}}</td>
+                    <td [style.overflow]="'auto'">{{dettaglio.tipo}}</td>
+                    <td [style.overflow]="'auto'">{{dettaglio.mail}}</td>
+                    <td [style.overflow]="'auto'">{{dettaglio.via + " " + dettaglio.civico + " " + dettaglio.comune + " " +
+                      dettaglio.cap + " " + dettaglio.provincia + " " + dettaglio.nazione}}</td>
+                    <td [style.overflow]="'auto'">{{dettaglio.telefono}}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            <!-- </div> -->
+          </td>
         </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-dettaglio>
         <tr>
-          <td [style.overflow]="'auto'">{{dettaglio.descrizione}}</td>
-          <td [style.overflow]="'auto'">{{dettaglio.cf}}</td>
-          <td [style.overflow]="'auto'">{{dettaglio.piva}}</td>
-          <td [style.overflow]="'auto'">{{dettaglio.tipo}}</td>
-          <td [style.overflow]="'auto'">{{dettaglio.mail}}</td>
-          <td [style.overflow]="'auto'">{{dettaglio.via + " " + dettaglio.civico + " " + dettaglio.comune + " " +
-            dettaglio.cap + " " + dettaglio.provincia + " " + dettaglio.nazione}}</td>
-          <td [style.overflow]="'auto'">{{dettaglio.telefono}}</td>
+          <td colspan="11" style="border-top: transparent;">
+              <!-- <div class="p-d-flex p-shadow-1 tabella-estesa"> -->
+              <!-- tabella sottodocumenti -->
+              <p-table class="tabella-estesa"
+              [value]="rowRS.sottodocumenti"
+              dataKey="id"
+              [resizableColumns]="true"
+              styleClass="p-datatable-gridlines">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="nome" pResizableColumn> Nome <p-sortIcon field="nome"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="nome_originale" pResizableColumn> Nome originale <p-sortIcon field="nomeOriginale">
+                      </p-sortIcon>
+                    </th>
+                    <th pSortableColumn="piva" pResizableColumn> Mimetype Originale <p-sortIcon field="mimeTypeOriginale">
+                      </p-sortIcon>
+                    </th>
+                    <th class="p-col-1 p-text-center">Download</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-sottodocumento>
+                  <tr>
+                    <td>{{sottodocumento.nome}}</td>
+                    <td>{{sottodocumento.nomeOriginale}}</td>
+                    <td>{{sottodocumento.mimeTypeOriginale}}</td>
+                    <td class="p-col-1 p-text-center"> 
+                      <button 
+                        pButton 
+                        type="button" 
+                        (click)="download(sottodocumento.guidSottodocumento, sottodocumento.nomeOriginale, sottodocumento.mimeTypeOriginale)"
+                        icon="pi pi-download">
+                      </button>
+                    </td> <!-- Hola Umbria! Vi ho tolto questo  iconPos="center" perché center non lo potete usare. le opzioni sono:  '"left" | "right" | "top" | "bottom"' -->
+                  </tr>
+                </ng-template>
+              </p-table>
+            <!-- </div> -->
+          </td>
         </tr>
       </ng-template>
     </p-table>
   </div>
-  <div class="p-d-flex p-shadow-1">
-    <!-- tabella sottodocumenti -->
-    <p-table [value]="rowRS.sottodocumenti" dataKey="id" [resizableColumns]="true" styleClass="p-datatable-gridlines">
-      <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="nome" pResizableColumn> Nome <p-sortIcon field="nome"></p-sortIcon>
-          </th>
-          <th pSortableColumn="nome_originale" pResizableColumn> Nome originale <p-sortIcon field="nomeOriginale">
-            </p-sortIcon>
-          </th>
-          <th pSortableColumn="piva" pResizableColumn> Mimetype Originale <p-sortIcon field="mimeTypeOriginale">
-            </p-sortIcon>
-          </th>
-          <th class="p-col-1 p-text-center">Download</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-sottodocumento>
-        <tr>
-          <td>{{sottodocumento.nome}}</td>
-          <td>{{sottodocumento.nomeOriginale}}</td>
-          <td>{{sottodocumento.mimeTypeOriginale}}</td>
-          <td class="p-col-1 p-text-center"> 
-            <button 
-              pButton 
-              type="button" 
-              (click)="download(sottodocumento.guidSottodocumento, sottodocumento.nomeOriginale, sottodocumento.mimeTypeOriginale)"
-              icon="pi pi-download">
-            </button>
-          </td> <!-- Hola Umbria! Vi ho tolto questo  iconPos="center" perché center non lo potete usare. le opzioni sono:  '"left" | "right" | "top" | "bottom"' -->
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
-  </td>
-  </tr>
-  </ng-template>
-  </p-table>
-  <!-- </div>
-    </div> -->
 </div>
-</div>
+
 
 <!-- popup stato documento -->
 <p-dialog header="Stato documento" [(visible)]="display" (onHide)="onHide()" [style]="{width: '50vw'}">
