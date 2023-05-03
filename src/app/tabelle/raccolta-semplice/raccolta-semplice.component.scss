@@ -14,6 +14,7 @@
     bottom: 0;
     right: 0;
     table-layout: fixed;
+    overflow: hidden;
 
 }
 .table-inner {
@@ -362,3 +363,16 @@ fill: #333333 !important;
   .p-col-0-7 {
     width: 8.2%;
   }
+
+  .text-content {
+    word-break: break-word;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  
+.tabella-estesa {
+  width: 100%;
+  padding-left: 15%;
+  padding-right: 15%;
+}

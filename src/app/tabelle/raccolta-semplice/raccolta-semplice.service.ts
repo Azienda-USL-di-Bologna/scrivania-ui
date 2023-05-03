@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { Storico } from './dettaglio-annullamento/modal/storico';
 import { FascicoloArgo } from './fascicolo.model';
 import { DocumentoArgo } from './DocumentoArgo.model';
+import { PersonaRS } from './personaRS.model';
 
 
 
@@ -18,6 +19,13 @@ import { DocumentoArgo } from './DocumentoArgo.model';
   })
   export class RaccoltaSempliceService  {
   
+    notEmptyText(s: string) : boolean {
+      if(s != null && s.trim() != "")
+        return true;
+      else
+        return false;
+    }
+
     constructor(protected http: HttpClient, protected datepipe: DatePipe) {}
 
     public getRaccoltaSemplice(aziendaCodice: string, dataInizio: string, dataFine: string, cf:string, piva:string, limit: number, offeset:number) : Observable<HttpResponse<Document[]>>{
@@ -32,28 +40,17 @@ import { DocumentoArgo } from './DocumentoArgo.model';
       return this.http.get<Storico[]>(url, {responseType: "json", observe: 'response'});
     }
 
-    public ricercaRaccolta(campi: string[], filtri: string[], limit: number, offeset:number) : Observable<HttpResponse<Document[]>> {
+    public ricercaRaccolta(campi: Map<string, string>, limit: number, offeset:number) : Observable<HttpResponse<Document[]>> {
       let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.RICERCA_RACCOLTA + "?";
-      if(campi.length != filtri.length) {
-        console.log("Il numero di campi e filtri è diverso");
-        return null;
+      let i = 0;
+      for(let key of campi.keys()) {
+        url = url + key + "=" + campi.get(key);
+        if(i < campi.size - 1)
+          url = url + "&";
       }
-        
-      else {
-        if(campi.length == 0 )
-          url = url + filtri[0] + "=" + campi[0];
-          else {
-            for(let i = 0 ; i < campi.length; i++) {
-              url = url + filtri[i] + "=" + campi[i];
-              if(i < campi.length - 1)
-              url = url +"&";
-          }
-        }
-        url  = url + "&offset="+ offeset;
-        url = url + "&limit=" + limit;
-
-        return this.http.get<Document[]>(url, {responseType: "json", observe: 'response'});
-      }
+      url  = url + "&offset="+ offeset;
+      url = url + "&limit=" + limit;
+      return this.http.get<Document[]>(url, {responseType: "json", observe: 'response'});
     }
 
     public updateAnnullamento(body: JSON): Observable<any> {
@@ -87,6 +84,48 @@ import { DocumentoArgo } from './DocumentoArgo.model';
    public downloadAllegato(azienda: String, idSottodocumento: String) : Observable<any> {
      let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.DOWNLOAD + "?azienda=" + azienda + "&id=" + idSottodocumento;
      return this.http.get(url, {responseType: "blob"});
+   }
+
+   public addContatto(azienda: string, body: JSON) : Observable<any> {
+    let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.ADD_CONTATTO;
+    console.log("Url addRubrica ", url);
+    return this.http.post(url, body);
+   }
+
+   public editRubrica(azienda: string, persona: PersonaRS, map: Map<string, string>) : Observable<any> {
+    let url = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.EDIT_RUBRICA;
+    let json : string = "{ ";
+    if(this.notEmptyText(map.get("telefono"))) {
+      json = json + " \"telefono\": \"" + map.get("telefono") + "\",";
+      if(this.notEmptyText(map.get("idTelefono")))
+        json = json + " \"idTelefono\": \"" + map.get("idTelefono") + "\","
+    }
+
+    if(this.notEmptyText(map.get("mail"))) {
+      json = json + " \"mail\": \"" + map.get("mail") + "\" ,";
+      if(this.notEmptyText(map.get("idMail")))
+        json = json + " \"idMail\": \"" + map.get("idMail") + "\",";
+    }
+
+    if(this.notEmptyText(map.get("via")) || this.notEmptyText(map.get("civico")) ||
+    this.notEmptyText(map.get("cap")) || this.notEmptyText(map.get("comune")) || 
+    this.notEmptyText(map.get("provincia")) || this.notEmptyText(map.get("nazione"))) {
+      json = json + " \"via\": \"" + map.get("via") + "\",";
+      json = json + " \"civico\": \"" + map.get("civico") + "\",";
+      json = json + " \"cap\": \"" + map.get("cap") + "\",";
+      json = json + " \"comune\": \"" + map.get("comune") + "\",";
+      json = json + " \"provincia\": \"" + map.get("provincia") + "\",";
+      json = json + " \"nazione\": \"" + map.get("nazione") + "\",";
+      if(this.notEmptyText(map.get("idIndirizzo")))
+      json = json + " \"idIndirizzo\": \"" + map.get("idIndirizzo") + "\","
+      
+    }
+    json = json + " \"idContatto\": \"" + persona.id + "\""
+    json = json + ", \"azienda\": \"" + azienda + "\"}"
+    console.log("Body: ", json);
+    let body: JSON = JSON.parse(json);
+    console.log("Url edit Rubrica ", url);
+    return this.http.post(url, body, {responseType: 'text'});
    }
 
   }
