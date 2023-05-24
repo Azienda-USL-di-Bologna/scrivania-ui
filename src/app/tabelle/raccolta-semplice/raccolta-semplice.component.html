@@ -32,17 +32,17 @@
         <span>Da:</span>
         <p-calendar [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showButtonBar]="true"
           yearRange="1000:4000" [locale]="it" [required]="true" dateFormat="dd/mm/yy" [hideOnDateTimeSelect]="true"
-          [(ngModel)]="dataInizio" [maxDate]="dataFine" [disabled]="!!!_azienda.codice" [inputStyle]="{'width':'87px'}"
+          [(ngModel)]="dataInizio" [maxDate]="dataFine" [disabled]="!!!_azienda.codice" [inputStyle]="{'width':'5.438rem'}"
           appendTo="body" placeholder="Data di inizio" pTooltip="Filtra dati a partire dal">
         </p-calendar>
-        <span style="width: 4px;" aria-hidden="true"></span>
+        <span style="width: 0.25rem;" aria-hidden="true"></span>
         <span> A:</span>
         <p-calendar [showIcon]="true" [monthNavigator]="true" [yearNavigator]="true" [showButtonBar]="true"
           yearRange="1900:2500" [locale]="it" dateFormat="dd/mm/yy" [hideOnDateTimeSelect]="true" [(ngModel)]="dataFine"
-          [disabled]="false" [minDate]="dataInizio" [inputStyle]="{'width':'87px'}" appendTo="body"
+          [disabled]="false" [minDate]="dataInizio" [inputStyle]="{'width':'5.438rem'}" appendTo="body"
           placeholder="Data di fine" pTooltip="Filtra dati fino al">
         </p-calendar>
-        <button type="button" pButton pTooltip="Estrai" tooltipPosition="bottom" style="margin-left: 6px"
+        <button type="button" pButton pTooltip="Estrai" tooltipPosition="bottom" style="margin-left: 0.375rem"
           (click)="onLoadRaccoltaSemplice()" iconPos="left" icon="pi pi-check-circle"
           class="ui-button-secondary icon-style" aria-label="Estrai">
         </button>

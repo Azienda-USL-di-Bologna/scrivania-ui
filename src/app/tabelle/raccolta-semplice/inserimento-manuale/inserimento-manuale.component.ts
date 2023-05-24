@@ -84,7 +84,7 @@ export class InserimentoManualeComponent implements OnInit {
     {
       field: "codice",
       header: "Numero",
-      width: "100px",
+      width: "6.25rem",
       label: "Numero Raccolta Semplice",
       textAlign: "center"
     }

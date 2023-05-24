@@ -31,18 +31,18 @@
   width: 70%;
 }
 .headerEspansione {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 button.viewAnnullamento {
-  width: 17px;
-  height: 20px;
+  width: 1.063rem;
+  height: 1.25rem;
 }
 
 .cellaEspansione {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 
@@ -103,46 +103,46 @@ button.viewAnnullamento {
 display: flex;
 justify-content: space-between;
 margin-bottom: 0.2%;
-margin-top: 0px;
+margin-top: 0rem;
 }
   
 .separator-class {
 width: 0;
-border-right: 1px solid #c8c8c8;
-margin: auto 8px auto 2px;
+border-right: 0.06rem solid #c8c8c8;
+margin: auto 0.5rem auto 0.13rem;
 height: 80%;
 display: inline;
 }
  
 .radioB {
-  width: 15px;
-  height: 15px;
+  width: 0.938rem;
+  height: 0.938rem;
 }
 .cellaAnnullamento {
-  height:50px;
-  width:225px;
+  height:3.125rem;
+  width:14.063rem;
 }
 
 .headerAnnullamento {
-  height: 37px;
-  width:225px;
+  height: 2.313rem;
+  width:14.063rem;
 }
 
 .rigaAnnullamento {
-  height:37px;
-  width: 1000px;
+  height: 2.313rem;
+  width: 62.5rem;
 }
 
 
 
 .motivazione {
-  width:250px;
-  height:150px;
+  width:15.625rem;
+  height:9.375rem;
 }
 
 .invio {
-  width:100px;
-  height: 30px;
+  width:6.25rem;
+  height: 1.875rem;
 }
 
   
@@ -152,20 +152,20 @@ display: flex;
 flex-direction: row;
 }
 .buttons-bar > button{
-margin: 0 6px 0 0;
+margin: 0 0.375rem 0 0;
 }
 
 .icon-custom {
-padding-left: 5px;
-padding-top: 2.5px;
-width: 34.1px;
+padding-left: 0.313rem;
+padding-top: 0.156rem;
+width: 2.131rem;
 }
 
 .images-pos {
 position: absolute;
 top: 15%;
 left: 15%;
-width: 21px;
+width: 1.313rem;
 }
   
 :host ::ng-deep .icon-style > span:first-child {
@@ -176,10 +176,10 @@ fill: #333333 !important;
 }
   
   :host ::ng-deep .ui-button.ui-state-default.ui-button-secondary:enabled:focus, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default:enabled:focus {
-    box-shadow: 0 0 0 1px #9E9E9E;
+    box-shadow: 0 0 0 0.06rem #9E9E9E;
   }
   :host ::ng-deep .ui-button.ui-state-default.ui-button-secondary, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default {
-    border: 1px solid #d2d2d2;
+    border: 0.06rem solid #d2d2d2;
   }
 
   :host::ng-deep .ui-table,
@@ -200,7 +200,7 @@ fill: #333333 !important;
     position: relative;
   } */
   .pr-8{
-   padding-right: 8px;
+   padding-right: 0.5rem;
   }
   .preview-inner{
     display: flex;
@@ -213,9 +213,9 @@ fill: #333333 !important;
   .overlap-div {
     position: absolute;
     top: 0;
-    bottom: 15px;
+    bottom: 0.938rem;
     left: 0;
-    right: 15px;
+    right: 0.938rem;
     z-index: 100;
   }
   .preview-inner > iframe{
@@ -233,8 +233,8 @@ fill: #333333 !important;
   .div-info-doc {
     /* display: flex;
     justify-content: space-between; */
-    margin-bottom: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 0.938rem;
+    margin-bottom: 0.938rem;
     max-height: 12vh;
     overflow: auto;
     word-break: break-word;
@@ -243,10 +243,10 @@ fill: #333333 !important;
     white-space: -moz-pre-wrap;
   }
   .px-16{
-    padding: 0 16px;
+    padding: 0 1rem;
   }
   .span-info-doc {
-    margin-left: 30px;
+    margin-left: 1.875rem;
   }
   
   .width100x100 {
@@ -254,11 +254,11 @@ fill: #333333 !important;
   }
   
   .mt16 {
-    margin-top: 16px;
+    margin-top: 1rem;
   }
   
   .ui-fluid .ui-dropdown {
-    width: 600px !important;
+    width: 37.5rem !important;
   }
   
   .no-anteprima {
@@ -314,12 +314,12 @@ fill: #333333 !important;
   
   button {
     /* margin: 0 6px 0 0; */
-    border: 1px solid #d2d2d2 !important;
+    border: 0.06rem solid #d2d2d2 !important;
     color: #333333 !important;
     background-color: #f4f4f4 !important;
   }
   p-calendar {
-    min-width:      146px;
+    min-width: 9.125rem;
   }
 
   .expand-button {

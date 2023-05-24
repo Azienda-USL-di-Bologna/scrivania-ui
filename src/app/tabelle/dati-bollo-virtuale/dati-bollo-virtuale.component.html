@@ -37,7 +37,7 @@
         <span #totalRecordsRef>{{totalRecords}}</span>
         <span *ngIf="exportCsvInProgress">
           <p-progressSpinner 
-              [style]="{width: '2em', height: '2em', marginRight: '7px'}"
+              [style]="{width: '2em', height: '2em', marginRight: '0.438rem'}"
               strokeWidth="5" 
               fill="#FFFFFF" 
               animationDuration=".5s">
@@ -65,12 +65,12 @@
           [(ngModel)]="dataInizio"
           [maxDate]="dataFine"
           [disabled]="!!!_azienda.codice"
-          [inputStyle]="{'width':'87px'}"
+          [inputStyle]="{'width':'5.438rem'}"
           appendTo="body"
           placeholder="Data di inizio"
           pTooltip="Dati bolli virtuali a partire dal">
         </p-calendar>
-        <span style="width: 4px;" aria-hidden="true"></span>
+        <span style="width: 0.25rem;" aria-hidden="true"></span>
         <span> A:</span>
         <p-calendar
           [showIcon]="true"
@@ -84,7 +84,7 @@
           [(ngModel)]="dataFine"
           [disabled]="false"
           [minDate]="dataInizio"
-          [inputStyle]="{'width':'87px'}"
+          [inputStyle]="{'width':'5.438rem'}"
           appendTo="body"
           placeholder="Data di fine"
           pTooltip="Dati bolli virtuali fino al">
@@ -93,7 +93,7 @@
           pButton 
           pTooltip="Estrai" 
           tooltipPosition="bottom"
-          style="margin-left: 6px"
+          style="margin-left: 0.4rem"
           (click)="onLoadDatiBolliVirtuali()" 
           iconPos="left" 
           icon="pi pi-check-circle" 
@@ -181,12 +181,12 @@
         </p-table>
       </div>
     </div>
-    <footer class="p-grid" style="margin-right: 17px; flex-wrap: nowrap; overflow-x: auto; font-weight: bold;">
-      <div class="p-col" style="text-align: center; min-width: 568px;">Totale</div>
-      <div #totalFacciateBolloRef class="p-col-fixed" style="width: 122px; text-align: center;">{{totalFacciateBollo}}</div>
-      <div #totalRigheBolloRef class="p-col-fixed" style="width: 105px; text-align: center;">{{totalRigheBollo}}</div>
-      <div #totalAltriImportiBolloRef class="p-col-fixed" style="width: 119px; text-align: center;">{{totalAltriImportiBollo}}</div>
-      <div  class="p-col-fixed" style="width: 105px; text-align: center;">
+    <footer class="p-grid" style="margin-right: 1.063rem; flex-wrap: nowrap; overflow-x: auto; font-weight: bold;">
+      <div class="p-col" style="text-align: center; min-width: 35.5rem;">Totale</div>
+      <div #totalFacciateBolloRef class="p-col-fixed" style="width: 7.625rem; text-align: center;">{{totalFacciateBollo}}</div>
+      <div #totalRigheBolloRef class="p-col-fixed" style="width: 6.563rem; text-align: center;">{{totalRigheBollo}}</div>
+      <div #totalAltriImportiBolloRef class="p-col-fixed" style="width: 7.438rem; text-align: center;">{{totalAltriImportiBollo}}</div>
+      <div  class="p-col-fixed" style="width: 6.563rem; text-align: center;">
         <span>€</span>
         <span #totalImportoAltriBolloRef>{{totalImportoAltriBollo}}</span>
       </div>

@@ -67,7 +67,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.addToMenu.push({
       label: "Impostazioni",
       icon: "pi pi-fw pi-cog slide-icon",
-      command: () => { this.showSettings(ImpostazioniComponent, "Impostazioni utente", "480px", "350px", null); }
+      command: () => { this.showSettings(ImpostazioniComponent, "Impostazioni utente", "30rem", "21.875rem", null); }
     });
     this.addToMenu = Object.assign([], this.addToMenu);
   }
@@ -87,7 +87,7 @@ export class AppComponent implements OnInit, OnDestroy {
       header: header,
       width: width,
       styleClass: "dialog-class",
-      contentStyle: {"max-height": "450px", "min-height": "250px", "overflow": "auto", "height": height }
+      contentStyle: {"max-height": "28.125rem", "min-height": "15.625rem", "overflow": "auto", "height": height }
     });
   }
 
