@@ -200,31 +200,29 @@ export class InserimentoManualeComponent implements OnInit {
     this.coinvolti = [];
 
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
-      this.loggedUser = u;
-      this.azienda = u.getUtente().aziendaLogin;
-      this.username = u.getUtente().username;
-      console.log("Utente: ", this.username)
-      console.log("Azienda: ", u.getUtente().aziendaLogin);
-      // la funzione atob server per decodificare la stringa base64 con cui viene passato dataForRubricaInternauta per evitare problemi coi caratteri strambi
-      if (!!sessionStorage.getItem("dataForInsertRaccoltaSemplice")) {
-        console.log("dataForInsertRaccoltaSemplice trovati");
-        this._callerData = JSON.parse(atob(sessionStorage.getItem("dataForInsertRaccoltaSemplice")));
-        this.openFromRecord();
-      } else {
-        console.log("dataForInsertRaccoltaSemplice NON trovati");
+      if (u) {
+        this.loggedUser = u;
+        this.azienda = u.getUtente().aziendaLogin;
+        this.username = u.getUtente().username;
+        console.log("Utente: ", this.username)
+        console.log("Azienda: ", u.getUtente().aziendaLogin);
+        // la funzione atob server per decodificare la stringa base64 con cui viene passato dataForRubricaInternauta per evitare problemi coi caratteri strambi
+        if (!!sessionStorage.getItem("dataForInsertRaccoltaSemplice")) {
+          console.log("dataForInsertRaccoltaSemplice trovati");
+          this._callerData = JSON.parse(atob(sessionStorage.getItem("dataForInsertRaccoltaSemplice")));
+          this.openFromRecord();
+        } else {
+          console.log("dataForInsertRaccoltaSemplice NON trovati");
+        }
+        this.raccoltaService.getTipologia(this.azienda.codice).subscribe(tipo => {
+          tipo.body.forEach(elem => {
+            const select = { label: elem, value: elem };
+            this.tipologieDocumenti$.push(select);
+          });
+        });
       }
     }
-    ))
-
-    this.raccoltaService.getTipologia(this.azienda.codice).subscribe(tipo => {
-      tipo.body.forEach(elem => {
-        let select = { label: elem, value: elem }
-        this.tipologieDocumenti$.push(select);
-
-      })
-    });
-
-
+    ));
   }
 
   public chiudiErrore() {
@@ -242,7 +240,7 @@ export class InserimentoManualeComponent implements OnInit {
       if (this._callerData.fascicoli.length > 0 && this.selectedFascicoli.length==0) {
         for (let i = 0; i < this._callerData.fascicoli.length; i++) {
           // setta, se ci sono, i fascicoli del documento
-          var fasc: FascicoloArgo = new FascicoloArgo();
+          const fasc: FascicoloArgo = new FascicoloArgo();
           fasc.numerazioneGerarchica = this._callerData.fascicoli[i];
           this.selectedFascicoli.push(fasc);
         }
