@@ -141,8 +141,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const that = this;
     window.addEventListener("resize", function(event) {
       const bodyTable = document.getElementsByClassName("ui-table-scrollable-body")[0] as HTMLElement;
-      bodyTable.style.paddingBottom = "1px";
-      bodyTable.style.paddingBottom = "1px";
+      bodyTable.style.paddingBottom = "0.06rem";
+      bodyTable.style.paddingBottom = "0.06rem";
     });
     this.contextMenuAperte = [
       { label: "Segna come da leggere", icon: "pi pi-eye-slash", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
