@@ -107,7 +107,7 @@ pipelines:
           steps:
             - step: *start_runner
             - step:
-                <<: *build_all_libs
+                <<: *build_app
                 runs-on:
                   - "self.hosted"
                   - "staging"
@@ -130,7 +130,7 @@ pipelines:
         steps:
           - step: *start_runner
           - step:
-              <<: *build_all_libs
+              <<: *build_app
               runs-on:
                 - "self.hosted"
                 - "prod"
