@@ -37,7 +37,7 @@ definitions:
           - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
           - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
           - INSTANCE_ID=$(aws ec2 describe-instances --filter "Name=tag:RunnerName,Values=*$AWS_ENV*" --query 'Reservations[].Instances[].InstanceId' --output text)
-          - [[ -n "$INSTANCE_ID" ]]
+          - '[[ -n "$INSTANCE_ID" ]]'
           - INSTANCE_STATE=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].State.Name' --output text)
           - ([[ "$INSTANCE_STATE" != "running" ]] && aws ec2 start-instances --instance-ids $INSTANCE_ID --region $AWS_DEFAULT_REGION) || true
           - ([[ "$INSTANCE_STATE" != "running" ]] && aws ec2 wait instance-running --instance-ids $INSTANCE_ID --region $AWS_DEFAULT_REGION) || true
