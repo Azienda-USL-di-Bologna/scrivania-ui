@@ -36,12 +36,12 @@ definitions:
           # Le altre variabili d'ambiente necessarie sono definite nel workspace e nel deployment
           - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
           - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
-          - INSTANCE_ID=$(aws ec2 describe-instances --filter "Name=tag:RunnerName,Values=*$AWS_ENV*" --query 'Reservations[].Instances[].InstanceId' --output text)
-          - '[[ -n "$INSTANCE_ID" ]]'
-          - INSTANCE_STATE=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[].Instances[].State.Name' --output text)
-          - ([[ "$INSTANCE_STATE" != "running" ]] && aws ec2 start-instances --instance-ids $INSTANCE_ID --region $AWS_DEFAULT_REGION) || true
-          - ([[ "$INSTANCE_STATE" != "running" ]] && aws ec2 wait instance-running --instance-ids $INSTANCE_ID --region $AWS_DEFAULT_REGION) || true
-          - ([[ "$INSTANCE_STATE" != "running" ]] && sleep 15) || true
+          - INSTANCE_ID=$(aws ec2 describe-instances --filter "Name=tag:RunnerName,Values=*${AWS_ENV}*" --query 'Reservations[].Instances[].InstanceId' --output text)
+          - ([[ -n "${INSTANCE_ID}" ]])
+          - INSTANCE_STATE=$(aws ec2 describe-instances --instance-ids ${INSTANCE_ID} --query 'Reservations[].Instances[].State.Name' --output text)
+          - ([[ "${INSTANCE_STATE}" != "running" ]] && aws ec2 start-instances --instance-ids ${INSTANCE_ID} --region ${AWS_DEFAULT_REGION}) || true
+          - ([[ "${INSTANCE_STATE}" != "running" ]] && aws ec2 wait instance-running --instance-ids ${INSTANCE_ID} --region ${AWS_DEFAULT_REGION}) || true
+          - ([[ "${INSTANCE_STATE}" != "running" ]] && sleep 15) || true
     - step: &stop_runner
         name: Stop Runner
         oidc: true
@@ -69,11 +69,11 @@ definitions:
         clone:
           enabled: false
         script:
-          - CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain $AWS_CODEARTIFACT_DOMAIN --domain-owner $AWS_ACCOUNT_ID --query authorizationToken --output text`
-          - CODEARTIFACT_ENDPOINT="//$AWS_CODEARTIFACT_DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.$AWS_DEFAULT_REGION.amazonaws.com/npm/$AWS_ENV/"
-          - echo "@bds:registry=https:$CODEARTIFACT_ENDPOINT" > .npmrc
-          - echo "$CODEARTIFACT_ENDPOINT:_authToken=$CODEARTIFACT_AUTH_TOKEN" >> .npmrc
-          - echo "$CODEARTIFACT_ENDPOINT:always-auth=true" >> .npmrc
+          - CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ${AWS_CODEARTIFACT_DOMAIN} --domain-owner ${AWS_ACCOUNT_ID} --query authorizationToken --output text`
+          - CODEARTIFACT_ENDPOINT="//${AWS_CODEARTIFACT_DOMAIN}-$AWS_ACCOUNT_ID.d.codeartifact.${AWS_DEFAULT_REGION}.amazonaws.com/npm/${AWS_ENV}/"
+          - echo "@bds:registry=https:${CODEARTIFACT_ENDPOINT}" > .npmrc
+          - echo "${CODEARTIFACT_ENDPOINT}:_authToken=${CODEARTIFACT_AUTH_TOKEN}" >> .npmrc
+          - echo "${CODEARTIFACT_ENDPOINT}:always-auth=true" >> .npmrc
         artifacts:
           - .npmrc
 
