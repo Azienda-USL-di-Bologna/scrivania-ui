@@ -10,7 +10,7 @@
 clone:
   # lfs: true     # See the lfs property documentation prior to enabling
   # skip-ssl-verify: true
-  enabled: true
+  enabled: false
   depth: 1
 
 # image:
@@ -30,8 +30,6 @@ definitions:
         name: Start Runner
         oidc: true
         image: public.ecr.aws/aws-cli/aws-cli:2.11.21
-        clone:
-          enabled: false
         script:
           # Le altre variabili d'ambiente necessarie sono definite nel workspace e nel deployment
           - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
@@ -46,28 +44,26 @@ definitions:
         name: Stop Runner
         oidc: true
         image: public.ecr.aws/aws-cli/aws-cli:2.11.21
-        clone:
-          enabled: false
         script:
           # Le altre variabili d'ambiente necessarie sono definite nel workspace e nel deployment
           - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
-          - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
-          - aws ec2 stop-instances --instance-ids $INSTANCE_ID --region $AWS_DEFAULT_REGION
+          - echo ${BITBUCKET_STEP_OIDC_TOKEN} > $(pwd)/web-identity-token
+          - aws ec2 stop-instances --instance-ids ${INSTANCE_ID} --region ${AWS_DEFAULT_REGION}
     - step: &build_app
         name: Build App
         image: public.ecr.aws/docker/library/node:14.21.3-bullseye
+        clone:
+          enabled: true
+        cache:
+          - node
         script:
-          - ls -al
           - npm install
           - npm run build
-          - ls -al
         artifacts:
           - "dist/**"
     - step: &codeartifact_login
         name: CodeArtifact Login
         image: public.ecr.aws/aws-cli/aws-cli:2.11.21
-        clone:
-          enabled: false
         script:
           - CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ${AWS_CODEARTIFACT_DOMAIN} --domain-owner ${AWS_ACCOUNT_ID} --query authorizationToken --output text`
           - CODEARTIFACT_ENDPOINT="//${AWS_CODEARTIFACT_DOMAIN}-$AWS_ACCOUNT_ID.d.codeartifact.${AWS_DEFAULT_REGION}.amazonaws.com/npm/${AWS_ENV}/"
@@ -91,15 +87,12 @@ pipelines:
             - step: *start_runner
             - step:
                 <<: *codeartifact_login
-                runs-on:
+                runs-on: &run_on_dev
                   - "self.hosted"
                   - "dev"
             - step:
                 <<: *build_app
-                runs-on:
-                  - "self.hosted"
-                  - "dev"
-
+                runs-on: *run_on_dev
     ### STAGING
     stage:
       - stage:
@@ -108,14 +101,12 @@ pipelines:
             - step: *start_runner
             - step:
                 <<: *build_app
-                runs-on:
+                runs-on: &run_on_stag
                   - "self.hosted"
                   - "staging"
             - step:
                 <<: *codeartifact_login
-                runs-on:
-                  - "self.hosted"
-                  - "staging"
+                runs-on: *run_on_stag
             - step: *stop_runner
   tags:
     ### STAGING
@@ -126,12 +117,10 @@ pipelines:
           - step: *start_runner
           - step:
               <<: *build_app
-              runs-on:
+              runs-on: &run_on_prod
                 - "self.hosted"
                 - "prod"
           - step:
               <<: *codeartifact_login
-              runs-on:
-                - "self.hosted"
-                - "prod"
+              runs-on: *run_on_prod
           - step: *stop_runner
