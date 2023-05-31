@@ -61,41 +61,41 @@ export class AttivitaFatteComponent implements OnInit {
     {
       // E' l'insieme di priorità e tipo attività
       field: "priorita",
-      width: "37px",
+      width: "2.313rem",
       padding: 0,
       label: "priorità",
-      minWidth: "37px"
+      minWidth: "2.313rem"
     },
     {
       field: "idAzienda.nome",
       header: "Ente",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "100px",
+      width: "6.25rem",
       label: "ente",
-      minWidth: "100px"
+      minWidth: "6.25rem"
     },
     {
       field: "idApplicazione.nome",
       header: "App",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "93px",
+      width: "5.813rem",
       label: "applicazione",
-      minWidth: "93px"
+      minWidth: "5.813rem"
     },
     {
       field: "provenienza",
       header: "Da",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "140px",
+      width: "8.75rem",
       label: "provenienza",
-      minWidth: "140px"
+      minWidth: "8.75rem"
     },
     {
       field: "oggetto",
       header: "Oggetto",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       label: "oggetto",
-      minWidth: "200px"
+      minWidth: "12.5rem"
     },
     {
       field: "dataInserimentoRiga",
@@ -104,23 +104,23 @@ export class AttivitaFatteComponent implements OnInit {
       fieldType: "DateTime",
       filterWidget: "Calendar",
       ariaLabelDescription: "Colonna Data, Cella filtro",
-      width: "128px",
+      width: "8rem",
       label: "svolta il",
-      minWidth: "128px"
+      minWidth: "8rem"
     },
     {
       field: "descrizione",
       header: "Tipo",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "120px",
+      width: "7.5rem",
       label: "tipo",
-      minWidth: "120px"
+      minWidth: "7.5rem"
     },
     {
     // colonna note
-      width: "30px",
+      width: "1.875rem",
       label: "note",
-      minWidth: "30px"
+      minWidth: "1.875rem"
     },
   ];
 
