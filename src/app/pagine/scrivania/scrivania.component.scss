@@ -4,7 +4,7 @@
     flex-direction: column;
 }
 .content-right{
-    padding-left: 23px;
+    padding-left: 1.438rem;
     /*overflow-y: auto;*/
     display: flex;
     flex-direction: column;
@@ -15,8 +15,8 @@
 .option-bar{
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
-    margin-top: -11.55px;
+    margin-bottom: 0.938rem;
+    margin-top: -0.722rem;
     /*
     position: sticky !important;
     left: 0;
@@ -26,48 +26,48 @@
 
 .separator-class {
     width: 0;
-    border-right: 1px solid #c8c8c8;
-    margin: auto 8px auto 2px;
+    border-right: 0.06rem solid #c8c8c8;
+    margin: auto 0.5rem auto 0.13rem;
     height: 80%;
     display: inline;
 }
 
 ::ng-deep .p-fluid .p-dialog-footer .p-button {
-    width: 62px;
+    width: 3.875rem;
 }
 
 /* BUTTON STYLES */
 
 ::ng-deep .p-fluid .p-button {
-    width: 80px; /* Senza dava problemi su firefox */
+    width: 5rem; /* Senza dava problemi su firefox */
 }
 
 .buttons-bar{
     display: flex;
     flex-direction: row;
-    height: 34.6px;
+    height: 2.163rem;
 }
 .buttons-bar > button {
-    margin: 0 6px 0 0;
-    border: 1px solid #d2d2d2 !important;
+    margin: 0 0.4rem 0 0;
+    border: 0.06rem solid #d2d2d2 !important;
     color: #333333 !important;
     background-color: #f4f4f4 !important;
 
 }
 
 .icon-custom {
-    // padding-left: 5px;
+    // padding-left: ;
     display: flex !important;
     align-items: center;
-    padding-top: 2.5px;
-    width: 34.1px;
+    padding-top: 0.156rem;
+    width: 2.131rem;
 }
 
 .images-pos {
     position: absolute;
     top: 15%;
     left: 15%;
-    width: 21px;
+    width: 1.313rem;
 }
 
 :host ::ng-deep .icon-style > span:first-child {
@@ -78,22 +78,21 @@
 }
 
 :host ::ng-deep .p-button.p-state-default.p-button-secondary:enabled:focus, body .p-buttonset.p-button-secondary > .p-button.p-state-default:enabled:focus {
-    box-shadow: 0 0 0 1px #9E9E9E;
+    box-shadow: 0 0 0 0.06rem #9E9E9E;
 }
 :host ::ng-deep .p-button.p-state-default.p-button-secondary, 
 body .p-buttonset.p-button-secondary > .p-button.p-state-default {
-    border: 1px solid #d2d2d2 !important;
+    border: 0.06rem solid #d2d2d2 !important;
     color: #333333 !important;
     background-color: #f4f4f4 !important;
 }
 /* :host::ng-deep .button-indietro{
     background-color: #e2e2e2;
-    height: 33px;
+    height: ;
 } */
 .table-wrapper{
     /*position: absolute;
-    top: 60px;
-    bottom: 15px;*/
+    top: */
     flex: 1;
     position: relative;
 }
@@ -105,7 +104,7 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
     bottom: 0;
     left: 0;
     right: 0;
-    //padding-bottom: 33px;
+    //padding-bottom: ;
 }
 :host::ng-deep .p-table,
 :host::ng-deep .p-table-scrollable-wrapper,
@@ -124,7 +123,7 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
     position: relative;
 } */
 .pr-8{
-   padding-right: 8px;
+   padding-right: 0.5rem;
 }
 .preview-inner{
     display: flex;
@@ -137,9 +136,9 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
 .overlap-div {
     position: absolute;
     top: 0;
-    bottom: 15px;
+    bottom: 0.938rem;
     left: 0;
-    right: 15px;
+    right: 0.938rem;
     z-index: 100;
 }
 .preview-inner > iframe{
@@ -157,8 +156,8 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
 .div-info-doc {
     /* display: flex;
     justify-content: space-between; */
-    margin-bottom: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 0.938rem;
+    margin-bottom: 0.938rem;
     max-height: 12vh;
     overflow: auto;
     word-break: break-word;
@@ -167,10 +166,10 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
     white-space: -moz-pre-wrap;
 }
 .px-16{
-    padding: 0 16px;
+    padding: 0 1rem;
 }
 .span-info-doc {
-    margin-left: 30px;
+    margin-left: 1.875rem;
 }
 
 .width100x100 {
@@ -178,11 +177,11 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
 }
 
 .mt16 {
-    margin-top: 16px;
+    margin-top: 1rem;
 }
 
 .p-fluid .p-dropdown {
-    width: 600px !important;
+    width: 37.5rem !important;
 }
 
 .no-anteprima {
@@ -199,10 +198,10 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
 .clMenu {
     /* display: flex; */
     font-weight: bold;
-    padding: 4px 8px;
+    padding: 0.25rem 0.5rem;
 }
 :host::ng-deep.clMenuPosition > .p-tieredmenu{
-    //top: 43px !important;
+    //top:  !important;
 }
 .clMenu:enabled{
     background-color: #993366 !important; /* #909090  #848484*/
@@ -216,8 +215,8 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
     float: left;
 }
 :host::ng-deep.clMenu > span {
-    padding: 0 0 0 8px !important;
-    margin: 2px 0;
+    padding: 0 0 0 0.5rem !important;
+    margin: 0.13rem 0;
     float: right;
 }
 :host::ng-deep.p-tieredmenu,
@@ -229,7 +228,7 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
 :host::ng-deep.p-tieredmenu .p-menuitem-link .p-menuitem-text,
 :host::ng-deep.p-submenu-icon {
     color: #f4f4f4;
-    top: 21px !important;
+    top: 1.313rem !important;
     /* color: #999; */
 }
 
@@ -249,7 +248,7 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
     /* font-size: 101%; */
 }
 :host::ng-deep.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
-    padding-left: 9px;
+    padding-left: 0.563rem;
 }
 
 :host::ng-deep.p-tieredmenu .p-menuitem-link .p-submenu-icon{
@@ -265,14 +264,14 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
     left: 0;
     top: 0;
     bottom: 0;
-    width: 15px;
+    width: 0.938rem;
     cursor: w-resize;
     text-align: center;
     justify-content: center;
 }
 .slider > div{
-    border: dotted 1px grey;
-    width: 3px;
+    border: dotted 0.06rem grey;
+    width: 0.19rem;
     border-top: none;
     border-bottom: none;
     height: 100%;
@@ -301,11 +300,11 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin: 8px 0;
+    margin: 0.5rem 0;
 }
 .allegati-dropdown > img{
     cursor: pointer;
-    width: 33px;
+    width: 2.063rem;
 }
 .allegati-dropdown > p-dropdown{
     flex-grow: 1;
