@@ -10,8 +10,8 @@
 .option-bar{
   display: flex;
   justify-content: space-between;
-  margin-bottom: 15px;
-  margin-top: -11.55px;
+  margin-bottom: 1rem;
+  margin-top: -0.719rem;
   /*
   position: sticky !important;
   left: 0;
@@ -21,14 +21,14 @@
 
 .separator-class {
   width: 0;
-  border-right: 1px solid #c8c8c8;
-  margin: auto 8px auto 2px;
+  border-right: 0.06rem solid #c8c8c8;
+  margin: auto 0.5rem auto 0.13rem;
   height: 80%;
   display: inline;
 }
 
 ::ng-deep .ui-fluid .ui-dialog-footer .ui-button {
-  width: 62px;
+  width: 3.875rem;
 }
 
 /* BUTTON STYLES */
@@ -38,21 +38,21 @@
   align-items: center;
 }
 .buttons-bar > button{
-  margin: 0 6px 0 0;
-  height: 42px;
+  margin: 0 0.4rem 0 0;
+  height: 2.625rem;
 }
 
 .icon-custom {
-  padding-left: 5px;
-  padding-top: 2.5px;
-  width: 34.1px;
+  padding-left: 0.3rem;
+  padding-top: 0.156rem;
+  width: 2.131rem;
 }
 
 .images-pos {
   position: absolute;
   top: 15%;
   left: 15%;
-  width: 21px;
+  width: 1.313rem;
 }
 
 :host ::ng-deep .icon-style > span:first-child {
@@ -63,19 +63,19 @@
 }
 
 :host ::ng-deep .ui-button.ui-state-default.ui-button-secondary:enabled:focus, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default:enabled:focus {
-  box-shadow: 0 0 0 1px #9E9E9E;
+  box-shadow: 0 0 0 0.06rem #9E9E9E;
 }
 :host ::ng-deep .ui-button.ui-state-default.ui-button-secondary, body .ui-buttonset.ui-button-secondary > .ui-button.ui-state-default {
-  border: 1px solid #d2d2d2;
+  border: 0.06rem solid #d2d2d2;
 }
 /* :host::ng-deep .button-indietro{
   background-color: #e2e2e2;
-  height: 33px;
+  height: ;
 } */
 .table-wrapper{
   /*position: absolute;
-  top: 60px;
-  bottom: 15px;*/
+  top: ;
+  bottom: ;*/
   flex: 1;
   position: relative;
 }
@@ -87,7 +87,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding-bottom: 15px;
+  padding-bottom: 0.938rem;
 }
 :host::ng-deep .ui-table,
 :host::ng-deep .ui-table-scrollable-wrapper,
@@ -106,7 +106,7 @@
   position: relative;
 } */
 .pr-8{
- padding-right: 8px;
+ padding-right: 0.5rem;
 }
 .preview-inner{
   display: flex;
@@ -119,9 +119,9 @@
 .overlap-div {
   position: absolute;
   top: 0;
-  bottom: 15px;
+  bottom: 0.938rem;
   left: 0;
-  right: 15px;
+  right: 0.938rem;
   z-index: 100;
 }
 .preview-inner > iframe{
@@ -139,8 +139,8 @@
 .div-info-doc {
   /* display: flex;
   justify-content: space-between; */
-  margin-bottom: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 0.938rem;
+  margin-bottom: 0.938rem;
   max-height: 12vh;
   overflow: auto;
   word-break: break-word;
@@ -149,10 +149,10 @@
   white-space: -moz-pre-wrap;
 }
 .px-16{
-  padding: 0 16px;
+  padding: 0 1rem;
 }
 .span-info-doc {
-  margin-left: 30px;
+  margin-left: 1.875rem;
 }
 
 .width100x100 {
@@ -160,11 +160,11 @@
 }
 
 .mt16 {
-  margin-top: 16px;
+  margin-top: 1rem;
 }
 
 .ui-fluid .ui-dropdown {
-  width: 600px !important;
+  width: 37.5rem !important;
 }
 
 .no-anteprima {
@@ -230,12 +230,12 @@
 }
 
 button {
-  margin: 0 6px 0 0;
-  border: 1px solid #d2d2d2 !important;
+  margin: 0 0.4rem 0 0;
+  border: 0.06rem solid #d2d2d2 !important;
   color: #333333 !important;
   background-color: #f4f4f4 !important;
-  height: 42px;
+  height: 2.625rem;
 }
 p-calendar {
-  min-width:      146px;
+  min-width:      9.125rem;
 }

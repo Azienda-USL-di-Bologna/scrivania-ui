@@ -1,16 +1,16 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2, ElementRef } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2, ElementRef, Inject } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
 import { Attivita, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
-import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
+import { JWTModuleConfig, JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
-import { IntimusClientService, IntimusCommand, IntimusCommands, LOCAL_IT, RefreshAttivitaParams } from "@bds/common-tools";
+import { IntimusClientService, IntimusCommand, IntimusCommands, LOCAL_IT, RefreshAttivitaParams, UtilityFunctions } from "@bds/common-tools";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
 import { HttpClient } from "@angular/common/http";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
@@ -141,8 +141,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const that = this;
     window.addEventListener("resize", function(event) {
       const bodyTable = document.getElementsByClassName("ui-table-scrollable-body")[0] as HTMLElement;
-      bodyTable.style.paddingBottom = "1px";
-      bodyTable.style.paddingBottom = "1px";
+      bodyTable.style.paddingBottom = "0.06rem";
+      bodyTable.style.paddingBottom = "0.06rem";
     });
     this.contextMenuAperte = [
       { label: "Segna come da leggere", icon: "pi pi-eye-slash", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
@@ -471,6 +471,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         case "idAzienda.nome":
         case "idApplicazione.nome":
           res = attivita[col.field.split(".")[0]][col.field.split(".")[1]];
+          if (res === "Servizio di download"){
+            res = "Gedi"
+          }
           break;
 
         case "data":
@@ -507,9 +510,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   fillActionCol(attivita, td) {
-    if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" &&
-      (attivita.idApplicazione.nome === "Pico" || attivita.idApplicazione.nome === "Dete" || attivita.idApplicazione.nome === "Deli"))) {
-      td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>Apri</strong></a>`;
+    if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" && ["procton", "dete", "deli", "downloader"].includes(attivita.idApplicazione.id))) {
+      if (attivita.idApplicazione.id === "downloader"){
+        td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>Scarica</strong></a>`;
+      }else{
+        td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>Apri</strong></a>`;
+      }
       if (this.listeners[td.id]) {
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
         this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa

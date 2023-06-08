@@ -1,7 +1,7 @@
 .img-table{
     display: block;
-    width: 24px;
-    height: 24px;
+    width: 1.5rem;
+    height: 1.5rem;
     margin: auto;
 }
 ::ng-deep app-attivita .p-datatable table {
@@ -24,7 +24,7 @@
     table-layout: auto;
 }
 :host::ng-deep .ui-table .ui-table-tbody > tr > td {
-    padding: 10px;
+    padding: 0.625rem;
 }
 .column-class-f {
     word-break: break-all;
@@ -43,7 +43,7 @@
     border: #c8c8c8;
     border-left-style: solid;
     border-right-style: solid;
-    border-width: 1px;
+    border-width: 0.06rem;
 }
 :host::ng-deep .ui-table .ui-table-tbody > tr.ui-contextmenu-selected {
     background-color: #ffffff !important;
@@ -60,7 +60,7 @@
     text-align: center;
 }
 .columns-icon > span{
-    font-size: 24px;
+    font-size: 1.5rem;
 }
 :host::ng-deep .clToast .ui-toast-message-info{
     background-color:#283948 !important;
@@ -76,11 +76,11 @@
 }
 
 ::ng-deep [role="dialog"].dialogNote {
-    width: 350px;
-    min-width: 200px;
+    width: 21.875rem;
+    min-width: 12.5rem;
 }
 ::ng-deep .dialogNote .ui-dialog-content.ui-widget-content {
-    min-height: 250px;
+    min-height: 15.625rem;
 }
 ::ng-deep .td-pos-relative {
     position: relative !important;
@@ -96,17 +96,17 @@
 }
 
 ::ng-deep .disabled {
-    -moz-box-shadow:    inset 0 0 10px grey !important;
-    -webkit-box-shadow: inset 0 0 10px grey !important;
-    box-shadow:         inset 0 0 10px grey !important;
+    -moz-box-shadow:    inset 0 0 0.625rem grey !important;
+    -webkit-box-shadow: inset 0 0 0.625rem grey !important;
+    box-shadow:         inset 0 0 0.625rem grey !important;
     /* cursor: not-allowed !important; */
     opacity: 0.4 !important;
 }
 
 .iconaEliminaAttivita{
     display: block;
-    width: 24px;
-    height: 24px;
+    width: 1.5rem;
+    height: 1.5rem;
     margin: auto;
     
 }

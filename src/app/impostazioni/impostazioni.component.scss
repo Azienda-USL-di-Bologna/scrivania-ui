@@ -9,16 +9,16 @@
 }
 .settings-items {
     list-style: none;
-    padding: 10px;
+    padding: 0.625rem;
     margin: 0;
     display: inline;
     .hide-preview-box {
-        margin: 10px;
+        margin: 0.625rem;
         display: flex;
         justify-content: center;
-        height: 45px;
+        height: 2.813rem;
         .right {
-            width: 180px;
+            width: 11.25rem;
             display: flex;
             justify-content: space-evenly;
             align-items: center;
@@ -28,25 +28,25 @@
     }
     .email-attivita-box {
         h4 {
-            margin-bottom: 7px;
+            margin-bottom: 0.438rem;
         }
         .field-checkbox {
-            margin-top: 7px;
+            margin-top: 0.438rem;
             label {
-                margin-left: 3px;
+                margin-left: 0.188rem;
             }
         }
     }
 }
 .button-styles {
-    width: 100px;
-    margin: 10px;
+    width: 6.25rem;
+    margin: 0.625rem;
 }
 .button-wrapper {
     position: absolute;
-    bottom: 5px;
+    bottom: 0.3rem;
     left: 21%;
 }
 .button-margin-left {
-    margin-left: 70px;
+    margin-left: 4.375rem;
 }

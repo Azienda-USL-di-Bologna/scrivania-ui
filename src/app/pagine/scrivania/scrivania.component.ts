@@ -169,7 +169,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       // };
       document.onmousemove = function (e: MouseEvent) {
         e.preventDefault();
-        const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia 32px che sfasano il conteggio
+        const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia pixel che sfasano il conteggio
         if (!(e.clientX <= that.LIMIT_X_LEFT_SIDE)) {
           that.changeColOrder = false;
         } else {
