@@ -399,20 +399,21 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           this.totalRecords = data.page.totalElements;
           /* console.log("ATTIVITA: ", this.attivita); */
           // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
-          this.attivita.forEach(a => {
-            this.setAttivitaIcon(a);
+          this.attivita.forEach((attivita: Attivita) => {
+            this.setAttivitaIcon(attivita);
             // console.log("carica", a.datiAggiuntivi);
-            a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
+            //a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
             // "forbidden" è un caso di smicnhiamento probabilmente
-            if (a.descrizione !== "Redazione" && a.descrizione !== "Bozza" && a.allegati && a.allegati !== "\"forbidden\"") {
-              const jsonObject = JSON.parse(a.allegati);
-              for (let i = 0; i < jsonObject.length; i++) {
-                if (jsonObject[i].tipologia === "STAMPA_UNICA") {
-                  a["allegatoDaMostrare"] = jsonObject[i];
+            if (attivita.descrizione !== "Redazione" && attivita.descrizione !== "Bozza" && attivita.allegati && attivita.allegati !== null) {
+              // const jsonObject = JSON.parse(a.allegati);
+              const allegati = attivita.allegati;
+              for (let i = 0; i < allegati.length; i++) {
+                if (allegati[i].tipologia === "STAMPA_UNICA") {
+                  attivita["allegatoDaMostrare"] = allegati[i];
                 }
               }
-            } else if (a.allegati && a.allegati !== "\"forbidden\"" && (a.descrizione === "Redazione" || a.descrizione === "Bozza")) {
-              a["anteprimaNonDisponibile"] = "Non disponibile";
+            } else if (attivita.allegati && attivita.allegati !== null && (attivita.descrizione === "Redazione" || attivita.descrizione === "Bozza")) {
+              attivita["anteprimaNonDisponibile"] = "Non disponibile";
             }
           });
         }

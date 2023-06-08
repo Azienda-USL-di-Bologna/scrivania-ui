@@ -265,7 +265,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       this.allegatiDropDown.clear(null);
       let allegatiAttivita: any[] = null;
       if (this.attivitaSelezionata.allegati && this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
-        allegatiAttivita = JSON.parse(this.attivitaSelezionata.allegati);
+        allegatiAttivita = this.attivitaSelezionata.allegati;
       }
       if (allegatiAttivita) {
         allegatiAttivita.sort((a: any, b: any) => { if (a.default) { return -1; } else if (a.default && b.default) { return 0; } else { return 1; } });
