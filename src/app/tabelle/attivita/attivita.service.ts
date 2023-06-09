@@ -1,15 +1,20 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { CUSTOM_SERVER_METHODS } from "../../../environments/app-constants";
 import { Attivita, ENTITIES_STRUCTURE, Azienda, Applicazione, getInternautaUrl, BaseUrlType } from "@bds/internauta-model";
 import { NextSDREntityProvider } from "@bds/next-sdr";
 import { Observable } from "rxjs";
+import { JWTModuleConfig, JwtLoginService } from "@bds/jwt-login";
 
 @Injectable()
 export class AttivitaService extends NextSDREntityProvider {
 
-  constructor(protected http: HttpClient, protected datepipe: DatePipe) {
+  constructor(
+    protected http: HttpClient, 
+    protected datepipe: DatePipe, 
+    @Inject("loginConfig") private loginConfig: JWTModuleConfig,
+    private loginService: JwtLoginService) {
     super(http, datepipe, ENTITIES_STRUCTURE.scrivania.attivita, getInternautaUrl(BaseUrlType.Scrivania));
   }
 
@@ -49,5 +54,9 @@ export class AttivitaService extends NextSDREntityProvider {
     formData.append("id_azienda", elementToDelete.idAzienda.id.toString());
     console.log(formData);
     return this.http.post(url, formData);
+  }
+
+  public downloadArchivioZip(url: string){
+    return this.http.get(url, {observe: 'response', responseType: "blob"});
   }
 }
