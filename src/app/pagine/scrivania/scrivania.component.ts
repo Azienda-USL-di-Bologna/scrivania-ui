@@ -509,8 +509,12 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.configurazioneService.getParametriAziende("raccoltaSemplice", null, idAziendaArray)
     .subscribe((parametriAziende: ParametroAziende[]) => {
-      console.log(parametriAziende[0].valore);
-      this.showRaccoltaSemplice = JSON.parse(parametriAziende[0].valore || false);
+      if (parametriAziende && parametriAziende[0].valore) {
+        console.log(parametriAziende[0].valore);
+        this.showRaccoltaSemplice = JSON.parse(parametriAziende[0].valore || false);
+      } else {
+        this.showRaccoltaSemplice = false;
+      }
       console.log("showRS: ",this.showRaccoltaSemplice);
     });
   }

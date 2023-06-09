@@ -201,7 +201,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             if (data) {
               data = data.results[0];
               this.setAttivitaIcon(data);
-              data.datiAggiuntivi = JSON.parse(data.datiAggiuntivi);
+              data.datiAggiuntivi = data.datiAggiuntivi;
               this.attivita.unshift(data);
             }
           });
@@ -212,7 +212,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
               if (data) {
                 console.log("DATA", data);
                 data = data.results[0];
-                data.datiAggiuntivi = JSON.parse(data.datiAggiuntivi);
+                data.datiAggiuntivi = data.datiAggiuntivi;
                 const idAttivitaToReplace = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
                 if (idAttivitaToReplace >= 0) {
                   this.setAttivitaIcon(data);

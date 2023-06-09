@@ -22,7 +22,7 @@ export class AttivitaService extends NextSDREntityProvider {
     Object.assign(temp, elementToUpdate);
     temp.idAzienda = {id: elementToUpdate.idAzienda.id} as Azienda;
     temp.idApplicazione = {id: elementToUpdate.idApplicazione.id} as Applicazione;
-    temp.datiAggiuntivi = JSON.stringify(elementToUpdate.datiAggiuntivi);
+    temp.datiAggiuntivi = elementToUpdate.datiAggiuntivi;
     // console.log(this.classDescriptionLocal, functioName, "id", elementToUpdate.id, "elmToUpdate", elementToUpdate);
     return this.patchHttpCall(temp, temp.id);
   }
@@ -42,7 +42,7 @@ export class AttivitaService extends NextSDREntityProvider {
 
   public eliminaAttivitaDemiurgo(elementToDelete: Attivita): Observable<any> {
     const url = getInternautaUrl(BaseUrlType.Scrivania) + "/" + CUSTOM_SERVER_METHODS.cancellaattivita;
-    const datiAggiuntiviJson = JSON.parse(JSON.stringify(elementToDelete.datiAggiuntivi));
+    const datiAggiuntiviJson = elementToDelete.datiAggiuntivi;
     let formData: FormData = new FormData();
     formData.append("id_attivita", datiAggiuntiviJson.id_attivita_babel.toString());
     formData.append("id_applicazione", "babel");
