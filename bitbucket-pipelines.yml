@@ -72,7 +72,7 @@ definitions:
           - echo "${CODEARTIFACT_ENDPOINT}:always-auth=true" >> .npmrc
         artifacts:
           - .npmrc
-    - step:
+    - step: &deploy
         oidc: true
         script:
           - pipe: atlassian/aws-s3-deploy:1.2.0
@@ -101,6 +101,9 @@ pipelines:
                   - "dev"
             - step:
                 <<: *build_app
+                runs-on: *run_on_dev
+            - step:
+                <<: *deploy
                 runs-on: *run_on_dev
     ### STAGING
     stage:
