@@ -73,14 +73,11 @@ definitions:
         artifacts:
           - .npmrc
     - step: &deploy
+        name: Deploy
         oidc: true
+        image: public.ecr.aws/aws-cli/aws-cli:2.11.21
         script:
-          - pipe: atlassian/aws-s3-deploy:1.2.0
-            variables:
-              #AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-              #AWS_OIDC_ROLE_ARN: "arn:aws:iam::123456789012:role/role_name"
-              S3_BUCKET: "babel-cloud-dev-spa-scrivania/scrivania"
-              LOCAL_PATH: "dist/Babel-internauta"
+          - aws s3 sync dist/Babel-internauta babel-cloud-dev-spa-scrivania/scrivania
 
 ################################
 ### PIPELINES
