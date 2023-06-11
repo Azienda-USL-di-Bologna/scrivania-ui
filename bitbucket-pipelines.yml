@@ -72,6 +72,15 @@ definitions:
           - echo "${CODEARTIFACT_ENDPOINT}:always-auth=true" >> .npmrc
         artifacts:
           - .npmrc
+    - step:
+        oidc: true
+        script:
+          - pipe: atlassian/aws-s3-deploy:1.2.0
+            variables:
+              #AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+              #AWS_OIDC_ROLE_ARN: "arn:aws:iam::123456789012:role/role_name"
+              S3_BUCKET: "babel-cloud-dev-spa-scrivania/scrivania"
+              LOCAL_PATH: "dist/Babel-internauta"
 
 ################################
 ### PIPELINES
