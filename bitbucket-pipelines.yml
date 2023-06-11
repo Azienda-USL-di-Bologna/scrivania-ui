@@ -75,9 +75,13 @@ definitions:
     - step: &deploy
         name: Deploy
         oidc: true
-        image: public.ecr.aws/aws-cli/aws-cli:2.11.21
+        #image: public.ecr.aws/aws-cli/aws-cli:2.11.21
         script:
-          - aws s3 sync dist/Babel-internauta s3://babel-cloud-dev-spa-scrivania/scrivania
+          #- aws s3 sync dist/Babel-internauta s3://babel-cloud-dev-spa-scrivania/scrivania
+          - pipe: atlassian/aws-s3-deploy:1.2.0
+            variables:
+              S3_BUCKET: "babel-cloud-dev-spa-scrivania/scrivania"
+              LOCAL_PATH: "dist/Babel-internauta"
 
 ################################
 ### PIPELINES
@@ -101,7 +105,7 @@ pipelines:
                 runs-on: *run_on_dev
             - step:
                 <<: *deploy
-                runs-on: *run_on_dev
+                # runs-on: *run_on_dev
     ### STAGING
     stage:
       - stage:
