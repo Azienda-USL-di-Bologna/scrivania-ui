@@ -77,7 +77,7 @@ definitions:
         oidc: true
         image: public.ecr.aws/aws-cli/aws-cli:2.11.21
         script:
-          - aws s3 sync dist/Babel-internauta babel-cloud-dev-spa-scrivania/scrivania
+          - aws s3 sync dist/Babel-internauta s3://babel-cloud-dev-spa-scrivania/scrivania
 
 ################################
 ### PIPELINES
