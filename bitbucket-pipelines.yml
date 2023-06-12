@@ -58,7 +58,7 @@ definitions:
           - node
         script:
           - npm install
-          - npm run build
+          - npm run build -- --base-href /scrivania/
         artifacts:
           - "dist/**"
     - step: &codeartifact_login
