@@ -4,10 +4,10 @@ import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "pr
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
-import { Attivita, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { Attivita, ConfigurazioneService, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
 import { JWTModuleConfig, JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Table } from "primeng/table";
-import { Subscription } from "rxjs";
+import { Subscription, first } from "rxjs";
 import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
 import { IntimusClientService, IntimusCommand, IntimusCommands, LOCAL_IT, RefreshAttivitaParams, UtilityFunctions } from "@bds/common-tools";
@@ -106,7 +106,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private confirmationService: ConfirmationService,
     private impostazioniService: ImpostazioniService,
     private scrivaniaService: ScrivaniaService,
-    private httpClient: HttpClient
+		private configurazioneService: ConfigurazioneService,
+    @Inject("loginConfig") private loginConfig: JWTModuleConfig
   ) {
 
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
@@ -201,7 +202,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             if (data) {
               data = data.results[0];
               this.setAttivitaIcon(data);
-              data.datiAggiuntivi = JSON.parse(data.datiAggiuntivi);
+              data.datiAggiuntivi = data.datiAggiuntivi;
               this.attivita.unshift(data);
             }
           });
@@ -212,7 +213,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
               if (data) {
                 console.log("DATA", data);
                 data = data.results[0];
-                data.datiAggiuntivi = JSON.parse(data.datiAggiuntivi);
+                data.datiAggiuntivi = data.datiAggiuntivi;
                 const idAttivitaToReplace = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
                 if (idAttivitaToReplace >= 0) {
                   this.setAttivitaIcon(data);
@@ -399,20 +400,21 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           this.totalRecords = data.page.totalElements;
           /* console.log("ATTIVITA: ", this.attivita); */
           // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
-          this.attivita.forEach(a => {
-            this.setAttivitaIcon(a);
+          this.attivita.forEach((attivita: Attivita) => {
+            this.setAttivitaIcon(attivita);
             // console.log("carica", a.datiAggiuntivi);
-            a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
+            //a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
             // "forbidden" è un caso di smicnhiamento probabilmente
-            if (a.descrizione !== "Redazione" && a.descrizione !== "Bozza" && a.allegati && a.allegati !== "\"forbidden\"") {
-              const jsonObject = JSON.parse(a.allegati);
-              for (let i = 0; i < jsonObject.length; i++) {
-                if (jsonObject[i].tipologia === "STAMPA_UNICA") {
-                  a["allegatoDaMostrare"] = jsonObject[i];
+            if (attivita.descrizione !== "Redazione" && attivita.descrizione !== "Bozza" && attivita.allegati && attivita.allegati !== null) {
+              // const jsonObject = JSON.parse(a.allegati);
+              const allegati = attivita.allegati;
+              for (let i = 0; i < allegati.length; i++) {
+                if (allegati[i].tipologia === "STAMPA_UNICA") {
+                  attivita["allegatoDaMostrare"] = allegati[i];
                 }
               }
-            } else if (a.allegati && a.allegati !== "\"forbidden\"" && (a.descrizione === "Redazione" || a.descrizione === "Bozza")) {
-              a["anteprimaNonDisponibile"] = "Non disponibile";
+            } else if (attivita.allegati && attivita.allegati !== null && (attivita.descrizione === "Redazione" || attivita.descrizione === "Bozza")) {
+              attivita["anteprimaNonDisponibile"] = "Non disponibile";
             }
           });
         }
@@ -524,7 +526,21 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         e.stopPropagation();
         console.log("fillActionCol td", td);
         if (!td.classList.contains("disabled")) {
-          this.apriAttivita(attivita);
+          if (attivita.idApplicazione.id === "downloader"){
+            this.configurazioneService.getParametriAziende("usaToastPerDownloadZipAsincrono", null, null).pipe(first())
+            .subscribe({next: (res: any) => {
+
+              console.log("sdfdsfdsfsdfdsfdsfdsfsdfdsfd", res[0].valore);
+              if(res[0].valore == "true"){
+                this.downloadArchivioZip(JSON.parse(attivita.compiledUrls)[0].url);
+              } else{
+                this.apriAttivita(attivita);
+              }
+            } 
+            });
+          }else{
+            this.apriAttivita(attivita);
+          }
 
           this.renderer.addClass(td, "disabled");
           // this.renderer.setAttribute(td, "title", "disabilitato per un paio di secondi");
@@ -540,6 +556,35 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     } else {
       td.innerHTML = "";
     }
+  }
+
+  public downloadArchivioZip(url: string): void{
+    this.attivitaService.downloadArchivioZip(url).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        
+        UtilityFunctions.downLoadFile(res.body, "application/zip", "allegati.zip")
+      },
+      error: (err) => {
+        console.log(err);
+        
+        if (err.status === 401) {
+          this.messageService.add({
+            severity: "error",
+            key : "attivitaToast",
+            summary: "Attenzione",
+            detail: `Lo zip è scaduto perché sono passate più di 48 ore. Se vuoi esegui di nuovo l'operazione da gedi.`
+          });
+        } else {
+          this.messageService.add({
+            severity: "error",
+            key : "attivitaToast",
+            summary: "ERRORE",
+            detail: `C'è stato un errore imprevisto sul server.`
+          });
+        }
+      } 
+    });
   }
 
   public onCalendarAction(event: any, field: string, action: string) {
