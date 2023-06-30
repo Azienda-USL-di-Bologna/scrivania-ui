@@ -563,7 +563,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       next: (res: any) => {
         console.log(res);
         
-        UtilityFunctions.downLoadFile(res.body, "application/zip", "allegati.zip")
+        UtilityFunctions.downLoadFile(res.body, "application/zip", "allegati.zip");
       },
       error: (err) => {
         console.log(err);
