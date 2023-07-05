@@ -1,15 +1,20 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { CUSTOM_SERVER_METHODS } from "../../../environments/app-constants";
 import { Attivita, ENTITIES_STRUCTURE, Azienda, Applicazione, getInternautaUrl, BaseUrlType } from "@bds/internauta-model";
 import { NextSDREntityProvider } from "@bds/next-sdr";
 import { Observable } from "rxjs";
+import { JWTModuleConfig, JwtLoginService } from "@bds/jwt-login";
 
 @Injectable()
 export class AttivitaService extends NextSDREntityProvider {
 
-  constructor(protected http: HttpClient, protected datepipe: DatePipe) {
+  constructor(
+    protected http: HttpClient, 
+    protected datepipe: DatePipe, 
+    @Inject("loginConfig") private loginConfig: JWTModuleConfig,
+    private loginService: JwtLoginService) {
     super(http, datepipe, ENTITIES_STRUCTURE.scrivania.attivita, getInternautaUrl(BaseUrlType.Scrivania));
   }
 
@@ -22,7 +27,7 @@ export class AttivitaService extends NextSDREntityProvider {
     Object.assign(temp, elementToUpdate);
     temp.idAzienda = {id: elementToUpdate.idAzienda.id} as Azienda;
     temp.idApplicazione = {id: elementToUpdate.idApplicazione.id} as Applicazione;
-    temp.datiAggiuntivi = JSON.stringify(elementToUpdate.datiAggiuntivi);
+    temp.datiAggiuntivi = elementToUpdate.datiAggiuntivi;
     // console.log(this.classDescriptionLocal, functioName, "id", elementToUpdate.id, "elmToUpdate", elementToUpdate);
     return this.patchHttpCall(temp, temp.id);
   }
@@ -42,12 +47,16 @@ export class AttivitaService extends NextSDREntityProvider {
 
   public eliminaAttivitaDemiurgo(elementToDelete: Attivita): Observable<any> {
     const url = getInternautaUrl(BaseUrlType.Scrivania) + "/" + CUSTOM_SERVER_METHODS.cancellaattivita;
-    const datiAggiuntiviJson = JSON.parse(JSON.stringify(elementToDelete.datiAggiuntivi));
+    const datiAggiuntiviJson = elementToDelete.datiAggiuntivi;
     let formData: FormData = new FormData();
     formData.append("id_attivita", datiAggiuntiviJson.id_attivita_babel.toString());
     formData.append("id_applicazione", "babel");
     formData.append("id_azienda", elementToDelete.idAzienda.id.toString());
     console.log(formData);
     return this.http.post(url, formData);
+  }
+
+  public downloadArchivioZip(url: string){
+    return this.http.get(url, {observe: 'response', responseType: "blob"});
   }
 }
