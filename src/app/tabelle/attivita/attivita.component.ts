@@ -1,16 +1,16 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2, ElementRef } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2, ElementRef, Inject } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
-import { Attivita, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
-import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
+import { Attivita, ConfigurazioneService, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { JWTModuleConfig, JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Table } from "primeng/table";
-import { Subscription } from "rxjs";
+import { Subscription, first } from "rxjs";
 import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
-import { IntimusClientService, IntimusCommand, IntimusCommands, LOCAL_IT, RefreshAttivitaParams } from "@bds/common-tools";
+import { IntimusClientService, IntimusCommand, IntimusCommands, LOCAL_IT, RefreshAttivitaParams, UtilityFunctions } from "@bds/common-tools";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
 import { HttpClient } from "@angular/common/http";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
@@ -106,7 +106,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private confirmationService: ConfirmationService,
     private impostazioniService: ImpostazioniService,
     private scrivaniaService: ScrivaniaService,
-    private httpClient: HttpClient
+		private configurazioneService: ConfigurazioneService,
+    @Inject("loginConfig") private loginConfig: JWTModuleConfig
   ) {
 
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
@@ -201,7 +202,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             if (data) {
               data = data.results[0];
               this.setAttivitaIcon(data);
-              data.datiAggiuntivi = JSON.parse(data.datiAggiuntivi);
+              data.datiAggiuntivi = data.datiAggiuntivi;
               this.attivita.unshift(data);
             }
           });
@@ -212,7 +213,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
               if (data) {
                 console.log("DATA", data);
                 data = data.results[0];
-                data.datiAggiuntivi = JSON.parse(data.datiAggiuntivi);
+                data.datiAggiuntivi = data.datiAggiuntivi;
                 const idAttivitaToReplace = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
                 if (idAttivitaToReplace >= 0) {
                   this.setAttivitaIcon(data);
@@ -399,20 +400,21 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           this.totalRecords = data.page.totalElements;
           /* console.log("ATTIVITA: ", this.attivita); */
           // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
-          this.attivita.forEach(a => {
-            this.setAttivitaIcon(a);
+          this.attivita.forEach((attivita: Attivita) => {
+            this.setAttivitaIcon(attivita);
             // console.log("carica", a.datiAggiuntivi);
-            a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
+            //a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
             // "forbidden" è un caso di smicnhiamento probabilmente
-            if (a.descrizione !== "Redazione" && a.descrizione !== "Bozza" && a.allegati && a.allegati !== "\"forbidden\"") {
-              const jsonObject = JSON.parse(a.allegati);
-              for (let i = 0; i < jsonObject.length; i++) {
-                if (jsonObject[i].tipologia === "STAMPA_UNICA") {
-                  a["allegatoDaMostrare"] = jsonObject[i];
+            if (attivita.descrizione !== "Redazione" && attivita.descrizione !== "Bozza" && attivita.allegati && attivita.allegati !== null) {
+              // const jsonObject = JSON.parse(a.allegati);
+              const allegati = attivita.allegati;
+              for (let i = 0; i < allegati.length; i++) {
+                if (allegati[i].tipologia === "STAMPA_UNICA") {
+                  attivita["allegatoDaMostrare"] = allegati[i];
                 }
               }
-            } else if (a.allegati && a.allegati !== "\"forbidden\"" && (a.descrizione === "Redazione" || a.descrizione === "Bozza")) {
-              a["anteprimaNonDisponibile"] = "Non disponibile";
+            } else if (attivita.allegati && attivita.allegati !== null && (attivita.descrizione === "Redazione" || attivita.descrizione === "Bozza")) {
+              attivita["anteprimaNonDisponibile"] = "Non disponibile";
             }
           });
         }
@@ -470,6 +472,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         case "idAzienda.nome":
         case "idApplicazione.nome":
           res = attivita[col.field.split(".")[0]][col.field.split(".")[1]];
+          if (res === "Servizio di download"){
+            res = "Gedi"
+          }
           break;
 
         case "data":
@@ -507,7 +512,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   fillActionCol(attivita, td) {
     if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" && ["procton", "dete", "deli", "downloader"].includes(attivita.idApplicazione.id))) {
-      td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>Apri</strong></a>`;
+      if (attivita.idApplicazione.id === "downloader"){
+        td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>Scarica</strong></a>`;
+      }else{
+        td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>Apri</strong></a>`;
+      }
       if (this.listeners[td.id]) {
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
         this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa
@@ -517,7 +526,21 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         e.stopPropagation();
         console.log("fillActionCol td", td);
         if (!td.classList.contains("disabled")) {
-          this.apriAttivita(attivita);
+          if (attivita.idApplicazione.id === "downloader"){
+            this.configurazioneService.getParametriAziende("usaToastPerDownloadZipAsincrono", null, null).pipe(first())
+            .subscribe({next: (res: any) => {
+
+              console.log("sdfdsfdsfsdfdsfdsfdsfsdfdsfd", res[0].valore);
+              if(res[0].valore == "true"){
+                this.downloadArchivioZip(JSON.parse(attivita.compiledUrls)[0].url);
+              } else{
+                this.apriAttivita(attivita);
+              }
+            } 
+            });
+          }else{
+            this.apriAttivita(attivita);
+          }
 
           this.renderer.addClass(td, "disabled");
           // this.renderer.setAttribute(td, "title", "disabilitato per un paio di secondi");
@@ -533,6 +556,35 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     } else {
       td.innerHTML = "";
     }
+  }
+
+  public downloadArchivioZip(url: string): void{
+    this.attivitaService.downloadArchivioZip(url).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        
+        UtilityFunctions.downLoadFile(res.body, "application/zip", "allegati.zip");
+      },
+      error: (err) => {
+        console.log(err);
+        
+        if (err.status === 401) {
+          this.messageService.add({
+            severity: "error",
+            key : "attivitaToast",
+            summary: "Attenzione",
+            detail: `Lo zip è scaduto perché sono passate più di 48 ore. Se vuoi esegui di nuovo l'operazione da gedi.`
+          });
+        } else {
+          this.messageService.add({
+            severity: "error",
+            key : "attivitaToast",
+            summary: "ERRORE",
+            detail: `C'è stato un errore imprevisto sul server.`
+          });
+        }
+      } 
+    });
   }
 
   public onCalendarAction(event: any, field: string, action: string) {
