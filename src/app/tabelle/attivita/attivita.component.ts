@@ -512,10 +512,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   fillActionCol(attivita, td) {
     if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" && ["procton", "dete", "deli", "downloader"].includes(attivita.idApplicazione.id))) {
-      if (attivita.idApplicazione.id === "downloader"){
-        td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>Scarica</strong></a>`;
-      }else{
-        td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>Apri</strong></a>`;
+      const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
+      if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
+        td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>${compiledUrlsJsonArray[0].label}</strong></a>`;
       }
       if (this.listeners[td.id]) {
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
@@ -524,24 +523,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this.listeners[td.id] = [this.renderer.listen(td, "mousedown", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log("fillActionCol td", td);
+        // console.log("fillActionCol td", td);
         if (!td.classList.contains("disabled")) {
-          if (attivita.idApplicazione.id === "downloader"){
-            this.configurazioneService.getParametriAziende("usaToastPerDownloadZipAsincrono", null, null).pipe(first())
-            .subscribe({next: (res: any) => {
-
-              console.log("sdfdsfdsfsdfdsfdsfdsfsdfdsfd", res[0].valore);
-              if(res[0].valore == "true"){
-                this.downloadArchivioZip(JSON.parse(attivita.compiledUrls)[0].url);
-              } else{
-                this.apriAttivita(attivita);
-              }
-            } 
-            });
-          }else{
-            this.apriAttivita(attivita);
-          }
-
+          this.apriAttivita(attivita);
           this.renderer.addClass(td, "disabled");
           // this.renderer.setAttribute(td, "title", "disabilitato per un paio di secondi");
 
@@ -556,35 +540,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     } else {
       td.innerHTML = "";
     }
-  }
-
-  public downloadArchivioZip(url: string): void{
-    this.attivitaService.downloadArchivioZip(url).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        
-        UtilityFunctions.downLoadFile(res.body, "application/zip", "allegati.zip");
-      },
-      error: (err) => {
-        console.log(err);
-        
-        if (err.status === 401) {
-          this.messageService.add({
-            severity: "error",
-            key : "attivitaToast",
-            summary: "Attenzione",
-            detail: `Lo zip è scaduto perché sono passate più di 48 ore. Se vuoi esegui di nuovo l'operazione da gedi.`
-          });
-        } else {
-          this.messageService.add({
-            severity: "error",
-            key : "attivitaToast",
-            summary: "ERRORE",
-            detail: `C'è stato un errore imprevisto sul server.`
-          });
-        }
-      } 
-    });
   }
 
   public onCalendarAction(event: any, field: string, action: string) {
