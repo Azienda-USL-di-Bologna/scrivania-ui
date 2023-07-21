@@ -512,10 +512,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   fillActionCol(attivita, td) {
     if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" && ["procton", "dete", "deli", "downloader"].includes(attivita.idApplicazione.id))) {
-      if (attivita.idApplicazione.id === "downloader"){
-        td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>Scarica</strong></a>`;
-      }else{
-        td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>Apri</strong></a>`;
+      const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
+      if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
+        td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>${compiledUrlsJsonArray[0].label}</strong></a>`;
       }
       if (this.listeners[td.id]) {
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
