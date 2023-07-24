@@ -233,33 +233,35 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.attivitaSelezionata) {
       this.oggetto = this.attivitaSelezionata.oggetto;
       const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
-      this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
-      let destinatariA, destinatariCC: string;
-      if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
-        const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
-        res.forEach(e => {
-          if (e.startsWith("A: ")) {
-            destinatariA = e.replace("A: ", "<strong>A: </strong>");
-          } else if (e.startsWith("CC: ")) {
-            destinatariCC = e.replace("CC: ", "<strong>CC: </strong>");
-          } else if (e.startsWith("Interni: ")) {
-            destinatariA = e.replace("Interni: ", "<b>Interni: </b>");
-          } else if (e.startsWith("Esterni: ")) {
-            destinatariCC = e.replace("Esterni: ", "<b>Esterni: </b>");
-          }
-        });
-      }
-      if (datiAggiuntiviAttivita.custom_app_4) {
-        this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
-        if (this.datiDiFlusso.length > MAX_CHARS_100) {
-          this.datiFlussoTooltip = this.datiDiFlusso;
-          this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
+      if (datiAggiuntiviAttivita) {
+        this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
+        let destinatariA, destinatariCC: string;
+        if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
+          const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
+          res.forEach(e => {
+            if (e.startsWith("A: ")) {
+              destinatariA = e.replace("A: ", "<strong>A: </strong>");
+            } else if (e.startsWith("CC: ")) {
+              destinatariCC = e.replace("CC: ", "<strong>CC: </strong>");
+            } else if (e.startsWith("Interni: ")) {
+              destinatariA = e.replace("Interni: ", "<b>Interni: </b>");
+            } else if (e.startsWith("Esterni: ")) {
+              destinatariCC = e.replace("Esterni: ", "<b>Esterni: </b>");
+            }
+          });
         }
-        this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
-        // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
+        if (datiAggiuntiviAttivita.custom_app_4) {
+          this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
+          if (this.datiDiFlusso.length > MAX_CHARS_100) {
+            this.datiFlussoTooltip = this.datiDiFlusso;
+            this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
+          }
+          this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
+          // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
+        }
+        this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
+        this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
       }
-      this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
-      this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
 
       this.allegati = [];
       this.allegatiDropDown.clear(null);
