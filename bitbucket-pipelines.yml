@@ -1,6 +1,10 @@
-#INFO | Le variabili d'ambiente AWS_ROLE_ARN, AWS_ACCOUNT_ID, AWS_OIDC_ROLE_NAME, AWS_CODEARTIFACT_DOMAIN e AWS_DEFAULT_REGION
-#INFO | L'id del worker varia in funzione dell'environment ed è stato inserito come variabile d'ambiente
-#INFO | INSTANCE_ID per ciascun deployment del repository.
+#INFO | Le variabili d'ambiente principali sono definite a livello di repository:
+#INFO | AWS_DEFAULT_REGION = eu-west-1
+#INFO | AWS_OIDC_ROLE_NAME = babel-bitbucket
+#INFO | AWS_ACCOUNT_ID = 545463498725
+#INFO | AWS_ROLE_ARN = arn:aws:iam::545463498725:role/babel-bitbucket
+#INFO | AWS_OIDC_ROLE_ARN = arn:aws:iam::545463498725:role/babel-bitbucket
+#INFO | AWS_CODEARTIFACT_DOMAIN = babel
 
 # options:
 #   max-time: 30
