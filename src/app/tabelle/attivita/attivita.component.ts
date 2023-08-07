@@ -1,18 +1,17 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2, ElementRef } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2, ElementRef, Inject } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
-import { Attivita, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
-import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
+import { Attivita, ConfigurazioneService, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { JWTModuleConfig, JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
-import { IntimusClientService, IntimusCommand, IntimusCommands, LOCAL_IT, RefreshAttivitaParams } from "@bds/common-tools";
+import { IntimusClientService, IntimusCommand, IntimusCommands, LOCAL_IT, RefreshAttivitaParams, UtilityFunctions } from "@bds/common-tools";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
-import { HttpClient } from "@angular/common/http";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 
@@ -24,7 +23,6 @@ import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 })
 export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  private previousEvent: LazyLoadEvent;
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private subscriptions: Subscription[] = [];
@@ -94,7 +92,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild("dt") private dataTable: Table;
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
   @ViewChildren("tableRows") tableRows: QueryList<ElementRef>;
-  private selectedTableRowIndex: number;
 
   constructor(
     private datepipe: DatePipe,
@@ -105,22 +102,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private intimusClientService: IntimusClientService,
     private confirmationService: ConfirmationService,
     private impostazioniService: ImpostazioniService,
-    private scrivaniaService: ScrivaniaService,
-    private httpClient: HttpClient
+    private scrivaniaService: ScrivaniaService
   ) {
 
     this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
       if (u) {
-        // if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
-        //   this.loggedUser = u;
-        //   console.log("faccio loadData");
-        //   this.loadData(null);
-        // } else {
-        //   this.loggedUser = u;
-        // }
-
         this.loggedUser = u;
-
         // tslint:disable-next-line:max-line-length
         // let a = (( (!!this.loggedUser.getUtente().utenteReale || this.loggedUser.isSD() ) && this.loggedUser.getUtente().aziende.length > 1) || (!!!this.loggedUser.getUtente().utenteReale && this.loggedUser.getUtente().aziendeAttive.length > 1) );
 
@@ -137,12 +124,10 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnInit() {
     // imposto l'utente loggato nell'apposita variabile
-
-    const that = this;
     window.addEventListener("resize", function(event) {
       const bodyTable = document.getElementsByClassName("ui-table-scrollable-body")[0] as HTMLElement;
-      bodyTable.style.paddingBottom = "1px";
-      bodyTable.style.paddingBottom = "1px";
+      bodyTable.style.paddingBottom = "0.06rem";
+      bodyTable.style.paddingBottom = "0.06rem";
     });
     this.contextMenuAperte = [
       { label: "Segna come da leggere", icon: "pi pi-eye-slash", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
@@ -156,14 +141,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     if (browserInfo.name !== "Firefox") {
       this.columnClass = "column-class-o";
     }
-
     this.verifyAndSetAnteprimaColumns();
-
     this.subscriptions.push(this.impostazioniService.settingsChangedNotifier$.subscribe(newSettings => {
       this.verifyAndSetAnteprimaColumns();
 
     }));
-
   }
 
   private verifyAndSetAnteprimaColumns() {
@@ -174,17 +156,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     console.log("!! this.cols", this.cols);
 
   }
-
-  /* private setVisibilityColumnAnteprima(hidden: boolean) {
-    console.log("SETTO VISIBILITA COLONNA ANTEPRIMA", hidden);
-
-    this.cols.forEach(element => {
-      if (element.field === "anteprima") {
-        element.visibility = hidden ? "collpse" : "visible";
-        element.display = hidden ? "none" : "";
-      }
-    });
-  } */
 
   private parseIntimusCommand(command: IntimusCommand) {
     // console.log("ricevuto comando in Attivita: ", command);
@@ -201,7 +172,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             if (data) {
               data = data.results[0];
               this.setAttivitaIcon(data);
-              data.datiAggiuntivi = JSON.parse(data.datiAggiuntivi);
+              data.datiAggiuntivi = data.datiAggiuntivi;
               this.attivita.unshift(data);
             }
           });
@@ -212,7 +183,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
               if (data) {
                 console.log("DATA", data);
                 data = data.results[0];
-                data.datiAggiuntivi = JSON.parse(data.datiAggiuntivi);
+                data.datiAggiuntivi = data.datiAggiuntivi;
                 const idAttivitaToReplace = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
                 if (idAttivitaToReplace >= 0) {
                   this.setAttivitaIcon(data);
@@ -232,8 +203,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           this.attivitaEmitter.emit(null);
         break;
       }
-
-      // this.loadData(this.previousEvent);
     }
   }
 
@@ -266,7 +235,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngAfterViewInit() {
     // aggiungo le label aria al campo input del calendario
-    // this.loadData(null);
     const colsDate = this.cols.filter(e => e.filterWidget === "Calendar");
     colsDate.forEach(element => {
       const calElm = document.getElementById("CalInput_" + element.field);
@@ -298,7 +266,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   public handleEvent(nome: string, event: any) {
-    const functionName = "handleEvent";
     switch (nome) {
       case "onLazyLoad":
         this.lazyLoad(event);
@@ -310,14 +277,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private lazyLoad(event: LazyLoadEvent) {
-    const functionName = "lazyLoad";
-    console.log(functionName, "event: ", event);
     this.loadData(event);
   }
 
   public selectIndex(index: number) {
     console.log("Index of the row: ", index, "Table Index, selectexRowIndex: ", this.selectedRowIndex);
-    this.selectedTableRowIndex = index;
     if (index < 0 || index >= this.attivita.length) { return; }
     console.log("Controllo supertao: ", this.attivita[index]);
     this.selectedRowIndex = index;
@@ -375,13 +339,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     /* console.log("TOKEN: ", this.loginService.token);
     console.log("UTENTE: ", this.loggedUser); */
     this.loading = true;
-    const functionName = "loadData";
-    console.log("Ricerca su colonna");
-
     // mi salvo il filtro dell'evento così, se cambio struttura o azienda posso ricaricare i dati applicando quel filtro
     // in alternativa potrei svuotare i filtri al cambio di struttura e azienda
     if (event) {
-      this.previousEvent = event;
       this.lazyLoadFiltersAndSorts = buildLazyEventFiltersAndSorts(event, this.cols, this.datepipe);
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
@@ -399,20 +359,21 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           this.totalRecords = data.page.totalElements;
           /* console.log("ATTIVITA: ", this.attivita); */
           // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
-          this.attivita.forEach(a => {
-            this.setAttivitaIcon(a);
+          this.attivita.forEach((attivita: Attivita) => {
+            this.setAttivitaIcon(attivita);
             // console.log("carica", a.datiAggiuntivi);
-            a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
+            //a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
             // "forbidden" è un caso di smicnhiamento probabilmente
-            if (a.descrizione !== "Redazione" && a.descrizione !== "Bozza" && a.allegati && a.allegati !== "\"forbidden\"") {
-              const jsonObject = JSON.parse(a.allegati);
-              for (let i = 0; i < jsonObject.length; i++) {
-                if (jsonObject[i].tipologia === "STAMPA_UNICA") {
-                  a["allegatoDaMostrare"] = jsonObject[i];
+            if (attivita.descrizione !== "Redazione" && attivita.descrizione !== "Bozza" && attivita.allegati && attivita.allegati !== null) {
+              // const jsonObject = JSON.parse(a.allegati);
+              const allegati = attivita.allegati;
+              for (let i = 0; i < allegati.length; i++) {
+                if (allegati[i].tipologia === "STAMPA_UNICA") {
+                  attivita["allegatoDaMostrare"] = allegati[i];
                 }
               }
-            } else if (a.allegati && a.allegati !== "\"forbidden\"" && (a.descrizione === "Redazione" || a.descrizione === "Bozza")) {
-              a["anteprimaNonDisponibile"] = "Non disponibile";
+            } else if (attivita.allegati && attivita.allegati !== null && (attivita.descrizione === "Redazione" || attivita.descrizione === "Bozza")) {
+              attivita["anteprimaNonDisponibile"] = "Non disponibile";
             }
           });
         }
@@ -422,8 +383,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private setAttivitaIcon(a: Attivita) {
-    // a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi);  // ?? perché questa stava qua? boh, comunque dava errore al click (l.s.)
-    if (a.tipo === "notifica") {
+    if (a && a.tipo === "notifica") {
       a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
     } else if (!a.priorita || a.priorita === 3) {
       a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
@@ -470,6 +430,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         case "idAzienda.nome":
         case "idApplicazione.nome":
           res = attivita[col.field.split(".")[0]][col.field.split(".")[1]];
+          if (res === "Servizio di download"){
+            res = "Gedi"
+          }
           break;
 
         case "data":
@@ -506,9 +469,17 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   fillActionCol(attivita, td) {
-    if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" &&
-      (attivita.idApplicazione.nome === "Pico" || attivita.idApplicazione.nome === "Dete" || attivita.idApplicazione.nome === "Deli"))) {
-      td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>Apri</strong></a>`;
+    if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" && ["procton", "dete", "deli", "downloader"].includes(attivita.idApplicazione.id))) {
+      const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
+      let compiledUrl;
+      let labelUrl = 'Apri';
+      if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
+        compiledUrl = compiledUrlsJsonArray[0].url;
+        labelUrl = compiledUrlsJsonArray[0].label;
+        if (labelUrl === 'Accetta/rifiuta')
+          labelUrl = 'Rispondi'; // TODO: Questo andrebbe cambiato nel backend. Per non modificare la larghezza del frontend lo cambio qui.
+        }
+      td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>${labelUrl}</strong></a>`;
       if (this.listeners[td.id]) {
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
         this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa
@@ -516,10 +487,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this.listeners[td.id] = [this.renderer.listen(td, "mousedown", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log("fillActionCol td", td);
+        // console.log("fillActionCol td", td);
         if (!td.classList.contains("disabled")) {
-          this.apriAttivita(attivita);
-
+          if (attivita.idApplicazione.id === "downloader" && compiledUrl){
+            this.downloadArchivioZip(attivita, compiledUrl);
+          } else {
+            this.apriAttivita(attivita);
+          }
           this.renderer.addClass(td, "disabled");
           // this.renderer.setAttribute(td, "title", "disabilitato per un paio di secondi");
 
@@ -534,6 +508,66 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     } else {
       td.innerHTML = "";
     }
+  }
+
+  /**
+   * Effettua il download del fascicolo in formato zip.
+   * @param attivita L'attivita/notifica contenente il link per il download.
+   * @param archivio Il fascicolo da scaricare.
+   */
+  private downloadArchivioZip(attivita: Attivita, url: string) {
+    this.attivitaService.downloadArchivioZip(url).subscribe({
+      next: (res) => {
+        if (res) {
+          const filename = this.getFilenameFromResponse(res, attivita);
+          UtilityFunctions.downLoadFile(res.body, "application/zip", filename);
+          this.messageService.add({
+            severity: "success",
+            key : "attivitaToast",
+            summary: "Download completato",
+            detail: `${attivita.oggetto} scaricato con successo.`
+          });
+        }
+      },
+      error: (err) => {        
+        if (err.status === 401) {
+          this.messageService.add({
+            severity: "error",
+            key : "attivitaToast",
+            summary: "Attenzione",
+            detail: `Il link per il download non è più valido. Si prega di ripetere l'operazione.`
+          });
+        } else {
+          this.messageService.add({
+            severity: "error",
+            key : "attivitaToast",
+            summary: "ERRORE",
+            detail: `C'è stato un errore imprevisto sul server.`
+          });
+        }
+      } 
+    });
+  }
+
+  /**
+ * Metodo che prende il nome del file dall'header della response.
+ * @param response La response http.
+ * @param archivio Il fascicolo per prendere il nome in caso non venga passato dal service.
+ * @returns Il nome del file.
+ */
+  private getFilenameFromResponse(response: any, attivita: Attivita) {
+    const contentDispositionHeader = response?.headers?.get('Content-Disposition');
+    if (contentDispositionHeader != null) {
+      const parts = contentDispositionHeader.split(';');
+      for (const part of parts) {
+        if (part.trim().startsWith('filename')) {
+          const filename = part.substring(part.indexOf('=') + 1).trim();
+          return filename.replace(/"/g, '');
+        }
+      }
+    }
+    const filename: string = attivita.oggetto.substring("Fascicolo: ".length);
+    return filename;
   }
 
   public onCalendarAction(event: any, field: string, action: string) {
@@ -665,27 +699,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       }
     );
   }
-
-  // chiudiNote() {
-  //   if (this._noteTemp !== this.attivitaTemp.note) {
-  //     // domando se vuole davvero uscire senza salvare
-  //     this.chiediConfermaAndFaiCose("closeWithoutSaving",
-  //       "La finestra verrà chiusa senza salvare le modifiche: continuare?",
-  //       () => { // funzione di accept: reimposto il valore iniziale
-  //         this.attivitaTemp.note = this._noteTemp;
-  //         this.closeAndBasta();
-  //       },
-  //       () => { // funzione reject: ritorno senza uscire
-  //         this.showNote = true;
-  //         return;
-  //       }
-  //     );
-  //   } else {
-  //     // esco senza salvare tanto non ci sono cambiamenti.
-  //     this.attivitaTemp.note = this._noteTemp; // reimposto il valore iniziale
-  //     this.closeAndBasta();
-  //   }
-  // }
 
   chiudiNote() {
     if (this._noteTemp !== this.attivitaTemp.note) {

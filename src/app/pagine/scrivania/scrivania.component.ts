@@ -169,7 +169,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       // };
       document.onmousemove = function (e: MouseEvent) {
         e.preventDefault();
-        const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia 32px che sfasano il conteggio
+        const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia pixel che sfasano il conteggio
         if (!(e.clientX <= that.LIMIT_X_LEFT_SIDE)) {
           that.changeColOrder = false;
         } else {
@@ -233,39 +233,41 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.attivitaSelezionata) {
       this.oggetto = this.attivitaSelezionata.oggetto;
       const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
-      this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
-      let destinatariA, destinatariCC: string;
-      if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
-        const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
-        res.forEach(e => {
-          if (e.startsWith("A: ")) {
-            destinatariA = e.replace("A: ", "<strong>A: </strong>");
-          } else if (e.startsWith("CC: ")) {
-            destinatariCC = e.replace("CC: ", "<strong>CC: </strong>");
-          } else if (e.startsWith("Interni: ")) {
-            destinatariA = e.replace("Interni: ", "<b>Interni: </b>");
-          } else if (e.startsWith("Esterni: ")) {
-            destinatariCC = e.replace("Esterni: ", "<b>Esterni: </b>");
-          }
-        });
-      }
-      if (datiAggiuntiviAttivita.custom_app_4) {
-        this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
-        if (this.datiDiFlusso.length > MAX_CHARS_100) {
-          this.datiFlussoTooltip = this.datiDiFlusso;
-          this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
+      if (datiAggiuntiviAttivita) {
+        this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
+        let destinatariA, destinatariCC: string;
+        if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
+          const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
+          res.forEach(e => {
+            if (e.startsWith("A: ")) {
+              destinatariA = e.replace("A: ", "<strong>A: </strong>");
+            } else if (e.startsWith("CC: ")) {
+              destinatariCC = e.replace("CC: ", "<strong>CC: </strong>");
+            } else if (e.startsWith("Interni: ")) {
+              destinatariA = e.replace("Interni: ", "<b>Interni: </b>");
+            } else if (e.startsWith("Esterni: ")) {
+              destinatariCC = e.replace("Esterni: ", "<b>Esterni: </b>");
+            }
+          });
         }
-        this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
-        // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
+        if (datiAggiuntiviAttivita.custom_app_4) {
+          this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
+          if (this.datiDiFlusso.length > MAX_CHARS_100) {
+            this.datiFlussoTooltip = this.datiDiFlusso;
+            this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
+          }
+          this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
+          // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
+        }
+        this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
+        this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
       }
-      this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
-      this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
 
       this.allegati = [];
       this.allegatiDropDown.clear(null);
       let allegatiAttivita: any[] = null;
       if (this.attivitaSelezionata.allegati && this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
-        allegatiAttivita = JSON.parse(this.attivitaSelezionata.allegati);
+        allegatiAttivita = this.attivitaSelezionata.allegati;
       }
       if (allegatiAttivita) {
         allegatiAttivita.sort((a: any, b: any) => { if (a.default) { return -1; } else if (a.default && b.default) { return 0; } else { return 1; } });
@@ -509,8 +511,12 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.configurazioneService.getParametriAziende("raccoltaSemplice", null, idAziendaArray)
     .subscribe((parametriAziende: ParametroAziende[]) => {
-      console.log(parametriAziende[0].valore);
-      this.showRaccoltaSemplice = JSON.parse(parametriAziende[0].valore || false);
+      if (parametriAziende && parametriAziende[0].valore) {
+        console.log(parametriAziende[0].valore);
+        this.showRaccoltaSemplice = JSON.parse(parametriAziende[0].valore || false);
+      } else {
+        this.showRaccoltaSemplice = false;
+      }
       console.log("showRS: ",this.showRaccoltaSemplice);
     });
   }

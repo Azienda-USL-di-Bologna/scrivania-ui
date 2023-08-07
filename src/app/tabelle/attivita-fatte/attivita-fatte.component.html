@@ -50,7 +50,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-attivita>
-        <tr #selRow class="row-class" [pSelectableRow]="rowData" aria-label="riga"><!-- style="height:30px" -->
+        <tr #selRow class="row-class" [pSelectableRow]="rowData" aria-label="riga"><!-- style="height:" -->
             <td [style.maxWidth]="cols[0].width" [style.minWidth]="cols[0].minWidth" class="column-class p0">
                 <img [src]="attivita.iconaAttivita" alt="{{attivita.tipo === 'notifica' ? 'icona notifica' : 'icona priorità'}}" class="img-table" />
             </td>
@@ -63,7 +63,7 @@
 
             <td aria-label="Colonna note" [style.maxWidth]="cols[7].width" [style.minWidth]="cols[7].minWidth" class="p0">
                 <img tabindex="0" role="button" *ngIf="attivita.note" src="assets/images/baseline-note-24px.svg" style="transform: rotate(90deg) scaleX(-1)" (click)="onNoteClick(attivita)" alt="l'attività ha delle note" class="img-table">
-                <!-- <img *ngIf="!attivita.note" src="assets/images/outline-note_add-24px.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table"> -->
+                <!-- <img *ngIf="!attivita.note" src="assets/images/outline-note_add-.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table"> -->
             </td>
         </tr>
 
