@@ -516,18 +516,20 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
    * @param archivio Il fascicolo da scaricare.
    */
   private downloadArchivioZip(attivita: Attivita, url: string) {
-    this.attivitaService.downloadArchivioZip(url).subscribe({
+    this.attivitaService.verifyArchivioZip(url).subscribe({
       next: (res) => {
-        if (res) {
-          const filename = this.getFilenameFromResponse(res, attivita);
-          UtilityFunctions.downLoadFile(res.body, "application/zip", filename);
-          this.messageService.add({
-            severity: "success",
-            key : "attivitaToast",
-            summary: "Download completato",
-            detail: `${attivita.oggetto} scaricato con successo.`
-          });
-        }
+        // faccio scaricare l'archivio da un tag ancor cossiché sia gestito dal browser
+        // questo per permettere una più chiara comrensione all'utente del download in corso
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'nome_del_tuo_file.txt';
+        link.click();
+        this.messageService.add({
+          severity: "success",
+          key : "attivitaToast",
+          summary: "Download completato",
+          detail: `Scaricamento archivio compresso ${attivita.oggetto} avviato con successo.`
+        });
       },
       error: (err) => {        
         if (err.status === 401) {
