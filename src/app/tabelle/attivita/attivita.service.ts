@@ -45,6 +45,17 @@ export class AttivitaService extends NextSDREntityProvider {
   }
 
   /**
+   * Effettua solo il controllo del token senza perdere tempo a sacricare il fascicolo.
+   * Istanzia un oggetto httpClient per bypassare l'interceptor.
+   * @param url L'url da chiamare.
+   * @returns lo stato del token.
+   */
+  public verifyArchivioZip(url: string){
+    const httpClient: HttpClient = new HttpClient(this.handler);
+    return httpClient.get(url.concat("&onlyVerify=true"));
+  }
+  
+  /**
    * Effettua il download di un fascicolo chiamando l'URL pre-autenticato.
    * Istanzia un oggetto httpClient per bypassare l'interceptor.
    * @param url L'url da chiamare.
