@@ -522,7 +522,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         // questo per permettere una più chiara comrensione all'utente del download in corso
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'nome_del_tuo_file.txt';
         link.click();
         this.messageService.add({
           severity: "success",
