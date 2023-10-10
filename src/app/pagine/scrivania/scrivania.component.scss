@@ -341,4 +341,14 @@ body .p-buttonset.p-button-secondary > .p-button.p-state-default {
     position: absolute;
     margin: auto;
 }
-
+::ng-deep .dialog-avviso-browser-obsoleto {
+    width: 25rem;
+    height: 11rem;
+    //display: flex;
+    //flex-direction: column;
+    //align-items: center;
+    //justify-content: center;
+    .testo {
+      text-align: center;
+    }
+  }
