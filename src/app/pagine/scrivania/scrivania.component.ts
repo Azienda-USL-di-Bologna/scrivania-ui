@@ -105,8 +105,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     }));
     
     this.allegati = [{ label: "Documenti non presenti", value: null }];
-    let browser = Bowser.getParser(window.navigator.userAgent).getBrowser(); 
-    this.browserObsolete = this.isBrowserObsolete(browser.name, browser.version)
+    // let browser = Bowser.getParser(window.navigator.userAgent).getBrowser(); 
+    // this.browserObsolete = this.isBrowserObsolete(browser.name, browser.version)
   }
 
   ngAfterViewInit() {
@@ -190,34 +190,34 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     };
   }
 
-  private isBrowserObsolete(browserName: string, version: string) {
-    version = version.split(".")[0];
-    let intVersion = parseInt(version)
-    switch (browserName) {
-      case "Chrome":
-        if(intVersion <= 95) {
-          this.browserMessageObsolete = "Il tuo browser è obsoleto; se non lo aggiorni Babel potrebbe non funzionare"
-          return true;
-        }
-        break;
-      case "Firefox":
-        if(intVersion <= 93) {
-          this.browserMessageObsolete = "Il tuo browser è obsoleto; se non lo aggiorni Babel potrebbe non funzionare"
-          return true;
-        }
-        break;
-      case "Microsoft Edge":
-        if(intVersion <= 94) {
-          this.browserMessageObsolete = "Il tuo browser è obsoleto; se non lo aggiorni Babel potrebbe non funzionare"
-          return true;
-        }
-        break;
-      default:
-        this.browserMessageObsolete = "Stai utilizzando un browser non supportato, Babel potrebbe non funzionare; i browser compatibili sono Firefox e Chrome"
-        return true;
-    }
-    return false;
-  }
+  // private isBrowserObsolete(browserName: string, version: string) {
+  //   version = version.split(".")[0];
+  //   let intVersion = parseInt(version)
+  //   switch (browserName) {
+  //     case "Chrome":
+  //       if(intVersion <= 95) {
+  //         this.browserMessageObsolete = "Il tuo browser è obsoleto; se non lo aggiorni Babel potrebbe non funzionare"
+  //         return true;
+  //       }
+  //       break;
+  //     case "Firefox":
+  //       if(intVersion <= 93) {
+  //         this.browserMessageObsolete = "Il tuo browser è obsoleto; se non lo aggiorni Babel potrebbe non funzionare"
+  //         return true;
+  //       }
+  //       break;
+  //     case "Microsoft Edge":
+  //       if(intVersion <= 94) {
+  //         this.browserMessageObsolete = "Il tuo browser è obsoleto; se non lo aggiorni Babel potrebbe non funzionare"
+  //         return true;
+  //       }
+  //       break;
+  //     default:
+  //       this.browserMessageObsolete = "Stai utilizzando un browser non supportato, Babel potrebbe non funzionare; i browser compatibili sono Firefox e Chrome"
+  //       return true;
+  //   }
+  //   return false;
+  // }
 
   @HostListener("window:resize", ["$event"])
   onResize(event: any) {
