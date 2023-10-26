@@ -10,6 +10,7 @@ import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ConfirmationService } from "primeng/api";
 import { ParametroAziende } from "@bds/internauta-model";
 import { ConfigurazioneService} from "@bds/internauta-model";
+import * as Bowser from "bowser";
 
 @Component({
   selector: "app-scrivania",
@@ -61,7 +62,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   private LIMIT_X_LEFT_SIDE: number = 905;
   private MIN_X_LEFT_SIDE: number = 570;
   private MIN_X_RIGHT_SIDE: number = 225;
-
+  public browserMessageObsolete = "";
+  public browserObsolete = false;
   public idAzienda: number = null;
   public changeColOrder: boolean = false;
   public hidePreview = false;
@@ -75,6 +77,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     console.log("scivania ngOnInit()");
+
     // imposto l'utente loggato nell'apposita variabile
     
     this.subscriptions.push(this.scrivaniaService.getUrlsFirmone().subscribe(data => {
@@ -102,7 +105,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     }));
     
     this.allegati = [{ label: "Documenti non presenti", value: null }];
-    
+    // let browser = Bowser.getParser(window.navigator.userAgent).getBrowser(); 
+    // this.browserObsolete = this.isBrowserObsolete(browser.name, browser.version)
   }
 
   ngAfterViewInit() {
@@ -185,6 +189,35 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       };
     };
   }
+
+  // private isBrowserObsolete(browserName: string, version: string) {
+  //   version = version.split(".")[0];
+  //   let intVersion = parseInt(version)
+  //   switch (browserName) {
+  //     case "Chrome":
+  //       if(intVersion <= 95) {
+  //         this.browserMessageObsolete = "Il tuo browser è obsoleto; se non lo aggiorni Babel potrebbe non funzionare"
+  //         return true;
+  //       }
+  //       break;
+  //     case "Firefox":
+  //       if(intVersion <= 93) {
+  //         this.browserMessageObsolete = "Il tuo browser è obsoleto; se non lo aggiorni Babel potrebbe non funzionare"
+  //         return true;
+  //       }
+  //       break;
+  //     case "Microsoft Edge":
+  //       if(intVersion <= 94) {
+  //         this.browserMessageObsolete = "Il tuo browser è obsoleto; se non lo aggiorni Babel potrebbe non funzionare"
+  //         return true;
+  //       }
+  //       break;
+  //     default:
+  //       this.browserMessageObsolete = "Stai utilizzando un browser non supportato, Babel potrebbe non funzionare; i browser compatibili sono Firefox e Chrome"
+  //       return true;
+  //   }
+  //   return false;
+  // }
 
   @HostListener("window:resize", ["$event"])
   onResize(event: any) {
