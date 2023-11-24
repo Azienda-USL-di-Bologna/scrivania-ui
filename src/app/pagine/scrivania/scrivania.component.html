@@ -94,6 +94,11 @@
             <h3 *ngIf="mostraStorico" class="crono-label">Cronologia</h3>
         </div>
 
+        <span *ngIf="browserObsolete" 
+            class="messaggio-browser-obsoleti">
+            {{browserMessageObsolete}}
+        </span>
+
         <app-dropdown-aziende 
             *ngIf="(( (!!this.loggedUser?.getUtente().utenteReale || this.loggedUser?.isSD() ) && this.loggedUser?.getUtente().aziende.length > 1) || (!!!this.loggedUser?.getUtente().utenteReale && this.loggedUser?.getUtente().aziendeAttive.length > 1) )" 
             (aziendaEmitter)="aziendaChanged($event)" 
