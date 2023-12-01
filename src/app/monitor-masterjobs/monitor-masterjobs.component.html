@@ -1,0 +1,117 @@
+<p-table
+  #dt
+  [value]="jobs"
+  [rows]="rowsNumber"
+  [columns]="columns"
+  dataKey="id"
+  scrollHeight="flex"
+  [scrollable]="true"
+  [virtualScroll]="true"
+  [virtualScrollDelay]="150"
+  [virtualRowHeight]="54"
+  [lazy]="true"
+  [lazyLoadOnInit]="true"
+  (onLazyLoad)="onLazyLoad($event)"
+  [loading]="loading"
+  [totalRecords]="totalRecords"
+>
+  <ng-template pTemplate="caption">
+    <button
+      type="button"
+      pButton
+      pTooltip="Daje"
+      tooltipPosition="bottom"
+      (click)="resetPaginationAndLoadData()"
+      label="Aggiorna tabella"
+      iconPos="left"
+      icon="pi pi-refresh"
+      class="ui-button-secondary icon-style icon-custom"
+    ></button>
+    <button
+      type="button"
+      pButton
+      pTooltip="Daje"
+      tooltipPosition="bottom"
+      (click)="relaunchJobsInError()"
+      label="Relaunch Jobs In Error"
+      iconPos="left"
+      icon="pi pi-truck"
+      class="ui-button-secondary icon-style icon-custom"
+    ></button>
+    <button
+      type="button"
+      pButton
+      pTooltip="Daje"
+      tooltipPosition="bottom"
+      (click)="regenerateQueue()"
+      label="Regenerate Queue"
+      iconPos="left"
+      icon="pi pi-server"
+      class="ui-button-secondary icon-style icon-custom"
+    ></button>
+    <i
+      *ngIf="spinActive"
+      class="pi pi-spin pi-spinner"
+      style="font-size: 2rem"
+    ></i>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <!-- HEADER -->
+    <tr class="header-row">
+      <th
+        *ngFor="let col of columns"
+        [ngClass]="col.bodyClass"
+      >
+        {{ col.header }}
+      </th>
+    </tr>
+    <!-- FILTRI -->
+    <tr class="header-row">
+      <th
+        *ngFor="let col of columns"
+        [ngSwitch]="col.field"
+        [ngClass]="col.filterClass"
+      >
+        <div *ngSwitchCase="'name'">
+          <p-columnFilter
+            #colName
+            [field]="col.field"
+            [matchMode]="col.filterMatchMode"
+            [showMenu]="false"
+            [useGrouping]="false"
+          >
+            <ng-template
+              pTemplate="filter"
+              let-value
+              let-filter="filterCallback"
+            >
+              <input
+                #inputName
+                pInputText
+                [ngModel]="value"
+                type="text"
+                (keydown.enter)="filter(inputName?.value)"
+              />
+            </ng-template>
+          </p-columnFilter>
+        </div>
+      </th>
+    </tr>
+  </ng-template>
+
+  <ng-template
+    pTemplate="body"
+    let-rowData
+    let-columns="columns"
+    let-index="rowIndex"
+  >
+    <tr class="row-height">
+      <td
+        *ngFor="let col of columns"
+        [ngClass]="col.bodyClass"
+      >
+        {{ rowData[col.field] }}
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
