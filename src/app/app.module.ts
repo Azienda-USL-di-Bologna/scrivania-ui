@@ -79,6 +79,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterjobs.component";
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     ImpostazioniComponent,
     DatiBolloVirtualeComponent,
     RaccoltaSempliceComponent,
-    InserimentoManualeComponent
+    InserimentoManualeComponent,
+    MonitorMasterjobsComponent
   ],
   imports: [
     JwtLoginModule.forRoot(loginModuleConfig),
