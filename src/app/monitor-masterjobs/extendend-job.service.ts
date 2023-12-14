@@ -13,12 +13,12 @@ export class ExtendedJobService extends JobService {
   }
 
   public relaunchJobsInError(): Observable<any> {
-    const url = getInternautaUrl(BaseUrlType.Masterjobs).replace("/resources/masterjobs", "") + `/relaunchJobsInError`;
+    const url = getInternautaUrl(BaseUrlType.Masterjobs) + `/relaunchJobsInError`;
     return this._http.get(url);
   }
 
   public regenerateQueue(): Observable<any> {
-    const url = getInternautaUrl(BaseUrlType.Masterjobs).replace("/resources/masterjobs", "") + `/regenerateQueue`;
+    const url = getInternautaUrl(BaseUrlType.Masterjobs) + `/regenerateQueue`;
     return this._http.get(url);
   }
 }
