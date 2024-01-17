@@ -301,6 +301,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log("attivitaClicked", attivitaCliccata);
     this.clearAccordionDetailFields();
     this.attivitaSelezionata = attivitaCliccata;
+    
+    attivitaCliccata.allegati = attivitaCliccata.allegati.filter((allegato) => {
+      return allegato.sottotipo !== 'LEGGE_190';
+    });
+    
     if (this.attivitaSelezionata) {
       this.oggetto = this.attivitaSelezionata.oggetto;
       const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
@@ -357,7 +362,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       } else {
         this.noAnteprima = true;
       }
-
       if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
         this.allegati = [{ label: "Documenti non presenti", value: null }];
         this.allegatiDropDown.disabled = true;
@@ -367,6 +371,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       // this.allegatiDropDown.show();
     }
   }
+
+ 
 
   public allegatoSelected(event: any) {
     if (event && event.value) {
