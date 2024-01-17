@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, AfterViewInit } from "@angular/core";
-import { Attivita, UrlsGenerationStrategy, ItemMenu, CommandType } from "@bds/internauta-model";
+import { Attivita, UrlsGenerationStrategy, ItemMenu, CommandType, CODICI_RUOLO } from "@bds/internauta-model";
 import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
@@ -9,16 +9,17 @@ import { ApplicationCustiomization } from "src/environments/application_customiz
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ConfirmationService } from "primeng/api";
 import { ParametroAziende } from "@bds/internauta-model";
-import { ConfigurazioneService} from "@bds/internauta-model";
+import { ConfigurazioneService } from "@bds/internauta-model";
 import * as Bowser from "bowser";
 
 @Component({
   selector: "app-scrivania",
   templateUrl: "./scrivania.component.html",
-  styleUrls: ["./scrivania.component.scss"]
+  styleUrls: ["./scrivania.component.scss"],
 })
 export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public mostraStorico: boolean = false;
+  public mostraMonitorMasterjobs: boolean = false;
 
   @ViewChild("anteprima") private anteprima: ElementRef;
   @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
@@ -43,10 +44,27 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public datiDiFlusso: string = null;
   public datiFlussoTooltip: string = null;
 
-  public finestreApribili: any[] = [{ label: "Elenco documenti", items: [{ label: "AOSPBO", command: (onclick) => { this.handleItemClick("ciao", ""); } }, { label: "AUSLBO" }] }, { label: "Elenco determine" }, { label: "Elenco delibere" }];
+  public finestreApribili: any[] = [
+    {
+      label: "Elenco documenti",
+      items: [
+        {
+          label: "AOSPBO",
+          command: (onclick) => {
+            this.handleItemClick("ciao", "");
+          },
+        },
+        { label: "AUSLBO" },
+      ],
+    },
+    { label: "Elenco determine" },
+    { label: "Elenco delibere" },
+  ];
   public finestraScelta: any;
 
   public loggedUser: UtenteUtilities;
+  public loggedUserIsSD: boolean = false;
+  public loggedUserIs99: boolean = false;
   public impostazioniVisualizzazione: any;
   public alberoMenu: any[];
   public menuItems: ItemMenu[];
@@ -71,59 +89,75 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public showBolli: boolean = false;
   public showRaccoltaSemplice: boolean = false;
   public tabellaDaRefreshare: any = { name: "" };
-  constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: JwtLoginService,
-    private confirmationService: ConfirmationService, private configurazioneService: ConfigurazioneService) {
-  }
+  constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: JwtLoginService, private confirmationService: ConfirmationService, private configurazioneService: ConfigurazioneService) {}
 
   ngOnInit() {
     console.log("scivania ngOnInit()");
 
     // imposto l'utente loggato nell'apposita variabile
-    
-    this.subscriptions.push(this.scrivaniaService.getUrlsFirmone().subscribe(data => {
-      if (data.size > 0) {
-        if (data.size === 1) {
-          this.urlFirmone = data.aziende[0];
+
+    this.subscriptions.push(
+      this.scrivaniaService.getUrlsFirmone().subscribe((data) => {
+        if (data.size > 0) {
+          if (data.size === 1) {
+            this.urlFirmone = data.aziende[0];
+          }
+          this.buildGenericMenu(data.aziende, this.alberoFirma);
         }
-        this.buildGenericMenu(data.aziende, this.alberoFirma);
-      }
-    }));
-    this.subscriptions.push(this.scrivaniaService.getUrlsPrendone().subscribe(data => {
-      if (data.size > 0) {
-        if (data.size === 1) {
-          this.urlPrendone = data.aziende[0];
+      })
+    );
+    this.subscriptions.push(
+      this.scrivaniaService.getUrlsPrendone().subscribe((data) => {
+        if (data.size > 0) {
+          if (data.size === 1) {
+            this.urlPrendone = data.aziende[0];
+          }
+          this.buildGenericMenu(data.aziende, this.alberoPrendi);
         }
-        this.buildGenericMenu(data.aziende, this.alberoPrendi);
-      }
-    }));
-    this.subscriptions.push(this.impostazioniService.settingsChangedNotifier$.subscribe(newSettings => {
-      this.hidePreview = newSettings[ApplicationCustiomization.scrivania.hidePreview] === "true";
-    }));
-    this.subscriptions.push(this.scrivaniaService.getMenuScrivania().subscribe((items: ItemMenu[]) => {
-      console.log("items", items);
-      this.menuItems = items;
-    }));
-    
+      })
+    );
+    this.subscriptions.push(
+      this.impostazioniService.settingsChangedNotifier$.subscribe((newSettings) => {
+        this.hidePreview = newSettings[ApplicationCustiomization.scrivania.hidePreview] === "true";
+      })
+    );
+    this.subscriptions.push(
+      this.scrivaniaService.getMenuScrivania().subscribe((items: ItemMenu[]) => {
+        console.log("items", items);
+        this.menuItems = items;
+      })
+    );
+
     this.allegati = [{ label: "Documenti non presenti", value: null }];
-    // let browser = Bowser.getParser(window.navigator.userAgent).getBrowser(); 
-    // this.browserObsolete = this.isBrowserObsolete(browser.name, browser.version)
+    const browser = Bowser.getParser(window.navigator.userAgent).getBrowser();
+    this.browserObsolete = this.isBrowserObsolete(browser.name, browser.version);
   }
 
   ngAfterViewInit() {
-    this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
-      if (u) {
-        if (!this.loggedUser || u.getUtente().id !== this.loggedUser.getUtente().id) {
-          this.loggedUser = u;
-          // this.loadMenu(); // not used
-          this.setLook();
-        } else {
-          this.loggedUser = u;
+    this.subscriptions.push(
+      this.loginService.loggedUser$.subscribe((utenteUtilitiesLogin: UtenteUtilities) => {
+        if (utenteUtilitiesLogin) {
+          if (!this.loggedUser || utenteUtilitiesLogin.getUtente().id !== this.loggedUser.getUtente().id) {
+            this.loggedUser = utenteUtilitiesLogin;
+            // this.loadMenu(); // not used
+            this.setLook();
+          } else {
+            this.loggedUser = utenteUtilitiesLogin;
+          }
+          // this.loadAziendeMenu();
+          this.setVisibilitàPulsanteBolli();
+
+          this.loggedUserIsSD = this.loggedUser.hasRole(CODICI_RUOLO.SD);
+
+          if (this.loggedUser.getUtente() && this.loggedUser.getUtente().utenteReale) {
+            this.loggedUserIs99 = (this.loggedUser.getUtente().utenteReale.idInquadramento as unknown as String) === "99";
+          } else if (this.loggedUser.getUtente()) {
+            this.loggedUserIs99 = (this.loggedUser.getUtente().idInquadramento as unknown as String) === "99";
+          }
         }
-        // this.loadAziendeMenu();
-        this.setVisibilitàPulsanteBolli();
-      }
-    }));
-    
+      })
+    );
+
     this.allegatiDropDown.disabled = true;
   }
 
@@ -135,7 +169,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
           break;
       }
     }
-  }
+  };
 
   private setLook(): void {
     this.setResponsiveSlider();
@@ -181,7 +215,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         if (!(e.clientX <= that.MIN_X_LEFT_SIDE)) {
           if (!(totalX - e.clientX <= that.MIN_X_RIGHT_SIDE)) {
-            const rxPercent = rx * 100 / totalX;
+            const rxPercent = (rx * 100) / totalX;
             that.rightSide.nativeElement.style.width = rxPercent + "%";
             that.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
           }
@@ -190,42 +224,43 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     };
   }
 
-  // private isBrowserObsolete(browserName: string, version: string) {
-  //   version = version.split(".")[0];
-  //   let intVersion = parseInt(version)
-  //   switch (browserName) {
-  //     case "Chrome":
-  //       if(intVersion <= 95) {
-  //         this.browserMessageObsolete = "Il tuo browser è obsoleto; se non lo aggiorni Babel potrebbe non funzionare"
-  //         return true;
-  //       }
-  //       break;
-  //     case "Firefox":
-  //       if(intVersion <= 93) {
-  //         this.browserMessageObsolete = "Il tuo browser è obsoleto; se non lo aggiorni Babel potrebbe non funzionare"
-  //         return true;
-  //       }
-  //       break;
-  //     case "Microsoft Edge":
-  //       if(intVersion <= 94) {
-  //         this.browserMessageObsolete = "Il tuo browser è obsoleto; se non lo aggiorni Babel potrebbe non funzionare"
-  //         return true;
-  //       }
-  //       break;
-  //     default:
-  //       this.browserMessageObsolete = "Stai utilizzando un browser non supportato, Babel potrebbe non funzionare; i browser compatibili sono Firefox e Chrome"
-  //       return true;
-  //   }
-  //   return false;
-  // }
+  private isBrowserObsolete(browserName: string, version: string) {
+    version = version.split(".")[0];
+    let intVersion = parseInt(version);
+    switch (browserName) {
+      case "Chrome":
+        if (intVersion <= 95) {
+          this.browserMessageObsolete = "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di aggiornare il browser";
+          return true;
+        }
+        break;
+      case "Firefox":
+        if (intVersion <= 93) {
+          this.browserMessageObsolete = "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di aggiornare il browser";
+          return true;
+        }
+        break;
+      case "Microsoft Edge":
+        if (intVersion <= 94) {
+          this.browserMessageObsolete = "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di aggiornare il browser";
+          return true;
+        }
+        break;
+      default:
+        this.browserMessageObsolete = "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di uasre un browser tra Firefox e Chrome";
+        return true;
+    }
+    return false;
+  }
 
   @HostListener("window:resize", ["$event"])
   onResize(event: any) {
     const lx = this.leftSide.nativeElement.offsetWidth;
     const rx = this.rightSide.nativeElement.offsetWidth;
     const screenX = event.currentTarget.innerWidth;
-    if ((screenX - lx) < this.MIN_X_RIGHT_SIDE || (screenX - rx) < this.MIN_X_LEFT_SIDE) { // Se rightside è minore di 385 o leftside è minore di 225  setto rightside a 225 e leftside il resto
-      const rxPercent = this.MIN_X_RIGHT_SIDE * 100 / screenX;
+    if (screenX - lx < this.MIN_X_RIGHT_SIDE || screenX - rx < this.MIN_X_LEFT_SIDE) {
+      // Se rightside è minore di 385 o leftside è minore di 225  setto rightside a 225 e leftside il resto
+      const rxPercent = (this.MIN_X_RIGHT_SIDE * 100) / screenX;
       this.rightSide.nativeElement.style.width = rxPercent + "%";
       this.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
     }
@@ -234,7 +269,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   private shrinkFileName(fileName: string): string {
     const maxFileName: number = 50;
 
-    if (fileName.length <= maxFileName) { return fileName; }
+    if (fileName.length <= maxFileName) {
+      return fileName;
+    }
 
     const matchExtRegex = /(?:\.([^.]+))?$/;
 
@@ -244,8 +281,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
     fileName = fileName.substr(0, maxFileName) + "..." + fileName.substr(fileName.length - 5, 5);
 
-    if (ext) { fileName += ext; }
-
+    if (ext) {
+      fileName += ext;
+    }
 
     return fileName;
   }
@@ -271,7 +309,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         let destinatariA, destinatariCC: string;
         if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
           const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
-          res.forEach(e => {
+          res.forEach((e) => {
             if (e.startsWith("A: ")) {
               destinatariA = e.replace("A: ", "<strong>A: </strong>");
             } else if (e.startsWith("CC: ")) {
@@ -303,15 +341,22 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         allegatiAttivita = this.attivitaSelezionata.allegati;
       }
       if (allegatiAttivita) {
-        allegatiAttivita.sort((a: any, b: any) => { if (a.default) { return -1; } else if (a.default && b.default) { return 0; } else { return 1; } });
-        allegatiAttivita.forEach(element => {
+        allegatiAttivita.sort((a: any, b: any) => {
+          if (a.default) {
+            return -1;
+          } else if (a.default && b.default) {
+            return 0;
+          } else {
+            return 1;
+          }
+        });
+        allegatiAttivita.forEach((element) => {
           this.allegati.push({ label: this.shrinkFileName(element.nome_file), value: element });
         });
         this.allegatoSelected({ value: this.allegati[0].value });
       } else {
         this.noAnteprima = true;
       }
-
 
       if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
         this.allegati = [{ label: "Documenti non presenti", value: null }];
@@ -333,20 +378,18 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public setAnteprimaUrl() {
-    if ( this.attivitaSelezionata.idApplicazione.id === "dete" && this.attivitaSelezionata.descrizione === "Bozza" ) {
+    if (this.attivitaSelezionata.idApplicazione.id === "dete" && this.attivitaSelezionata.descrizione === "Bozza") {
       this.noAnteprima = true;
     } else {
       this.noAnteprima = false;
-      this.scrivaniaService
-        .getAnteprima(this.attivitaSelezionata, this.allegatoSelezionato)
-        .subscribe(
-          file => {
-            this.anteprima.nativeElement.src = file;
-          },
-          err => {
-            this.noAnteprima = true;
-          }
-        );
+      this.scrivaniaService.getAnteprima(this.attivitaSelezionata, this.allegatoSelezionato).subscribe(
+        (file) => {
+          this.anteprima.nativeElement.src = file;
+        },
+        (err) => {
+          this.noAnteprima = true;
+        }
+      );
     }
     // return this.domSanitizer.bypassSecurityTrustResourceUrl(this.anteprimaUrl);
   }
@@ -359,13 +402,12 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleItemClick(event, urlGenerationStrategy: string) {
     console.log("Link: ", event);
-    const encodeParams = urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
-                          urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
+    const encodeParams = urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION || urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
     const addRichiestaParam = true;
     const addPassToken = true;
     this.loginService.buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
       console.log("urlAperto:", url);
-     });
+    });
   }
 
   // private loadMenu() {
@@ -518,49 +560,45 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   // }
 
   public buildGenericMenu(aziende, albero) {
-    aziende.forEach(element => {
-      albero.push(new TreeNode(
-        element.nome,
-        null,
-        (onClick) => {
+    aziende.forEach((element) => {
+      albero.push(
+        new TreeNode(element.nome, null, (onClick) => {
           this.handleItemClick(element.url, element.urlGenerationStrategy);
-        }));
+        })
+      );
     });
   }
 
   public setVisibilitàPulsanteBolli(): void {
     //let aziendaArray = this.loggedUser.getUtente().aziende;
     let idAziendaArray: number[] = [];
-    this.loggedUser.getUtente().aziende.forEach(elem => {
+    this.loggedUser.getUtente().aziende.forEach((elem) => {
       idAziendaArray.push(elem.id);
     });
     console.log(idAziendaArray);
-    this.configurazioneService.getParametriAziende("visibilitaBollo", null, idAziendaArray)
-      .subscribe((parametriAziende: ParametroAziende[]) => {
-        console.log(parametriAziende[0].valore);
-        this.showBolli = JSON.parse(parametriAziende[0].valore || false);
-        console.log("showBolli: ",this.showBolli);
+    this.configurazioneService.getParametriAziende("visibilitaBollo", null, idAziendaArray).subscribe((parametriAziende: ParametroAziende[]) => {
+      console.log(parametriAziende[0].valore);
+      this.showBolli = JSON.parse(parametriAziende[0].valore || false);
+      console.log("showBolli: ", this.showBolli);
     });
 
-    this.configurazioneService.getParametriAziende("raccoltaSemplice", null, idAziendaArray)
-    .subscribe((parametriAziende: ParametroAziende[]) => {
+    this.configurazioneService.getParametriAziende("raccoltaSemplice", null, idAziendaArray).subscribe((parametriAziende: ParametroAziende[]) => {
       if (parametriAziende && parametriAziende[0].valore) {
         console.log(parametriAziende[0].valore);
         this.showRaccoltaSemplice = JSON.parse(parametriAziende[0].valore || false);
       } else {
         this.showRaccoltaSemplice = false;
       }
-      console.log("showRS: ",this.showRaccoltaSemplice);
+      console.log("showRS: ", this.showRaccoltaSemplice);
     });
   }
-
 
   public aziendaChanged(event) {
     this.idAzienda = event;
   }
 
   public onNoteClick(attivita: any) {
-    this.showNote = ((this.noteText = attivita.note) !== null);
+    this.showNote = (this.noteText = attivita.note) !== null;
   }
 
   ngOnDestroy(): void {
@@ -577,9 +615,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-
   ricarica() {
-
     if (this.mostraStorico === true) {
       this.tabellaDaRefreshare = Object.assign({}, { name: "attivita-fatte" });
     } else {
@@ -596,16 +632,17 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       rejectLabel: "No",
       accept: () => {
         // this.msgs = [{severity:'info', summary:'Confirmed', detail:'You have accepted'}];
-        this.subscriptions.push(this.scrivaniaService.cancellaNotifiche().subscribe(data => {
-          this.ricarica();
-        }));
+        this.subscriptions.push(
+          this.scrivaniaService.cancellaNotifiche().subscribe((data) => {
+            this.ricarica();
+          })
+        );
       },
       reject: () => {
         console.log("Errore nel salvataggio");
-      }
+      },
     });
   }
-
 }
 
 class TreeNode {
