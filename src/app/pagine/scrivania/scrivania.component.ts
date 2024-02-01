@@ -1,5 +1,19 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, AfterViewInit } from "@angular/core";
-import { Attivita, UrlsGenerationStrategy, ItemMenu, CommandType, CODICI_RUOLO } from "@bds/internauta-model";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+  HostListener,
+  AfterViewInit,
+} from "@angular/core";
+import {
+  Attivita,
+  UrlsGenerationStrategy,
+  ItemMenu,
+  CommandType,
+  CODICI_RUOLO,
+} from "@bds/internauta-model";
 import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
@@ -89,7 +103,13 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public showBolli: boolean = false;
   public showRaccoltaSemplice: boolean = false;
   public tabellaDaRefreshare: any = { name: "" };
-  constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: JwtLoginService, private confirmationService: ConfirmationService, private configurazioneService: ConfigurazioneService) {}
+  constructor(
+    private impostazioniService: ImpostazioniService,
+    private scrivaniaService: ScrivaniaService,
+    private loginService: JwtLoginService,
+    private confirmationService: ConfirmationService,
+    private configurazioneService: ConfigurazioneService
+  ) {}
 
   ngOnInit() {
     console.log("scivania ngOnInit()");
@@ -117,45 +137,67 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       })
     );
     this.subscriptions.push(
-      this.impostazioniService.settingsChangedNotifier$.subscribe((newSettings) => {
-        this.hidePreview = newSettings[ApplicationCustiomization.scrivania.hidePreview] === "true";
-      })
+      this.impostazioniService.settingsChangedNotifier$.subscribe(
+        (newSettings) => {
+          this.hidePreview =
+            newSettings[ApplicationCustiomization.scrivania.hidePreview] ===
+            "true";
+        }
+      )
     );
     this.subscriptions.push(
-      this.scrivaniaService.getMenuScrivania().subscribe((items: ItemMenu[]) => {
-        console.log("items", items);
-        this.menuItems = items;
-      })
+      this.scrivaniaService
+        .getMenuScrivania()
+        .subscribe((items: ItemMenu[]) => {
+          console.log("items", items);
+          this.menuItems = items;
+        })
     );
 
     this.allegati = [{ label: "Documenti non presenti", value: null }];
     const browser = Bowser.getParser(window.navigator.userAgent).getBrowser();
-    this.browserObsolete = this.isBrowserObsolete(browser.name, browser.version);
+    this.browserObsolete = this.isBrowserObsolete(
+      browser.name,
+      browser.version
+    );
   }
 
   ngAfterViewInit() {
     this.subscriptions.push(
-      this.loginService.loggedUser$.subscribe((utenteUtilitiesLogin: UtenteUtilities) => {
-        if (utenteUtilitiesLogin) {
-          if (!this.loggedUser || utenteUtilitiesLogin.getUtente().id !== this.loggedUser.getUtente().id) {
-            this.loggedUser = utenteUtilitiesLogin;
-            // this.loadMenu(); // not used
-            this.setLook();
-          } else {
-            this.loggedUser = utenteUtilitiesLogin;
-          }
-          // this.loadAziendeMenu();
-          this.setVisibilitàPulsanteBolli();
+      this.loginService.loggedUser$.subscribe(
+        (utenteUtilitiesLogin: UtenteUtilities) => {
+          if (utenteUtilitiesLogin) {
+            if (
+              !this.loggedUser ||
+              utenteUtilitiesLogin.getUtente().id !==
+                this.loggedUser.getUtente().id
+            ) {
+              this.loggedUser = utenteUtilitiesLogin;
+              // this.loadMenu(); // not used
+              this.setLook();
+            } else {
+              this.loggedUser = utenteUtilitiesLogin;
+            }
+            // this.loadAziendeMenu();
+            this.setVisibilitàPulsanteBolli();
 
-          this.loggedUserIsSD = this.loggedUser.hasRole(CODICI_RUOLO.SD);
+            this.loggedUserIsSD = this.loggedUser.hasRole(CODICI_RUOLO.SD);
 
-          if (this.loggedUser.getUtente() && this.loggedUser.getUtente().utenteReale) {
-            this.loggedUserIs99 = (this.loggedUser.getUtente().utenteReale.idInquadramento as unknown as String) === "99";
-          } else if (this.loggedUser.getUtente()) {
-            this.loggedUserIs99 = (this.loggedUser.getUtente().idInquadramento as unknown as String) === "99";
+            if (
+              this.loggedUser.getUtente() &&
+              this.loggedUser.getUtente().utenteReale
+            ) {
+              this.loggedUserIs99 =
+                (this.loggedUser.getUtente().utenteReale
+                  .idInquadramento as unknown as String) === "99";
+            } else if (this.loggedUser.getUtente()) {
+              this.loggedUserIs99 =
+                (this.loggedUser.getUtente()
+                  .idInquadramento as unknown as String) === "99";
+            }
           }
         }
-      })
+      )
     );
 
     this.allegatiDropDown.disabled = true;
@@ -174,8 +216,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   private setLook(): void {
     this.setResponsiveSlider();
     if (this.impostazioniService.getImpostazioniVisualizzazione()) {
-      this.rightSide.nativeElement.style.width = this.impostazioniService.getRightSideOffsetWidth() + "%";
-      this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniService.getRightSideOffsetWidth() + "%";
+      this.rightSide.nativeElement.style.width =
+        this.impostazioniService.getRightSideOffsetWidth() + "%";
+      this.slider.nativeElement.style.marginLeft =
+        100 - this.impostazioniService.getRightSideOffsetWidth() + "%";
       if (window.screen.width <= 1280) {
         this.hidePreview = true;
       } else {
@@ -189,12 +233,19 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.slider.nativeElement.onmousedown = function (event: MouseEvent) {
       that.sliding = true;
       event.preventDefault();
-      const totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
+      const totalX =
+        that.rightSide.nativeElement.offsetWidth +
+        that.leftSide.nativeElement.offsetWidth;
       document.onmouseup = function () {
         document.onmousemove = null;
         console.log("that.slider.nativeElement.onmouseup");
-        that.impostazioniService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
-        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniService.getImpostazioniVisualizzazione());
+        that.impostazioniService.setRightSideOffsetWidth(
+          parseInt(that.rightSide.nativeElement.style.width, 10)
+        );
+        that.loggedUser.setImpostazioniApplicazione(
+          that.loginService,
+          that.impostazioniService.getImpostazioniVisualizzazione()
+        );
         document.onmouseup = null;
         that.sliding = false;
       };
@@ -230,24 +281,28 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     switch (browserName) {
       case "Chrome":
         if (intVersion <= 95) {
-          this.browserMessageObsolete = "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di aggiornare il browser";
+          this.browserMessageObsolete =
+            "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di aggiornare il browser. Inoltre, un browser aggiornato ti tiene al riparo dagli attacchi hacker.";
           return true;
         }
         break;
       case "Firefox":
         if (intVersion <= 93) {
-          this.browserMessageObsolete = "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di aggiornare il browser";
+          this.browserMessageObsolete =
+            "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di aggiornare il browser. Inoltre, un browser aggiornato ti tiene al riparo dagli attacchi hacker.";
           return true;
         }
         break;
       case "Microsoft Edge":
         if (intVersion <= 94) {
-          this.browserMessageObsolete = "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di aggiornare il browser";
+          this.browserMessageObsolete =
+            "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di aggiornare il browser. Inoltre, un browser aggiornato ti tiene al riparo dagli attacchi hacker.";
           return true;
         }
         break;
       default:
-        this.browserMessageObsolete = "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di uasre un browser tra Firefox e Chrome";
+        this.browserMessageObsolete =
+          "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di uasre un browser tra Firefox e Chrome. Inoltre, un browser aggiornato ti tiene al riparo dagli attacchi hacker.";
         return true;
     }
     return false;
@@ -258,7 +313,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     const lx = this.leftSide.nativeElement.offsetWidth;
     const rx = this.rightSide.nativeElement.offsetWidth;
     const screenX = event.currentTarget.innerWidth;
-    if (screenX - lx < this.MIN_X_RIGHT_SIDE || screenX - rx < this.MIN_X_LEFT_SIDE) {
+    if (
+      screenX - lx < this.MIN_X_RIGHT_SIDE ||
+      screenX - rx < this.MIN_X_LEFT_SIDE
+    ) {
       // Se rightside è minore di 385 o leftside è minore di 225  setto rightside a 225 e leftside il resto
       const rxPercent = (this.MIN_X_RIGHT_SIDE * 100) / screenX;
       this.rightSide.nativeElement.style.width = rxPercent + "%";
@@ -279,7 +337,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
     fileName = fileName.replace("." + ext, "");
 
-    fileName = fileName.substr(0, maxFileName) + "..." + fileName.substr(fileName.length - 5, 5);
+    fileName =
+      fileName.substr(0, maxFileName) +
+      "..." +
+      fileName.substr(fileName.length - 5, 5);
 
     if (ext) {
       fileName += ext;
@@ -303,11 +364,15 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.attivitaSelezionata = attivitaCliccata;
     if (this.attivitaSelezionata) {
       this.oggetto = this.attivitaSelezionata.oggetto;
-      const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
+      const datiAggiuntiviAttivita: any =
+        this.attivitaSelezionata.datiAggiuntivi;
       if (datiAggiuntiviAttivita) {
         this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
         let destinatariA, destinatariCC: string;
-        if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
+        if (
+          datiAggiuntiviAttivita.custom_app_2 &&
+          datiAggiuntiviAttivita.custom_app_2.trim() !== ""
+        ) {
           const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
           res.forEach((e) => {
             if (e.startsWith("A: ")) {
@@ -325,19 +390,30 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
           this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
           if (this.datiDiFlusso.length > MAX_CHARS_100) {
             this.datiFlussoTooltip = this.datiDiFlusso;
-            this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
+            this.datiDiFlusso = this.datiDiFlusso
+              .substring(0, MAX_CHARS_100 - 3)
+              .concat("...");
           }
-          this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
+          this.datiDiFlusso = this.datiDiFlusso
+            .replace("R:", "<b>R:</b>")
+            .replace("A:", "<b>A: </b>");
           // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
         }
-        this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
-        this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
+        this.destinatari = destinatariA
+          ? destinatariA.replace(";", "; ")
+          : destinatariA; // ? destinatariA : "Nessun destinatario";
+        this.destinatariCC = destinatariCC
+          ? destinatariCC.replace(";", "; ")
+          : destinatariCC; // ? destinatariCC : "Nessun destinatario";
       }
 
       this.allegati = [];
       this.allegatiDropDown.clear(null);
       let allegatiAttivita: any[] = null;
-      if (this.attivitaSelezionata.allegati && this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
+      if (
+        this.attivitaSelezionata.allegati &&
+        this.attivitaSelezionata.allegati.indexOf("forbidden") === -1
+      ) {
         allegatiAttivita = this.attivitaSelezionata.allegati;
       }
       if (allegatiAttivita) {
@@ -351,14 +427,19 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         });
         allegatiAttivita.forEach((element) => {
-          this.allegati.push({ label: this.shrinkFileName(element.nome_file), value: element });
+          this.allegati.push({
+            label: this.shrinkFileName(element.nome_file),
+            value: element,
+          });
         });
         this.allegatoSelected({ value: this.allegati[0].value });
       } else {
         this.noAnteprima = true;
       }
 
-      if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
+      if (
+        (this.allegatiDropDown.disabled = this.allegati.length === 0) === true
+      ) {
         this.allegati = [{ label: "Documenti non presenti", value: null }];
         this.allegatiDropDown.disabled = true;
       }
@@ -378,36 +459,57 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public setAnteprimaUrl() {
-    if (this.attivitaSelezionata.idApplicazione.id === "dete" && this.attivitaSelezionata.descrizione === "Bozza") {
+    if (
+      this.attivitaSelezionata.idApplicazione.id === "dete" &&
+      this.attivitaSelezionata.descrizione === "Bozza"
+    ) {
       this.noAnteprima = true;
     } else {
       this.noAnteprima = false;
-      this.scrivaniaService.getAnteprima(this.attivitaSelezionata, this.allegatoSelezionato).subscribe(
-        (file) => {
-          this.anteprima.nativeElement.src = file;
-        },
-        (err) => {
-          this.noAnteprima = true;
-        }
-      );
+      this.scrivaniaService
+        .getAnteprima(this.attivitaSelezionata, this.allegatoSelezionato)
+        .subscribe(
+          (file) => {
+            this.anteprima.nativeElement.src = file;
+          },
+          (err) => {
+            this.noAnteprima = true;
+          }
+        );
     }
     // return this.domSanitizer.bypassSecurityTrustResourceUrl(this.anteprimaUrl);
   }
 
   fullscreen(event: any) {
     const iframeElement: any = this.anteprima.nativeElement;
-    const fullScreenFunction = iframeElement.requestFullscreen || iframeElement.webkitRequestFullscreen || iframeElement.mozRequestFullScreen || iframeElement.msRequestFullscreen;
+    const fullScreenFunction =
+      iframeElement.requestFullscreen ||
+      iframeElement.webkitRequestFullscreen ||
+      iframeElement.mozRequestFullScreen ||
+      iframeElement.msRequestFullscreen;
     fullScreenFunction.call(iframeElement);
   }
 
   handleItemClick(event, urlGenerationStrategy: string) {
     console.log("Link: ", event);
-    const encodeParams = urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION || urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
+    const encodeParams =
+      urlGenerationStrategy ===
+        UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
+      urlGenerationStrategy ===
+        UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
     const addRichiestaParam = true;
     const addPassToken = true;
-    this.loginService.buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
-      console.log("urlAperto:", url);
-    });
+    this.loginService
+      .buildInterAppUrl(
+        event,
+        encodeParams,
+        addRichiestaParam,
+        addPassToken,
+        true
+      )
+      .subscribe((url: string) => {
+        console.log("urlAperto:", url);
+      });
   }
 
   // private loadMenu() {
@@ -576,21 +678,27 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       idAziendaArray.push(elem.id);
     });
     console.log(idAziendaArray);
-    this.configurazioneService.getParametriAziende("visibilitaBollo", null, idAziendaArray).subscribe((parametriAziende: ParametroAziende[]) => {
-      console.log(parametriAziende[0].valore);
-      this.showBolli = JSON.parse(parametriAziende[0].valore || false);
-      console.log("showBolli: ", this.showBolli);
-    });
-
-    this.configurazioneService.getParametriAziende("raccoltaSemplice", null, idAziendaArray).subscribe((parametriAziende: ParametroAziende[]) => {
-      if (parametriAziende && parametriAziende[0].valore) {
+    this.configurazioneService
+      .getParametriAziende("visibilitaBollo", null, idAziendaArray)
+      .subscribe((parametriAziende: ParametroAziende[]) => {
         console.log(parametriAziende[0].valore);
-        this.showRaccoltaSemplice = JSON.parse(parametriAziende[0].valore || false);
-      } else {
-        this.showRaccoltaSemplice = false;
-      }
-      console.log("showRS: ", this.showRaccoltaSemplice);
-    });
+        this.showBolli = JSON.parse(parametriAziende[0].valore || false);
+        console.log("showBolli: ", this.showBolli);
+      });
+
+    this.configurazioneService
+      .getParametriAziende("raccoltaSemplice", null, idAziendaArray)
+      .subscribe((parametriAziende: ParametroAziende[]) => {
+        if (parametriAziende && parametriAziende[0].valore) {
+          console.log(parametriAziende[0].valore);
+          this.showRaccoltaSemplice = JSON.parse(
+            parametriAziende[0].valore || false
+          );
+        } else {
+          this.showRaccoltaSemplice = false;
+        }
+        console.log("showRS: ", this.showRaccoltaSemplice);
+      });
   }
 
   public aziendaChanged(event) {
@@ -625,7 +733,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   delNotifiche() {
     this.confirmationService.confirm({
-      message: "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
+      message:
+        "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
       header: "Cancellazione notifiche",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Sì",
