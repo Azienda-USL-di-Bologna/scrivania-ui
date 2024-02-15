@@ -89,7 +89,13 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public showBolli: boolean = false;
   public showRaccoltaSemplice: boolean = false;
   public tabellaDaRefreshare: any = { name: "" };
-  constructor(private impostazioniService: ImpostazioniService, private scrivaniaService: ScrivaniaService, private loginService: JwtLoginService, private confirmationService: ConfirmationService, private configurazioneService: ConfigurazioneService) {}
+  constructor(
+    private impostazioniService: ImpostazioniService,
+    private scrivaniaService: ScrivaniaService,
+    private loginService: JwtLoginService,
+    private confirmationService: ConfirmationService,
+    private configurazioneService: ConfigurazioneService
+  ) {}
 
   ngOnInit() {
     console.log("scivania ngOnInit()");
@@ -150,7 +156,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
           this.loggedUserIsSD = this.loggedUser.hasRole(CODICI_RUOLO.SD);
 
           if (this.loggedUser.getUtente() && this.loggedUser.getUtente().utenteReale) {
-            this.loggedUserIs99 = (this.loggedUser.getUtente().utenteReale.idInquadramento as unknown as String) === "99";
+            this.loggedUserIs99 =
+              (this.loggedUser.getUtente().utenteReale.idInquadramento as unknown as String) === "99";
           } else if (this.loggedUser.getUtente()) {
             this.loggedUserIs99 = (this.loggedUser.getUtente().idInquadramento as unknown as String) === "99";
           }
@@ -194,7 +201,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         document.onmousemove = null;
         console.log("that.slider.nativeElement.onmouseup");
         that.impostazioniService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
-        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniService.getImpostazioniVisualizzazione());
+        that.loggedUser.setImpostazioniApplicazione(
+          that.loginService,
+          that.impostazioniService.getImpostazioniVisualizzazione()
+        );
         document.onmouseup = null;
         that.sliding = false;
       };
@@ -226,28 +236,31 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private isBrowserObsolete(browserName: string, version: string) {
     version = version.split(".")[0];
+    const fraseBrowser =
+      "ATTENZIONE: Per continuare a usare Babel al meglio delle sue funzionalità è necessario aggiornare il browser. Inoltre, un browser aggiornato ti tiene al riparo dagli attacchi hacker.";
     let intVersion = parseInt(version);
     switch (browserName) {
       case "Chrome":
         if (intVersion <= 95) {
-          this.browserMessageObsolete = "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di aggiornare il browser";
+          this.browserMessageObsolete = fraseBrowser;
           return true;
         }
         break;
       case "Firefox":
         if (intVersion <= 93) {
-          this.browserMessageObsolete = "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di aggiornare il browser";
+          this.browserMessageObsolete = fraseBrowser;
           return true;
         }
         break;
       case "Microsoft Edge":
         if (intVersion <= 94) {
-          this.browserMessageObsolete = "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di aggiornare il browser";
+          this.browserMessageObsolete = fraseBrowser;
           return true;
         }
         break;
       default:
-        this.browserMessageObsolete = "Per continuare a usare Babel al meglio delle sue funzionalità si consiglia di uasre un browser tra Firefox e Chrome";
+        this.browserMessageObsolete =
+          "ATTENZIONE: Per continuare a usare Babel al meglio delle sue funzionalità è necessario usare un browser tra Firefox e Chrome e aggiornato. Inoltre, un browser aggiornato ti tiene al riparo dagli attacchi hacker.";
         return true;
     }
     return false;
@@ -301,11 +314,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log("attivitaClicked", attivitaCliccata);
     this.clearAccordionDetailFields();
     this.attivitaSelezionata = attivitaCliccata;
-    
+
     attivitaCliccata.allegati = attivitaCliccata.allegati.filter((allegato) => {
-      return allegato.sottotipo !== 'LEGGE_190';
+      return allegato.sottotipo !== "LEGGE_190";
     });
-    
+
     if (this.attivitaSelezionata) {
       this.oggetto = this.attivitaSelezionata.oggetto;
       const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
@@ -372,8 +385,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
- 
-
   public allegatoSelected(event: any) {
     if (event && event.value) {
       this.allegatoSelezionato = event.value;
@@ -402,18 +413,26 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   fullscreen(event: any) {
     const iframeElement: any = this.anteprima.nativeElement;
-    const fullScreenFunction = iframeElement.requestFullscreen || iframeElement.webkitRequestFullscreen || iframeElement.mozRequestFullScreen || iframeElement.msRequestFullscreen;
+    const fullScreenFunction =
+      iframeElement.requestFullscreen ||
+      iframeElement.webkitRequestFullscreen ||
+      iframeElement.mozRequestFullScreen ||
+      iframeElement.msRequestFullscreen;
     fullScreenFunction.call(iframeElement);
   }
 
   handleItemClick(event, urlGenerationStrategy: string) {
     console.log("Link: ", event);
-    const encodeParams = urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION || urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
+    const encodeParams =
+      urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
+      urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
     const addRichiestaParam = true;
     const addPassToken = true;
-    this.loginService.buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
-      console.log("urlAperto:", url);
-    });
+    this.loginService
+      .buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true)
+      .subscribe((url: string) => {
+        console.log("urlAperto:", url);
+      });
   }
 
   // private loadMenu() {
@@ -582,21 +601,25 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       idAziendaArray.push(elem.id);
     });
     console.log(idAziendaArray);
-    this.configurazioneService.getParametriAziende("visibilitaBollo", null, idAziendaArray).subscribe((parametriAziende: ParametroAziende[]) => {
-      console.log(parametriAziende[0].valore);
-      this.showBolli = JSON.parse(parametriAziende[0].valore || false);
-      console.log("showBolli: ", this.showBolli);
-    });
-
-    this.configurazioneService.getParametriAziende("raccoltaSemplice", null, idAziendaArray).subscribe((parametriAziende: ParametroAziende[]) => {
-      if (parametriAziende && parametriAziende[0].valore) {
+    this.configurazioneService
+      .getParametriAziende("visibilitaBollo", null, idAziendaArray)
+      .subscribe((parametriAziende: ParametroAziende[]) => {
         console.log(parametriAziende[0].valore);
-        this.showRaccoltaSemplice = JSON.parse(parametriAziende[0].valore || false);
-      } else {
-        this.showRaccoltaSemplice = false;
-      }
-      console.log("showRS: ", this.showRaccoltaSemplice);
-    });
+        this.showBolli = JSON.parse(parametriAziende[0].valore || false);
+        console.log("showBolli: ", this.showBolli);
+      });
+
+    this.configurazioneService
+      .getParametriAziende("raccoltaSemplice", null, idAziendaArray)
+      .subscribe((parametriAziende: ParametroAziende[]) => {
+        if (parametriAziende && parametriAziende[0].valore) {
+          console.log(parametriAziende[0].valore);
+          this.showRaccoltaSemplice = JSON.parse(parametriAziende[0].valore || false);
+        } else {
+          this.showRaccoltaSemplice = false;
+        }
+        console.log("showRS: ", this.showRaccoltaSemplice);
+      });
   }
 
   public aziendaChanged(event) {
@@ -629,9 +652,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  delNotifiche() {
+  public delNotifiche() {
     this.confirmationService.confirm({
-      message: "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
+      message:
+        "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
       header: "Cancellazione notifiche",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Sì",
