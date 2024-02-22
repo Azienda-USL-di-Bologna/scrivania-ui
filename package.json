@@ -24,7 +24,7 @@
     "@bds/common-tools": "3.2.8",
     "@bds/internauta-model": "3.3.10",
     "@bds/jwt-login": "3.2.12",
-    "@bds/common-components": "3.2.78",
+    "@bds/common-components": "3.2.83",
     "@bds/next-sdr": "6.1.3",
     "@bds/primeng-plugin": "3.2.3",
     "@bds/rubrint": "3.3.4",
