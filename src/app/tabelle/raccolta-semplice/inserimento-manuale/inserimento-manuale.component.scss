@@ -4,8 +4,10 @@
   padding-top: 1rem;
   padding-bottom: 1rem;
   border-radius: 4px;
-  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2),
-    0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0 1px 1px 0 rgba(0, 0, 0, 0.14),
+    0 1px 3px 0 rgba(0, 0, 0, 0.12);
 }
 
 .box-stretched {
@@ -31,7 +33,7 @@
   margin: 100px;
 }
 
-.expansion-header{
+.expansion-header {
   background-color: darkgrey;
   height: 2em;
 }
@@ -43,11 +45,10 @@
 
 .expansion-single-box {
   margin-bottom: 0.5em;
-  
 }
 
 .custom-grid {
-  height: 6em;  
+  height: 6em;
 }
 
 .align-table {
@@ -63,9 +64,8 @@
   background-color: #203142;
 }
 
-
 /* cambio colore pulsante upload */
-::ng-deep .p-fileupload-choose  {
+::ng-deep .p-fileupload-choose {
   background-color: #993366;
   border: white;
 }
@@ -76,7 +76,7 @@
   border: white;
 }
 
-::ng-deep .p-fileupload .p-button.p-button-icon-only{
+::ng-deep .p-fileupload .p-button.p-button-icon-only {
   background-color: #203142 !important;
   padding: 0.429rem 0.5rem !important;
 }
@@ -86,4 +86,3 @@
   word-wrap: break-word;
   white-space: pre-wrap;
 }
-

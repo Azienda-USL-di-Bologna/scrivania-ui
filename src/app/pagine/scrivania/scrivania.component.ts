@@ -156,8 +156,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
           this.loggedUserIsSD = this.loggedUser.hasRole(CODICI_RUOLO.SD);
 
           if (this.loggedUser.getUtente() && this.loggedUser.getUtente().utenteReale) {
-            this.loggedUserIs99 =
-              (this.loggedUser.getUtente().utenteReale.idInquadramento as unknown as String) === "99";
+            this.loggedUserIs99 = (this.loggedUser.getUtente().utenteReale.idInquadramento as unknown as String) === "99";
           } else if (this.loggedUser.getUtente()) {
             this.loggedUserIs99 = (this.loggedUser.getUtente().idInquadramento as unknown as String) === "99";
           }
@@ -201,10 +200,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         document.onmousemove = null;
         console.log("that.slider.nativeElement.onmouseup");
         that.impostazioniService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
-        that.loggedUser.setImpostazioniApplicazione(
-          that.loginService,
-          that.impostazioniService.getImpostazioniVisualizzazione()
-        );
+        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniService.getImpostazioniVisualizzazione());
         document.onmouseup = null;
         that.sliding = false;
       };
@@ -428,11 +424,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
     const addRichiestaParam = true;
     const addPassToken = true;
-    this.loginService
-      .buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true)
-      .subscribe((url: string) => {
-        console.log("urlAperto:", url);
-      });
+    this.loginService.buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
+      console.log("urlAperto:", url);
+    });
   }
 
   // private loadMenu() {
@@ -654,8 +648,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public delNotifiche() {
     this.confirmationService.confirm({
-      message:
-        "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
+      message: "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
       header: "Cancellazione notifiche",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Sì",

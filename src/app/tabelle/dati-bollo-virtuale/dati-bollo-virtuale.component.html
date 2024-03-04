@@ -1,46 +1,53 @@
 <div class="p-grid attivita-wrapper position-relative">
-  <div class="p-col content-left" #leftSide>
+  <div
+    class="p-col content-left"
+    #leftSide
+  >
     <div class="option-bar">
       <div class="buttons-bar">
-        <button type="button" 
-          pButton 
-          pTooltip="Vai alla scrivania" 
-          tooltipPosition="bottom" 
-          icon="pi pi-chevron-left" 
-          iconPos="left" 
-          [routerLink]="'/attivita'" 
-          class="ui-button-secondary icon-style" 
-          aria-label="Vai alla tabella delle attivita">
-        </button>
+        <button
+          type="button"
+          pButton
+          pTooltip="Vai alla scrivania"
+          tooltipPosition="bottom"
+          icon="pi pi-chevron-left"
+          iconPos="left"
+          [routerLink]="'/attivita'"
+          class="ui-button-secondary icon-style"
+          aria-label="Vai alla tabella delle attivita"
+        ></button>
         <div class="separator-class"></div>
-        <button type="button" 
-          pButton 
-          pTooltip="Aggiorna tabella" 
+        <button
+          type="button"
+          pButton
+          pTooltip="Aggiorna tabella"
           tooltipPosition="bottom"
-          (click)="onTableRefresh()"  
-          iconPos="left" 
-          icon="pi pi-refresh" 
-          class="ui-button-secondary icon-style" 
-          aria-label="Aggiorna la tabella dei bolli virtuali">
-        </button>
-        <button type="button" 
-          pButton 
-          pTooltip="Esporta in CSV tutti i dati" 
+          (click)="onTableRefresh()"
+          iconPos="left"
+          icon="pi pi-refresh"
+          class="ui-button-secondary icon-style"
+          aria-label="Aggiorna la tabella dei bolli virtuali"
+        ></button>
+        <button
+          type="button"
+          pButton
+          pTooltip="Esporta in CSV tutti i dati"
           tooltipPosition="bottom"
-          (click)="exportToCsv(tableBolliVirtuali)" 
-          iconPos="left" 
-          icon="pi pi-download" 
-          class="ui-button-secondary icon-style" 
-          aria-label="Esporta in CSV tutti i dati">
-        </button>
+          (click)="exportToCsv(tableBolliVirtuali)"
+          iconPos="left"
+          icon="pi pi-download"
+          class="ui-button-secondary icon-style"
+          aria-label="Esporta in CSV tutti i dati"
+        ></button>
         <span>Righe: </span>
-        <span #totalRecordsRef>{{totalRecords}}</span>
+        <span #totalRecordsRef>{{ totalRecords }}</span>
         <span *ngIf="exportCsvInProgress">
-          <p-progressSpinner 
-              [style]="{width: '2em', height: '2em', marginRight: '0.438rem'}"
-              strokeWidth="5" 
-              fill="#FFFFFF" 
-              animationDuration=".5s">
+          <p-progressSpinner
+            [style]="{ width: '2em', height: '2em', marginRight: '0.438rem' }"
+            strokeWidth="5"
+            fill="#FFFFFF"
+            animationDuration=".5s"
+          >
           </p-progressSpinner>
         </span>
       </div>
@@ -49,7 +56,8 @@
         <lib-aziende-autocomplete
           [azienda]="_azienda"
           (aziendaChange)="handleSelectedAziendaEmit($event, 'Azienda')"
-          [filterByRole]="true">
+          [filterByRole]="true"
+        >
         </lib-aziende-autocomplete>
         <span>Da:</span>
         <p-calendar
@@ -65,12 +73,16 @@
           [(ngModel)]="dataInizio"
           [maxDate]="dataFine"
           [disabled]="!!!_azienda.codice"
-          [inputStyle]="{'width':'5.438rem'}"
+          [inputStyle]="{ width: '5.438rem' }"
           appendTo="body"
           placeholder="Data di inizio"
-          pTooltip="Dati bolli virtuali a partire dal">
+          pTooltip="Dati bolli virtuali a partire dal"
+        >
         </p-calendar>
-        <span style="width: 0.25rem;" aria-hidden="true"></span>
+        <span
+          style="width: 0.25rem"
+          aria-hidden="true"
+        ></span>
         <span> A:</span>
         <p-calendar
           [showIcon]="true"
@@ -84,111 +96,175 @@
           [(ngModel)]="dataFine"
           [disabled]="false"
           [minDate]="dataInizio"
-          [inputStyle]="{'width':'5.438rem'}"
+          [inputStyle]="{ width: '5.438rem' }"
           appendTo="body"
           placeholder="Data di fine"
-          pTooltip="Dati bolli virtuali fino al">
+          pTooltip="Dati bolli virtuali fino al"
+        >
         </p-calendar>
-        <button type="button" 
-          pButton 
-          pTooltip="Estrai" 
+        <button
+          type="button"
+          pButton
+          pTooltip="Estrai"
           tooltipPosition="bottom"
           style="margin-left: 0.4rem"
-          (click)="onLoadDatiBolliVirtuali()" 
-          iconPos="left" 
-          icon="pi pi-check-circle" 
-          class="ui-button-secondary icon-style" 
-          aria-label="Estrai">
-        </button>
+          (click)="onLoadDatiBolliVirtuali()"
+          iconPos="left"
+          icon="pi pi-check-circle"
+          class="ui-button-secondary icon-style"
+          aria-label="Estrai"
+        ></button>
       </div>
     </div>
     <div class="table-wrapper">
       <div class="table-inner">
-          <p-table #tableBolliVirtuali
-            [value]="datiBolliVirtuali"
-            [columns]="cols"
-            [rows]="_rows"
-            [autoLayout]="false"
-            [totalRecords]="totalRecords"
-            selectionMode="single"
-            (onRowSelect)="handleEvent('onRowSelect', $event)"
-            [scrollable]="true"
-            scrollHeight="flex"
-            [loading]="loading"
-            (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
-            (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
-            csvSeparator=";"
-            [exportFilename]="dataInizio ? 'dati-bolli-virtuali_'+ dataInizio.toDateString()+'_'+dataFine.toDateString() : 'dati-bolli-virtuali_'">
-            <ng-template pTemplate="header" let-columns>
-                <tr>
-                    <th *ngFor="let col of columns"  
-                        [style.maxWidth]="col.width" 
-                        [style.minWidth]="col.minWidth ? col.minWidth : col.width" 
-                        [style.padding]="col.padding" 
-                        [pSortableColumn]="col.field"
-                        [pTooltip]="col.label" 
-                        attr.aria-label="Colonna {{col.label}}, {{col.header ? 'Ordinare colonna' : ''}}">
-                        {{col.header}}
-                        <p-sortIcon [field]="col.field" *ngIf="col.field != undefined" attr.aria-label="Ordinare colonna {{col.label}}" arialabelasc="Ordinamento ascendente" arialabeldesc="Ordinamento discendente">
-                                <!-- ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente" -->
-                        </p-sortIcon>
-                    </th>
-                </tr>
-                <tr>
-                    <th *ngFor="let col of columns" 
-                      [ngSwitch]="col.fieldType" 
-                      [style.maxWidth]="col.width" 
-                      [style.minWidth]="col.minWidth ? col.minWidth : col.width" >
-                        <div *ngIf="col.field != undefined && col.field !== 'priorita'" style="width: 100%">
-                            <p-calendar #calGen 
-                              *ngSwitchCase="'DateTime'"
-                              [(ngModel)]="dataRange[col.field]"
-                              placeholder="Scegli..."
-                              [showButtonBar]="true"
-                              [locale]="it"
-                              [showIcon]="false"
-                              dateFormat="dd/mm/yy"
-                              (onSelect)="onCalendarAction($event, col.field, 'select')"
-                              (onClearClick)="onCalendarAction($event, col.field, 'clear')" 
-                              (onTodayClick)="onCalendarAction($event, col.field, 'today')"
-                              appendTo="body" 
-                              selectionMode="range" 
-                              [readonlyInput]="true" 
-                              [pTooltip]="calendarTooltip(col.field)" 
-                              inputId="CalInput_{{col.field}}"> 
-                            </p-calendar>
-                            <input *ngSwitchDefault pInputText 
-                                attr.aria-label="Cella filtro per Colonna {{col.label}}" 
-                                type="text" 
-                                (input)="tableBolliVirtuali.filter($event.target['value'].trim(), col.field, col.filterMatchMode)"
-                                #filterInputText>
-                        </div>
-                    </th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-rowBollo let-columns="columns">
-              <tr class="row-class">
-                <td *ngFor="let col of columns" 
-                  class="column-class" 
-                  [style.maxWidth]="col.width" 
-                  [style.minWidth]="col.minWidth ? col.minWidth : col.width" 
-                  [style.textAlign]="col.textAlign" 
-                  [pTooltip]="col.label">
-                  {{ col.field != "dataNumeroDoc" ? rowBollo[col.field] : rowBollo[col.field] | date: 'dd/MM/yyyy'}}
-                </td>
-              </tr>
-            </ng-template>
+        <p-table
+          #tableBolliVirtuali
+          [value]="datiBolliVirtuali"
+          [columns]="cols"
+          [rows]="_rows"
+          [autoLayout]="false"
+          [totalRecords]="totalRecords"
+          selectionMode="single"
+          (onRowSelect)="handleEvent('onRowSelect', $event)"
+          [scrollable]="true"
+          scrollHeight="flex"
+          [loading]="loading"
+          (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
+          (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
+          csvSeparator=";"
+          [exportFilename]="
+            dataInizio
+              ? 'dati-bolli-virtuali_' + dataInizio.toDateString() + '_' + dataFine.toDateString()
+              : 'dati-bolli-virtuali_'
+          "
+        >
+          <ng-template
+            pTemplate="header"
+            let-columns
+          >
+            <tr>
+              <th
+                *ngFor="let col of columns"
+                [style.maxWidth]="col.width"
+                [style.minWidth]="col.minWidth ? col.minWidth : col.width"
+                [style.padding]="col.padding"
+                [pSortableColumn]="col.field"
+                [pTooltip]="col.label"
+                attr.aria-label="Colonna {{ col.label }}, {{ col.header ? 'Ordinare colonna' : '' }}"
+              >
+                {{ col.header }}
+                <p-sortIcon
+                  [field]="col.field"
+                  *ngIf="col.field != undefined"
+                  attr.aria-label="Ordinare colonna {{ col.label }}"
+                  arialabelasc="Ordinamento ascendente"
+                  arialabeldesc="Ordinamento discendente"
+                >
+                  <!-- ariaLabelAsc="Colonna {{col.header}}, Ordinamento ascendente" ariaLabelDesc="Colonna {{col.header}}, Ordinamento discendente" -->
+                </p-sortIcon>
+              </th>
+            </tr>
+            <tr>
+              <th
+                *ngFor="let col of columns"
+                [ngSwitch]="col.fieldType"
+                [style.maxWidth]="col.width"
+                [style.minWidth]="col.minWidth ? col.minWidth : col.width"
+              >
+                <div
+                  *ngIf="col.field != undefined && col.field !== 'priorita'"
+                  style="width: 100%"
+                >
+                  <p-calendar
+                    #calGen
+                    *ngSwitchCase="'DateTime'"
+                    [(ngModel)]="dataRange[col.field]"
+                    placeholder="Scegli..."
+                    [showButtonBar]="true"
+                    [locale]="it"
+                    [showIcon]="false"
+                    dateFormat="dd/mm/yy"
+                    (onSelect)="onCalendarAction($event, col.field, 'select')"
+                    (onClearClick)="onCalendarAction($event, col.field, 'clear')"
+                    (onTodayClick)="onCalendarAction($event, col.field, 'today')"
+                    appendTo="body"
+                    selectionMode="range"
+                    [readonlyInput]="true"
+                    [pTooltip]="calendarTooltip(col.field)"
+                    inputId="CalInput_{{ col.field }}"
+                  >
+                  </p-calendar>
+                  <input
+                    *ngSwitchDefault
+                    pInputText
+                    attr.aria-label="Cella filtro per Colonna {{ col.label }}"
+                    type="text"
+                    (input)="tableBolliVirtuali.filter($event.target['value'].trim(), col.field, col.filterMatchMode)"
+                    #filterInputText
+                  />
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="body"
+            let-rowBollo
+            let-columns="columns"
+          >
+            <tr class="row-class">
+              <td
+                *ngFor="let col of columns"
+                class="column-class"
+                [style.maxWidth]="col.width"
+                [style.minWidth]="col.minWidth ? col.minWidth : col.width"
+                [style.textAlign]="col.textAlign"
+                [pTooltip]="col.label"
+              >
+                {{ col.field != "dataNumeroDoc" ? rowBollo[col.field] : (rowBollo[col.field] | date: "dd/MM/yyyy") }}
+              </td>
+            </tr>
+          </ng-template>
         </p-table>
       </div>
     </div>
-    <footer class="p-grid" style="margin-right: 1.063rem; flex-wrap: nowrap; overflow-x: auto; font-weight: bold;">
-      <div class="p-col" style="text-align: center; min-width: 35.5rem;">Totale</div>
-      <div #totalFacciateBolloRef class="p-col-fixed" style="width: 7.625rem; text-align: center;">{{totalFacciateBollo}}</div>
-      <div #totalRigheBolloRef class="p-col-fixed" style="width: 6.563rem; text-align: center;">{{totalRigheBollo}}</div>
-      <div #totalAltriImportiBolloRef class="p-col-fixed" style="width: 7.438rem; text-align: center;">{{totalAltriImportiBollo}}</div>
-      <div  class="p-col-fixed" style="width: 6.563rem; text-align: center;">
+    <footer
+      class="p-grid"
+      style="margin-right: 1.063rem; flex-wrap: nowrap; overflow-x: auto; font-weight: bold"
+    >
+      <div
+        class="p-col"
+        style="text-align: center; min-width: 35.5rem"
+      >
+        Totale
+      </div>
+      <div
+        #totalFacciateBolloRef
+        class="p-col-fixed"
+        style="width: 7.625rem; text-align: center"
+      >
+        {{ totalFacciateBollo }}
+      </div>
+      <div
+        #totalRigheBolloRef
+        class="p-col-fixed"
+        style="width: 6.563rem; text-align: center"
+      >
+        {{ totalRigheBollo }}
+      </div>
+      <div
+        #totalAltriImportiBolloRef
+        class="p-col-fixed"
+        style="width: 7.438rem; text-align: center"
+      >
+        {{ totalAltriImportiBollo }}
+      </div>
+      <div
+        class="p-col-fixed"
+        style="width: 6.563rem; text-align: center"
+      >
         <span>€</span>
-        <span #totalImportoAltriBolloRef>{{totalImportoAltriBollo}}</span>
+        <span #totalImportoAltriBolloRef>{{ totalImportoAltriBollo }}</span>
       </div>
     </footer>
   </div>

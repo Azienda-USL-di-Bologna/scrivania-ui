@@ -1,112 +1,110 @@
-.img-table{
-    display: block;
-    width: 1.5rem;
-    height: 1.5rem;
-    margin: auto;
+.img-table {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: auto;
 }
 ::ng-deep app-attivita .p-datatable table {
-    table-layout: unset;
+  table-layout: unset;
 }
-.openTabLink{
-    color: #993366 !important;
+.openTabLink {
+  color: #993366 !important;
 }
 
-.openTabLink:hover{
-    cursor: pointer;
+.openTabLink:hover {
+  cursor: pointer;
 }
-.p0{
-    padding: 0 !important;
+.p0 {
+  padding: 0 !important;
 }
-:host::ng-deeptable.ui-table-scrollable-body-table{
-    table-layout: auto;
+:host::ng-deeptable.ui-table-scrollable-body-table {
+  table-layout: auto;
 }
-:host::ng-deeptable.ui-table-scrollable-header-table{
-    table-layout: auto;
+:host::ng-deeptable.ui-table-scrollable-header-table {
+  table-layout: auto;
 }
 :host::ng-deep .ui-table .ui-table-tbody > tr > td {
-    padding: 0.625rem;
+  padding: 0.625rem;
 }
 
 .colonna-azione {
-    word-break: break-all;
-    word-wrap: break-word;
-    white-space: pre-wrap;
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }
 .column-class-o {
-    word-break: break-word;
-    word-wrap: break-word;
-    white-space: pre-wrap;
+  word-break: break-word;
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }
-
 
 .filters-styles {
-    border: #c8c8c8;
-    border-left-style: solid;
-    border-right-style: solid;
-    border-width: 0.06rem;
+  border: #c8c8c8;
+  border-left-style: solid;
+  border-right-style: solid;
+  border-width: 0.06rem;
 }
 :host::ng-deep .ui-table .ui-table-tbody > tr.ui-contextmenu-selected {
-    background-color: #ffffff !important;
-    color: black !important;
+  background-color: #ffffff !important;
+  color: black !important;
 }
 :host::ng-deep .clContextMenu .ui-contextmenu,
-:host::ng-deep .clContextMenu .ui-menuitem-link{
-    background-color: #203244fa !important;
+:host::ng-deep .clContextMenu .ui-menuitem-link {
+  background-color: #203244fa !important;
 }
-:host::ng-deep .clContextMenu span{
-    color: #ffffff !important;
+:host::ng-deep .clContextMenu span {
+  color: #ffffff !important;
 }
-.columns-icon{
-    text-align: center;
+.columns-icon {
+  text-align: center;
 }
-.columns-icon > span{
-    font-size: 1.5rem;
+.columns-icon > span {
+  font-size: 1.5rem;
 }
-:host::ng-deep .clToast .ui-toast-message-info{
-    background-color:#283948 !important;
-    color: #ffffff !important;
+:host::ng-deep .clToast .ui-toast-message-info {
+  background-color: #283948 !important;
+  color: #ffffff !important;
 }
 
 .note {
-    resize: none;
-    width: 100%;
-    height: 100%;
-    min-height: inherit;
-    scroll-behavior: auto
+  resize: none;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  scroll-behavior: auto;
 }
 
 ::ng-deep [role="dialog"].dialogNote {
-    width: 21.875rem;
-    min-width: 12.5rem;
+  width: 21.875rem;
+  min-width: 12.5rem;
 }
 ::ng-deep .dialogNote .ui-dialog-content.ui-widget-content {
-    min-height: 15.625rem;
+  min-height: 15.625rem;
 }
 ::ng-deep .td-pos-relative {
-    position: relative !important;
-    height: 100% !important;
+  position: relative !important;
+  height: 100% !important;
 }
 ::ng-deep .anteprima-non-disponibile {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    height: 100%;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  height: 100%;
 }
 
 ::ng-deep .disabled {
-    -moz-box-shadow:    inset 0 0 0.625rem grey !important;
-    -webkit-box-shadow: inset 0 0 0.625rem grey !important;
-    box-shadow:         inset 0 0 0.625rem grey !important;
-    /* cursor: not-allowed !important; */
-    opacity: 0.4 !important;
+  -moz-box-shadow: inset 0 0 0.625rem grey !important;
+  -webkit-box-shadow: inset 0 0 0.625rem grey !important;
+  box-shadow: inset 0 0 0.625rem grey !important;
+  /* cursor: not-allowed !important; */
+  opacity: 0.4 !important;
 }
 
-.iconaEliminaAttivita{
-    display: block;
-    width: 1.5rem;
-    height: 1.5rem;
-    margin: auto;
-    
+.iconaEliminaAttivita {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: auto;
 }

@@ -8,19 +8,19 @@ import { Observable } from "rxjs";
 
 @Injectable()
 export class AttivitaService extends NextSDREntityProvider {
-
   constructor(
     protected http: HttpClient,
-    private handler: HttpBackend, 
-    protected datepipe: DatePipe) {
+    private handler: HttpBackend,
+    protected datepipe: DatePipe
+  ) {
     super(http, datepipe, ENTITIES_STRUCTURE.scrivania.attivita, getInternautaUrl(BaseUrlType.Scrivania));
   }
 
   update(elementToUpdate: Attivita): Observable<any> {
     const temp = new Attivita();
     Object.assign(temp, elementToUpdate);
-    temp.idAzienda = {id: elementToUpdate.idAzienda.id} as Azienda;
-    temp.idApplicazione = {id: elementToUpdate.idApplicazione.id} as Applicazione;
+    temp.idAzienda = { id: elementToUpdate.idAzienda.id } as Azienda;
+    temp.idApplicazione = { id: elementToUpdate.idApplicazione.id } as Applicazione;
     temp.datiAggiuntivi = elementToUpdate.datiAggiuntivi;
     return this.patchHttpCall(temp, temp.id);
   }
@@ -50,11 +50,11 @@ export class AttivitaService extends NextSDREntityProvider {
    * @param url L'url da chiamare.
    * @returns lo stato del token.
    */
-  public verifyArchivioZip(url: string){
+  public verifyArchivioZip(url: string) {
     const httpClient: HttpClient = new HttpClient(this.handler);
     return httpClient.get(url.concat("&onlyVerify=true"));
   }
-  
+
   /**
    * Effettua il download di un fascicolo chiamando l'URL pre-autenticato.
    * Istanzia un oggetto httpClient per bypassare l'interceptor.
@@ -63,6 +63,6 @@ export class AttivitaService extends NextSDREntityProvider {
    */
   public downloadArchivioZip(url: string): Observable<HttpResponse<Blob>> {
     const httpClient: HttpClient = new HttpClient(this.handler);
-    return httpClient.get(url, {observe: 'response', responseType: "blob"});
+    return httpClient.get(url, { observe: "response", responseType: "blob" });
   }
 }
