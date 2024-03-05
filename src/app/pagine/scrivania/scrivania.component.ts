@@ -233,7 +233,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   private isBrowserObsolete(browserName: string, version: string) {
     version = version.split(".")[0];
     const fraseBrowser =
-      "ATTENZIONE: Per continuare a usare Babel al meglio delle sue funzionalità è necessario aggiornare il browser. Inoltre, un browser aggiornato ti tiene al riparo dagli attacchi hacker.";
+      "Importante: Per sfruttare tutte le funzionalità di Babel e garantire la tua sicurezza online, è necessario che tu utilizzi una versione aggiornata del tuo browser. Un browser aggiornato ti protegge meglio dai potenziali attacchi informatici. Ti invitiamo a contattare il tuo amministratore di sistema per procedere con l’aggiornamento. Grazie per la tua collaborazione!";
     let intVersion = parseInt(version);
     switch (browserName) {
       case "Chrome":
@@ -256,7 +256,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       default:
         this.browserMessageObsolete =
-          "ATTENZIONE: Per continuare a usare Babel al meglio delle sue funzionalità è necessario usare un browser tra Firefox e Chrome e aggiornato. Inoltre, un browser aggiornato ti tiene al riparo dagli attacchi hacker.";
+          "Importante: Per sfruttare tutte le funzionalità di Babel e garantire la tua sicurezza online, è necessario che tu utilizzi una versione aggiornata del tuo browser. Un browser aggiornato ti protegge meglio dai potenziali attacchi informatici. Ti invitiamo a contattare il tuo amministratore di sistema per procedere con l’aggiornamento. Grazie per la tua collaborazione!";
         return true;
     }
     return false;

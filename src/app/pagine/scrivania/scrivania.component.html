@@ -215,7 +215,11 @@
         *ngIf="browserObsolete"
         class="messaggio-browser-obsoleti"
       >
-        {{ browserMessageObsolete }}
+        <i
+          class="pi pi-exclamation-triangle"
+          style="font-size: 2rem"
+        ></i>
+        <span>{{ browserMessageObsolete }}</span>
       </span>
 
       <app-dropdown-aziende
