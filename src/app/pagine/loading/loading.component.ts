@@ -9,52 +9,55 @@ import { COMMON_PARAMETERS, ATTIVITA_ROUTE } from "src/environments/app-constant
 @Component({
   selector: "app-loading",
   templateUrl: "./loading.component.html",
-  styleUrls: ["./loading.component.scss"]
+  styleUrls: ["./loading.component.scss"],
 })
 export class LoadingComponent implements OnInit {
-
   constructor(
     private router: Router,
     private loginService: JwtLoginService,
-    private globalService: GlobalService) { }
+    private globalService: GlobalService
+  ) {}
 
   ngOnInit() {
-      this.loginService.loggedUser$.subscribe((utenteUtilities: UtenteUtilities) => {
-        if (utenteUtilities) {
-          const impostazioniApplicazioni: ImpostazioniApplicazioni = utenteUtilities.getImpostazioniApplicazione();
-          if (impostazioniApplicazioni) {
-            const impostazioniVisualizzazione: any = JSON.parse(impostazioniApplicazioni.impostazioniVisualizzazione);
-            const scrivaniaVersion: string = impostazioniVisualizzazione[ApplicationCustiomization.scrivania.version];
-            if (scrivaniaVersion === ScrivaniaVersion.local) {
-                  this.globalService.commonParameters$.subscribe(commonParameters => {
-                  const babelApplication: Applicazione = commonParameters[COMMON_PARAMETERS.BABEL_APPLICATION];
-                  let baseUrl: string;
-                  if (window.location.hostname === "localhost") {
-                      baseUrl = window.location.protocol + "//" + "localhost:8080";
-                  } else {
-                      // baseUrl = window.location.protocol + "//" + window.location.host;
-                      baseUrl = utenteUtilities.getUtente().aziendaLogin["baseUrl" as keyof Azienda];
-                  }
+    this.loginService.loggedUser$.subscribe((utenteUtilities: UtenteUtilities) => {
+      if (utenteUtilities) {
+        const impostazioniApplicazioni: ImpostazioniApplicazioni = utenteUtilities.getImpostazioniApplicazione();
+        if (impostazioniApplicazioni) {
+          const impostazioniVisualizzazione: any = JSON.parse(impostazioniApplicazioni.impostazioniVisualizzazione);
+          const scrivaniaVersion: string = impostazioniVisualizzazione[ApplicationCustiomization.scrivania.version];
+          if (scrivaniaVersion === ScrivaniaVersion.local) {
+            this.globalService.commonParameters$.subscribe((commonParameters) => {
+              const babelApplication: Applicazione = commonParameters[COMMON_PARAMETERS.BABEL_APPLICATION];
+              let baseUrl: string;
+              if (window.location.hostname === "localhost") {
+                baseUrl = window.location.protocol + "//" + "localhost:8080";
+              } else {
+                // baseUrl = window.location.protocol + "//" + window.location.host;
+                baseUrl = utenteUtilities.getUtente().aziendaLogin["baseUrl" as keyof Azienda];
+              }
 
-                  const babelUrl = baseUrl + babelApplication.baseUrl + "/" + babelApplication.indexPage +
-                    "?CMD=scrivania_local" +
-                    "&from=INTERNAUTA" +
-                    "&redirect=true" +
-                    "&utenteImpersonato=" + utenteUtilities.getUtente().idPersona.codiceFiscale;
-                  this.loginService.buildInterAppUrl(babelUrl, false, true, true, false, false).subscribe(
-                    (url: string) => {
-                      this.loginService.clearSession();
-                      window.location.assign(url);
-                  });
-                });
-            } else {
-              this.router.navigate([ATTIVITA_ROUTE]);
-            }
+              const babelUrl =
+                baseUrl +
+                babelApplication.baseUrl +
+                "/" +
+                babelApplication.indexPage +
+                "?CMD=scrivania_local" +
+                "&from=INTERNAUTA" +
+                "&redirect=true" +
+                "&utenteImpersonato=" +
+                utenteUtilities.getUtente().idPersona.codiceFiscale;
+              this.loginService.buildInterAppUrl(babelUrl, false, true, true, false, false).subscribe((url: string) => {
+                this.loginService.clearSession();
+                window.location.assign(url);
+              });
+            });
           } else {
             this.router.navigate([ATTIVITA_ROUTE]);
           }
+        } else {
+          this.router.navigate([ATTIVITA_ROUTE]);
+        }
       }
     });
   }
-
 }

@@ -1,16 +1,16 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from "@angular/core";
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogRef } from "primeng/dynamicdialog";
 import { Impostazioni } from "./impostazioni";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { Subscription } from "rxjs";
-import { FormControl, Validators } from '@angular/forms';
-import { Inplace } from 'primeng/inplace';
+import { FormControl, Validators } from "@angular/forms";
+import { Inplace } from "primeng/inplace";
 
 @Component({
   selector: "app-impostazioni",
   templateUrl: "./impostazioni.component.html",
-  styleUrls: ["./impostazioni.component.scss"]
+  styleUrls: ["./impostazioni.component.scss"],
 })
 export class ImpostazioniComponent implements OnInit, OnDestroy {
   checked: boolean;
@@ -21,15 +21,17 @@ export class ImpostazioniComponent implements OnInit, OnDestroy {
   @ViewChild("inplace")
   public inplace: Inplace;
 
-  emailRegex = new RegExp(/^(([^&#!?'òùàèéì%+*§$£<>()\[\]\.,;:\s@\"]+(\.[^<>&#!?'òùàèéì%+*§$£()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()&#!?'%òùàèéì+*§$£[\]\.,;:'\s@\"]+\.)+[^<>&#!?%'òùàèéì+*§$£()[\]\.,;:'\s@\"]{2,})$/);
+  emailRegex = new RegExp(
+    /^(([^&#!?'òùàèéì%+*§$£<>()\[\]\.,;:\s@\"]+(\.[^<>&#!?'òùàèéì%+*§$£()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()&#!?'%òùàèéì+*§$£[\]\.,;:'\s@\"]+\.)+[^<>&#!?%'òùàèéì+*§$£()[\]\.,;:'\s@\"]{2,})$/
+  );
 
   public mail = new FormControl("", Validators.pattern(this.emailRegex));
 
   constructor(
-    public ref: DynamicDialogRef, 
-    private loginService: JwtLoginService, 
+    public ref: DynamicDialogRef,
+    private loginService: JwtLoginService,
     private impostazioniService: ImpostazioniService
-    ) { }
+  ) {}
 
   ngOnInit() {
     this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
@@ -56,18 +58,18 @@ export class ImpostazioniComponent implements OnInit, OnDestroy {
 
   saveSettings() {
     this.impostazioniService.setHidePreview(this.model.hidePreview.toString());
-    if (this.model.emailToNotify){
+    if (this.model.emailToNotify) {
       this.impostazioniService.setEmailToNotify(this.model.emailToNotify.toString());
     }
     this.impostazioniService.setEmailGiornaliera(this.model.emailGiornaliera);
     this.impostazioniService.setEmailPerSingolaAttivita(this.model.emailPerSingolaAttivita);
     // console.log(this.impostazioniService.getImpostazioniVisualizzazione());
-    this.subscription =
-      this.loggedUser.setImpostazioniApplicazione(this.loginService,this.impostazioniService.getImpostazioniVisualizzazione())
-        .subscribe((newSettings) => {
-          this.impostazioniService.doNotify(newSettings);
-          this.onClose();
-        });
+    this.subscription = this.loggedUser
+      .setImpostazioniApplicazione(this.loginService, this.impostazioniService.getImpostazioniVisualizzazione())
+      .subscribe((newSettings) => {
+        this.impostazioniService.doNotify(newSettings);
+        this.onClose();
+      });
   }
 
   onClose() {

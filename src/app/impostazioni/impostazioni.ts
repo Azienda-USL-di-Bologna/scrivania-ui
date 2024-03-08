@@ -1,8 +1,8 @@
 export class Impostazioni {
-    hidePreview: boolean;
-    emailToNotify: string;
-    emailGiornaliera: boolean;
-    emailPerSingolaAttivita: boolean;
+  hidePreview: boolean;
+  emailToNotify: string;
+  emailGiornaliera: boolean;
+  emailPerSingolaAttivita: boolean;
 
-    constructor() { }
+  constructor() {}
 }

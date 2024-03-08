@@ -8,14 +8,17 @@ import { JwtLoginService } from "@bds/jwt-login";
 import { NextSDREntityProvider } from "@bds/next-sdr";
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class ScrivaniaService extends NextSDREntityProvider {
-
   private getAnteprimaServlet: string = "getAnteprima";
   // private blobEmitter: BehaviorSubject<any> = new BehaviorSubject(new URL("http:// localhost:4200/assets/images/no_anteprima.png"));
 
-  constructor(protected http: HttpClient, protected datepipe: DatePipe, private loginService: JwtLoginService) {
+  constructor(
+    protected http: HttpClient,
+    protected datepipe: DatePipe,
+    private loginService: JwtLoginService
+  ) {
     super(http, datepipe, ENTITIES_STRUCTURE.scrivania.menu, getInternautaUrl(BaseUrlType.Scrivania));
   }
 
@@ -27,7 +30,7 @@ export class ScrivaniaService extends NextSDREntityProvider {
 
   insert(elementToInsert: Attivita, datepipe: DatePipe): Observable<any> {
     const functioName = "insert";
-   //  console.log(this.classDescriptionLocal, functioName, "elementToInsert", elementToInsert);
+    //  console.log(this.classDescriptionLocal, functioName, "elementToInsert", elementToInsert);
     return this.postHttpCall(elementToInsert);
   }
 
@@ -41,39 +44,48 @@ export class ScrivaniaService extends NextSDREntityProvider {
   //   return this.blobEmitter.asObservable();
   // }
 
-
   // public getBlobEmitter(): BehaviorSubject<any> {
   //   return this.blobEmitter;
   // }
   public getAnteprima(attivita: Attivita, allegatoSelezionato: any): Observable<URL> {
     const queryString: string =
-      "guid=" + allegatoSelezionato.guid + "&" +
-      "tipologia=" + allegatoSelezionato.tipologia + "&" +
-      "idAzienda=" + attivita.fk_idAzienda.id + "&" +
-      "idApplicazione=" + attivita.fk_idApplicazione.id + "&" +
-      "fileName=" + allegatoSelezionato.nome_file;
-      const url = this.restApiBaseUrl + "/" + this.getAnteprimaServlet + "?" + queryString;
+      "guid=" +
+      allegatoSelezionato.guid +
+      "&" +
+      "tipologia=" +
+      allegatoSelezionato.tipologia +
+      "&" +
+      "idAzienda=" +
+      attivita.fk_idAzienda.id +
+      "&" +
+      "idApplicazione=" +
+      attivita.fk_idApplicazione.id +
+      "&" +
+      "fileName=" +
+      allegatoSelezionato.nome_file;
+    const url = this.restApiBaseUrl + "/" + this.getAnteprimaServlet + "?" + queryString;
 
-  return new Observable((observer: Subscriber<any>) => {
-          let objectUrl: string = null;
-          this.http.get(url, { responseType: "blob" }).subscribe(m => {
-            objectUrl = URL.createObjectURL(m);
-            observer.next(objectUrl);
+    return new Observable((observer: Subscriber<any>) => {
+      let objectUrl: string = null;
+      this.http.get(url, { responseType: "blob" }).subscribe(
+        (m) => {
+          objectUrl = URL.createObjectURL(m);
+          observer.next(objectUrl);
         },
-        err => {
+        (err) => {
           observer.error(err);
-        });
-        return () => {
-          if (objectUrl) {
-              URL.revokeObjectURL(objectUrl);
-              objectUrl = null;
-          }
-        };
-      });
+        }
+      );
+      return () => {
+        if (objectUrl) {
+          URL.revokeObjectURL(objectUrl);
+          objectUrl = null;
+        }
+      };
+    });
 
-       // return this.http.get<any>(url);
+    // return this.http.get<any>(url);
   }
-
 
   public getUrlsFirmone(): Observable<any> {
     const url: string = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.FIRMONE_URLS;

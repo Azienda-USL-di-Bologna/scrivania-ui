@@ -1,4 +1,18 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy, Input, ViewChildren, QueryList, Renderer2, ElementRef, Inject } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  EventEmitter,
+  Output,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy,
+  Input,
+  ViewChildren,
+  QueryList,
+  Renderer2,
+  ElementRef,
+  Inject,
+} from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
@@ -10,7 +24,14 @@ import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
 import * as Bowser from "bowser";
-import { IntimusClientService, IntimusCommand, IntimusCommands, LOCAL_IT, RefreshAttivitaParams, UtilityFunctions } from "@bds/common-tools";
+import {
+  IntimusClientService,
+  IntimusCommand,
+  IntimusCommands,
+  LOCAL_IT,
+  RefreshAttivitaParams,
+  UtilityFunctions,
+} from "@bds/common-tools";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
@@ -19,10 +40,9 @@ import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
   selector: "app-attivita",
   templateUrl: "./attivita.component.html",
   styleUrls: ["./attivita.component.scss"],
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
 export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewInit {
-
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private subscriptions: Subscription[] = [];
@@ -55,18 +75,20 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private salvataggioNoteResultMessages = {
     success: {
       target: "clToast",
-      message: "Note attività aggiornate con successo"
+      message: "Note attività aggiornate con successo",
     },
     error: {
       target: "errorToast",
-      message: "Errore nel salvataggio delle note attività."
-    }
+      message: "Errore nel salvataggio delle note attività.",
+    },
   };
 
   @Input("idAzienda")
   set idAzienda(idAzienda: number) {
     this._idAzienda = idAzienda;
-    if (!this.loggedUser) { return; }
+    if (!this.loggedUser) {
+      return;
+    }
     if (this._idAzienda) {
       this.loadData(null);
     } else {
@@ -104,36 +126,43 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private impostazioniService: ImpostazioniService,
     private scrivaniaService: ScrivaniaService
   ) {
+    this.subscriptions.push(
+      this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
+        if (u) {
+          this.loggedUser = u;
+          // tslint:disable-next-line:max-line-length
+          // let a = (( (!!this.loggedUser.getUtente().utenteReale || this.loggedUser.isSD() ) && this.loggedUser.getUtente().aziende.length > 1) || (!!!this.loggedUser.getUtente().utenteReale && this.loggedUser.getUtente().aziendeAttive.length > 1) );
 
-    this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
-      if (u) {
-        this.loggedUser = u;
-        // tslint:disable-next-line:max-line-length
-        // let a = (( (!!this.loggedUser.getUtente().utenteReale || this.loggedUser.isSD() ) && this.loggedUser.getUtente().aziende.length > 1) || (!!!this.loggedUser.getUtente().utenteReale && this.loggedUser.getUtente().aziendeAttive.length > 1) );
-
-        if (!this.intimusSubscribbed) {
-          this.subscriptions.push(this.intimusClientService.command$.subscribe((command: IntimusCommand) => {
-            this.parseIntimusCommand(command);
-          }));
-          this.intimusSubscribbed = true;
+          if (!this.intimusSubscribbed) {
+            this.subscriptions.push(
+              this.intimusClientService.command$.subscribe((command: IntimusCommand) => {
+                this.parseIntimusCommand(command);
+              })
+            );
+            this.intimusSubscribbed = true;
+          }
         }
-      }
-      // console.log("faccio il load data di nuovo");
-    }));
+        // console.log("faccio il load data di nuovo");
+      })
+    );
   }
 
   ngOnInit() {
     // imposto l'utente loggato nell'apposita variabile
-    window.addEventListener("resize", function(event) {
+    window.addEventListener("resize", function (event) {
       const bodyTable = document.getElementsByClassName("ui-table-scrollable-body")[0] as HTMLElement;
       bodyTable.style.paddingBottom = "0.06rem";
       bodyTable.style.paddingBottom = "0.06rem";
     });
     this.contextMenuAperte = [
-      { label: "Segna come da leggere", icon: "pi pi-eye-slash", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
+      {
+        label: "Segna come da leggere",
+        icon: "pi pi-eye-slash",
+        command: (event) => this.handleContextMenu(this.attivitaSelezionata),
+      },
     ];
     this.contextMenuNonAperte = [
-      { label: "Segna come letta", icon: "pi pi-eye", command: (event) => this.handleContextMenu(this.attivitaSelezionata) }
+      { label: "Segna come letta", icon: "pi pi-eye", command: (event) => this.handleContextMenu(this.attivitaSelezionata) },
     ];
     const browser = Bowser.getParser(window.navigator.userAgent);
     const browserInfo = browser.getBrowser();
@@ -142,19 +171,22 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this.columnClass = "column-class-o";
     }
     this.verifyAndSetAnteprimaColumns();
-    this.subscriptions.push(this.impostazioniService.settingsChangedNotifier$.subscribe(newSettings => {
-      this.verifyAndSetAnteprimaColumns();
-
-    }));
+    this.subscriptions.push(
+      this.impostazioniService.settingsChangedNotifier$.subscribe((newSettings) => {
+        this.verifyAndSetAnteprimaColumns();
+      })
+    );
   }
 
   private verifyAndSetAnteprimaColumns() {
     this.hidePreview = this.impostazioniService.getHidePreview() === "true";
-    console.log("Se hidePreview è true, 'anteprima' deve essere hidden = false;  se false, anteprima deve essere hidden = true ", this.hidePreview);
+    console.log(
+      "Se hidePreview è true, 'anteprima' deve essere hidden = false;  se false, anteprima deve essere hidden = true ",
+      this.hidePreview
+    );
 
     //this.setVisibilityColumnAnteprima(!this.hidePreview);
     console.log("!! this.cols", this.cols);
-
   }
 
   private parseIntimusCommand(command: IntimusCommand) {
@@ -167,24 +199,32 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       filterById.addFilter(new FilterDefinition("id", FILTER_TYPES.not_string.equals, idAttivitaToRefresh));
       switch (operation) {
         case "INSERT":
-          this.attivitaService.getData(ENTITIES_STRUCTURE.scrivania.attivita.customProjections.AttivitaWithIdApplicazioneAndIdAziendaAndTransientFields, filterById)
-          .subscribe((data: any) => {
-            if (data) {
-              data = data.results[0];
-              this.setAttivitaIcon(data);
-              data.datiAggiuntivi = data.datiAggiuntivi;
-              this.attivita.unshift(data);
-            }
-          });
-        break;
+          this.attivitaService
+            .getData(
+              ENTITIES_STRUCTURE.scrivania.attivita.customProjections.AttivitaWithIdApplicazioneAndIdAziendaAndTransientFields,
+              filterById
+            )
+            .subscribe((data: any) => {
+              if (data) {
+                data = data.results[0];
+                this.setAttivitaIcon(data);
+                data.datiAggiuntivi = data.datiAggiuntivi;
+                this.attivita.unshift(data);
+              }
+            });
+          break;
         case "UPDATE":
-          this.attivitaService.getData(ENTITIES_STRUCTURE.scrivania.attivita.customProjections.AttivitaWithIdApplicazioneAndIdAziendaAndTransientFields, filterById)
-          .subscribe((data: any) => {
+          this.attivitaService
+            .getData(
+              ENTITIES_STRUCTURE.scrivania.attivita.customProjections.AttivitaWithIdApplicazioneAndIdAziendaAndTransientFields,
+              filterById
+            )
+            .subscribe((data: any) => {
               if (data) {
                 console.log("DATA", data);
                 data = data.results[0];
                 data.datiAggiuntivi = data.datiAggiuntivi;
-                const idAttivitaToReplace = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
+                const idAttivitaToReplace = this.attivita.findIndex((attivita) => attivita.id === idAttivitaToRefresh);
                 if (idAttivitaToReplace >= 0) {
                   this.setAttivitaIcon(data);
                   this.attivita[idAttivitaToReplace] = data;
@@ -193,24 +233,28 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
                   console.log("2 = ", this.attivita[idAttivitaToReplace].aperta);
                   this.dataTable.selection = this.attivita[this.selectedRowIndex];
                   console.log("3 = ", this.attivita[idAttivitaToReplace].aperta);
+                }
               }
-            }
-          });
-        break;
+            });
+          break;
         case "DELETE":
-          const idAttivitaToDelete = this.attivita.findIndex(attivita => attivita.id === idAttivitaToRefresh);
+          const idAttivitaToDelete = this.attivita.findIndex((attivita) => attivita.id === idAttivitaToRefresh);
           this.attivita.splice(idAttivitaToDelete, 1);
           this.attivitaEmitter.emit(null);
-        break;
+          break;
       }
     }
   }
 
-  doNotShowAziendaHeader( columns ) {
+  doNotShowAziendaHeader(columns) {
     let filteredColumns = columns;
-    if (( (!!this.loggedUser.getUtente().utenteReale || this.loggedUser.isSD()) && this.loggedUser.getUtente().aziende.length < 2) ||
-        (!!!this.loggedUser.getUtente().utenteReale && !this.loggedUser.isSD() && this.loggedUser.getUtente().aziendeAttive.length < 2)) {
-      filteredColumns = columns.filter(obj => obj.field !== "idAzienda.nome");
+    if (
+      ((!!this.loggedUser.getUtente().utenteReale || this.loggedUser.isSD()) && this.loggedUser.getUtente().aziende.length < 2) ||
+      (!!!this.loggedUser.getUtente().utenteReale &&
+        !this.loggedUser.isSD() &&
+        this.loggedUser.getUtente().aziendeAttive.length < 2)
+    ) {
+      filteredColumns = columns.filter((obj) => obj.field !== "idAzienda.nome");
     }
     return filteredColumns;
   }
@@ -222,8 +266,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     attivitaToUpdate.id = attivitaSelezionata.id;
     attivitaToUpdate.aperta = !attivitaSelezionata.aperta;
     attivitaToUpdate.version = attivitaSelezionata.version;
-    this.attivitaService.patchHttpCall(attivitaToUpdate, attivitaToUpdate.id).subscribe( (attivitaAggiornata: Attivita) => {
-      const indexAttivitaToReplace: number = this.attivita.findIndex(a => a.id === attivitaAggiornata.id);
+    this.attivitaService.patchHttpCall(attivitaToUpdate, attivitaToUpdate.id).subscribe((attivitaAggiornata: Attivita) => {
+      const indexAttivitaToReplace: number = this.attivita.findIndex((a) => a.id === attivitaAggiornata.id);
       this.attivita[indexAttivitaToReplace].aperta = attivitaToUpdate.aperta;
       this.attivita[indexAttivitaToReplace].version = attivitaAggiornata.version;
     });
@@ -235,8 +279,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngAfterViewInit() {
     // aggiungo le label aria al campo input del calendario
-    const colsDate = this.cols.filter(e => e.filterWidget === "Calendar");
-    colsDate.forEach(element => {
+    const colsDate = this.cols.filter((e) => e.filterWidget === "Calendar");
+    colsDate.forEach((element) => {
       const calElm = document.getElementById("CalInput_" + element.field);
       calElm.setAttribute("aria-label", element.ariaLabelDescription);
     });
@@ -282,18 +326,20 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   public selectIndex(index: number) {
     console.log("Index of the row: ", index, "Table Index, selectexRowIndex: ", this.selectedRowIndex);
-    if (index < 0 || index >= this.attivita.length) { return; }
+    if (index < 0 || index >= this.attivita.length) {
+      return;
+    }
     console.log("Controllo supertao: ", this.attivita[index]);
     this.selectedRowIndex = index;
     this.dataTable.selection = this.attivita[this.selectedRowIndex];
     const attivitaSelezionata: Attivita = this.attivita[this.selectedRowIndex];
-    if (!attivitaSelezionata.aperta) { // se l'attivita non è letta la metto come letta
+    if (!attivitaSelezionata.aperta) {
+      // se l'attivita non è letta la metto come letta
       attivitaSelezionata.aperta = !attivitaSelezionata.aperta;
-      this.attivitaService.update(attivitaSelezionata).subscribe( (a: Attivita) => {
-          this.attivita[this.selectedRowIndex].version = a.version;
-          attivitaSelezionata.version = a.version;
-        }
-      );
+      this.attivitaService.update(attivitaSelezionata).subscribe((a: Attivita) => {
+        this.attivita[this.selectedRowIndex].version = a.version;
+        attivitaSelezionata.version = a.version;
+      });
     }
     this.attivitaEmitter.emit(this.dataTable.selection);
   }
@@ -306,10 +352,19 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("data", SORT_MODES.desc));
     initialFiltersAndSorts.addSort(new SortDefinition("id", SORT_MODES.desc));
-    const filterIdPersona: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
+    const filterIdPersona: FilterDefinition = new FilterDefinition(
+      "idPersona.id",
+      FILTER_TYPES.not_string.equals,
+      this.loggedUser.getUtente().fk_idPersona.id
+    );
     initialFiltersAndSorts.addFilter(filterIdPersona);
-    if (this._idAzienda !== -1) { // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
-      const filterIdAzienda: FilterDefinition = new FilterDefinition("idAzienda.id", FILTER_TYPES.not_string.equals, this._idAzienda);
+    if (this._idAzienda !== -1) {
+      // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
+      const filterIdAzienda: FilterDefinition = new FilterDefinition(
+        "idAzienda.id",
+        FILTER_TYPES.not_string.equals,
+        this._idAzienda
+      );
       initialFiltersAndSorts.addFilter(filterIdAzienda);
     }
     // initialFiltersAndSorts.rows = this.LOADED_ROWS;
@@ -328,9 +383,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const pageConf: PagingConf = {
       conf: {
         page: page,
-        size: size
+        size: size,
       },
-      mode: "PAGE"
+      mode: "PAGE",
     };
     return pageConf;
   }
@@ -348,10 +403,14 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
     const pageConfing: PagingConf = this.buildPageConf(event);
 
-    this.attivitaService.getData(ENTITIES_STRUCTURE.scrivania.attivita.customProjections.AttivitaWithIdApplicazioneAndIdAziendaAndTransientFields,
+    this.attivitaService
+      .getData(
+        ENTITIES_STRUCTURE.scrivania.attivita.customProjections.AttivitaWithIdApplicazioneAndIdAziendaAndTransientFields,
         this.initialFiltersAndSorts,
         this.lazyLoadFiltersAndSorts,
-        pageConfing).subscribe(data => {
+        pageConfing
+      )
+      .subscribe((data) => {
         this.attivita = undefined;
         this.totalRecords = 0;
         if (data && data.results && data.page) {
@@ -364,7 +423,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             // console.log("carica", a.datiAggiuntivi);
             //a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
             // "forbidden" è un caso di smicnhiamento probabilmente
-            if (attivita.descrizione !== "Redazione" && attivita.descrizione !== "Bozza" && attivita.allegati && attivita.allegati !== null) {
+            if (
+              attivita.descrizione !== "Redazione" &&
+              attivita.descrizione !== "Bozza" &&
+              attivita.allegati &&
+              attivita.allegati !== null
+            ) {
               // const jsonObject = JSON.parse(a.allegati);
               const allegati = attivita.allegati;
               for (let i = 0; i < allegati.length; i++) {
@@ -372,14 +436,17 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
                   attivita["allegatoDaMostrare"] = allegati[i];
                 }
               }
-            } else if (attivita.allegati && attivita.allegati !== null && (attivita.descrizione === "Redazione" || attivita.descrizione === "Bozza")) {
+            } else if (
+              attivita.allegati &&
+              attivita.allegati !== null &&
+              (attivita.descrizione === "Redazione" || attivita.descrizione === "Bozza")
+            ) {
               attivita["anteprimaNonDisponibile"] = "Non disponibile";
             }
           });
         }
         this.loading = false;
       });
-
   }
 
   private setAttivitaIcon(a: Attivita) {
@@ -398,28 +465,37 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
     this.selectIndex(this.attivita.indexOf(attivita));
     if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
-      const encodeParams = attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
-                          attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
+      const encodeParams =
+        attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
+        attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
       const addRichiestaParam = true;
       const addPassToken = true;
-      this.loginService.buildInterAppUrl(compiledUrlsJsonArray[0].url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
-        console.log("urlAperto:", url);
-      });
+      this.loginService
+        .buildInterAppUrl(compiledUrlsJsonArray[0].url, encodeParams, addRichiestaParam, addPassToken, true)
+        .subscribe((url: string) => {
+          console.log("urlAperto:", url);
+        });
     }
-
   }
 
   public deleteAttivita(event: MouseEvent, attivita: Attivita) {
     event.stopPropagation();
     const response = this.attivitaService.delete(attivita);
     this.loading = true;
-    response.subscribe(res => {
-      this.refreshAttivitaCaller();
-      this.messageService.add({ severity: "info", summary: "Eliminazione", detail: "Notifica eliminata con successo!" });
-    }, err => {
-      this.messageService.add({ severity: "error", summary: "Eliminazione", detail: "Non è stato possibile eliminare la notifica. Contattare BabelCare" });
-      console.error("Messaggio errore: ", err);
-    });
+    response.subscribe(
+      (res) => {
+        this.refreshAttivitaCaller();
+        this.messageService.add({ severity: "info", summary: "Eliminazione", detail: "Notifica eliminata con successo!" });
+      },
+      (err) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Eliminazione",
+          detail: "Non è stato possibile eliminare la notifica. Contattare BabelCare",
+        });
+        console.error("Messaggio errore: ", err);
+      }
+    );
   }
 
   getColumnValue(attivita, col, td?, link?) {
@@ -430,8 +506,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         case "idAzienda.nome":
         case "idApplicazione.nome":
           res = attivita[col.field.split(".")[0]][col.field.split(".")[1]];
-          if (res === "Servizio di download"){
-            res = "Gedi"
+          if (res === "Servizio di download") {
+            res = "Gedi";
           }
           break;
 
@@ -469,42 +545,45 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   fillActionCol(attivita, td) {
-    if (attivita.tipo === "attivita" || (attivita.tipo === "notifica" && ["procton", "dete", "deli", "downloader"].includes(attivita.idApplicazione.id))) {
+    if (
+      attivita.tipo === "attivita" ||
+      (attivita.tipo === "notifica" && ["procton", "dete", "deli", "downloader"].includes(attivita.idApplicazione.id))
+    ) {
       const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
       let compiledUrl;
-      let labelUrl = 'Apri';
+      let labelUrl = "Apri";
       if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
         compiledUrl = compiledUrlsJsonArray[0].url;
         labelUrl = compiledUrlsJsonArray[0].label;
-        if (labelUrl === 'Accetta/rifiuta')
-          labelUrl = 'Rispondi'; // TODO: Questo andrebbe cambiato nel backend. Per non modificare la larghezza del frontend lo cambio qui.
-        }
+        if (labelUrl === "Accetta/rifiuta") labelUrl = "Rispondi"; // TODO: Questo andrebbe cambiato nel backend. Per non modificare la larghezza del frontend lo cambio qui.
+      }
       td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>${labelUrl}</strong></a>`;
       if (this.listeners[td.id]) {
         this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
         this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa
       }
-      this.listeners[td.id] = [this.renderer.listen(td, "mousedown", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        // console.log("fillActionCol td", td);
-        if (!td.classList.contains("disabled")) {
-          if (attivita.idApplicazione.id === "downloader" && compiledUrl){
-            this.downloadArchivioZip(attivita, compiledUrl);
-          } else {
-            this.apriAttivita(attivita);
+      this.listeners[td.id] = [
+        this.renderer.listen(td, "mousedown", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          // console.log("fillActionCol td", td);
+          if (!td.classList.contains("disabled")) {
+            if (attivita.idApplicazione.id === "downloader" && compiledUrl) {
+              this.downloadArchivioZip(attivita, compiledUrl);
+            } else {
+              this.apriAttivita(attivita);
+            }
+            this.renderer.addClass(td, "disabled");
+            // this.renderer.setAttribute(td, "title", "disabilitato per un paio di secondi");
+
+            setTimeout(() => {
+              this.renderer.removeClass(td, "disabled");
+              // this.renderer.removeAttribute(td, "title");
+            }, 5000);
           }
-          this.renderer.addClass(td, "disabled");
-          // this.renderer.setAttribute(td, "title", "disabilitato per un paio di secondi");
-
-          setTimeout(() => {
-            this.renderer.removeClass(td, "disabled");
-            // this.renderer.removeAttribute(td, "title");
-          }, 5000);
-        }
-
-      }), td.cellIndex];
-
+        }),
+        td.cellIndex,
+      ];
     } else {
       td.innerHTML = "";
     }
@@ -520,50 +599,50 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       next: (res) => {
         // faccio scaricare l'archivio da un tag ancor cossiché sia gestito dal browser
         // questo per permettere una più chiara comrensione all'utente del download in corso
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = url;
         link.click();
         this.messageService.add({
           severity: "success",
-          key : "attivitaToast",
+          key: "attivitaToast",
           summary: "Download completato",
-          detail: `Scaricamento archivio compresso ${attivita.oggetto} avviato con successo.`
+          detail: `Scaricamento archivio compresso ${attivita.oggetto} avviato con successo.`,
         });
       },
-      error: (err) => {        
+      error: (err) => {
         if (err.status === 401) {
           this.messageService.add({
             severity: "error",
-            key : "attivitaToast",
+            key: "attivitaToast",
             summary: "Attenzione",
-            detail: `Il link per il download non è più valido. Si prega di ripetere l'operazione.`
+            detail: `Il link per il download non è più valido. Si prega di ripetere l'operazione.`,
           });
         } else {
           this.messageService.add({
             severity: "error",
-            key : "attivitaToast",
+            key: "attivitaToast",
             summary: "ERRORE",
-            detail: `C'è stato un errore imprevisto sul server.`
+            detail: `C'è stato un errore imprevisto sul server.`,
           });
         }
-      } 
+      },
     });
   }
 
   /**
- * Metodo che prende il nome del file dall'header della response.
- * @param response La response http.
- * @param archivio Il fascicolo per prendere il nome in caso non venga passato dal service.
- * @returns Il nome del file.
- */
+   * Metodo che prende il nome del file dall'header della response.
+   * @param response La response http.
+   * @param archivio Il fascicolo per prendere il nome in caso non venga passato dal service.
+   * @returns Il nome del file.
+   */
   private getFilenameFromResponse(response: any, attivita: Attivita) {
-    const contentDispositionHeader = response?.headers?.get('Content-Disposition');
+    const contentDispositionHeader = response?.headers?.get("Content-Disposition");
     if (contentDispositionHeader != null) {
-      const parts = contentDispositionHeader.split(';');
+      const parts = contentDispositionHeader.split(";");
       for (const part of parts) {
-        if (part.trim().startsWith('filename')) {
-          const filename = part.substring(part.indexOf('=') + 1).trim();
-          return filename.replace(/"/g, '');
+        if (part.trim().startsWith("filename")) {
+          const filename = part.substring(part.indexOf("=") + 1).trim();
+          return filename.replace(/"/g, "");
         }
       }
     }
@@ -575,34 +654,38 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     let calSel: Calendar = null;
     switch (action) {
       case "today":
-        calSel = this._calGen.find(e => e.inputId === "CalInput_" + field);
+        calSel = this._calGen.find((e) => e.inputId === "CalInput_" + field);
         if (calSel) {
           calSel.overlayVisible = false;
         }
-      break;
+        break;
 
       case "clear":
         this.dataTable.filter(null, field, null);
-      break;
+        break;
 
       case "select":
         if (this._calGen) {
-          calSel = this._calGen.find(a => a.inputId === "CalInput_" + field);
-          if (calSel && this.dataRange && this.dataRange[field].length === 2
-            && this.dataRange[field][0] && this.dataRange[field][1]) {
+          calSel = this._calGen.find((a) => a.inputId === "CalInput_" + field);
+          if (
+            calSel &&
+            this.dataRange &&
+            this.dataRange[field].length === 2 &&
+            this.dataRange[field][0] &&
+            this.dataRange[field][1]
+          ) {
             calSel.overlayVisible = false;
           }
         }
 
         const value = this.dataRange[field];
         this.dataTable.filter(value, field, null);
-      break;
+        break;
     }
   }
 
   public onNoteClick(attivita: any) {
     this.onAttivitaNoteEmitter.emit(attivita);
-
   }
 
   public noteClicckato(attivita: Attivita, event: any) {
@@ -626,32 +709,34 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public apriAnteprima(attivita: Attivita) {
     console.log("apriAnteprima(attivita: Attivita)", attivita);
     if (attivita["allegatoDaMostrare"]) {
-      this.scrivaniaService.getAnteprima(attivita, attivita["allegatoDaMostrare"])
-        .subscribe(
-          file => {
-            const name = attivita.oggetto.substr(0, attivita.oggetto.indexOf(":"));
-            /* console.log(attivita);
+      this.scrivaniaService.getAnteprima(attivita, attivita["allegatoDaMostrare"]).subscribe(
+        (file) => {
+          const name = attivita.oggetto.substr(0, attivita.oggetto.indexOf(":"));
+          /* console.log(attivita);
             console.log("FILE", file);
             console.log(typeof file);
             console.log(name); */
-            let newWindow: Window;
-            if (typeof file === "string") {
-              newWindow = window.open(file, "_balank");
-            } else  {
-              newWindow = window.open(file["url"], "_balank");
-            }
-            newWindow.document.title = name;  // BOH! Vorrei capire come fare
-            newWindow.focus();
-            console.log("IL DOCUMENT", newWindow.document);
-          },
-          err => {
-            console.log("ERRORE!!!", err);
-            this.messageService.clear("errorToast");
-            this.messageService.add({ key: "errorToast",
-              severity: "error", summary: "Attenzione",
-              detail: "Stampa Unica non trovata" });
+          let newWindow: Window;
+          if (typeof file === "string") {
+            newWindow = window.open(file, "_balank");
+          } else {
+            newWindow = window.open(file["url"], "_balank");
           }
-        );
+          newWindow.document.title = name; // BOH! Vorrei capire come fare
+          newWindow.focus();
+          console.log("IL DOCUMENT", newWindow.document);
+        },
+        (err) => {
+          console.log("ERRORE!!!", err);
+          this.messageService.clear("errorToast");
+          this.messageService.add({
+            key: "errorToast",
+            severity: "error",
+            summary: "Attenzione",
+            detail: "Stampa Unica non trovata",
+          });
+        }
+      );
     } else {
       console.log("NESSUNA STAMPA UNICA DA MOSTRARE");
     }
@@ -659,7 +744,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   closeAndBasta() {
     this.showNote = false;
-    setTimeout(() => { // this will make the execution after the above boolean has changed
+    setTimeout(() => {
+      // this will make the execution after the above boolean has changed
       const selectedRow = this.tableRows.toArray()[0];
       selectedRow.nativeElement.focus();
     }, 0);
@@ -689,14 +775,24 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   salvaNote() {
     this.attivitaService.update(this.attivitaTemp).subscribe(
-      res => {
+      (res) => {
         this.messageService.clear("clToast");
-        this.messageService.add({key: this.salvataggioNoteResultMessages.success.target, severity: "success", summary: "OK", detail: this.salvataggioNoteResultMessages.success.message});
+        this.messageService.add({
+          key: this.salvataggioNoteResultMessages.success.target,
+          severity: "success",
+          summary: "OK",
+          detail: this.salvataggioNoteResultMessages.success.message,
+        });
         this.closeAndBasta();
       },
-      err => {
+      (err) => {
         this.messageService.clear("errorToast");
-        this.messageService.add({ key: this.salvataggioNoteResultMessages.error.target, severity: "error", summary: "Errore", detail: this.salvataggioNoteResultMessages.error.message });
+        this.messageService.add({
+          key: this.salvataggioNoteResultMessages.error.target,
+          severity: "error",
+          summary: "Errore",
+          detail: this.salvataggioNoteResultMessages.error.message,
+        });
       }
     );
   }
@@ -715,7 +811,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   impostaPriorita(attivita: Attivita, event: any) {
     if (attivita.tipo === "attivita") {
-      (!attivita.priorita || attivita.priorita === 3 ? attivita.priorita = 1 : (attivita.priorita === 1 ? attivita.priorita = 2 : attivita.priorita = 3));
+      !attivita.priorita || attivita.priorita === 3
+        ? (attivita.priorita = 1)
+        : attivita.priorita === 1
+          ? (attivita.priorita = 2)
+          : (attivita.priorita = 3);
       this.setAttivitaIcon(attivita);
       this.attivitaService.update(attivita).subscribe();
       event.stopPropagation();
@@ -726,14 +826,18 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     this.confirmationService.confirm({
       key: _key,
       message: _message,
-      accept: () => {_accept(); },
-      reject: () => {_reject(); }
+      accept: () => {
+        _accept();
+      },
+      reject: () => {
+        _reject();
+      },
     });
   }
 
   refreshAttivitaCaller(): void {
-    console.log('scatta evento');
-    this.refreshAttivita.next('refresh');
+    console.log("scatta evento");
+    this.refreshAttivita.next("refresh");
   }
 
   public confermaEliminaAttivita(attivita: Attivita, event: Event): void {
@@ -742,29 +846,29 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       target: event.target,
       message: "Stai eliminando questa attività, vuoi proseguire?",
       accept: () => {
-        this.loading= true;
+        this.loading = true;
         this.attivitaService.eliminaAttivitaDemiurgo(attivita).subscribe(
-          res => {
+          (res) => {
             this.refreshAttivitaCaller();
             this.messageService.add({
               severity: "success",
-              key : "attivitaToast",
+              key: "attivitaToast",
               summary: "OK",
-              detail: `Attività rimossa dalla scrivania con successo! `
+              detail: `Attività rimossa dalla scrivania con successo! `,
             });
             this.loading = false;
             console.log(res);
           },
-          err => {
+          (err) => {
             this.messageService.add({
               severity: "warn",
-              key : "attivitaToast",
+              key: "attivitaToast",
               summary: "Attenzione",
-              detail: `Si è verificato un errore nell'eliminazione dell'attività, contattare il servizio di supporto`
+              detail: `Si è verificato un errore nell'eliminazione dell'attività, contattare il servizio di supporto`,
             });
           }
         );
-      }
+      },
     });
   }
 

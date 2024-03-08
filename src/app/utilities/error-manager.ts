@@ -2,7 +2,6 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Observable, throwError } from "rxjs";
 
 export class ErrorManager {
-
   public static errorMgmt(error: HttpErrorResponse): Observable<never> {
     let errorMessage = "";
     if (error.error instanceof ErrorEvent) {

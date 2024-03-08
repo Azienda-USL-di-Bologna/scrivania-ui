@@ -1,15 +1,15 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed, inject } from "@angular/core/testing";
 
-import { ScrivaniaService } from './scrivania.service';
+import { ScrivaniaService } from "./scrivania.service";
 
-describe('ScrivaniaService', () => {
+describe("ScrivaniaService", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ScrivaniaService]
+      providers: [ScrivaniaService],
     });
   });
 
-  it('should be created', inject([ScrivaniaService], (service: ScrivaniaService) => {
+  it("should be created", inject([ScrivaniaService], (service: ScrivaniaService) => {
     expect(service).toBeTruthy();
   }));
 });

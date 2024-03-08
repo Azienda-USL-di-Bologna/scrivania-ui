@@ -15,10 +15,9 @@ import { Table } from "primeng/table";
   selector: "app-attivita-fatte",
   templateUrl: "./attivita-fatte.component.html",
   styleUrls: ["./attivita-fatte.component.scss"],
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
 export class AttivitaFatteComponent implements OnInit {
-
   public attivitaFatte: AttivitaFatta[];
   public totalRecords: number;
   public localIt = LOCAL_IT;
@@ -44,7 +43,9 @@ export class AttivitaFatteComponent implements OnInit {
     if (!this._idAzienda) {
       this._idAzienda = -1;
     }
-    if ( !this.loggedUser ) { return; }
+    if (!this.loggedUser) {
+      return;
+    }
     if (this._idAzienda) {
       this.loadData(null);
     }
@@ -64,7 +65,7 @@ export class AttivitaFatteComponent implements OnInit {
       width: "2.313rem",
       padding: 0,
       label: "priorità",
-      minWidth: "2.313rem"
+      minWidth: "2.313rem",
     },
     {
       field: "idAzienda.nome",
@@ -72,7 +73,7 @@ export class AttivitaFatteComponent implements OnInit {
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "6.25rem",
       label: "ente",
-      minWidth: "6.25rem"
+      minWidth: "6.25rem",
     },
     {
       field: "idApplicazione.nome",
@@ -80,7 +81,7 @@ export class AttivitaFatteComponent implements OnInit {
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "5.813rem",
       label: "applicazione",
-      minWidth: "5.813rem"
+      minWidth: "5.813rem",
     },
     {
       field: "provenienza",
@@ -88,14 +89,14 @@ export class AttivitaFatteComponent implements OnInit {
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "8.75rem",
       label: "provenienza",
-      minWidth: "8.75rem"
+      minWidth: "8.75rem",
     },
     {
       field: "oggetto",
       header: "Oggetto",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       label: "oggetto",
-      minWidth: "12.5rem"
+      minWidth: "12.5rem",
     },
     {
       field: "dataInserimentoRiga",
@@ -106,7 +107,7 @@ export class AttivitaFatteComponent implements OnInit {
       ariaLabelDescription: "Colonna Data, Cella filtro",
       width: "8rem",
       label: "svolta il",
-      minWidth: "8rem"
+      minWidth: "8rem",
     },
     {
       field: "descrizione",
@@ -114,23 +115,29 @@ export class AttivitaFatteComponent implements OnInit {
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
       width: "7.5rem",
       label: "tipo",
-      minWidth: "7.5rem"
+      minWidth: "7.5rem",
     },
     {
-    // colonna note
+      // colonna note
       width: "1.875rem",
       label: "note",
-      minWidth: "1.875rem"
+      minWidth: "1.875rem",
     },
   ];
 
-  constructor(private datepipe: DatePipe, private attivitaFatteService: AttivitaFatteService, private loginService: JwtLoginService) { }
+  constructor(
+    private datepipe: DatePipe,
+    private attivitaFatteService: AttivitaFatteService,
+    private loginService: JwtLoginService
+  ) {}
 
   ngOnInit() {
     this.subscriptions = [];
-    this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
-      this.loggedUser = u;
-    }));
+    this.subscriptions.push(
+      this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
+        this.loggedUser = u;
+      })
+    );
     // this.loadData(null);
   }
 
@@ -156,18 +163,16 @@ export class AttivitaFatteComponent implements OnInit {
         this.lazyLoadFiltersAndSorts,
         pageConfing
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         console.log("DATA FATTE", data);
 
         this.attivitaFatte = undefined;
         this.totalRecords = 0;
         if (data && data.results && data.page) {
-          this.attivitaFatte = <AttivitaFatta[]>(
-            data.results
-          );
+          this.attivitaFatte = <AttivitaFatta[]>data.results;
 
           this.totalRecords = data.page.totalElements;
-          this.attivitaFatte.forEach(a => {
+          this.attivitaFatte.forEach((a) => {
             if (a.tipo === "notifica") {
               a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
             } else if (!a.priorita || a.priorita === 3) {
@@ -194,9 +199,9 @@ export class AttivitaFatteComponent implements OnInit {
     const pageConf: PagingConf = {
       conf: {
         page: page,
-        size: size
+        size: size,
       },
-      mode: "PAGE_NO_COUNT"
+      mode: "PAGE_NO_COUNT",
     };
     return pageConf;
   }
@@ -205,10 +210,19 @@ export class AttivitaFatteComponent implements OnInit {
     const functionName = "buildInitialFiltersAndSorts";
     const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("id", SORT_MODES.desc));
-    const filterIdPersona: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
+    const filterIdPersona: FilterDefinition = new FilterDefinition(
+      "idPersona.id",
+      FILTER_TYPES.not_string.equals,
+      this.loggedUser.getUtente().fk_idPersona.id
+    );
     initialFiltersAndSorts.addFilter(filterIdPersona);
-    if (this._idAzienda !== -1) { // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
-      const filterIdAzienda: FilterDefinition = new FilterDefinition("idAzienda.id", FILTER_TYPES.not_string.equals, this._idAzienda);
+    if (this._idAzienda !== -1) {
+      // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
+      const filterIdAzienda: FilterDefinition = new FilterDefinition(
+        "idAzienda.id",
+        FILTER_TYPES.not_string.equals,
+        this._idAzienda
+      );
       initialFiltersAndSorts.addFilter(filterIdAzienda);
     }
     // initialFiltersAndSorts.rows = 20;
@@ -261,28 +275,33 @@ export class AttivitaFatteComponent implements OnInit {
     let calSel: Calendar = null;
     switch (action) {
       case "today":
-        calSel = this._calGen.find(e => e.inputId === "CalInput_" + field);
+        calSel = this._calGen.find((e) => e.inputId === "CalInput_" + field);
         if (calSel) {
           calSel.overlayVisible = false;
         }
-      break;
+        break;
 
       case "clear":
         this.dataTable.filter(null, field, null);
-      break;
+        break;
 
       case "select":
         if (this._calGen) {
-          calSel = this._calGen.find(a => a.inputId === "CalInput_" + field);
-          if (calSel && this.dataRange && this.dataRange[field].length === 2
-            && this.dataRange[field][0] && this.dataRange[field][1]) {
+          calSel = this._calGen.find((a) => a.inputId === "CalInput_" + field);
+          if (
+            calSel &&
+            this.dataRange &&
+            this.dataRange[field].length === 2 &&
+            this.dataRange[field][0] &&
+            this.dataRange[field][1]
+          ) {
             calSel.overlayVisible = false;
           }
         }
 
         const value = this.dataRange[field];
         this.dataTable.filter(value, field, null);
-      break;
+        break;
     }
   }
 
@@ -309,7 +328,6 @@ export class AttivitaFatteComponent implements OnInit {
   // private fourRandomChar() {
   //   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   // }
-
 }
 
 export class AttivitaFattaCustom extends AttivitaFatta {
