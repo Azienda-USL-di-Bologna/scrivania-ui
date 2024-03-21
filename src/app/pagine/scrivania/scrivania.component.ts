@@ -156,8 +156,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
           this.loggedUserIsSD = this.loggedUser.hasRole(CODICI_RUOLO.SD);
 
           if (this.loggedUser.getUtente() && this.loggedUser.getUtente().utenteReale) {
-            this.loggedUserIs99 =
-              (this.loggedUser.getUtente().utenteReale.idInquadramento as unknown as String) === "99";
+            this.loggedUserIs99 = (this.loggedUser.getUtente().utenteReale.idInquadramento as unknown as String) === "99";
           } else if (this.loggedUser.getUtente()) {
             this.loggedUserIs99 = (this.loggedUser.getUtente().idInquadramento as unknown as String) === "99";
           }
@@ -201,10 +200,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         document.onmousemove = null;
         console.log("that.slider.nativeElement.onmouseup");
         that.impostazioniService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
-        that.loggedUser.setImpostazioniApplicazione(
-          that.loginService,
-          that.impostazioniService.getImpostazioniVisualizzazione()
-        );
+        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniService.getImpostazioniVisualizzazione());
         document.onmouseup = null;
         that.sliding = false;
       };
@@ -237,7 +233,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   private isBrowserObsolete(browserName: string, version: string) {
     version = version.split(".")[0];
     const fraseBrowser =
-      "ATTENZIONE: Per continuare a usare Babel al meglio delle sue funzionalità è necessario aggiornare il browser. Inoltre, un browser aggiornato ti tiene al riparo dagli attacchi hacker.";
+      "Importante: Per sfruttare tutte le funzionalità di Babel e garantire la tua sicurezza online, è necessario che tu utilizzi una versione aggiornata del tuo browser. Un browser aggiornato ti protegge meglio dai potenziali attacchi informatici. Ti invitiamo a contattare il tuo amministratore di sistema per procedere con l’aggiornamento. Grazie per la tua collaborazione!";
     let intVersion = parseInt(version);
     switch (browserName) {
       case "Chrome":
@@ -260,7 +256,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       default:
         this.browserMessageObsolete =
-          "ATTENZIONE: Per continuare a usare Babel al meglio delle sue funzionalità è necessario usare un browser tra Firefox e Chrome e aggiornato. Inoltre, un browser aggiornato ti tiene al riparo dagli attacchi hacker.";
+          "Importante: Per sfruttare tutte le funzionalità di Babel e garantire la tua sicurezza online, è necessario che tu utilizzi una versione aggiornata del tuo browser. Un browser aggiornato ti protegge meglio dai potenziali attacchi informatici. Ti invitiamo a contattare il tuo amministratore di sistema per procedere con l’aggiornamento. Grazie per la tua collaborazione!";
         return true;
     }
     return false;
@@ -428,11 +424,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
     const addRichiestaParam = true;
     const addPassToken = true;
-    this.loginService
-      .buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true)
-      .subscribe((url: string) => {
-        console.log("urlAperto:", url);
-      });
+    this.loginService.buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
+      console.log("urlAperto:", url);
+    });
   }
 
   // private loadMenu() {
@@ -654,8 +648,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public delNotifiche() {
     this.confirmationService.confirm({
-      message:
-        "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
+      message: "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
       header: "Cancellazione notifiche",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Sì",

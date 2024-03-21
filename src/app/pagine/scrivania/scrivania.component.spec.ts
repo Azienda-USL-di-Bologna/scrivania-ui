@@ -1,16 +1,15 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ScrivaniaComponent } from './scrivania.component';
+import { ScrivaniaComponent } from "./scrivania.component";
 
-describe('ScrivaniaComponent', () => {
+describe("ScrivaniaComponent", () => {
   let component: ScrivaniaComponent;
   let fixture: ComponentFixture<ScrivaniaComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ScrivaniaComponent ]
-    })
-    .compileComponents();
+      declarations: [ScrivaniaComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('ScrivaniaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

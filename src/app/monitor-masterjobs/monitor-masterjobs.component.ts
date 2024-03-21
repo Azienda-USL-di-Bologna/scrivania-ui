@@ -31,7 +31,11 @@ export class MonitorMasterjobsComponent implements OnInit {
   public spinActive: boolean = false;
   public rowCount: number;
 
-  constructor(private loginService: JwtLoginService, private jobService: ExtendedJobService, private datepipe: DatePipe) {}
+  constructor(
+    private loginService: JwtLoginService,
+    private jobService: ExtendedJobService,
+    private datepipe: DatePipe
+  ) {}
 
   ngOnInit() {}
 
@@ -66,7 +70,11 @@ export class MonitorMasterjobsComponent implements OnInit {
       this.loadJobSubscription.unsubscribe();
       this.loadJobSubscription = null;
     }
-    const lazyFiltersAndSorts: FiltersAndSorts = buildLazyEventFiltersAndSorts(this.storedLazyLoadEvent, this.columns, this.datepipe);
+    const lazyFiltersAndSorts: FiltersAndSorts = buildLazyEventFiltersAndSorts(
+      this.storedLazyLoadEvent,
+      this.columns,
+      this.datepipe
+    );
     this.loadCount(this.jobService as NextSDREntityProvider, null, null, lazyFiltersAndSorts);
     this.loadJobSubscription = this.jobService.getData(null, null, lazyFiltersAndSorts, this.pageConf).subscribe(
       (data: any) => {
@@ -89,7 +97,12 @@ export class MonitorMasterjobsComponent implements OnInit {
     );
   }
 
-  private loadCount(serviceToUse: NextSDREntityProvider, projectionFotGetData: string, filtersAndSorts: FiltersAndSorts, lazyFiltersAndSorts: FiltersAndSorts): void {
+  private loadCount(
+    serviceToUse: NextSDREntityProvider,
+    projectionFotGetData: string,
+    filtersAndSorts: FiltersAndSorts,
+    lazyFiltersAndSorts: FiltersAndSorts
+  ): void {
     this.spinActive = true;
     if (this.loadJobCountSubscription) {
       this.loadJobCountSubscription.unsubscribe();
@@ -97,15 +110,17 @@ export class MonitorMasterjobsComponent implements OnInit {
     }
     const pageConf: PagingConf = { mode: "LIMIT_OFFSET", conf: { limit: 1, offset: 0 } };
     //private pageConfNoLimit: PagingConf = {conf: {page: 0,size: 999999},mode: "PAGE_NO_COUNT"};
-    this.loadJobCountSubscription = serviceToUse.getData(projectionFotGetData, filtersAndSorts, lazyFiltersAndSorts, pageConf).subscribe({
-      next: (data: any) => {
-        this.rowCount = data.page.totalElements;
-        this.spinActive = false;
-      },
-      error: (err) => {
-        console.log("Non sono riuscito a fare il count");
-      },
-    });
+    this.loadJobCountSubscription = serviceToUse
+      .getData(projectionFotGetData, filtersAndSorts, lazyFiltersAndSorts, pageConf)
+      .subscribe({
+        next: (data: any) => {
+          this.rowCount = data.page.totalElements;
+          this.spinActive = false;
+        },
+        error: (err) => {
+          console.log("Non sono riuscito a fare il count");
+        },
+      });
   }
 
   public onLazyLoad(event: LazyLoadEvent): void {

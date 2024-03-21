@@ -8,7 +8,10 @@ import { Observable } from "rxjs";
   providedIn: "root",
 })
 export class ExtendedJobService extends JobService {
-  constructor(protected _http: HttpClient, protected _datepipe: DatePipe) {
+  constructor(
+    protected _http: HttpClient,
+    protected _datepipe: DatePipe
+  ) {
     super(_http, _datepipe);
   }
 

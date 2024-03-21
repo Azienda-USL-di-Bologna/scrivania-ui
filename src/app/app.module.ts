@@ -5,8 +5,8 @@ import { RouterModule } from "@angular/router";
 import { rootRouterConfig } from "./app.routes";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
-import { RouteReuseStrategy } from '@angular/router';
-import { CommonToolsModule, CustomReuseStrategy } from '@bds/common-tools';
+import { RouteReuseStrategy } from "@angular/router";
+import { CommonToolsModule, CustomReuseStrategy } from "@bds/common-tools";
 
 /* Custom component */
 import { AppComponent } from "./app.component";
@@ -22,12 +22,12 @@ import { AttivitaService } from "./tabelle/attivita/attivita.service";
 import { AttivitaFatteService } from "./tabelle/attivita-fatte/attivita-fatte.service";
 import { MessageService } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
-import { RaccoltaSempliceService } from './tabelle/raccolta-semplice/raccolta-semplice.service';
+import { RaccoltaSempliceService } from "./tabelle/raccolta-semplice/raccolta-semplice.service";
 import { ExtendedAllegatoService } from "./tabelle/raccolta-semplice/inserimento-manuale/extended-allegato.service";
 import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtuale.service";
 
 /* PrimeNG component */
-import { RadioButtonModule } from 'primeng/radiobutton';
+import { RadioButtonModule } from "primeng/radiobutton";
 import { AccordionModule } from "primeng/accordion";
 import { LightboxModule } from "primeng/lightbox";
 import { PanelModule } from "primeng/panel";
@@ -51,16 +51,15 @@ import { CardModule } from "primeng/card";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
 import { ProgressSpinnerModule } from "primeng/progressspinner";
-import { FileUploadModule } from 'primeng/fileupload';
-import {BlockUIModule} from 'primeng/blockui';
-import {ListboxModule} from 'primeng/listbox';
-import {FieldsetModule} from 'primeng/fieldset';
-import {ScrollPanelModule} from 'primeng/scrollpanel';
-import { InplaceModule } from 'primeng/inplace';
-import {ConfirmPopupModule} from "primeng/confirmpopup";
-import {DividerModule} from 'primeng/divider';
-import {CheckboxModule} from 'primeng/checkbox';
-
+import { FileUploadModule } from "primeng/fileupload";
+import { BlockUIModule } from "primeng/blockui";
+import { ListboxModule } from "primeng/listbox";
+import { FieldsetModule } from "primeng/fieldset";
+import { ScrollPanelModule } from "primeng/scrollpanel";
+import { InplaceModule } from "primeng/inplace";
+import { ConfirmPopupModule } from "primeng/confirmpopup";
+import { DividerModule } from "primeng/divider";
+import { CheckboxModule } from "primeng/checkbox";
 
 /* Login */
 import { JwtLoginModule } from "@bds/jwt-login";
@@ -69,16 +68,16 @@ import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
 
 import { CommonComponentsModule, HeaderModule, HeaderFeaturesModule } from "@bds/common-components";
-import { DatiBolloVirtualeComponent } from './tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component';
-import { RaccoltaSempliceComponent } from './tabelle/raccolta-semplice/raccolta-semplice.component';
-import { InserimentoManualeComponent } from './tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component';
+import { DatiBolloVirtualeComponent } from "./tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component";
+import { RaccoltaSempliceComponent } from "./tabelle/raccolta-semplice/raccolta-semplice.component";
+import { InserimentoManualeComponent } from "./tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component";
 
 /* Angular Material Module */
-import {MatMenuModule} from '@angular/material/menu';
-import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatMenuModule } from "@angular/material/menu";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatExpansionModule } from "@angular/material/expansion";
 import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterjobs.component";
 
 @NgModule({
@@ -93,7 +92,7 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
     DatiBolloVirtualeComponent,
     RaccoltaSempliceComponent,
     InserimentoManualeComponent,
-    MonitorMasterjobsComponent
+    MonitorMasterjobsComponent,
   ],
   imports: [
     JwtLoginModule.forRoot(loginModuleConfig),
@@ -127,8 +126,8 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
     PrimengPluginModule,
     CommonToolsModule,
     CommonComponentsModule,
-    HeaderModule, 
-    HeaderFeaturesModule, 
+    HeaderModule,
+    HeaderFeaturesModule,
     ProgressSpinnerModule,
     MatMenuModule,
     MatIconModule,
@@ -143,14 +142,22 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
     ScrollPanelModule,
     InplaceModule,
     DividerModule,
-    CheckboxModule
+    CheckboxModule,
   ],
-  providers: [AttivitaService, AttivitaFatteService, DatePipe, MessageService,
-    ImpostazioniService, DialogService, ConfirmationService,
-    BolloVirtualeService, RaccoltaSempliceService, ExtendedAllegatoService,
-    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
+  providers: [
+    AttivitaService,
+    AttivitaFatteService,
+    DatePipe,
+    MessageService,
+    ImpostazioniService,
+    DialogService,
+    ConfirmationService,
+    BolloVirtualeService,
+    RaccoltaSempliceService,
+    ExtendedAllegatoService,
+    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ImpostazioniComponent]
+  entryComponents: [ImpostazioniComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -4,7 +4,7 @@ import { ApplicationCustiomization } from "src/environments/application_customiz
 import { Subscription, Subject } from "rxjs";
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class ImpostazioniService {
   impostazioniVisualizzazione: any;
@@ -18,7 +18,9 @@ export class ImpostazioniService {
         if (!this.loggedUser || utente.getUtente().id !== this.loggedUser.getUtente().id) {
           this.loggedUser = utente;
           if (this.loggedUser && this.loggedUser.getImpostazioniApplicazione()) {
-            this.impostazioniVisualizzazione = JSON.parse(this.loggedUser.getImpostazioniApplicazione().impostazioniVisualizzazione);
+            this.impostazioniVisualizzazione = JSON.parse(
+              this.loggedUser.getImpostazioniApplicazione().impostazioniVisualizzazione
+            );
           } else {
             this.impostazioniVisualizzazione = {};
           }
@@ -48,7 +50,7 @@ export class ImpostazioniService {
   setHidePreview(hidePreviewValue: string) {
     this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.hidePreview] = hidePreviewValue;
   }
-  
+
   getEmailToNotify() {
     return this.impostazioniVisualizzazione[ApplicationCustiomization.scrivania.emailToNotify];
   }
@@ -76,9 +78,8 @@ export class ImpostazioniService {
   /**
    * Lancia la notifica di cambiamento delle impostazioni ai sottoscrittori
    * @param settings L'oggetto che contiene le nuove impostazioni
-  */
+   */
   doNotify(settings: any) {
     this.settingsChangedNotifier$.next(settings);
   }
 }
-

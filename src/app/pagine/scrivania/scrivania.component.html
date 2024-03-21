@@ -24,7 +24,12 @@
           pButton
           pTooltip="Firma"
           tooltipPosition="bottom"
-          [ngClass]="{ 'ui-button-secondary icon-custom': true, 'pr-8': true, 'd-hidden': mostraStorico || urlFirmone === '#', 'd-flex': !mostraStorico }"
+          [ngClass]="{
+            'ui-button-secondary icon-custom': true,
+            'pr-8': true,
+            'd-hidden': mostraStorico || urlFirmone === '#',
+            'd-flex': !mostraStorico
+          }"
           class="p-button-icon-only"
           (click)="handleItemClick(urlFirmone.url, urlFirmone.urlGenerationStrategy)"
           aria-label="Firma"
@@ -68,7 +73,12 @@
           pButton
           pTooltip="Prendi i tuoi assegnamenti"
           tooltipPosition="bottom"
-          [ngClass]="{ 'ui-button-secondary icon-custom': true, 'pr-8': true, 'd-hidden': mostraStorico || urlPrendone === '#', 'd-flex': !mostraStorico }"
+          [ngClass]="{
+            'ui-button-secondary icon-custom': true,
+            'pr-8': true,
+            'd-hidden': mostraStorico || urlPrendone === '#',
+            'd-flex': !mostraStorico
+          }"
           class="p-button-icon-only"
           (click)="handleItemClick(urlPrendone.url, urlPrendone.urlGenerationStrategy)"
           aria-label="Prendi il documento"
@@ -205,11 +215,19 @@
         *ngIf="browserObsolete"
         class="messaggio-browser-obsoleti"
       >
-        {{ browserMessageObsolete }}
+        <i
+          class="pi pi-exclamation-triangle"
+          style="font-size: 2rem"
+        ></i>
+        <span>{{ browserMessageObsolete }}</span>
       </span>
 
       <app-dropdown-aziende
-        *ngIf="((!!this.loggedUser?.getUtente().utenteReale || this.loggedUser?.isSD()) && this.loggedUser?.getUtente().aziende.length > 1) || (!!!this.loggedUser?.getUtente().utenteReale && this.loggedUser?.getUtente().aziendeAttive.length > 1)"
+        *ngIf="
+          ((!!this.loggedUser?.getUtente().utenteReale || this.loggedUser?.isSD()) &&
+            this.loggedUser?.getUtente().aziende.length > 1) ||
+          (!!!this.loggedUser?.getUtente().utenteReale && this.loggedUser?.getUtente().aziendeAttive.length > 1)
+        "
         (aziendaEmitter)="aziendaChanged($event)"
         aria-label="Ente delle attività"
       >

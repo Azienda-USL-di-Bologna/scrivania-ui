@@ -5,11 +5,13 @@ import { Azienda, BaseUrlType, ENTITIES_STRUCTURE, getInternautaUrl } from "@bds
 import { NextSDREntityProvider } from "@bds/next-sdr";
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class DropdownAziendeService extends NextSDREntityProvider {
-
-  constructor(protected _http: HttpClient, protected _datepipe: DatePipe) {
+  constructor(
+    protected _http: HttpClient,
+    protected _datepipe: DatePipe
+  ) {
     super(_http, _datepipe, ENTITIES_STRUCTURE.scrivania.menu, getInternautaUrl(BaseUrlType.Scrivania));
   }
 

@@ -1,21 +1,21 @@
-import { Component, OnInit, Input, OnDestroy, ElementRef, ViewChild, ViewChildren, QueryList  } from '@angular/core';
-import { Azienda } from '@bds/internauta-model';
-import { BolloVirtuale } from './bollo.model';
-import { BolloVirtualeService } from './bollo-virtuale.service';
-import { FILTER_TYPES } from '@bds/next-sdr';
-import { Subscription } from 'rxjs';
-import { JwtLoginService, UtenteUtilities } from '@bds/jwt-login';
-import { HttpResponse } from '@angular/common/http';
-import { DatePipe } from '@angular/common';
-import { Table } from 'primeng/table';
-import { CsvExtractor, LOCAL_IT } from '@bds/common-tools';
-import { Calendar } from 'primeng/calendar';
+import { Component, OnInit, Input, OnDestroy, ElementRef, ViewChild, ViewChildren, QueryList } from "@angular/core";
+import { Azienda } from "@bds/internauta-model";
+import { BolloVirtuale } from "./bollo.model";
+import { BolloVirtualeService } from "./bollo-virtuale.service";
+import { FILTER_TYPES } from "@bds/next-sdr";
+import { Subscription } from "rxjs";
+import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
+import { HttpResponse } from "@angular/common/http";
+import { DatePipe } from "@angular/common";
+import { Table } from "primeng/table";
+import { CsvExtractor, LOCAL_IT } from "@bds/common-tools";
+import { Calendar } from "primeng/calendar";
 import { FilterService } from "primeng/api";
 
 @Component({
-  selector: 'app-dati-bollo-virtuale',
-  templateUrl: './dati-bollo-virtuale.component.html',
-  styleUrls: ['./dati-bollo-virtuale.component.scss']
+  selector: "app-dati-bollo-virtuale",
+  templateUrl: "./dati-bollo-virtuale.component.html",
+  styleUrls: ["./dati-bollo-virtuale.component.scss"],
 })
 export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
   _azienda: Azienda;
@@ -27,13 +27,13 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
 
   public dataRange: Date[] = [];
 
-  public datiBolliVirtuali: BolloVirtuale[]=[];
+  public datiBolliVirtuali: BolloVirtuale[] = [];
   public loading: boolean = false;
   public _rows = 20;
-  private subscriptions: Subscription[]=[];
+  private subscriptions: Subscription[] = [];
   public loggedUser: UtenteUtilities;
   public exportCsvInProgress: boolean = false;
-  
+
   public totalRecords: number = 0;
   public totalFacciateBollo: number = 0;
   public totalRigheBollo: number = 0;
@@ -45,11 +45,11 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
   public dataInizio: Date = null;
   public dataFine: Date = new Date(this.dataOggi.toDateString());
 
-  @ViewChild('totalRecordsRef', { static: false }) totalRecordsRef?: ElementRef<HTMLElement>; 
-  @ViewChild('totalFacciateBolloRef', { static: false }) totalFacciateBolloRef?: ElementRef<HTMLElement>; 
-  @ViewChild('totalRigheBolloRef', { static: false }) totalRigheBolloRef?: ElementRef<HTMLElement>; 
-  @ViewChild('totalAltriImportiBolloRef', { static: false }) totalAltriImportiBolloRef?: ElementRef<HTMLElement>; 
-  @ViewChild('totalImportoAltriBolloRef', { static: false }) totalImportoAltriBolloRef?: ElementRef<HTMLElement>; 
+  @ViewChild("totalRecordsRef", { static: false }) totalRecordsRef?: ElementRef<HTMLElement>;
+  @ViewChild("totalFacciateBolloRef", { static: false }) totalFacciateBolloRef?: ElementRef<HTMLElement>;
+  @ViewChild("totalRigheBolloRef", { static: false }) totalRigheBolloRef?: ElementRef<HTMLElement>;
+  @ViewChild("totalAltriImportiBolloRef", { static: false }) totalAltriImportiBolloRef?: ElementRef<HTMLElement>;
+  @ViewChild("totalImportoAltriBolloRef", { static: false }) totalImportoAltriBolloRef?: ElementRef<HTMLElement>;
 
   @ViewChild("tableBolliVirtuali") private dataTable: Table;
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
@@ -62,7 +62,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       padding: 0,
       label: "codice registro",
       textAlign: "center",
-      filterMatchMode: FILTER_TYPES.string.contains
+      filterMatchMode: FILTER_TYPES.string.contains,
     },
     {
       field: "numeroDoc",
@@ -70,7 +70,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       filterMatchMode: FILTER_TYPES.string.contains,
       width: "7.75rem",
       label: "numero documento",
-      textAlign:"center"
+      textAlign: "center",
     },
     {
       field: "annoNumeroDoc",
@@ -78,23 +78,23 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       filterMatchMode: FILTER_TYPES.string.contains,
       width: "6.5rem",
       label: "anno della numerazione del doc",
-      textAlign:"center"
+      textAlign: "center",
     },
     {
       field: "dataNumeroDoc",
       header: "Data",
-      filterMatchMode: '',
+      filterMatchMode: "",
       width: "6.25rem",
       label: "data della numerazione del doc",
       fieldType: "DateTime",
-      textAlign:"center"
+      textAlign: "center",
     },
     {
       field: "oggettoDoc",
       header: "Oggetto",
       filterMatchMode: FILTER_TYPES.string.contains,
       label: "oggetto",
-      minWidth: "12.5rem"
+      minWidth: "12.5rem",
     },
     {
       field: "redattoreDoc",
@@ -102,7 +102,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       filterMatchMode: FILTER_TYPES.string.contains,
       ariaLabelDescription: "Colonna Data, Cella filtro",
       width: "12.5rem",
-      label: "redattore del documento"
+      label: "redattore del documento",
     },
     {
       field: "nomeStruttura",
@@ -110,7 +110,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       filterMatchMode: FILTER_TYPES.string.contains,
       ariaLabelDescription: "Colonna Data, Cella filtro",
       width: "12.5rem",
-      label: "Struttura del documento"
+      label: "Struttura del documento",
     },
     {
       field: "noFacciateBollo",
@@ -118,7 +118,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       filterMatchMode: FILTER_TYPES.not_string.equals,
       width: "7.875rem",
       label: "numero facciate bollo",
-      textAlign:"center"
+      textAlign: "center",
     },
     {
       field: "noRigheBollo",
@@ -126,7 +126,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       filterMatchMode: FILTER_TYPES.not_string.equals,
       width: "6.75rem",
       label: "numero righe di bollo",
-      textAlign:"center"
+      textAlign: "center",
     },
     {
       field: "noBolliAltriImporti",
@@ -134,7 +134,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       filterMatchMode: FILTER_TYPES.not_string.equals,
       width: "7.563rem",
       label: "numero bolli altri importi",
-      textAlign:"center"
+      textAlign: "center",
     },
     {
       field: "importoBolliAltriImporti",
@@ -142,23 +142,26 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       filterMatchMode: FILTER_TYPES.not_string.equals,
       width: "6.688rem",
       label: "importo bolli altri importi in euro",
-      textAlign:"center"
-    }
+      textAlign: "center",
+    },
   ];
 
   constructor(
-      private bolloVirtualeService: BolloVirtualeService, 
-      private loginService: JwtLoginService, 
-      private datePipe: DatePipe,
-      private filterService: FilterService) { }
+    private bolloVirtualeService: BolloVirtualeService,
+    private loginService: JwtLoginService,
+    private datePipe: DatePipe,
+    private filterService: FilterService
+  ) {}
 
   ngOnInit() {
-    this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
-      this.loggedUser = u;
-      this.azienda = u.getUtente().aziendaLogin;
-      console.log("Azienda: ",u.getUtente());
-    }));
-    
+    this.subscriptions.push(
+      this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
+        this.loggedUser = u;
+        this.azienda = u.getUtente().aziendaLogin;
+        console.log("Azienda: ", u.getUtente());
+      })
+    );
+
     this.filterService.register("dateRangeFilter", (value: Date, filter: [Date, Date]): boolean => {
       var v = new Date(value);
       // get the from/start value
@@ -167,8 +170,8 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       // the to/end value might not be set
       // use the from/start date and add 1 day
       // or the to/end date and add 1 day
-      if ( filter[1]) {
-        e =  filter[1].getTime() + 86400000;
+      if (filter[1]) {
+        e = filter[1].getTime() + 86400000;
       } else {
         e = s + 86400000;
       }
@@ -178,7 +181,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
   }
 
   handleSelectedAziendaEmit(event: Azienda, type: string) {
-    console.log('%c handleSelectedAziendaEmit', 'background-color:violet;color:black;', event);
+    console.log("%c handleSelectedAziendaEmit", "background-color:violet;color:black;", event);
     this.azienda = event;
     if (!!this._azienda && !!this.dataInizio && this.dataInizio instanceof Date) {
       this.onLoadDatiBolliVirtuali();
@@ -197,7 +200,6 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
     }
   }
 
-
   onLoadDatiBolliVirtuali() {
     this.datiBolliVirtuali = [];
     this.totalRecords = 0;
@@ -213,55 +215,62 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       // console.log("data fine", this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'));
 
       this.subscriptions.push(
-        this.bolloVirtualeService.getDatiBolliVirtuali(this._azienda.codice, this.datePipe.transform(this.dataInizio, 'yyyy-MM-dd'),this.datePipe.transform(this.dataFine, 'yyyy-MM-dd'))
-          .subscribe((res: HttpResponse<BolloVirtuale[]>) => {
-            this.loading = false;
-            
-            this.datiBolliVirtuali = res.body.map(bollo => { return ({ ...bollo } as BolloVirtuale) });
-            this.sanatoriaBolli();
-            this.calculateTotal(this.datiBolliVirtuali);
-          }, error => {
-            console.log("error bolloVirtualeService.getDatiBolliVirtuali", error);
-            this.loading = false;
-          }
-        )
-      )
-    }
+        this.bolloVirtualeService
+          .getDatiBolliVirtuali(
+            this._azienda.codice,
+            this.datePipe.transform(this.dataInizio, "yyyy-MM-dd"),
+            this.datePipe.transform(this.dataFine, "yyyy-MM-dd")
+          )
+          .subscribe(
+            (res: HttpResponse<BolloVirtuale[]>) => {
+              this.loading = false;
 
+              this.datiBolliVirtuali = res.body.map((bollo) => {
+                return { ...bollo } as BolloVirtuale;
+              });
+              this.sanatoriaBolli();
+              this.calculateTotal(this.datiBolliVirtuali);
+            },
+            (error) => {
+              console.log("error bolloVirtualeService.getDatiBolliVirtuali", error);
+              this.loading = false;
+            }
+          )
+      );
+    }
   }
 
   private rigaNulla(v: BolloVirtuale): boolean {
-    if(v.noFacciateBollo != 0 || v.importoBolliAltriImporti != 0 || v.noRigheBollo != 0 || v.noBolliAltriImporti != 0 )
+    if (v.noFacciateBollo != 0 || v.importoBolliAltriImporti != 0 || v.noRigheBollo != 0 || v.noBolliAltriImporti != 0)
       return false;
-    else
-      return true;  
+    else return true;
   }
 
   private sanatoriaBolli() {
     let nuoviBolli: BolloVirtuale[] = this.datiBolliVirtuali;
-    nuoviBolli.forEach((value,index)=>{
-      if(this.rigaNulla(value)) {
-        nuoviBolli.splice(index,1);
+    nuoviBolli.forEach((value, index) => {
+      if (this.rigaNulla(value)) {
+        nuoviBolli.splice(index, 1);
       }
     });
 
-    this.datiBolliVirtuali = nuoviBolli;  
+    this.datiBolliVirtuali = nuoviBolli;
   }
 
   private calculateTotal(bolli: BolloVirtuale[]) {
     this.totalRecords = 0;
     this.totalRigheBollo = 0;
     this.totalFacciateBollo = 0;
-    this.totalAltriImportiBollo  = 0;
+    this.totalAltriImportiBollo = 0;
     this.totalImportoAltriBollo = 0;
-    
+
     if (!!bolli && Array.isArray(bolli) && bolli.length > 0) {
       this.totalRecords = this.datiBolliVirtuali.length;
-      this.totalRigheBollo = bolli.map(bollo => bollo.noRigheBollo).reduce(this.sum);
-      this.totalFacciateBollo = bolli.map(bollo => bollo.noFacciateBollo).reduce(this.sum);
-      this.totalAltriImportiBollo = bolli.map(bollo => bollo.noBolliAltriImporti).reduce(this.sum);
-      this.totalImportoAltriBollo = bolli.map(bollo => bollo.importoBolliAltriImporti).reduce(this.sum);
-    } 
+      this.totalRigheBollo = bolli.map((bollo) => bollo.noRigheBollo).reduce(this.sum);
+      this.totalFacciateBollo = bolli.map((bollo) => bollo.noFacciateBollo).reduce(this.sum);
+      this.totalAltriImportiBollo = bolli.map((bollo) => bollo.noBolliAltriImporti).reduce(this.sum);
+      this.totalImportoAltriBollo = bolli.map((bollo) => bollo.importoBolliAltriImporti).reduce(this.sum);
+    }
 
     this.updateCount(this.totalRecords, this.totalRecordsRef);
     this.updateCount(this.totalRigheBollo, this.totalRigheBolloRef);
@@ -279,16 +288,16 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
   }
 
   private setInnerTextZero(element: ElementRef<HTMLElement>) {
-    element.nativeElement.innerText = '0';
+    element.nativeElement.innerText = "0";
   }
 
   private updateCount(total: number, element: ElementRef<HTMLElement>) {
-      element.nativeElement.innerText = total.toString();
+    element.nativeElement.innerText = total.toString();
   }
 
   private sum = (a: number, b: number) => {
     return a + b;
-  }
+  };
 
   onTableRefresh() {
     if (!!this._azienda && !!this.dataInizio && this.dataInizio instanceof Date) {
@@ -311,12 +320,14 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       this.exportCsvInProgress = true;
       const tableTemp = {} as Table;
       Object.assign(tableTemp, table);
-  
+
       try {
-        const exportColumns = this.cols.map(col => { return ({...col, title: col.header, dataKey: col.field }) });
+        const exportColumns = this.cols.map((col) => {
+          return { ...col, title: col.header, dataKey: col.field };
+        });
         tableTemp.columns = exportColumns;
         tableTemp.value = this.datiBolliVirtuali;
-  
+
         const extractor = new CsvExtractor();
         extractor.exportCsv(tableTemp);
         this.exportCsvInProgress = false;
@@ -331,27 +342,32 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
     let calSel: Calendar = null;
     switch (action) {
       case "today":
-        calSel = this._calGen.find(e => e.inputId === "CalInput_" + field);
+        calSel = this._calGen.find((e) => e.inputId === "CalInput_" + field);
         if (calSel) {
           calSel.overlayVisible = false;
         }
-      break;
+        break;
 
       case "clear":
-        this.dataTable.filter(null, field, 'CalendarRange');
-      break;
+        this.dataTable.filter(null, field, "CalendarRange");
+        break;
 
       case "select":
         if (this._calGen) {
-          calSel = this._calGen.find(a => a.inputId === "CalInput_" + field);
-          if (calSel && this.dataRange && this.dataRange[field].length === 2
-            && this.dataRange[field][0] && this.dataRange[field][1]) {
+          calSel = this._calGen.find((a) => a.inputId === "CalInput_" + field);
+          if (
+            calSel &&
+            this.dataRange &&
+            this.dataRange[field].length === 2 &&
+            this.dataRange[field][0] &&
+            this.dataRange[field][1]
+          ) {
             calSel.overlayVisible = false;
           }
         }
         const value = this.dataRange[field];
-        this.dataTable.filter(value, field, 'dateRangeFilter');
-      break;
+        this.dataTable.filter(value, field, "dateRangeFilter");
+        break;
     }
   }
 
@@ -375,5 +391,4 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
       }
     }
   }
-
 }

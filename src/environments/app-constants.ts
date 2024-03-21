@@ -10,38 +10,38 @@ export const BABELMAN_URL = "https://babelman-auslbo.avec.emr.it/";
 export const APPLICATION = "scrivania";
 
 export const CONTROLLERS_ENDPOINT = {
-    EDIT_RUBRICA: "/editRubrica",
-    FIRMONE_URLS: "/getFirmoneUrls",
-    PRENDONE_URLS: "/getPrendoneUrls",
-    CANCELLA_NOTIFICHE: "/cancellaNotifiche",
-    GET_MENU_SCRIVANIA: "/getMenuScrivania",
-    GET_DATI_BOLLO_AZIENDA: "/getDatiBolloByAzienda",
-    GET_DATI_RACCOLTA_SEMPLICE: "/getRaccoltaSemplice",
-    GET_FASCICOLI_ARGO: "/getFascicoliArgo",
-    GET_DOCUMENTI_ARGO: "/getDocumentiArgo",
-    GET_STORICO: "/storico",
-    ANNULLAMENTO_URL: "/annullamento",
-    RICERCA_RACCOLTA: "/ricerca",
-    CREATE_RS: "/createRS",
-    DOWNLOAD: "/downloadAllegato",
-    TIPOLOGIE: "/getTipologia",
-    ADD_CONTATTO: "/personaRS"
+  EDIT_RUBRICA: "/editRubrica",
+  FIRMONE_URLS: "/getFirmoneUrls",
+  PRENDONE_URLS: "/getPrendoneUrls",
+  CANCELLA_NOTIFICHE: "/cancellaNotifiche",
+  GET_MENU_SCRIVANIA: "/getMenuScrivania",
+  GET_DATI_BOLLO_AZIENDA: "/getDatiBolloByAzienda",
+  GET_DATI_RACCOLTA_SEMPLICE: "/getRaccoltaSemplice",
+  GET_FASCICOLI_ARGO: "/getFascicoliArgo",
+  GET_DOCUMENTI_ARGO: "/getDocumentiArgo",
+  GET_STORICO: "/storico",
+  ANNULLAMENTO_URL: "/annullamento",
+  RICERCA_RACCOLTA: "/ricerca",
+  CREATE_RS: "/createRS",
+  DOWNLOAD: "/downloadAllegato",
+  TIPOLOGIE: "/getTipologia",
+  ADD_CONTATTO: "/personaRS",
 };
 
 export const COMMANDS = {
-    scrivania_local: "scrivania_local",
-    gedi_local: "gedi_local",
-    open_prendone_local: "open_prendone_local",
-    open_firmone_local: "open_firmone_local"
+  scrivania_local: "scrivania_local",
+  gedi_local: "gedi_local",
+  open_prendone_local: "open_prendone_local",
+  open_firmone_local: "open_firmone_local",
 };
 
 export const COMMON_PARAMETERS = {
-    BABEL_APPLICATION: "BABEL_APPLICATION"
+  BABEL_APPLICATION: "BABEL_APPLICATION",
 };
 
 export const CUSTOM_SERVER_METHODS = {
-    saveAllegato: "saveAllegato",
-    downloadAttachment: "downloadAttachment",
-    downloadAllAttachments: "downloadAllAttachments",
-    cancellaattivita: "cancellaattivita"
-  };
+  saveAllegato: "saveAllegato",
+  downloadAttachment: "downloadAttachment",
+  downloadAllAttachments: "downloadAllAttachments",
+  cancellaattivita: "cancellaattivita",
+};
