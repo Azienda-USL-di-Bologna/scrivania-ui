@@ -16,6 +16,7 @@ import { AttivitaFatteComponent } from "./tabelle/attivita-fatte/attivita-fatte.
 import { DropdownAziendeComponent } from "./components/dropdown-aziende/dropdown-aziende.component";
 import { LoadingComponent } from "./pagine/loading/loading.component";
 import { PrimengPluginModule } from "@bds/primeng-plugin";
+import { LoginAdminComponent } from "./components/login-admin/login-admin.component";
 
 /* Custom services */
 import { AttivitaService } from "./tabelle/attivita/attivita.service";
@@ -93,6 +94,7 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
     RaccoltaSempliceComponent,
     InserimentoManualeComponent,
     MonitorMasterjobsComponent,
+    LoginAdminComponent
   ],
   imports: [
     JwtLoginModule.forRoot(loginModuleConfig),
