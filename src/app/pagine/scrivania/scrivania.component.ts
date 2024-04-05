@@ -11,6 +11,7 @@ import { ConfirmationService } from "primeng/api";
 import { ParametroAziende } from "@bds/internauta-model";
 import { ConfigurazioneService } from "@bds/internauta-model";
 import * as Bowser from "bowser";
+import { LOCAL_IT, UtilityFunctions } from "@bds/common-tools";
 
 @Component({
   selector: "app-scrivania",
@@ -43,6 +44,13 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public destinatariCC: string = null; // "Li dobbiamo mettere?? sulla scrivania non ci sono mai stati";
   public datiDiFlusso: string = null;
   public datiFlussoTooltip: string = null;
+
+  public localIt = LOCAL_IT;
+
+  public buttonAvcpEnabled = false;
+  public showAvcpDialog = false;
+  public avcpCalendarDate: Date = new Date();
+  public avcpIdAzienda = 13;
 
   public finestreApribili: any[] = [
     {
@@ -179,6 +187,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setLook(): void {
     this.setResponsiveSlider();
+    this.buttonAvcpEnabled = !!this.loggedUser?.getUtente().aziendeAttive.find((a) => (a.codice === "050109"))
     if (this.impostazioniService.getImpostazioniVisualizzazione()) {
       this.rightSide.nativeElement.style.width = this.impostazioniService.getRightSideOffsetWidth() + "%";
       this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniService.getRightSideOffsetWidth() + "%";
@@ -665,6 +674,12 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log("Errore nel salvataggio");
       },
     });
+  }
+
+  public generateAvcp() {
+    this.scrivaniaService.generateAvcp(this.avcpCalendarDate.getFullYear(), this.avcpIdAzienda).subscribe(zip =>
+      UtilityFunctions.downLoadFile(zip, "application/zip", "avcp.zip")
+    );
   }
 }
 

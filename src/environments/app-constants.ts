@@ -26,6 +26,7 @@ export const CONTROLLERS_ENDPOINT = {
   DOWNLOAD: "/downloadAllegato",
   TIPOLOGIE: "/getTipologia",
   ADD_CONTATTO: "/personaRS",
+  GENERATE_AVCP_XML: "/generateAvcpXml",
 };
 
 export const COMMANDS = {

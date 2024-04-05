@@ -108,4 +108,12 @@ export class ScrivaniaService extends NextSDREntityProvider {
     console.log("url: " + url);
     return this.http.get(url) as Observable<ItemMenu[]>;
   }
+
+  public generateAvcp(year: number, idAzienda: number) : Observable<any>  {
+    const url: string = getInternautaUrl(BaseUrlType.Lotti) + CONTROLLERS_ENDPOINT.GENERATE_AVCP_XML;
+    const httpOptions = {
+      responseType: "blob"
+    };
+    return this.http.get(url+"?anno="+year+"&idAzienda="+idAzienda, {      responseType: "blob"    }) as Observable<any>;
+  }
 }
