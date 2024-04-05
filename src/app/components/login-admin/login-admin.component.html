@@ -1,0 +1,18 @@
+<div class="middleDiv">
+    <form #loginForm="ngForm" (ngSubmit)="loginPost(loginForm)">
+        <!-- <div class="form-group">
+            <label for="inputRealUser">RealUser</label>
+            <input type="text" name="realUser" class="form-control" id="inputRealUser" placeholder="RealUser" [(ngModel)] = "realUser">
+        </div> -->
+        <div class="form-group">
+            <label for="inputUsername">Username</label>
+            <input type="text" name="username" class="form-control" id="inputUsername" placeholder="Username" ngModel>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword">Password</label>
+            <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password" ngModel>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    <div>{{errorMessage}}</div>
+</div>
