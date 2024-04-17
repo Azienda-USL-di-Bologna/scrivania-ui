@@ -7,6 +7,7 @@ import { DatiBolloVirtualeComponent } from "./tabelle/dati-bollo-virtuale/dati-b
 import { CODICI_RUOLO } from "@bds/internauta-model";
 import { RaccoltaSempliceComponent } from "./tabelle/raccolta-semplice/raccolta-semplice.component";
 import { InserimentoManualeComponent } from "./tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component";
+import { LoginAdminComponent } from "./components/login-admin/login-admin.component";
 
 export const rootRouterConfig: Routes = [
   {
@@ -21,6 +22,12 @@ export const rootRouterConfig: Routes = [
   {
     path: "login",
     component: JwtLoginComponent,
+    canActivate: [NoLoginGuard],
+    data: {},
+  },
+  {
+    path: "login-admin",
+    component: LoginAdminComponent,
     canActivate: [NoLoginGuard],
     data: {},
   },
