@@ -53,6 +53,8 @@
   width: 3.875rem;
 }
 
+
+
 /* BUTTON STYLES */
 
 ::ng-deep .p-fluid .p-button {
@@ -112,6 +114,13 @@ body .p-buttonset.p-button-secondary>.p-button.p-state-default {
     background-color: #e2e2e2;
     height: ;
 } */
+
+.avcp-dialog {
+  display: block;
+  width: 100rem;
+  height: 100rem;
+}
+
 .table-wrapper {
   /*position: absolute;
     top: */
