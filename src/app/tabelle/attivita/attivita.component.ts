@@ -150,9 +150,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   ngOnInit() {
     // imposto l'utente loggato nell'apposita variabile
     window.addEventListener("resize", function (event) {
-      const bodyTable = document.getElementsByClassName("ui-table-scrollable-body")[0] as HTMLElement;
-      bodyTable.style.paddingBottom = "0.06rem";
-      bodyTable.style.paddingBottom = "0.06rem";
+      if (document.getElementsByClassName("ui-table-scrollable-body")[0]) {
+        const bodyTable = document.getElementsByClassName("ui-table-scrollable-body")[0] as HTMLElement;
+        bodyTable.style.paddingBottom = "0.06rem";
+        bodyTable.style.paddingBottom = "0.06rem";
+      }
     });
     this.contextMenuAperte = [
       {
@@ -814,8 +816,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       !attivita.priorita || attivita.priorita === 3
         ? (attivita.priorita = 1)
         : attivita.priorita === 1
-          ? (attivita.priorita = 2)
-          : (attivita.priorita = 3);
+        ? (attivita.priorita = 2)
+        : (attivita.priorita = 3);
       this.setAttivitaIcon(attivita);
       this.attivitaService.update(attivita).subscribe();
       event.stopPropagation();
