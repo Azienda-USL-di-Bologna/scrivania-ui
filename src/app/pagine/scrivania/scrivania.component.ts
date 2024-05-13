@@ -187,7 +187,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setLook(): void {
     this.setResponsiveSlider();
-    this.buttonAvcpEnabled = !!this.loggedUser?.getUtente().aziendeAttive.find((a) => (a.codice === "050109"))
+    this.buttonAvcpEnabled = !!this.loggedUser?.getUtente().aziendeAttive.find((a) => a.codice === "050109");
     if (this.impostazioniService.getImpostazioniVisualizzazione()) {
       this.rightSide.nativeElement.style.width = this.impostazioniService.getRightSideOffsetWidth() + "%";
       this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniService.getRightSideOffsetWidth() + "%";
@@ -655,7 +655,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  public delNotifiche() {
+  public eliminaTutteNotifiche() {
     this.confirmationService.confirm({
       message: "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
       header: "Cancellazione notifiche",
@@ -677,9 +677,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public generateAvcp() {
-    this.scrivaniaService.generateAvcp(this.avcpCalendarDate.getFullYear(), this.avcpIdAzienda).subscribe(zip =>
-      UtilityFunctions.downLoadFile(zip, "application/zip", "avcp.zip")
-    );
+    this.scrivaniaService
+      .generateAvcp(this.avcpCalendarDate.getFullYear(), this.avcpIdAzienda)
+      .subscribe((zip) => UtilityFunctions.downLoadFile(zip, "application/zip", "avcp.zip"));
   }
 }
 

@@ -239,7 +239,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           break;
         case "DELETE":
           const idAttivitaToDelete = this.attivita.findIndex((attivita) => attivita.id === idAttivitaToRefresh);
-          this.attivita.splice(idAttivitaToDelete, 1);
+          if (idAttivitaToDelete >= 0) {
+            this.attivita.splice(idAttivitaToDelete, 1);
+          }
           this.attivitaEmitter.emit(null);
           break;
       }
@@ -814,8 +816,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       !attivita.priorita || attivita.priorita === 3
         ? (attivita.priorita = 1)
         : attivita.priorita === 1
-          ? (attivita.priorita = 2)
-          : (attivita.priorita = 3);
+        ? (attivita.priorita = 2)
+        : (attivita.priorita = 3);
       this.setAttivitaIcon(attivita);
       this.attivitaService.update(attivita).subscribe();
       event.stopPropagation();
