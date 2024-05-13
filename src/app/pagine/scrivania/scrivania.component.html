@@ -185,7 +185,7 @@
           pButton
           pTooltip="Elimina notifiche"
           tooltipPosition="bottom"
-          (click)="delNotifiche()"
+          (click)="eliminaTutteNotifiche()"
           iconPos="left"
           icon="pi pi-trash"
           class="ui-button-secondary icon-style icon-custom"
@@ -220,7 +220,7 @@
           iconPos="left"
           icon="pi pi-file"
           class="ui-button-secondary icon-style icon-custom"
-        ></button> 
+        ></button>
       </div>
 
       <span
@@ -427,35 +427,37 @@
   [style]="{ width: '30vw' }"
 ></p-confirmDialog>
 
-<p-dialog 
-  header="AVCP" 
+<p-dialog
+  header="AVCP"
   [(visible)]="showAvcpDialog"
   [modal]="true"
-  [style]="{width: '30rem', height: '25rem'}"
+  [style]="{ width: '30rem', height: '25rem' }"
   [baseZIndex]="10000"
-  >
+>
   <div style="display: 'flex'; justify-content: 'space-evenly'">
     <p-calendar
-          [(ngModel)]="avcpCalendarDate"
-          [showIcon]="true"
-          [locale]="localIt"
-          view="year"
-          dateFormat="yy"
-          [yearNavigator]="true"
-          yearRange="2000:2030"
-          [readonlyInput]="true"
-          inputId="monthpicker"
-          placeholder="Seleziona Anno AVCP"
-          pTooltip="Seleziona l'anno per la produzione dell'xml AVCP"
-        ></p-calendar>
-    </div>
-    <button
-          *ngIf="true"
-          type="button"
-          pButton
-          pTooltip="Ok"
-          tooltipPosition="bottom"
-          (click)="generateAvcp()"
-          style="width: 6rem; left: 74%; margin-top: 11rem;"
-        >Scarica...</button> 
+      [(ngModel)]="avcpCalendarDate"
+      [showIcon]="true"
+      [locale]="localIt"
+      view="year"
+      dateFormat="yy"
+      [yearNavigator]="true"
+      yearRange="2000:2030"
+      [readonlyInput]="true"
+      inputId="monthpicker"
+      placeholder="Seleziona Anno AVCP"
+      pTooltip="Seleziona l'anno per la produzione dell'xml AVCP"
+    ></p-calendar>
+  </div>
+  <button
+    *ngIf="true"
+    type="button"
+    pButton
+    pTooltip="Ok"
+    tooltipPosition="bottom"
+    (click)="generateAvcp()"
+    style="width: 6rem; left: 74%; margin-top: 11rem"
+  >
+    Scarica...
+  </button>
 </p-dialog>

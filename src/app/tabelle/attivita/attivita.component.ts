@@ -241,7 +241,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           break;
         case "DELETE":
           const idAttivitaToDelete = this.attivita.findIndex((attivita) => attivita.id === idAttivitaToRefresh);
-          this.attivita.splice(idAttivitaToDelete, 1);
+          if (idAttivitaToDelete >= 0) {
+            this.attivita.splice(idAttivitaToDelete, 1);
+          }
           this.attivitaEmitter.emit(null);
           break;
       }
