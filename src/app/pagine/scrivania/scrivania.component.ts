@@ -600,7 +600,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public setVisibilitàPulsanteBolli(): void {
     //let aziendaArray = this.loggedUser.getUtente().aziende;
     let idAziendaArray: number[] = [];
-    this.loggedUser.getUtente().aziende.forEach((elem) => {
+    this.loggedUser.getUtente().aziendeAttive.forEach((elem) => {
       idAziendaArray.push(elem.id);
     });
     console.log(idAziendaArray);
