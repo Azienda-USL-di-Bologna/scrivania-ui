@@ -101,14 +101,14 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Babel-internauta:build"
+            "buildTarget": "Babel-internauta:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "Babel-internauta:build:production"
+              "buildTarget": "Babel-internauta:build:production"
             },
             "development": {
-              "browserTarget": "Babel-internauta:build:development"
+              "buildTarget": "Babel-internauta:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -116,7 +116,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Babel-internauta:build"
+            "buildTarget": "Babel-internauta:build"
           }
         },
         "test": {
