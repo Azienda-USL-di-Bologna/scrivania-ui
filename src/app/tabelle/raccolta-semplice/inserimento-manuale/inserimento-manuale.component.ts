@@ -31,7 +31,7 @@ import {
 } from "@bds/internauta-model";
 import { FascicoloArgo } from "../fascicolo.model";
 import { RaccoltaSempliceService } from "../raccolta-semplice.service";
-import { FormBuilder, FormControl, FormGroup, SelectMultipleControlValueAccessor } from "@angular/forms";
+import { UntypedFormBuilder, FormControl, UntypedFormGroup, SelectMultipleControlValueAccessor } from "@angular/forms";
 import { DocumentoArgo } from "../DocumentoArgo.model";
 import { PersonaRS } from "../personaRS.model";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -91,7 +91,7 @@ export class InserimentoManualeComponent implements OnInit {
   public _strutturaInternautaSelezionata: Struttura = new Struttura();
   public _fascicoloArgoSelezionato: FascicoloArgo;
   public modalError: boolean = false;
-  public formGroup: FormGroup;
+  public formGroup: UntypedFormGroup;
   public visualizzaCoinvolti: boolean = false;
 
   public oggetto: string;
@@ -165,7 +165,7 @@ export class InserimentoManualeComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private contattoService: ContattoService,
     private dettaglioContattoService: DettaglioContattoService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private http: HttpClient,
     private loginService: JwtLoginService,
     private router: Router,

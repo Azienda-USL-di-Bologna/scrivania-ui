@@ -4,7 +4,7 @@ import { Impostazioni } from "./impostazioni";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { Subscription } from "rxjs";
-import { FormControl, Validators } from "@angular/forms";
+import { UntypedFormControl, Validators } from "@angular/forms";
 import { Inplace } from "primeng/inplace";
 
 @Component({
@@ -25,7 +25,7 @@ export class ImpostazioniComponent implements OnInit, OnDestroy {
     /^(([^&#!?'òùàèéì%+*§$£<>()\[\]\.,;:\s@\"]+(\.[^<>&#!?'òùàèéì%+*§$£()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()&#!?'%òùàèéì+*§$£[\]\.,;:'\s@\"]+\.)+[^<>&#!?%'òùàèéì+*§$£()[\]\.,;:'\s@\"]{2,})$/
   );
 
-  public mail = new FormControl("", Validators.pattern(this.emailRegex));
+  public mail = new UntypedFormControl("", Validators.pattern(this.emailRegex));
 
   constructor(
     public ref: DynamicDialogRef,
