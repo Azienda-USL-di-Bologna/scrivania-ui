@@ -74,10 +74,10 @@ import { RaccoltaSempliceComponent } from "./tabelle/raccolta-semplice/raccolta-
 import { InserimentoManualeComponent } from "./tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component";
 
 /* Angular Material Module */
-import { MatMenuModule } from "@angular/material/menu";
+import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
 import { MatIconModule } from "@angular/material/icon";
-import { MatInputModule } from "@angular/material/input";
-import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatLegacyInputModule as MatInputModule } from "@angular/material/legacy-input";
+import { MatLegacyAutocompleteModule as MatAutocompleteModule } from "@angular/material/legacy-autocomplete";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterjobs.component";
 
