@@ -4,7 +4,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { rootRouterConfig } from "./app.routes";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { RouteReuseStrategy } from "@angular/router";
 import { CommonToolsModule, CustomReuseStrategy } from "@bds/common-tools";
 
@@ -81,8 +81,7 @@ import { MatLegacyAutocompleteModule as MatAutocompleteModule } from "@angular/m
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterjobs.component";
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         TabellaAttivitaComponent,
         ScrivaniaComponent,
@@ -96,11 +95,9 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
         MonitorMasterjobsComponent,
         LoginAdminComponent
     ],
-    imports: [
-        JwtLoginModule.forRoot(loginModuleConfig),
+    bootstrap: [AppComponent], imports: [JwtLoginModule.forRoot(loginModuleConfig),
         BrowserModule,
         BrowserAnimationsModule,
-        HttpClientModule,
         AccordionModule,
         LightboxModule,
         PanelModule,
@@ -144,9 +141,7 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
         ScrollPanelModule,
         InplaceModule,
         DividerModule,
-        CheckboxModule,
-    ],
-    providers: [
+        CheckboxModule], providers: [
         AttivitaService,
         AttivitaFatteService,
         DatePipe,
@@ -158,7 +153,6 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
         RaccoltaSempliceService,
         ExtendedAllegatoService,
         { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
-    ],
-    bootstrap: [AppComponent]
-})
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {}
