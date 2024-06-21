@@ -148,7 +148,7 @@
       class="table-wrapper"
       [value]="datiDocumenti"
       [lazy]="true"
-      (onLazyLoad)="lazyLoad($event)"
+      (onLazyLoad)="lazyLoad($any($event))"
       [paginator]="true"
       [rows]="recordPerPagina"
       [totalRecords]="totalRows"
@@ -300,7 +300,7 @@
               ></button>
             </div>
             <div *ngIf="col.field == 'createTime'">
-              {{ rowRS[col.field] | date: "dd/MM/yyyy" }}
+              {{ rowRS[col.field] | date : "dd/MM/yyyy" }}
             </div>
           </td>
         </tr>

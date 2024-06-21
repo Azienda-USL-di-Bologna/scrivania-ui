@@ -42,7 +42,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public mittente: string = null; // "Nessun mittente";
   public destinatari: string = null; // "Nessun destinatario";
   public destinatariCC: string = null; // "Li dobbiamo mettere?? sulla scrivania non ci sono mai stati";
-  public datiDiFlusso: string = null;
+  public datiDiFlusso: any = null;
   public datiFlussoTooltip: string = null;
 
   public localIt = LOCAL_IT;
