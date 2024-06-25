@@ -73,12 +73,11 @@ import { RaccoltaSempliceComponent } from "./tabelle/raccolta-semplice/raccolta-
 import { InserimentoManualeComponent } from "./tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component";
 
 /* Angular Material Module */
-import { MatLegacyMenuModule as MatMenuModule } from "@angular/material/legacy-menu";
 import { MatIconModule } from "@angular/material/icon";
-import { MatLegacyInputModule as MatInputModule } from "@angular/material/legacy-input";
-import { MatLegacyAutocompleteModule as MatAutocompleteModule } from "@angular/material/legacy-autocomplete";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterjobs.component";
+import { NgIdleKeepaliveModule } from "@ng-idle/keepalive";
+import { SplitterModule } from "primeng/splitter";
 
 @NgModule({
   declarations: [
@@ -129,12 +128,9 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
     HeaderModule,
     HeaderFeaturesModule,
     ProgressSpinnerModule,
-    MatMenuModule,
     MatIconModule,
     RadioButtonModule,
     BlockUIModule,
-    MatInputModule,
-    MatAutocompleteModule,
     ListboxModule,
     ConfirmPopupModule,
     FieldsetModule,
@@ -142,7 +138,9 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
     ScrollPanelModule,
     InplaceModule,
     DividerModule,
+    SplitterModule,
     CheckboxModule,
+    NgIdleKeepaliveModule.forRoot(),
   ],
   providers: [
     AttivitaService,

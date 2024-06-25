@@ -23,7 +23,7 @@ import { JWTModuleConfig, JwtLoginService, UtenteUtilities } from "@bds/jwt-logi
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
-import * as Bowser from "bowser";
+
 import {
   IntimusClientService,
   IntimusCommand,
@@ -35,6 +35,7 @@ import {
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
+import Bowser from "bowser";
 
 @Component({
   selector: "app-attivita",
