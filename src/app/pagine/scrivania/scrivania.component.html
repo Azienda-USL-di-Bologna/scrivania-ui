@@ -1,16 +1,21 @@
-<div class="p-grid attivita-wrapper position-relative">
-  <!-- Left side -->
-  <!-- <div
+<!-- <div class="p-grid attivita-wrapper position-relative"> -->
+<!-- Left side -->
+<!-- <div
     class="p-col content-left"
     #leftSide
   > -->
 
-  <p-splitter
-    *ngIf="!noAnteprima"
-    [panelSizes]="[25, 75]"
-    [minSizes]="[15, 55]"
-  >
-    <ng-template pTemplate>
+<p-splitter
+  class="splitter"
+  [panelSizes]="[70, 30]"
+  [minSizes]="[15, 15]"
+  #splitter
+>
+  <ng-template pTemplate>
+    <div
+      class="p-col content-left"
+      #leftSide
+    >
       <div class="option-bar">
         <div class="buttons-bar">
           <bds-menu
@@ -272,23 +277,24 @@
           <monitor-masterjobs *ngIf="mostraMonitorMasterjobs"></monitor-masterjobs>
         </div>
       </div>
-      <!-- </div> -->
+    </div>
+    <!-- </div> -->
 
-      <!-- <div
+    <!-- <div
     class="p-offset-7 d-inline-block slider"
     [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'"
     #slider
   >
     <div></div>
   </div> -->
-    </ng-template>
-    <ng-template pTemplate>
-      <!-- Right side -->
-      <!-- <div
-    class="p-md-5 p-sm-12 content-right"
-    [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'"
-    #rightSide
-  > -->
+  </ng-template>
+  <ng-template pTemplate>
+    <!-- Right side -->
+    <div
+      class="p-md-5 p-sm-12 content-right"
+      [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'"
+      #rightSide
+    >
       <div
         tabindex="0"
         aria-label="Anteprima del documento"
@@ -417,10 +423,10 @@
         </div>
       </div>
       <!-- </div> -->
-      <!-- </div> -->
-    </ng-template>
-  </p-splitter>
-</div>
+    </div>
+  </ng-template>
+</p-splitter>
+<!-- </div> -->
 <p-dialog
   header="Note Attività"
   [(visible)]="this.showNote"

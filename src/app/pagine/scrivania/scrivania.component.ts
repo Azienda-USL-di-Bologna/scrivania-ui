@@ -25,9 +25,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild("anteprima") private anteprima: ElementRef;
   @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
 
-  // @ViewChild("leftSide") private leftSide: ElementRef;
-  // @ViewChild("rightSide") private rightSide: ElementRef;
-  // @ViewChild("slider") private slider: ElementRef;
+  @ViewChild("leftSide") private leftSide: ElementRef;
+  @ViewChild("rightSide") private rightSide: ElementRef;
+  @ViewChild("splitter") private splitter: ElementRef;
 
   private subscriptions: Subscription[] = [];
 
@@ -186,11 +186,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   private setLook(): void {
-    // this.setResponsiveSlider();
+    this.setResponsiveSlider();
     this.buttonAvcpEnabled = !!this.loggedUser?.getUtente().aziendeAttive.find((a) => a.codice === "050109");
     if (this.impostazioniService.getImpostazioniVisualizzazione()) {
-      // this.rightSide.nativeElement.style.width = this.impostazioniService.getRightSideOffsetWidth() + "%";
-      // this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniService.getRightSideOffsetWidth() + "%";
+      this.rightSide.nativeElement.style.width = this.impostazioniService.getRightSideOffsetWidth() + "%";
+      this.splitter.nativeElement.style.marginLeft = 100 - this.impostazioniService.getRightSideOffsetWidth() + "%";
       if (window.screen.width <= 1280) {
         this.hidePreview = true;
       } else {
@@ -199,45 +199,45 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // private setResponsiveSlider(): void {
-  //   const that = this;
-  //   this.slider.nativeElement.onmousedown = function (event: MouseEvent) {
-  //     that.sliding = true;
-  //     event.preventDefault();
-  //     const totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
-  //     document.onmouseup = function () {
-  //       document.onmousemove = null;
-  //       console.log("that.slider.nativeElement.onmouseup");
-  //       that.impostazioniService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
-  //       that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniService.getImpostazioniVisualizzazione());
-  //       document.onmouseup = null;
-  //       that.sliding = false;
-  //     };
-  //     // that.slider.nativeElement.onmouseup = function() {
-  //     //   console.log("that.slider.nativeElement.onmouseup");
-  //     //   that.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] = parseInt(that.rightSide.nativeElement.style.width, 10);
-  //     //   // const impostazioni: ImpostazioniApplicazioni = that.loggedUser.getImpostazioniApplicazione();
-  //     //   // impostazioni.impostazioniVisualizzazione = JSON.stringify(that.impostazioniVisualizzazione);
-  //     //   that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniVisualizzazione);
-  //     // };
-  //     document.onmousemove = function (e: MouseEvent) {
-  //       e.preventDefault();
-  //       const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia pixel che sfasano il conteggio
-  //       if (!(e.clientX <= that.LIMIT_X_LEFT_SIDE)) {
-  //         that.changeColOrder = false;
-  //       } else {
-  //         that.changeColOrder = true;
-  //       }
-  //       if (!(e.clientX <= that.MIN_X_LEFT_SIDE)) {
-  //         if (!(totalX - e.clientX <= that.MIN_X_RIGHT_SIDE)) {
-  //           const rxPercent = (rx * 100) / totalX;
-  //           that.rightSide.nativeElement.style.width = rxPercent + "%";
-  //           that.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
-  //         }
-  //       }
-  //     };
-  //   };
-  // }
+  private setResponsiveSlider(): void {
+    const that = this;
+    this.splitter.nativeElement.onmousedown = function (event: MouseEvent) {
+      that.sliding = true;
+      event.preventDefault();
+      const totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
+      document.onmouseup = function () {
+        document.onmousemove = null;
+        console.log("that.splitter.nativeElement.onmouseup");
+        that.impostazioniService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
+        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniService.getImpostazioniVisualizzazione());
+        document.onmouseup = null;
+        that.sliding = false;
+      };
+      // that.splitter.nativeElement.onmouseup = function() {
+      //   console.log("that.splitter.nativeElement.onmouseup");
+      //   that.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] = parseInt(that.rightSide.nativeElement.style.width, 10);
+      //   // const impostazioni: ImpostazioniApplicazioni = that.loggedUser.getImpostazioniApplicazione();
+      //   // impostazioni.impostazioniVisualizzazione = JSON.stringify(that.impostazioniVisualizzazione);
+      //   that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniVisualizzazione);
+      // };
+      document.onmousemove = function (e: MouseEvent) {
+        e.preventDefault();
+        const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia pixel che sfasano il conteggio
+        if (!(e.clientX <= that.LIMIT_X_LEFT_SIDE)) {
+          that.changeColOrder = false;
+        } else {
+          that.changeColOrder = true;
+        }
+        if (!(e.clientX <= that.MIN_X_LEFT_SIDE)) {
+          if (!(totalX - e.clientX <= that.MIN_X_RIGHT_SIDE)) {
+            const rxPercent = (rx * 100) / totalX;
+            that.rightSide.nativeElement.style.width = rxPercent + "%";
+            that.splitter.nativeElement.style.marginLeft = 100 - rxPercent + "%";
+          }
+        }
+      };
+    };
+  }
 
   private isBrowserObsolete(browserName: string, version: string) {
     version = version.split(".")[0];
@@ -271,18 +271,18 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     return false;
   }
 
-  // @HostListener("window:resize", ["$event"])
-  // onResize(event: any) {
-  //   const lx = this.leftSide.nativeElement.offsetWidth;
-  //   const rx = this.rightSide.nativeElement.offsetWidth;
-  //   const screenX = event.currentTarget.innerWidth;
-  //   if (screenX - lx < this.MIN_X_RIGHT_SIDE || screenX - rx < this.MIN_X_LEFT_SIDE) {
-  //     // Se rightside è minore di 385 o leftside è minore di 225  setto rightside a 225 e leftside il resto
-  //     const rxPercent = (this.MIN_X_RIGHT_SIDE * 100) / screenX;
-  //     this.rightSide.nativeElement.style.width = rxPercent + "%";
-  //     // this.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
-  //   }
-  // }
+  @HostListener("window:resize", ["$event"])
+  onResize(event: any) {
+    const lx = this.leftSide.nativeElement.offsetWidth;
+    const rx = this.rightSide.nativeElement.offsetWidth;
+    const screenX = event.currentTarget.innerWidth;
+    if (screenX - lx < this.MIN_X_RIGHT_SIDE || screenX - rx < this.MIN_X_LEFT_SIDE) {
+      // Se rightside è minore di 385 o leftside è minore di 225  setto rightside a 225 e leftside il resto
+      const rxPercent = (this.MIN_X_RIGHT_SIDE * 100) / screenX;
+      this.rightSide.nativeElement.style.width = rxPercent + "%";
+      // this.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
+    }
+  }
 
   private shrinkFileName(fileName: string): string {
     const maxFileName: number = 50;

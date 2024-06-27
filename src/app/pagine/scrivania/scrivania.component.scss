@@ -1,7 +1,27 @@
+:host ::ng-deep {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  .splitter {
+    height: 100%;
+    width: 100%;
+    .p-splitter {
+      height: 100%;
+      width: 100%;
+      border: 0px;
+    }
+    .p-splitter-panel {
+      padding: 1rem;
+    }
+  }
+}
 .content-left {
   /*position: relative;*/
   display: flex;
   flex-direction: column;
+  height: 100%;
+  width: 100%;
 }
 
 .messaggio-browser-obsoleti {
@@ -19,6 +39,7 @@
 }
 
 .content-right {
+  flex: 1 1 0;
   padding-left: 1.438rem;
   /*overflow-y: auto;*/
   display: flex;
@@ -29,6 +50,7 @@
   height: 100%;
   display: flex;
   flex-direction: row;
+  overflow: hidden;
 }
 
 .option-bar {

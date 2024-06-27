@@ -19,9 +19,9 @@ body .ui-button:enabled:focus {
   box-shadow: none;
 }
 body a {
-  color: deepskyblue;
+  // color: deepskyblue;
 }
-.p-button {
+/* .p-button {
   border: 0.06rem solid #203244 !important;
   background: #2e4a65 !important;
   &:hover {
@@ -33,7 +33,7 @@ body a {
   &.p-button-text {
     color: white;
   }
-}
+} */
 
 // Responsive
 @media screen and (max-width: 1600px) {

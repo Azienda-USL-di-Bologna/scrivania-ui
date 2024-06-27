@@ -6,6 +6,9 @@
 }
 .page-wrapper {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 .custom-header {
   background-color: #993366;
