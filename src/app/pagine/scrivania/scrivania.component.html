@@ -10,6 +10,8 @@
   [panelSizes]="[70, 30]"
   [minSizes]="[15, 15]"
   #splitter
+  [ngClass]="{ hiderightside: hidePreview }"
+  onResizeEnd="onResize($event)"
 >
   <ng-template pTemplate>
     <div
@@ -294,6 +296,7 @@
       class="p-md-5 p-sm-12 content-right"
       [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'"
       #rightSide
+      *ngIf="!hidePreview"
     >
       <div
         tabindex="0"
