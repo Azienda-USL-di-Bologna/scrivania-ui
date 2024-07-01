@@ -1,6 +1,6 @@
 job_1:
   stage: build
-  image: node:12-alpine
+  image: node:20.14
   tags:
     - babel
   script:
