@@ -18,6 +18,6 @@ install_dependencies:
   only:
     refs:
       - merge_requests
-      - master
+      - gdm
     changes:
       - yarn.lock
