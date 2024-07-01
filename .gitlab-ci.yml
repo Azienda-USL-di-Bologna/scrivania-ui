@@ -12,3 +12,5 @@ install_dependencies:
     refs:
       - merge_requests
       - gdm
+    changes:
+      - yarn.lock
