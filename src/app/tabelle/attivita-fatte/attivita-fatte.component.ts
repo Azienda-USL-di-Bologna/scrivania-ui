@@ -1,23 +1,23 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList, ViewChild } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
-import { FILTER_TYPES, SORT_MODES, LOCAL_IT } from "@bds/nt-communicator";
+import { LOCAL_IT } from "@bds/common-tools";
 import { buildLazyEventFiltersAndSorts, buildPagingConf } from "@bds/primeng-plugin";
 import { AttivitaFatteService } from "./attivita-fatte.service";
-import { PROJECTIONS } from "../../../environments/app-constants";
-import { AttivitaFatta } from "@bds/ng-internauta-model";
-import { NtJwtLoginService, UtenteUtilities } from "@bds/nt-jwt-login";
+import { AttivitaFatta, ENTITIES_STRUCTURE } from "@bds/internauta-model";
+import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Subscription } from "rxjs";
-import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf } from "@nfa/next-sdr";
+import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
+import { Calendar } from "primeng/calendar";
+import { Table } from "primeng/table";
 
 @Component({
   selector: "app-attivita-fatte",
   templateUrl: "./attivita-fatte.component.html",
-  styleUrls: ["./attivita-fatte.component.css"],
-  providers: [DatePipe]
+  styleUrls: ["./attivita-fatte.component.scss"],
+  providers: [DatePipe],
 })
 export class AttivitaFatteComponent implements OnInit {
-
   public attivitaFatte: AttivitaFatta[];
   public totalRecords: number;
   public localIt = LOCAL_IT;
@@ -31,6 +31,11 @@ export class AttivitaFatteComponent implements OnInit {
   public selectedRowIndex: number = -1;
   private subscriptions: Subscription[];
 
+  public _rows = 20;
+
+  @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
+  @ViewChild("dt") private dataTable: Table;
+
   private _idAzienda: number = -1;
   @Input("idAzienda")
   set idAzienda(idAzienda: number) {
@@ -38,7 +43,9 @@ export class AttivitaFatteComponent implements OnInit {
     if (!this._idAzienda) {
       this._idAzienda = -1;
     }
-    if ( !this.loggedUser ) { return; }
+    if (!this.loggedUser) {
+      return;
+    }
     if (this._idAzienda) {
       this.loadData(null);
     }
@@ -55,60 +62,82 @@ export class AttivitaFatteComponent implements OnInit {
     {
       // E' l'insieme di priorità e tipo attività
       field: "priorita",
-      width: "30px",
-      padding: 0
+      width: "2.313rem",
+      padding: 0,
+      label: "priorità",
+      minWidth: "2.313rem",
     },
     {
       field: "idAzienda.nome",
       header: "Ente",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "85px"
+      width: "6.25rem",
+      label: "ente",
+      minWidth: "6.25rem",
     },
     {
       field: "idApplicazione.nome",
       header: "App",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "80px"
+      width: "5.813rem",
+      label: "applicazione",
+      minWidth: "5.813rem",
     },
     {
       field: "provenienza",
       header: "Da",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "140px"
+      width: "8.75rem",
+      label: "provenienza",
+      minWidth: "8.75rem",
     },
     {
       field: "oggetto",
       header: "Oggetto",
-      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase
+      filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
+      label: "oggetto",
+      minWidth: "12.5rem",
     },
     {
-      field: "data",
+      field: "dataInserimentoRiga",
       header: "Svolta il",
       filterMatchMode: FILTER_TYPES.not_string.equals,
       fieldType: "DateTime",
       filterWidget: "Calendar",
-      ariaLabelDescription: "Colonna Inserimento, Cella filtro",
-      width: "100px"
+      ariaLabelDescription: "Colonna Data, Cella filtro",
+      width: "8rem",
+      label: "svolta il",
+      minWidth: "8rem",
     },
     {
       field: "descrizione",
       header: "Tipo",
       filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-      width: "120px"
+      width: "7.5rem",
+      label: "tipo",
+      minWidth: "7.5rem",
     },
     {
-    // colonna note
-      width: "30px"
+      // colonna note
+      width: "1.875rem",
+      label: "note",
+      minWidth: "1.875rem",
     },
   ];
 
-  constructor(private datepipe: DatePipe, private attivitaFatteService: AttivitaFatteService, private loginService: NtJwtLoginService) { }
+  constructor(
+    private datepipe: DatePipe,
+    private attivitaFatteService: AttivitaFatteService,
+    private loginService: JwtLoginService
+  ) {}
 
   ngOnInit() {
     this.subscriptions = [];
-    this.subscriptions.push(this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
-      this.loggedUser = u;
-    }));
+    this.subscriptions.push(
+      this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
+        this.loggedUser = u;
+      })
+    );
     // this.loadData(null);
   }
 
@@ -124,40 +153,34 @@ export class AttivitaFatteComponent implements OnInit {
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
 
-    const pageConfing: PagingConf = buildPagingConf(event);
+    const pageConfing: PagingConf = this.buildPageConf(event);
 
     this.attivitaFatteService
       .getData(
-        PROJECTIONS.attivitaFatta.customProjections
-          .attivitaFattaWithIdApplicazioneAndIdAziendaAndTransientFields,
+        ENTITIES_STRUCTURE.scrivania.attivitafatta.customProjections
+          .AttivitaFattaWithIdApplicazioneAndIdAziendaAndTransientFields,
         this.initialFiltersAndSorts,
         this.lazyLoadFiltersAndSorts,
         pageConfing
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         console.log("DATA FATTE", data);
 
         this.attivitaFatte = undefined;
         this.totalRecords = 0;
         if (data && data.results && data.page) {
-          this.attivitaFatte = <AttivitaFatta[]>(
-            data.results
-          );
+          this.attivitaFatte = <AttivitaFatta[]>data.results;
 
           this.totalRecords = data.page.totalElements;
-          this.attivitaFatte.forEach(a => {
+          this.attivitaFatte.forEach((a) => {
             if (a.tipo === "notifica") {
-              a["iconaAttivita"] =
-                "assets/images/baseline-notifications_none-24px.svg";
+              a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
             } else if (!a.priorita || a.priorita === 3) {
-              a["iconaAttivita"] =
-                "assets/images/baseline-outlined_flag-24px.3.svg";
+              a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
             } else if (a.priorita === 2) {
-              a["iconaAttivita"] =
-                "assets/images/baseline-outlined_flag-24px.2.svg";
+              a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.2.svg";
             } else if (a.priorita === 1) {
-              a["iconaAttivita"] =
-                "assets/images/baseline-outlined_flag-24px.1.svg";
+              a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.1.svg";
             }
           });
         }
@@ -165,14 +188,41 @@ export class AttivitaFatteComponent implements OnInit {
       });
   }
 
+  // TODO: toglierla e usare quella in primeng-plugin dopo opportuno refactoring
+  private buildPageConf(event: any): PagingConf {
+    let page = 0;
+    let size = this._rows;
+    if (event) {
+      page = event.first / event.rows;
+      size = event.rows;
+    }
+    const pageConf: PagingConf = {
+      conf: {
+        page: page,
+        size: size,
+      },
+      mode: "PAGE_NO_COUNT",
+    };
+    return pageConf;
+  }
+
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const functionName = "buildInitialFiltersAndSorts";
     const initialFiltersAndSorts = new FiltersAndSorts();
-    initialFiltersAndSorts.addSort(new SortDefinition("dataInserimentoRiga", SORT_MODES.desc));
-    const filterIdPersona: FilterDefinition = new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().fk_idPersona.id);
+    initialFiltersAndSorts.addSort(new SortDefinition("id", SORT_MODES.desc));
+    const filterIdPersona: FilterDefinition = new FilterDefinition(
+      "idPersona.id",
+      FILTER_TYPES.not_string.equals,
+      this.loggedUser.getUtente().fk_idPersona.id
+    );
     initialFiltersAndSorts.addFilter(filterIdPersona);
-    if (this._idAzienda !== -1) { // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
-      const filterIdAzienda: FilterDefinition = new FilterDefinition("idAzienda.id", FILTER_TYPES.not_string.equals, this._idAzienda);
+    if (this._idAzienda !== -1) {
+      // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
+      const filterIdAzienda: FilterDefinition = new FilterDefinition(
+        "idAzienda.id",
+        FILTER_TYPES.not_string.equals,
+        this._idAzienda
+      );
       initialFiltersAndSorts.addFilter(filterIdAzienda);
     }
     // initialFiltersAndSorts.rows = 20;
@@ -209,16 +259,50 @@ export class AttivitaFatteComponent implements OnInit {
     this.loadData(event);
   }
 
-  public onKeydownHandlerArrowDown(event: KeyboardEvent) {
+  public onKeydownHandlerArrowDown(event: Event) {
     // this.selectIndex(this.selectedRowIndex + 1);
   }
 
-  public onKeydownHandlerArrowUp(event: KeyboardEvent) {
+  public onKeydownHandlerArrowUp(event: Event) {
     // this.selectIndex(this.selectedRowIndex - 1);
   }
 
-  private onNoteClick(attivita: any) {
+  public onNoteClick(attivita: any) {
     this.onAttivitaNoteEmitter.emit(attivita);
+  }
+
+  public onCalendarAction(event: any, field: string, action: string) {
+    let calSel: Calendar = null;
+    switch (action) {
+      case "today":
+        calSel = this._calGen.find((e) => e.inputId === "CalInput_" + field);
+        if (calSel) {
+          calSel.overlayVisible = false;
+        }
+        break;
+
+      case "clear":
+        this.dataTable.filter(null, field, null);
+        break;
+
+      case "select":
+        if (this._calGen) {
+          calSel = this._calGen.find((a) => a.inputId === "CalInput_" + field);
+          if (
+            calSel &&
+            this.dataRange &&
+            this.dataRange[field].length === 2 &&
+            this.dataRange[field][0] &&
+            this.dataRange[field][1]
+          ) {
+            calSel.overlayVisible = false;
+          }
+        }
+
+        const value = this.dataRange[field];
+        this.dataTable.filter(value, field, null);
+        break;
+    }
   }
 
   // public apriAttivita(attivita: any) {
@@ -244,5 +328,8 @@ export class AttivitaFatteComponent implements OnInit {
   // private fourRandomChar() {
   //   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   // }
+}
 
+export class AttivitaFattaCustom extends AttivitaFatta {
+  iconaAttivita: string;
 }

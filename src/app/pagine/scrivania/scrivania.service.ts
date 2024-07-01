@@ -1,22 +1,24 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { DatePipe } from "@angular/common";
-import { Attivita, ENTITIES_STRUCTURE } from "@bds/ng-internauta-model";
-import { HttpAbstractService } from "@bds/nt-communicator";
-import { ENTITIES_CONFIGURATION, ENTITIES, getInternautaUrl, BaseUrlType, COMMANDS, CONTROLLERS_ENDPOINT } from "../../../environments/app-constants";
+import { Attivita, BaseUrlType, ENTITIES_STRUCTURE, getInternautaUrl, ItemMenu } from "@bds/internauta-model";
+import { CONTROLLERS_ENDPOINT } from "../../../environments/app-constants";
 import { Observable, Subscriber } from "rxjs";
-import { NtJwtLoginService } from "@bds/nt-jwt-login";
-import { NextSDREntityProvider } from "@nfa/next-sdr";
+import { JwtLoginService } from "@bds/jwt-login";
+import { NextSDREntityProvider } from "@bds/next-sdr";
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class ScrivaniaService extends NextSDREntityProvider {
-
   private getAnteprimaServlet: string = "getAnteprima";
   // private blobEmitter: BehaviorSubject<any> = new BehaviorSubject(new URL("http:// localhost:4200/assets/images/no_anteprima.png"));
 
-  constructor(protected http: HttpClient, protected datepipe: DatePipe, private loginService: NtJwtLoginService) {
+  constructor(
+    protected http: HttpClient,
+    protected datepipe: DatePipe,
+    private loginService: JwtLoginService
+  ) {
     super(http, datepipe, ENTITIES_STRUCTURE.scrivania.menu, getInternautaUrl(BaseUrlType.Scrivania));
   }
 
@@ -28,7 +30,7 @@ export class ScrivaniaService extends NextSDREntityProvider {
 
   insert(elementToInsert: Attivita, datepipe: DatePipe): Observable<any> {
     const functioName = "insert";
-   //  console.log(this.classDescriptionLocal, functioName, "elementToInsert", elementToInsert);
+    //  console.log(this.classDescriptionLocal, functioName, "elementToInsert", elementToInsert);
     return this.postHttpCall(elementToInsert);
   }
 
@@ -42,39 +44,48 @@ export class ScrivaniaService extends NextSDREntityProvider {
   //   return this.blobEmitter.asObservable();
   // }
 
-
   // public getBlobEmitter(): BehaviorSubject<any> {
   //   return this.blobEmitter;
   // }
   public getAnteprima(attivita: Attivita, allegatoSelezionato: any): Observable<URL> {
     const queryString: string =
-      "guid=" + allegatoSelezionato.guid + "&" +
-      "tipologia=" + allegatoSelezionato.tipologia + "&" +
-      "idAzienda=" + attivita.fk_idAzienda.id + "&" +
-      "idApplicazione=" + attivita.fk_idApplicazione.id + "&" +
-      "fileName=" + allegatoSelezionato.nome_file;
-      const url = this.restApiBaseUrl + "/" + this.getAnteprimaServlet + "?" + queryString;
+      "guid=" +
+      allegatoSelezionato.guid +
+      "&" +
+      "tipologia=" +
+      allegatoSelezionato.tipologia +
+      "&" +
+      "idAzienda=" +
+      attivita.fk_idAzienda.id +
+      "&" +
+      "idApplicazione=" +
+      attivita.fk_idApplicazione.id +
+      "&" +
+      "fileName=" +
+      allegatoSelezionato.nome_file;
+    const url = this.restApiBaseUrl + "/" + this.getAnteprimaServlet + "?" + queryString;
 
-  return new Observable((observer: Subscriber<any>) => {
-          let objectUrl: string = null;
-          this.http.get(url, { responseType: "blob" }).subscribe(m => {
-            objectUrl = URL.createObjectURL(m);
-            observer.next(objectUrl);
+    return new Observable((observer: Subscriber<any>) => {
+      let objectUrl: string = null;
+      this.http.get(url, { responseType: "blob" }).subscribe(
+        (m) => {
+          objectUrl = URL.createObjectURL(m);
+          observer.next(objectUrl);
         },
-        err => {
+        (err) => {
           observer.error(err);
-        });
-        return () => {
-          if (objectUrl) {
-              URL.revokeObjectURL(objectUrl);
-              objectUrl = null;
-          }
-        };
-      });
+        }
+      );
+      return () => {
+        if (objectUrl) {
+          URL.revokeObjectURL(objectUrl);
+          objectUrl = null;
+        }
+      };
+    });
 
-       // return this.http.get<any>(url);
+    // return this.http.get<any>(url);
   }
-
 
   public getUrlsFirmone(): Observable<any> {
     const url: string = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.FIRMONE_URLS;
@@ -89,5 +100,20 @@ export class ScrivaniaService extends NextSDREntityProvider {
   public cancellaNotifiche(): Observable<any> {
     const url: string = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.CANCELLA_NOTIFICHE;
     return this.http.get(url);
+  }
+
+  public getMenuScrivania(): Observable<ItemMenu[]> {
+    console.log("Sono qui per chiedere il menu della scrivania");
+    const url: string = getInternautaUrl(BaseUrlType.Scrivania) + CONTROLLERS_ENDPOINT.GET_MENU_SCRIVANIA;
+    console.log("url: " + url);
+    return this.http.get(url) as Observable<ItemMenu[]>;
+  }
+
+  public generateAvcp(year: number, idAzienda: number) : Observable<any>  {
+    const url: string = getInternautaUrl(BaseUrlType.Lotti) + CONTROLLERS_ENDPOINT.GENERATE_AVCP_XML;
+    const httpOptions = {
+      responseType: "blob"
+    };
+    return this.http.get(url+"?anno="+year+"&idAzienda="+idAzienda, {      responseType: "blob"    }) as Observable<any>;
   }
 }

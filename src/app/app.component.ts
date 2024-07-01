@@ -1,86 +1,108 @@
-import { Component, OnInit } from "@angular/core";
-import { NtJwtLoginService, UtenteUtilities, UtilityFunctions} from "@bds/nt-jwt-login";
-import { getInternautaUrl, BaseUrlType, SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
+import { Component, OnInit, OnDestroy, Type } from "@angular/core";
+import { JwtLoginService, UtenteUtilities, UtilityFunctions } from "@bds/jwt-login";
+import { SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { Utente } from "@bds/ng-internauta-model";
-import { MenuItem, DialogService } from "primeng/api";
+import { getInternautaUrl, BaseUrlType } from "@bds/internauta-model";
+import { MenuItem, PrimeNGConfig } from "primeng/api";
+import { DialogService } from "primeng/dynamicdialog";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
-import { IntimusClientService } from "./intimus/intimus-client.service";
-import { HeaderFeaturesConfig } from "@bds/primeng-plugin";
-import { SessionManager } from "./services/session-manager.service";
+import { IntimusClientService, PRIMENG_ITA_TRANSALATION } from "@bds/common-tools";
+import { HeaderFeaturesConfig, PopupMessaggiService } from "@bds/common-components";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.css"]
+  styleUrls: ["./app.component.scss"],
 })
-export class AppComponent implements OnInit {
-
-  title = "Babel-Internauta";
-  private deletedImpersonatedUserQueryParams = false;
-  public addToMenu: MenuItem[] = [];
-  public utenteConnesso: UtenteUtilities;
+export class AppComponent implements OnInit, OnDestroy {
+  public addToMenu: MenuItem[] = []; // E' il menu che si aprirà nell'header
   public headerFeaturesConfig: HeaderFeaturesConfig;
+  public utenteConnesso: UtenteUtilities;
+  private subscriptions: Subscription[] = [];
 
   constructor(
-    private loginService: NtJwtLoginService,
+    private loginService: JwtLoginService,
+    private config: PrimeNGConfig,
     private route: ActivatedRoute,
     private router: Router,
+    private popupMessaggiService: PopupMessaggiService,
     public dialogService: DialogService,
-    private intimusClient: IntimusClientService,
-    private sessionManager: SessionManager) {}
+    private intimusClient: IntimusClientService
+  ) {}
 
   ngOnInit() {
-    console.log("inizio onInit() appComponent");
-
+    this.config.setTranslation(PRIMENG_ITA_TRANSALATION);
     this.headerFeaturesConfig = new HeaderFeaturesConfig();
     this.headerFeaturesConfig.showCambioUtente = true;
     this.headerFeaturesConfig.showLogOut = true;
     this.headerFeaturesConfig.showUserFullName = true;
     this.headerFeaturesConfig.showUserMenu = true;
     this.headerFeaturesConfig.showManuale = true;
+    this.headerFeaturesConfig.showDownloadFirmaJR = true;
     this.headerFeaturesConfig.showProfilo = true;
     this.headerFeaturesConfig.logoutRedirectRoute = SCRIVANIA_ROUTE;
     this.headerFeaturesConfig.logoutIconPath = "assets/images/signout.svg";
+    this.headerFeaturesConfig.logoutWarning = true;
 
-    this.loginService.setloginUrl(getInternautaUrl(BaseUrlType.Login));
+    this.loginService.setLoginUrl(getInternautaUrl(BaseUrlType.Login));
+    this.loginService.setPassTokenGeneratorURL(getInternautaUrl(BaseUrlType.PassTokenGenerator));
     this.loginService.setImpostazioniApplicazioniUrl(getInternautaUrl(BaseUrlType.ConfigurazioneImpostazioniApplicazioni));
+    this.loginService.setRefreshSessionInternautaUrl(getInternautaUrl(BaseUrlType.RefreshSessionInternauta));
 
-    this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
-      if (utente) {
-        this.utenteConnesso = utente;
-      }
-    });
+    this.subscriptions.push(
+      this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
+        if (utente) {
+          this.utenteConnesso = utente;
+          const intimusUrl = getInternautaUrl(BaseUrlType.Intimus);
+          this.intimusClient.start(
+            intimusUrl,
+            APPLICATION,
+            this.utenteConnesso.getUtente().idPersona.id,
+            this.utenteConnesso.getUtente().aziendaLogin.id,
+            this.utenteConnesso.getUtente().aziende.map((a) => a.id)
+          );
+        }
+      })
+    );
 
-    this.route.queryParams.subscribe((params: Params) => UtilityFunctions.manageChangeUserLogin(params, this.loginService, this.router, LOGIN_ROUTE));
+    this.route.queryParams.subscribe((params: Params) =>
+      UtilityFunctions.manageChangeUserLogin(params, this.loginService, this.router, LOGIN_ROUTE)
+    );
     this.addToMenu.push({
       label: "Impostazioni",
       icon: "pi pi-fw pi-cog slide-icon",
-      command: () => { this.showSettings(ImpostazioniComponent, "Impostazioni utente", "480px", "200px", null); }
+      command: () => {
+        this.showSettings(ImpostazioniComponent, "Impostazioni utente", "30rem", "21.875rem", null);
+      },
     });
     this.addToMenu = Object.assign([], this.addToMenu);
-
-    // this.sessionManager.setExpireTokenOnIdle(10);
   }
 
-  showSettings(component, header, width, height, data) {
+  /**
+   * Questa funzione viene passata all'header come comando di risposta al click sulla volce impostazioni.
+   * Si occupa di aprire un dialog dinamico di primeng in cui è caricato il componente passato (ImpostazioniComponent)
+   * @param component
+   * @param header
+   * @param width
+   * @param height
+   * @param data
+   */
+  private showSettings(component: Type<any>, header: string, width: string, height: string, data: any) {
     const ref = this.dialogService.open(component, {
       data: data,
       header: header,
       width: width,
       styleClass: "dialog-class",
-      contentStyle: {"max-height": "450px", "min-height": "250px", "overflow": "auto", "height": height, }
+      contentStyle: { "max-height": "28.125rem", "min-height": "15.625rem", overflow: "auto", height: height },
     });
   }
 
-  // crea l'utente a partire dai dati "grezzi" UserInfo della risposta
-  public buildLoggedUser(userInfo: any): Utente {
-    const loggedUser: Utente = new Utente();
-    for (const key in userInfo) {
-      if (userInfo.hasOwnProperty(key)) {
-        loggedUser[key] = userInfo[key];
+  ngOnDestroy(): void {
+    if (this.subscriptions && this.subscriptions.length > 0) {
+      while (this.subscriptions.length > 0) {
+        this.subscriptions.pop().unsubscribe();
       }
     }
-    return loggedUser;
   }
 }

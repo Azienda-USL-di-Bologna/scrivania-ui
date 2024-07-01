@@ -1,0 +1,26 @@
+.img-table {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: auto;
+}
+.openTabLink {
+  color: #993366 !important;
+}
+.openTabLink:hover {
+  cursor: pointer;
+}
+.p0 {
+  padding: 0 !important;
+}
+
+.column-class {
+  word-break: break-word;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+}
+
+::ng-deep app-attivita-fatte .p-datatable table {
+  table-layout: unset;
+}
