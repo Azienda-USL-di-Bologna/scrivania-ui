@@ -1,5 +1,5 @@
 job_1:
-  stage: stage_a
+  stage: build
   image: node:12-alpine
   tags:
     - docker
