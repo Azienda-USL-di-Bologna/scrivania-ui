@@ -22,6 +22,7 @@
   padding: 2rem 1.875rem 0;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 ::ng-deep body .ui-table .ui-table-tbody > tr.ui-state-highlight {
   background-color: #fcf9bf;
