@@ -8,7 +8,6 @@ install_dependencies:
     - babel
   script:
     - yarn install
-    - yarn ngcc --properties es2015 --create-ivy-entry-points
   cache:
     key:
       files:
