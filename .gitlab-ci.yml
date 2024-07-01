@@ -7,16 +7,4 @@ install_dependencies:
   tags:
     - babel
   script:
-    - yarn install
-  cache:
-    key:
-      files:
-        - yarn.lock
-    paths:
-      - node_modules
-  only:
-    refs:
-      - merge_requests
-      - gdm
-    changes:
-      - yarn.lock
+    - node --version
