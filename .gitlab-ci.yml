@@ -1,7 +1,23 @@
-job_1:
-  stage: build
+stages:
+  - install
+ 
+install_dependencies:
+  stage: install
   image: node:20.14
   tags:
     - babel
   script:
-    - node --version
+    - yarn install
+    - yarn ngcc --properties es2015 --create-ivy-entry-points
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - node_modules
+  only:
+    refs:
+      - merge_requests
+      - master
+    changes:
+      - yarn.lock
