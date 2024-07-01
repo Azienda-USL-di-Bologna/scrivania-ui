@@ -8,3 +8,7 @@ install_dependencies:
     - babel
   script:
     - node --version
+  only:
+    refs:
+      - merge_requests
+      - gdm
