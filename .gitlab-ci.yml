@@ -45,11 +45,7 @@ install_dependencies:
 build_app:
   stage: build
   script:
-    - npm config set registry http://gdml.internal.ausl.bologna.it:4873/ -g
-    - npm config set fetch-retry-mintimeout 5 -g
-    - npm config set fetch-retry-maxtimeout 5 -g
-    - yarn install
-    - $CI_PROJECT_DIR/node_modules/.bin/ng build --configuration=$ENVIRONMENT --base-href /$APP_PATH/ --output-path dist
+    - yarn build --configuration=stage --base-href /scrivania/ --output-path dist
   after_script:
     - cp $PROJECT_PATH/Dockerfile $APP_OUTPUT_PATH
   artifacts:
