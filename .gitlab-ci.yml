@@ -52,4 +52,4 @@ build_app:
     name: "angular-app-pipeline"
     paths:
       - $APP_OUTPUT_PATH
-extends: .dependencies_cache
+  extends: .dependencies_cache
