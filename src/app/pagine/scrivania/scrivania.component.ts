@@ -90,6 +90,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   private MIN_X_RIGHT_SIDE: number = 225;
   public browserMessageObsolete = "";
   public browserObsolete = false;
+  public diplayPopUpObsolescenza: boolean = false;
   public idAzienda: number = null;
   public changeColOrder: boolean = false;
   public hidePreview = false;
@@ -145,6 +146,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.allegati = [{ label: "Documenti non presenti", value: null }];
     const browser = Bowser.getParser(window.navigator.userAgent).getBrowser();
     this.browserObsolete = this.isBrowserObsolete(browser.name, browser.version);
+    this.diplayPopUpObsolescenza = this.browserObsolete;
   }
 
   ngAfterViewInit() {

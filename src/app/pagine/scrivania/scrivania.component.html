@@ -461,3 +461,18 @@
     Scarica...
   </button>
 </p-dialog>
+
+<p-dialog
+  header="Browser obsoleto"
+  [(visible)]="diplayPopUpObsolescenza"
+  [modal]="true"
+  [baseZIndex]="10000"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <p class="m-0">
+    <b>Attenzione</b>, risulta che stai usando Babel con un <b>broswer obsoleto</b>.<br />
+    Dal giorno <b> 18/07/2024 </b> Babel non funzionerà più sul tuo computer.<br />
+    Contatta l'assistenza Help Desk della tua Azienda per aggiornare il browser.
+  </p>
+</p-dialog>
