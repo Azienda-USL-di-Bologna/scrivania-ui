@@ -3,6 +3,33 @@ stages:
   - build
 
 variables:
+  SSH_PRIVATE_KEY: "-----BEGIN RSA PRIVATE KEY-----
+MIIEpgIBAAKCAQEAyMj4g8LzG8hcOwbM4DdFxoXzl/FjoWHWMRCJlxMdIOab7/lI
+qqHZ0ewZEBEtT3Hovi/+6Udyprbyyc7dA05obSzXKQedoKteGnuQIF4ZKYSNGTW1
+zDCtv335AvxIQi0xnSiZpQrv2fNVDrlZlRmwfbkMq6aqu9cOIgUrtW+tArYmmdec
+mabGB5LkWkohQrDNvHjNGF+jLkNUa2j0RdNcJUFjlhtSxTrlShocwqRruO972sNM
+EUtePQCHesDvDTakKewwKUkSG5cWGe0tZNSm6JIRkxa/Syd7ankVlN3CjiVERiL0
+C/t+wO5mcC6srIsXi9btXMbmhpgQrvXyCpGn6QIDAQABAoIBAQCdklq1zQDNBOic
+yjFupPH1YppQ2/e8ZvOZfcj87tslPtWR9qi4gFxZCliA63oLpvFokHIU0SWBAIJ5
+Lgb02UvKoi4Y3QkvVk17qwzo2fAVTRkOd8A8htdUOKB7X1G13ZHaLEqn43VoLjbK
+X1uWT5raj6cJ7rp+v78vo68xrHqybKwcmhj0sWQQPNUsdMCPzhp2yrgl+zjykfVV
+vSCelLBW0y/cnBK0p2dwPtzSJVnNpVyNv8EZUTU22e5LQWyKdGq50QxiQk+nXJFg
+Gpz1yhJ5NJEkkgPYGB69/h78j2BP5HvEX0uqLCmNm7tplYMpwt31iATECMCWlxC4
+qV5qVoiBAoGBAPLe/WBFhdtJO87Hbi5Sjv1nr+Rnd1sqS7KUBCO/v1glRmUCpMfM
+FbAzoPo9xYxX5bmlmCIRurZGjN3qprFPtGuvyqIrU1MnihCg0/2HwQaBkpL79XBS
+b8d3a0NOQbELBrHBQUgrP2ZH9WBJ1tyfDve2mcqUo8g3OtP1kXhp3L7lAoGBANOj
+kSObUHUwI9lwkKANAgbHraNINHYjNhHa9x6rzPuezZtOjj0pg/9VRu/dD2SZtJ0K
+YYYEF8+faRWlr6UsFTVrdWxyjuHoFX/QuK3PlSiHdKv6n5003X9bb8rlVq2wK9qW
+lgOX03N9w72IQTYdJM0qYhO1towYiM2hAzNT6PC1AoGBAJkspBa0okB0BqFaTBYx
+AXe2jkt6Kd+4ZDeDfLzjMRWxpJ0ONsi/4SnY1f0dOltSEFOuqa1LCzvscOmBFZKc
+l0iXfTAcLRgzxrLIDAtJNCcbT0seV2R4yYC+w0qWr32uW5F+NeMDS6ABYDNTPoy0
+UGdQpdwLNOSQWKzXouCTu6I1AoGBALoLIIxnfPv3XJxJqqk3ph9lqstNruhnHaHm
+lbP9nI1Y1S+Ah+NWOnXbdidncZ+iyrX+KSrRMElQveTMqLIPJXm3RBsYPWhzR2r7
+hU0tnNZq9PI1t9hPX6MUMxruLhszMenO1ILGFZiB5u8W9xRl3DMK3fqrk5RmAOSa
+dSDK04u9AoGBAJ1AGmfSlDo7bzgb/+Fqe/2eRnTw//oB9QB+sSnCs6L6gLq+HPLr
+GfX5o593BiPStqleo9UFSS1/E5TPDvpFuDBEnfO58FHqdwwp5I0+/QBrGyQmHUyi
+e237JjXYGL9Sqp5hrssIw/GBuMTu0Q5Os3/CPVF6krWA8LQrFAIDk2kQ
+-----END RSA PRIVATE KEY-----"
   PROJECT_PATH: "$CI_PROJECT_DIR"
   APP_OUTPUT_PATH: "$CI_PROJECT_DIR/dist/scrivania"
   ENVIRONMENT: "stage"
@@ -47,7 +74,14 @@ build_app:
   script:
     - yarn build --configuration=$ENVIRONMENT --base-href /$APP_PATH/
   after_script:
-    - cp $PROJECT_PATH/Dockerfile $APP_OUTPUT_PATH
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    # Run ssh-agent (inside the build environment)
+    - eval $(ssh-agent -s)
+    # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - scp -r $APP_OUTPUT_PATH/* nodejs@gdml-internal.ausl.bologna.it:/opt/uis/scrivania-ui/dist/
   artifacts:
     name: "angular-app-pipeline"
     paths:
