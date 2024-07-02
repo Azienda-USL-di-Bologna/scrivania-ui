@@ -4,7 +4,7 @@ stages:
 
 variables:
   PROJECT_PATH: "$CI_PROJECT_DIR"
-  APP_OUTPUT_PATH: "$CI_PROJECT_DIR/artifacts/app"
+  APP_OUTPUT_PATH: "$CI_PROJECT_DIR/dist/scrivania"
   ENVIRONMENT: "stage"
   APP_PATH: "scrivania"
 
