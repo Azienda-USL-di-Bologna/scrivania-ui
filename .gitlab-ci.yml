@@ -73,7 +73,8 @@ build_app:
   stage: build
   script:
     - yarn build --configuration=$ENVIRONMENT --base-href /$APP_PATH/
-  after_script:
+  before_script:
+    - echo "$SSH_PRIVATE_KEY"
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     # Run ssh-agent (inside the build environment)
     - eval $(ssh-agent -s)
@@ -81,6 +82,7 @@ build_app:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  after_script:
     - scp -r $APP_OUTPUT_PATH/* nodejs@gdml-internal.ausl.bologna.it:/opt/uis/scrivania-ui/dist/
   artifacts:
     name: "angular-app-pipeline"
