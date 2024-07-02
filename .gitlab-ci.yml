@@ -11,6 +11,7 @@ install_dependencies:
     - npm config set fetch-retry-mintimeout 5 -g
     - npm config set fetch-retry-maxtimeout 5 -g
     - yarn install
+    - yarn ngcc --properties ES2022 --create-ivy-entry-points
   cache:
     key:
       files:
