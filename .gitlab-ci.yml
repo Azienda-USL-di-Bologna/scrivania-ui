@@ -55,7 +55,7 @@ build_app:
     - ssh-add <(echo "$SSH_PRIVATE_KEY" | base64 -d)
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - yarn build --configuration=$ENVIRONMENT --base-href /$APP_PATH/ --output-path dist
+    - yarn build --configuration $ENVIRONMENT --base-href /$APP_PATH/ --output-path dist
   after_script:
     - (echo "$SSH_PRIVATE_KEY" | base64 -d) > key.pk
     - chmod 600 key.pk
