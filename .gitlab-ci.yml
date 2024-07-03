@@ -57,7 +57,6 @@ build_app:
     - yarn build --configuration=$ENVIRONMENT --base-href /$APP_PATH/
   after_script:
     - ssh nodejs@gdml.internal.ausl.bologna.it
-    - ls
     # - scp -r $APP_OUTPUT_PATH/* nodejs@gdml.internal.ausl.bologna.it:/opt/uis/scrivania-ui/dist/
   artifacts:
     name: "angular-app-pipeline"
