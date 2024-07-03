@@ -47,6 +47,7 @@ install_dependencies:
   only:
     changes:
       - package.json
+      - force_deploy
 
 build_app:
   stage: build
