@@ -1,6 +1,5 @@
 stages:
-  - install
-  - build
+  - install_and_build
   - deploy
 
 variables:
@@ -21,39 +20,34 @@ default:
 
 # Define an hidden job to be used with extends
 # Better than default to avoid activating cache for all jobs
-.dependencies_cache:
-  cache:
-    key:
-      files:
-        - package.json
-    paths:
-      - node_modules
-    policy: pull
- 
-install_dependencies:
-  stage: install
+#.dependencies_cache:
+#  cache:
+#    key:
+#      files:
+#        - package.json
+#    paths:
+#      - node_modules
+#    policy: pull
+
+install_dependencies_and_build:
+  stage: install_and_build
   script:
     - npm config set registry http://gdml.internal.ausl.bologna.it:4873/ -g
     - npm config set fetch-retry-mintimeout 5 -g
     - npm config set fetch-retry-maxtimeout 5 -g
     - yarn install
-    # Redefine cache to have default pull-push policy
-  extends: .dependencies_cache
-  cache:
-    policy: pull-push
-  only:
-    changes:
-      - package.json
-
-build_app:
-  stage: build
-  script:
     - yarn build --configuration $ENVIRONMENT --base-href /$APP_PATH/ --output-path dist
   artifacts:
-    name: "angular-app-pipeline"
+    name: "dist-files"
     paths:
       - $APP_OUTPUT_PATH
-  extends: .dependencies_cache
+    # Redefine cache to have default pull-push policy
+  # extends: .dependencies_cache
+  # cache:
+  #   policy: pull-push
+  # only:
+  #   changes:
+  #     - package.json
 
 deploy_app:
   stage: deploy
@@ -63,4 +57,4 @@ deploy_app:
     - ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk nodejs@gdml.internal.ausl.bologna.it  "rm -rf /opt/uis/$DIR_NAME/dist/*"
     - scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk $APP_OUTPUT_PATH/* nodejs@gdml.internal.ausl.bologna.it:/opt/uis/scrivania-ui/dist/
   dependencies:
-    - build_app
+    - install_dependencies_and_build
