@@ -24,7 +24,8 @@
           "options": {
             "preserveSymlinks": true,
             "outputPath": {
-              "base": "dist/scrivania"
+              "base": "dist/scrivania",
+              "browser": ""
             },
             "index": "src/index.html",
             "polyfills": ["src/polyfills.ts"],
@@ -90,11 +91,7 @@
                 "hidden": false,
                 "vendor": false
               },
-              "namedChunks": true,
-              "outputPath": {
-                "base": "dist",
-                "browser": ""
-              }
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
