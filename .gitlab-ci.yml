@@ -47,14 +47,6 @@ install_dependencies:
 build_app:
   stage: build
   script:
-    - echo "$SSH_PRIVATE_KEY"
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    # Run ssh-agent (inside the build environment)
-    - eval $(ssh-agent -s)
-    # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
-    - ssh-add <(echo "$SSH_PRIVATE_KEY" | base64 -d)
-    - mkdir -p ~/.ssh
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - yarn build --configuration $ENVIRONMENT --base-href /$APP_PATH/ --output-path dist
   after_script:
     - (echo "$SSH_PRIVATE_KEY" | base64 -d) > key.pk
