@@ -25,7 +25,7 @@ default:
   cache:
     key:
       files:
-        - yarn.lock
+        - package.json
     paths:
       - node_modules
     policy: pull
@@ -43,7 +43,7 @@ install_dependencies:
     policy: pull-push
   only:
     changes:
-      - yarn.lock
+      - package.json
 
 build_app:
   stage: build
