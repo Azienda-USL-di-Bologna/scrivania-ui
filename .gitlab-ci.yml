@@ -54,12 +54,12 @@ build_app:
     - ssh-add <(echo "$SSH_PRIVATE_KEY" | base64 -d)
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - yarn build --configuration=$ENVIRONMENT --base-href /$APP_PATH/
+    - yarn build --configuration=$ENVIRONMENT --base-href /$APP_PATH/ --output-path dist
   after_script:
     - (echo "$SSH_PRIVATE_KEY" | base64 -d) > key.pk
     - chmod 600 key.pk
-    # - ssh nodejs@gdml.internal.ausl.bologna.it
-    - scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk -r $APP_OUTPUT_PATH/* nodejs@gdml.internal.ausl.bologna.it:/opt/uis/scrivania-ui/dist/
+    #- ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk nodejs@gdml.internal.ausl.bologna.it
+    - rsync -avh --delete-after -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk" $APP_OUTPUT_PATH/dist/ nodejs@gdml.internal.ausl.bologna.it:/opt/uis/scrivania-ui/dist/
   artifacts:
     name: "angular-app-pipeline"
     paths:
