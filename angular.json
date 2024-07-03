@@ -90,7 +90,11 @@
                 "hidden": false,
                 "vendor": false
               },
-              "namedChunks": true
+              "namedChunks": true,
+              "outputPath": {
+                "base": "dist",
+                "browser": ""
+              }
             }
           },
           "defaultConfiguration": "production"
