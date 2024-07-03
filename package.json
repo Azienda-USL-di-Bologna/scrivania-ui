@@ -1,6 +1,6 @@
 {
-  "name": "babel-internauta",
-  "version": "1.0.0",
+  "name": "scrivania",
+  "version": "18.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
