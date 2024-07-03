@@ -49,11 +49,6 @@ build_app:
   stage: build
   script:
     - yarn build --configuration $ENVIRONMENT --base-href /$APP_PATH/ --output-path dist
-  after_script:
-    - (echo "$SSH_PRIVATE_KEY" | base64 -d) > key.pk
-    - chmod 600 key.pk
-    - ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk nodejs@gdml.internal.ausl.bologna.it  "rm -rf /opt/uis/$DIR_NAME/dist/*"
-    - scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk $APP_OUTPUT_PATH/* nodejs@gdml.internal.ausl.bologna.it:/opt/uis/scrivania-ui/dist/
   artifacts:
     name: "angular-app-pipeline"
     paths:
