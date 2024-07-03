@@ -57,6 +57,7 @@ build_app:
     - yarn build --configuration=$ENVIRONMENT --base-href /$APP_PATH/
   after_script:
     - (echo "$SSH_PRIVATE_KEY" | base64 -d) > key.pk
+    - chmod 600 key.pk
     # - ssh nodejs@gdml.internal.ausl.bologna.it
     - scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk -r $APP_OUTPUT_PATH/* nodejs@gdml.internal.ausl.bologna.it:/opt/uis/scrivania-ui/dist/
   artifacts:
