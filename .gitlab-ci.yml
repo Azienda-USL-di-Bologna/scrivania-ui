@@ -9,6 +9,7 @@ variables:
   NPM_REGISTRY: "http://gdml.internal.ausl.bologna.it:4873/"
   ENVIRONMENT: "stage"
   BROWSER_APP_PATH: "scrivania"
+  TARGET_USER: "nodejs"
   TARGET_SERVER_NAME: "arena.internal.ausl.bologna.it"
   TARGET_DIST_PATH: "/opt/uis/scrivania-ui/dist"
 
@@ -56,7 +57,7 @@ deploy_app:
   script:
     - (echo "$SSH_PRIVATE_KEY" | base64 -d) > key.pk
     - chmod 600 key.pk
-    - ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk nodejs@$TARGET_SERVER_NAME  "rm -rf $TARGET_DIST_PATH/*"
-    - scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk $APP_OUTPUT_PATH/* nodejs@$TARGET_SERVER_NAME:$TARGET_DIST_PATH/
+    - ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk $TARGET_USER@$TARGET_SERVER_NAME  "rm -rf $TARGET_DIST_PATH/*"
+    - scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk $APP_OUTPUT_PATH/* $TARGET_USER@$TARGET_SERVER_NAME:$TARGET_DIST_PATH/
   dependencies:
     - install_dependencies_and_build
