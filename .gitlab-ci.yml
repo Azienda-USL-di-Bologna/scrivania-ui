@@ -56,8 +56,9 @@ build_app:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - yarn build --configuration=$ENVIRONMENT --base-href /$APP_PATH/
   after_script:
-    - ssh nodejs@gdml.internal.ausl.bologna.it
-    # - scp -r $APP_OUTPUT_PATH/* nodejs@gdml.internal.ausl.bologna.it:/opt/uis/scrivania-ui/dist/
+    - (echo "$SSH_PRIVATE_KEY" | base64 -d) > key.pk
+    # - ssh nodejs@gdml.internal.ausl.bologna.it
+    - scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentityFile=key.pk -r $APP_OUTPUT_PATH/* nodejs@gdml.internal.ausl.bologna.it:/opt/uis/scrivania-ui/dist/
   artifacts:
     name: "angular-app-pipeline"
     paths:
