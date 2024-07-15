@@ -27,6 +27,10 @@
   padding: 0.625rem;
 }
 
+:host::ng-deep .p-datatable-scrollable-table > .p-datatable-thead {
+  z-index: 0 !important;
+}
+
 .colonna-azione {
   word-break: break-all;
   word-wrap: break-word;

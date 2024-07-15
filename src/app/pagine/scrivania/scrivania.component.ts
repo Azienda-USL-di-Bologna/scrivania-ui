@@ -10,8 +10,8 @@ import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ConfirmationService } from "primeng/api";
 import { ParametroAziende } from "@bds/internauta-model";
 import { ConfigurazioneService } from "@bds/internauta-model";
-import * as Bowser from "bowser";
 import { LOCAL_IT, UtilityFunctions } from "@bds/common-tools";
+import Bowser from "bowser";
 
 @Component({
   selector: "app-scrivania",
@@ -27,7 +27,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild("leftSide") private leftSide: ElementRef;
   @ViewChild("rightSide") private rightSide: ElementRef;
-  @ViewChild("slider") private slider: ElementRef;
+  @ViewChild("splitter") private splitter: ElementRef;
 
   private subscriptions: Subscription[] = [];
 
@@ -42,7 +42,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public mittente: string = null; // "Nessun mittente";
   public destinatari: string = null; // "Nessun destinatario";
   public destinatariCC: string = null; // "Li dobbiamo mettere?? sulla scrivania non ci sono mai stati";
-  public datiDiFlusso: string = null;
+  public datiDiFlusso: any = null;
   public datiFlussoTooltip: string = null;
 
   public localIt = LOCAL_IT;
@@ -186,11 +186,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   private setLook(): void {
-    this.setResponsiveSlider();
+    // this.setResponsiveSlider();
     this.buttonAvcpEnabled = !!this.loggedUser?.getUtente().aziendeAttive.find((a) => a.codice === "050109");
     if (this.impostazioniService.getImpostazioniVisualizzazione()) {
       this.rightSide.nativeElement.style.width = this.impostazioniService.getRightSideOffsetWidth() + "%";
-      this.slider.nativeElement.style.marginLeft = 100 - this.impostazioniService.getRightSideOffsetWidth() + "%";
+      // this.splitter.nativeElement.style.marginLeft = 100 - this.impostazioniService.getRightSideOffsetWidth() + "%";
       if (window.screen.width <= 1280) {
         this.hidePreview = true;
       } else {
@@ -199,45 +199,45 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private setResponsiveSlider(): void {
-    const that = this;
-    this.slider.nativeElement.onmousedown = function (event: MouseEvent) {
-      that.sliding = true;
-      event.preventDefault();
-      const totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
-      document.onmouseup = function () {
-        document.onmousemove = null;
-        console.log("that.slider.nativeElement.onmouseup");
-        that.impostazioniService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
-        that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniService.getImpostazioniVisualizzazione());
-        document.onmouseup = null;
-        that.sliding = false;
-      };
-      // that.slider.nativeElement.onmouseup = function() {
-      //   console.log("that.slider.nativeElement.onmouseup");
-      //   that.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] = parseInt(that.rightSide.nativeElement.style.width, 10);
-      //   // const impostazioni: ImpostazioniApplicazioni = that.loggedUser.getImpostazioniApplicazione();
-      //   // impostazioni.impostazioniVisualizzazione = JSON.stringify(that.impostazioniVisualizzazione);
-      //   that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniVisualizzazione);
-      // };
-      document.onmousemove = function (e: MouseEvent) {
-        e.preventDefault();
-        const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia pixel che sfasano il conteggio
-        if (!(e.clientX <= that.LIMIT_X_LEFT_SIDE)) {
-          that.changeColOrder = false;
-        } else {
-          that.changeColOrder = true;
-        }
-        if (!(e.clientX <= that.MIN_X_LEFT_SIDE)) {
-          if (!(totalX - e.clientX <= that.MIN_X_RIGHT_SIDE)) {
-            const rxPercent = (rx * 100) / totalX;
-            that.rightSide.nativeElement.style.width = rxPercent + "%";
-            that.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
-          }
-        }
-      };
-    };
-  }
+  // private setResponsiveSlider(): void {
+  //   const that = this;
+  //   this.splitter.nativeElement.onmousedown = function (event: MouseEvent) {
+  //     that.sliding = true;
+  //     event.preventDefault();
+  //     const totalX = that.rightSide.nativeElement.offsetWidth + that.leftSide.nativeElement.offsetWidth;
+  //     document.onmouseup = function () {
+  //       document.onmousemove = null;
+  //       console.log("that.splitter.nativeElement.onmouseup");
+  //       that.impostazioniService.setRightSideOffsetWidth(parseInt(that.rightSide.nativeElement.style.width, 10));
+  //       that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniService.getImpostazioniVisualizzazione());
+  //       document.onmouseup = null;
+  //       that.sliding = false;
+  //     };
+  //     // that.splitter.nativeElement.onmouseup = function() {
+  //     //   console.log("that.splitter.nativeElement.onmouseup");
+  //     //   that.impostazioniVisualizzazione[applicationCustiomization.scrivania.rigthside.offsetWidth] = parseInt(that.rightSide.nativeElement.style.width, 10);
+  //     //   // const impostazioni: ImpostazioniApplicazioni = that.loggedUser.getImpostazioniApplicazione();
+  //     //   // impostazioni.impostazioniVisualizzazione = JSON.stringify(that.impostazioniVisualizzazione);
+  //     //   that.loggedUser.setImpostazioniApplicazione(that.loginService, that.impostazioniVisualizzazione);
+  //     // };
+  //     document.onmousemove = function (e: MouseEvent) {
+  //       e.preventDefault();
+  //       const rx = totalX - e.clientX + 32; // e.clientX non comincia dall'estremo della pagina ma lascia pixel che sfasano il conteggio
+  //       if (!(e.clientX <= that.LIMIT_X_LEFT_SIDE)) {
+  //         that.changeColOrder = false;
+  //       } else {
+  //         that.changeColOrder = true;
+  //       }
+  //       if (!(e.clientX <= that.MIN_X_LEFT_SIDE)) {
+  //         if (!(totalX - e.clientX <= that.MIN_X_RIGHT_SIDE)) {
+  //           const rxPercent = (rx * 100) / totalX;
+  //           that.rightSide.nativeElement.style.width = rxPercent + "%";
+  //           that.splitter.nativeElement.style.marginLeft = 100 - rxPercent + "%";
+  //         }
+  //       }
+  //     };
+  //   };
+  // }
 
   private isBrowserObsolete(browserName: string, version: string) {
     version = version.split(".")[0];
@@ -271,7 +271,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     return false;
   }
 
-  @HostListener("window:resize", ["$event"])
+  // @HostListener("window:resize", ["$event"])
   onResize(event: any) {
     const lx = this.leftSide.nativeElement.offsetWidth;
     const rx = this.rightSide.nativeElement.offsetWidth;
@@ -280,7 +280,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       // Se rightside è minore di 385 o leftside è minore di 225  setto rightside a 225 e leftside il resto
       const rxPercent = (this.MIN_X_RIGHT_SIDE * 100) / screenX;
       this.rightSide.nativeElement.style.width = rxPercent + "%";
-      this.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
+      // this.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
     }
   }
 
@@ -316,77 +316,82 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public attivitaClicked(attivitaCliccata: Attivita) {
-    console.log("attivitaClicked", attivitaCliccata);
-    this.clearAccordionDetailFields();
-    this.attivitaSelezionata = attivitaCliccata;
+    if (attivitaCliccata) {
+      console.log("attivitaClicked", attivitaCliccata);
+      this.clearAccordionDetailFields();
+      this.attivitaSelezionata = attivitaCliccata;
 
-    attivitaCliccata.allegati = attivitaCliccata.allegati.filter((allegato) => {
-      return allegato.sottotipo !== "LEGGE_190";
-    });
+      attivitaCliccata.allegati = attivitaCliccata.allegati?.filter((allegato) => {
+        return allegato.sottotipo !== "LEGGE_190";
+      });
 
-    if (this.attivitaSelezionata) {
-      this.oggetto = this.attivitaSelezionata.oggetto;
-      const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
-      if (datiAggiuntiviAttivita) {
-        this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
-        let destinatariA, destinatariCC: string;
-        if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
-          const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
-          res.forEach((e) => {
-            if (e.startsWith("A: ")) {
-              destinatariA = e.replace("A: ", "<strong>A: </strong>");
-            } else if (e.startsWith("CC: ")) {
-              destinatariCC = e.replace("CC: ", "<strong>CC: </strong>");
-            } else if (e.startsWith("Interni: ")) {
-              destinatariA = e.replace("Interni: ", "<b>Interni: </b>");
-            } else if (e.startsWith("Esterni: ")) {
-              destinatariCC = e.replace("Esterni: ", "<b>Esterni: </b>");
+      if (this.attivitaSelezionata) {
+        this.oggetto = this.attivitaSelezionata.oggetto;
+        const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
+        if (datiAggiuntiviAttivita) {
+          this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
+          let destinatariA, destinatariCC: string;
+          if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
+            const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
+            res.forEach((e) => {
+              if (e.startsWith("A: ")) {
+                destinatariA = e.replace("A: ", "<strong>A: </strong>");
+              } else if (e.startsWith("CC: ")) {
+                destinatariCC = e.replace("CC: ", "<strong>CC: </strong>");
+              } else if (e.startsWith("Interni: ")) {
+                destinatariA = e.replace("Interni: ", "<b>Interni: </b>");
+              } else if (e.startsWith("Esterni: ")) {
+                destinatariCC = e.replace("Esterni: ", "<b>Esterni: </b>");
+              }
+            });
+          }
+          if (datiAggiuntiviAttivita.custom_app_4) {
+            this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
+            if (this.datiDiFlusso.length > MAX_CHARS_100) {
+              this.datiFlussoTooltip = this.datiDiFlusso;
+              this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
             }
-          });
-        }
-        if (datiAggiuntiviAttivita.custom_app_4) {
-          this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
-          if (this.datiDiFlusso.length > MAX_CHARS_100) {
-            this.datiFlussoTooltip = this.datiDiFlusso;
-            this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
+            this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
+            // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
           }
-          this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
-          // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
+          this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
+          this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
         }
-        this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
-        this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
-      }
 
-      this.allegati = [];
-      this.allegatiDropDown.clear(null);
-      let allegatiAttivita: any[] = null;
-      if (this.attivitaSelezionata.allegati && this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
-        allegatiAttivita = this.attivitaSelezionata.allegati;
-      }
-      if (allegatiAttivita) {
-        allegatiAttivita.sort((a: any, b: any) => {
-          if (a.default) {
-            return -1;
-          } else if (a.default && b.default) {
-            return 0;
+        this.allegati = [];
+        if (this.allegatiDropDown) {
+          // Se non c'è this.allegatiDropDown con ogni probabilità è perché la anteprima è settata come non visbile
+          this.allegatiDropDown.clear(null);
+          let allegatiAttivita: any[] = null;
+          if (this.attivitaSelezionata.allegati && this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
+            allegatiAttivita = this.attivitaSelezionata.allegati;
+          }
+          if (allegatiAttivita) {
+            allegatiAttivita.sort((a: any, b: any) => {
+              if (a.default) {
+                return -1;
+              } else if (a.default && b.default) {
+                return 0;
+              } else {
+                return 1;
+              }
+            });
+            allegatiAttivita.forEach((element) => {
+              this.allegati.push({ label: this.shrinkFileName(element.nome_file), value: element });
+            });
+            this.allegatoSelected({ value: this.allegati[0].value });
           } else {
-            return 1;
+            this.noAnteprima = true;
           }
-        });
-        allegatiAttivita.forEach((element) => {
-          this.allegati.push({ label: this.shrinkFileName(element.nome_file), value: element });
-        });
-        this.allegatoSelected({ value: this.allegati[0].value });
-      } else {
-        this.noAnteprima = true;
-      }
-      if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
-        this.allegati = [{ label: "Documenti non presenti", value: null }];
-        this.allegatiDropDown.disabled = true;
-      }
+          if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
+            this.allegati = [{ label: "Documenti non presenti", value: null }];
+            this.allegatiDropDown.disabled = true;
+          }
+        }
 
-      // this.allegatiDropDown.updateDimensions();
-      // this.allegatiDropDown.show();
+        // this.allegatiDropDown.updateDimensions();
+        // this.allegatiDropDown.show();
+      }
     }
   }
 

@@ -4,10 +4,7 @@
   padding-top: 1rem;
   padding-bottom: 1rem;
   border-radius: 4px;
-  box-shadow:
-    0 2px 1px -1px rgba(0, 0, 0, 0.2),
-    0 1px 1px 0 rgba(0, 0, 0, 0.14),
-    0 1px 3px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
 }
 
 .box-stretched {
@@ -35,7 +32,7 @@
 
 .expansion-header {
   background-color: darkgrey;
-  height: 2em;
+  height: 2em !important;
 }
 
 ::ng-deep .mat-expansion-panel-body {
@@ -85,4 +82,8 @@
   word-break: break-word;
   word-wrap: break-word;
   white-space: pre-wrap;
+}
+.buttons-container {
+  display: flex;
+  justify-content: flex-end;
 }

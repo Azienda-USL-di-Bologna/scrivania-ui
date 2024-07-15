@@ -4,7 +4,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { rootRouterConfig } from "./app.routes";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { RouteReuseStrategy } from "@angular/router";
 import { CommonToolsModule, CustomReuseStrategy } from "@bds/common-tools";
 
@@ -30,7 +30,6 @@ import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtua
 /* PrimeNG component */
 import { RadioButtonModule } from "primeng/radiobutton";
 import { AccordionModule } from "primeng/accordion";
-import { LightboxModule } from "primeng/lightbox";
 import { PanelModule } from "primeng/panel";
 import { DropdownModule } from "primeng/dropdown";
 import { TableModule } from "primeng/table";
@@ -74,12 +73,11 @@ import { RaccoltaSempliceComponent } from "./tabelle/raccolta-semplice/raccolta-
 import { InserimentoManualeComponent } from "./tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component";
 
 /* Angular Material Module */
-import { MatMenuModule } from "@angular/material/menu";
 import { MatIconModule } from "@angular/material/icon";
-import { MatInputModule } from "@angular/material/input";
-import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterjobs.component";
+import { NgIdleKeepaliveModule } from "@ng-idle/keepalive";
+import { SplitterModule } from "primeng/splitter";
 
 @NgModule({
   declarations: [
@@ -94,15 +92,14 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
     RaccoltaSempliceComponent,
     InserimentoManualeComponent,
     MonitorMasterjobsComponent,
-    LoginAdminComponent
+    LoginAdminComponent,
   ],
+  bootstrap: [AppComponent],
   imports: [
     JwtLoginModule.forRoot(loginModuleConfig),
     BrowserModule,
     BrowserAnimationsModule,
-    HttpClientModule,
     AccordionModule,
-    LightboxModule,
     PanelModule,
     DropdownModule,
     TableModule,
@@ -131,12 +128,9 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
     HeaderModule,
     HeaderFeaturesModule,
     ProgressSpinnerModule,
-    MatMenuModule,
     MatIconModule,
     RadioButtonModule,
     BlockUIModule,
-    MatInputModule,
-    MatAutocompleteModule,
     ListboxModule,
     ConfirmPopupModule,
     FieldsetModule,
@@ -144,7 +138,9 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
     ScrollPanelModule,
     InplaceModule,
     DividerModule,
+    SplitterModule,
     CheckboxModule,
+    NgIdleKeepaliveModule.forRoot(),
   ],
   providers: [
     AttivitaService,
@@ -158,8 +154,7 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
     RaccoltaSempliceService,
     ExtendedAllegatoService,
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
-  entryComponents: [ImpostazioniComponent],
 })
 export class AppModule {}
