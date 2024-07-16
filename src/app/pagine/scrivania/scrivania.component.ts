@@ -612,9 +612,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.configurazioneService
       .getParametriAziende("visibilitaBollo", null, idAziendaArray)
       .subscribe((parametriAziende: ParametroAziende[]) => {
-        console.log(parametriAziende[0].valore);
-        this.showBolli = JSON.parse(parametriAziende[0].valore || false);
-        console.log("showBolli: ", this.showBolli);
+        if (parametriAziende && parametriAziende[0]) {
+          console.log(parametriAziende[0].valore);
+          this.showBolli = JSON.parse(parametriAziende[0].valore || false);
+          console.log("showBolli: ", this.showBolli);
+        }
       });
 
     this.configurazioneService
