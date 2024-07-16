@@ -1,6 +1,9 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
+    "cache": {
+      "enabled": false
+    },
     "analytics": false
   },
   "version": 1,
@@ -20,13 +23,14 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "preserveSymlinks": true,
-            "outputPath": "dist/Babel-internauta",
+            "outputPath": {
+              "base": "dist/Babel-internauta"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
@@ -36,7 +40,8 @@
               "./node_modules/quill/dist/quill.core.css",
               "./node_modules/quill/dist/quill.snow.css"
             ],
-            "scripts": ["src/assets/primus.js", "./node_modules/quill/dist/quill.js"]
+            "scripts": ["src/assets/primus.js", "./node_modules/quill/dist/quill.js"],
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -66,13 +71,10 @@
                 "vendor": false
               },
               "aot": true,
-              "buildOptimizer": true,
               "optimization": true
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": {
                 "scripts": true,
@@ -83,9 +85,7 @@
               "namedChunks": true
             },
             "stage": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": {
                 "scripts": true,
@@ -101,14 +101,14 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Babel-internauta:build"
+            "buildTarget": "Babel-internauta:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "Babel-internauta:build:production"
+              "buildTarget": "Babel-internauta:build:production"
             },
             "development": {
-              "browserTarget": "Babel-internauta:build:development"
+              "buildTarget": "Babel-internauta:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -116,7 +116,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Babel-internauta:build"
+            "buildTarget": "Babel-internauta:build"
           }
         },
         "test": {
@@ -129,13 +129,6 @@
             "styles": ["./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css", "src/styles.scss"],
             "scripts": [],
             "assets": ["src/favicon.ico", "src/assets"]
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -155,16 +148,8 @@
               "devServerTarget": "Babel-internauta:serve:production"
             }
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
-          }
         }
       }
     }
-  },
-  "defaultProject": "Babel-internauta"
+  }
 }

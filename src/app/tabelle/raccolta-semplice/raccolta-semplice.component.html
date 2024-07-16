@@ -14,7 +14,7 @@
           icon="pi pi-chevron-left"
           iconPos="left"
           [routerLink]="'/attivita'"
-          class="ui-button-secondary icon-style"
+          class="ui-button-secondary icon-style buttons"
           aria-label="Vai alla tabella delle attivita"
         ></button>
         <div class="separator-class"></div>
@@ -26,7 +26,7 @@
           icon="pi pi-plus-circle"
           iconPos="left"
           (click)="openInsert()"
-          class="ui-button-secondary icon-style"
+          class="ui-button-secondary icon-style second-button buttons"
           aria-label="Caricamento manuale documento"
         ></button>
         <button
@@ -37,7 +37,7 @@
           (click)="onTableRefresh()"
           iconPos="left"
           icon="pi pi-refresh"
-          class="ui-button-secondary icon-style"
+          class="ui-button-secondary icon-style buttons"
           aria-label="Aggiorna la tabella della raccolta semplice"
         ></button>
         <button
@@ -48,13 +48,13 @@
           (click)="exportToCsv(tableRaccoltaSemplice)"
           iconPos="left"
           icon="pi pi-download"
-          class="ui-button-secondary icon-style"
+          class="ui-button-secondary icon-style buttons"
           aria-label="Esporta in CSV tutti i dati"
         ></button>
       </div>
       <h3 class="crono-label">Raccolta Semplice</h3>
 
-      <div class="p-grid p-align-center p-nogutter">
+      <div class="p-grid p-align-center p-nogutter rightpart-bar">
         <lib-aziende-autocomplete
           [azienda]="_azienda"
           (aziendaChange)="handleSelectedAziendaEmit($event, 'Azienda')"
@@ -67,7 +67,7 @@
           [(ngModel)]="codiceFiscale"
           placeholder="Codice Fiscale"
           style="width: 15%"
-          class="p-mr-1"
+          class="p-mr-1 secondo-figlio"
         />
         <input
           type="text"
@@ -129,7 +129,7 @@
           (click)="onLoadRaccoltaSemplice()"
           iconPos="left"
           icon="pi pi-check-circle"
-          class="ui-button-secondary icon-style"
+          class="ui-button-secondary icon-style buttons"
           aria-label="Estrai"
         ></button>
       </div>
@@ -148,7 +148,7 @@
       class="table-wrapper"
       [value]="datiDocumenti"
       [lazy]="true"
-      (onLazyLoad)="lazyLoad($event)"
+      (onLazyLoad)="lazyLoad($any($event))"
       [paginator]="true"
       [rows]="recordPerPagina"
       [totalRecords]="totalRows"
@@ -300,7 +300,7 @@
               ></button>
             </div>
             <div *ngIf="col.field == 'createTime'">
-              {{ rowRS[col.field] | date: "dd/MM/yyyy" }}
+              {{ rowRS[col.field] | date : "dd/MM/yyyy" }}
             </div>
           </td>
         </tr>

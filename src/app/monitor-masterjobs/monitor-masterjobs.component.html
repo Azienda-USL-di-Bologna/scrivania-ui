@@ -11,7 +11,7 @@
   [virtualRowHeight]="54"
   [lazy]="true"
   [lazyLoadOnInit]="true"
-  (onLazyLoad)="onLazyLoad($event)"
+  (onLazyLoad)="onLazyLoad($any($event))"
   [loading]="loading"
   [totalRecords]="totalRecords"
 >

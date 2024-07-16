@@ -13,7 +13,7 @@
           icon="pi pi-chevron-left"
           iconPos="left"
           [routerLink]="'/attivita'"
-          class="ui-button-secondary icon-style"
+          class="ui-button-secondary icon-style buttons"
           aria-label="Vai alla tabella delle attivita"
         ></button>
         <div class="separator-class"></div>
@@ -25,7 +25,7 @@
           (click)="onTableRefresh()"
           iconPos="left"
           icon="pi pi-refresh"
-          class="ui-button-secondary icon-style"
+          class="ui-button-secondary icon-style buttons"
           aria-label="Aggiorna la tabella dei bolli virtuali"
         ></button>
         <button
@@ -36,7 +36,7 @@
           (click)="exportToCsv(tableBolliVirtuali)"
           iconPos="left"
           icon="pi pi-download"
-          class="ui-button-secondary icon-style"
+          class="ui-button-secondary icon-style buttons"
           aria-label="Esporta in CSV tutti i dati"
         ></button>
         <span>Righe: </span>
@@ -52,14 +52,14 @@
         </span>
       </div>
       <h3 class="crono-label">Bollo Virtuale</h3>
-      <div class="p-grid p-align-center p-nogutter">
+      <div class="p-grid p-align-center p-nogutter rightpart-bar">
         <lib-aziende-autocomplete
           [azienda]="_azienda"
           (aziendaChange)="handleSelectedAziendaEmit($event, 'Azienda')"
           [filterByRole]="true"
         >
         </lib-aziende-autocomplete>
-        <span>Da:</span>
+        <span class="secondo-figlio">Da:</span>
         <p-calendar
           [showIcon]="true"
           [monthNavigator]="true"
@@ -111,7 +111,7 @@
           (click)="onLoadDatiBolliVirtuali()"
           iconPos="left"
           icon="pi pi-check-circle"
-          class="ui-button-secondary icon-style"
+          class="ui-button-secondary icon-style buttons"
           aria-label="Estrai"
         ></button>
       </div>
@@ -221,7 +221,7 @@
                 [style.textAlign]="col.textAlign"
                 [pTooltip]="col.label"
               >
-                {{ col.field != "dataNumeroDoc" ? rowBollo[col.field] : (rowBollo[col.field] | date: "dd/MM/yyyy") }}
+                {{ col.field != "dataNumeroDoc" ? rowBollo[col.field] : (rowBollo[col.field] | date : "dd/MM/yyyy") }}
               </td>
             </tr>
           </ng-template>
@@ -229,7 +229,7 @@
       </div>
     </div>
     <footer
-      class="p-grid"
+      class="p-grid footer"
       style="margin-right: 1.063rem; flex-wrap: nowrap; overflow-x: auto; font-weight: bold"
     >
       <div

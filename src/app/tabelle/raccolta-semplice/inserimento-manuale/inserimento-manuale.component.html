@@ -1,4 +1,4 @@
-<div class="p-d-flex p-jc-end p-col-12">
+<div class="p-d-flex p-jc-end p-col-12 buttons-container">
   <div class="p-mr-2">
     <button
       type="button"
@@ -122,7 +122,7 @@
                 #autocompleteFascicoli
                 ariaLabel="fascicoli"
                 [(ngModel)]="selectedFascicolo"
-                (onSelect)="saveFascicolo($event)"
+                (onSelect)="saveFascicolo($any($event))"
                 [suggestions]="filteredFascicoli"
                 (completeMethod)="searchFascicolo($event)"
                 field="nomeFascicolo"
@@ -248,7 +248,7 @@
                       #autocompletedocbabel
                       ariaLabel="docbabel"
                       [(ngModel)]="selectedDoc"
-                      (onSelect)="saveDocBabel($event)"
+                      (onSelect)="saveDocBabel($any($event))"
                       [suggestions]="filteredDocs"
                       (completeMethod)="searchDocBabel($event)"
                       field="codiceBabel"
@@ -654,7 +654,7 @@
                 [disabled]="disabledContatto"
                 ariaLabel="contatto"
                 [(ngModel)]="selectedContatto"
-                (onSelect)="saveContatto($event)"
+                (onSelect)="saveContatto($any($event))"
                 [suggestions]="filteredContatti"
                 (completeMethod)="searchContatto($event)"
                 field="descrizione"
@@ -676,20 +676,20 @@
                         contatto.categoria === 'ESTERNO'
                           ? 'Esterno'
                           : contatto.categoria === 'PERSONA'
-                            ? 'Utente'
-                            : contatto.categoria === 'STRUTTURA'
-                              ? 'Struttura'
-                              : 'Gruppo'
+                          ? 'Utente'
+                          : contatto.categoria === 'STRUTTURA'
+                          ? 'Struttura'
+                          : 'Gruppo'
                       "
                     >
                       {{
                         contatto.categoria === "ESTERNO"
                           ? "perm_identity"
                           : contatto.categoria === "PERSONA"
-                            ? "face"
-                            : contatto.categoria === "STRUTTURA"
-                              ? "account_balance"
-                              : "people"
+                          ? "face"
+                          : contatto.categoria === "STRUTTURA"
+                          ? "account_balance"
+                          : "people"
                       }}
                     </em>
                     {{ contatto.descrizione }}

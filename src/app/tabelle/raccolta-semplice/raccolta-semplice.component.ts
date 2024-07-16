@@ -12,7 +12,7 @@ import { Table } from "primeng/table";
 import { Calendar } from "primeng/calendar";
 import { FilterService } from "primeng/api";
 import { Storico } from "./dettaglio-annullamento/modal/storico";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { LazyLoadEvent } from "primeng/api";
 import { ActivatedRoute, Router } from "@angular/router";
 
@@ -26,7 +26,7 @@ export class RaccoltaSempliceComponent implements OnInit {
     private raccoltaSempliceService: RaccoltaSempliceService,
     private loginService: JwtLoginService,
     private datePipe: DatePipe,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private filterService: FilterService
@@ -39,9 +39,9 @@ export class RaccoltaSempliceComponent implements OnInit {
     }
   }
 
-  public validateForm: FormGroup = this.formBuilder.group({
-    stato: new FormControl("", Validators.required),
-    motivazione: new FormControl("", Validators.required),
+  public validateForm: UntypedFormGroup = this.formBuilder.group({
+    stato: new UntypedFormControl("", Validators.required),
+    motivazione: new UntypedFormControl("", Validators.required),
   });
 
   public contentTypesEnabledForPreview = ["text/html", "application/pdf", "text/plain", "image/jpeg", "image/png"];

@@ -31,6 +31,7 @@ export class DropdownAziendeComponent implements OnInit, OnDestroy {
           aziende.forEach((azienda) => {
             this.filtriApribili.push(new DropdownRecord(azienda.id, azienda.nome));
           });
+          this.filtroScelto = this.filtriApribili[0];
         }
       })
     );
