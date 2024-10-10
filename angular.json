@@ -9,7 +9,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Babel-internauta": {
+    "scrivania": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -27,7 +27,8 @@
           "options": {
             "preserveSymlinks": true,
             "outputPath": {
-              "base": "dist/Babel-internauta"
+              "base": "dist/scrivania",
+              "browser": ""
             },
             "index": "src/index.html",
             "polyfills": ["src/polyfills.ts"],
@@ -101,14 +102,14 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "Babel-internauta:build"
+            "buildTarget": "scrivania:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "Babel-internauta:build:production"
+              "buildTarget": "scrivania:build:production"
             },
             "development": {
-              "buildTarget": "Babel-internauta:build:development"
+              "buildTarget": "scrivania:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -116,7 +117,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "Babel-internauta:build"
+            "buildTarget": "scrivania:build"
           }
         },
         "test": {
@@ -133,7 +134,7 @@
         }
       }
     },
-    "Babel-internauta-e2e": {
+    "scrivania-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -141,11 +142,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "Babel-internauta:serve"
+            "devServerTarget": "scrivania:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "Babel-internauta:serve:production"
+              "devServerTarget": "scrivania:serve:production"
             }
           }
         }
