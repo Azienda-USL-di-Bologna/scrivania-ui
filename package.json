@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "18.0.5",
     "@angular/router": "18.0.5",
     "@bds/common-tools": "18.0.0",
-    "@bds/common-components": "18.0.1",
+    "@bds/common-components": "18.0.2",
     "@bds/internauta-model": "18.1.9",
     "@bds/jwt-login": "18.0.0",
     "@bds/next-sdr": "18.0.0",
