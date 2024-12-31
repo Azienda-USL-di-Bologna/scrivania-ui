@@ -73,7 +73,7 @@
           *ngIf="col.field != undefined && col.field !== 'azione' && col.field !== 'priorita' && col.field !== 'anteprima'"
           style="width: 100%"
         >
-          <p-calendar
+          <p-datepicker
             #calGen
             *ngSwitchCase="'Calendar'"
             [(ngModel)]="dataRange[col.field]"
@@ -91,7 +91,7 @@
             [pTooltip]="calendarTooltip(col.field)"
             inputId="CalInput_{{ col.field }}"
           >
-          </p-calendar>
+          </p-datepicker>
           <input
             *ngSwitchDefault
             pInputText
@@ -389,7 +389,7 @@
     placeholder="Inserisci note"
     [(ngModel)]="this.attivitaTemp.note"
   ></textarea>
-  <p-footer #footerNoteAttivita>
+  <ng-template #footer let-onAccept="onAccept" let-onReject="onReject">
     <button
       tabindex="0"
       style="width: auto; min-width: 3.125rem"
@@ -397,7 +397,7 @@
       pButton
       icon="pi pi-check"
       label="Conferma"
-      (click)="bottoneSalvaNote()"
+      (click)="onAccept()"
       pTooltip="Salva"
       tooltipPosition="bottom"
       appendTo="body"
@@ -409,12 +409,12 @@
       pButton
       icon="pi pi-times"
       label="Annulla"
-      (click)="chiudiNote()"
+      (click)="onReject()"
       pTooltip="Chiudi"
       tooltipPosition="bottom"
       appendTo="body"
     ></button>
-  </p-footer>
+  </ng-template>
 </p-dialog>
 <!-- richiesta di conferma di chiusura senza salvare  -->
 <p-confirmDialog
@@ -425,22 +425,22 @@
   width="425"
   key="closeWithoutSaving"
 >
-  <p-footer>
+  <ng-template #footer let-onAccept="onAccept" let-onReject="onReject">
     <button
       type="button"
       pButton
       icon=""
       label="Si"
-      (click)="confermaUscita.accept()"
+      (click)="onAccept()"
     ></button>
     <button
       type="button"
       pButton
       icon=""
       label="No"
-      (click)="confermaUscita.reject()"
+      (click)="onReject()"
     ></button>
-  </p-footer>
+  </ng-template>
 </p-confirmDialog>
 
 <p-confirmDialog
@@ -451,22 +451,22 @@
   width="425"
   key="saveNotes"
 >
-  <p-footer>
+  <ng-template #footer let-onAccept="onAccept" let-onReject="onReject">
     <button
       type="button"
       pButton
       icon=""
       label="Si"
-      (click)="confermaSalvataggio.accept()"
+      (click)="onAccept()"
     ></button>
     <button
       type="button"
       pButton
       icon=""
       label="No"
-      (click)="confermaSalvataggio.reject()"
+      (click)="onReject()"
     ></button>
-  </p-footer>
+  </ng-template>
 </p-confirmDialog>
 
 <p-toast key="attivitaToast"></p-toast>

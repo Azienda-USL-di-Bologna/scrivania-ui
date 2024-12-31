@@ -1,11 +1,12 @@
-@import "../node_modules/primeng/resources/themes/nova/theme.css";
-@import "../node_modules/primeng/resources/primeng.min.css";
+//@import "../node_modules/primeng/resources/themes/nova/theme.css";
+//@import "../node_modules/primeng/resources/primeng.min.css";
 @import "../node_modules/primeicons/primeicons.css";
-@import "../node_modules/primeflex/primeflex.css";
-@import "../node_modules/@bds/common-components/assets/bds-styles/primeng.scss";
+/* @import "../node_modules/primeflex/primeflex.css";
+@import "../node_modules/@bds/common-components/assets/bds-styles/primeng.scss"; */
 @import "../node_modules/@bds/common-components/assets/bds-styles/material-icons.scss";
 @import "../node_modules/@bds/common-components/assets/bds-styles/custom-classes.scss";
 @import "../node_modules/@bds/common-components/assets/bds-styles/basic.scss";
+
 html,
 body {
   min-height: 100%;
@@ -15,12 +16,15 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   //font-family: "Open Sans", "Helvetica Neue", sans-serif !important;
 }
+
 body .ui-button:enabled:focus {
   box-shadow: none;
 }
+
 body a {
   // color: deepskyblue;
 }
+
 /* .p-button {
   border: 0.06rem solid #203244 !important;
   background: #2e4a65 !important;
@@ -41,26 +45,31 @@ body a {
     font-size: 95%;
   }
 }
+
 @media screen and (max-width: 1500px) {
   html {
     font-size: 90%;
   }
 }
+
 @media screen and (max-width: 1400px) {
   html {
     font-size: 85%;
   }
 }
+
 @media screen and (max-width: 1300px) {
   html {
     font-size: 80%;
   }
 }
+
 @media screen and (max-width: 1200px) {
   html {
     font-size: 75%;
   }
 }
+
 @media screen and (max-width: 1100px) {
   html {
     font-size: 70%;

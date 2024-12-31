@@ -60,7 +60,7 @@
         >
         </lib-aziende-autocomplete>
         <span class="secondo-figlio">Da:</span>
-        <p-calendar
+        <p-datepicker
           [showIcon]="true"
           [monthNavigator]="true"
           [yearNavigator]="true"
@@ -78,13 +78,13 @@
           placeholder="Data di inizio"
           pTooltip="Dati bolli virtuali a partire dal"
         >
-        </p-calendar>
+        </p-datepicker>
         <span
           style="width: 0.25rem"
           aria-hidden="true"
         ></span>
         <span> A:</span>
-        <p-calendar
+        <p-datepicker
           [showIcon]="true"
           [monthNavigator]="true"
           [yearNavigator]="true"
@@ -101,7 +101,7 @@
           placeholder="Data di fine"
           pTooltip="Dati bolli virtuali fino al"
         >
-        </p-calendar>
+        </p-datepicker>
         <button
           type="button"
           pButton
@@ -176,7 +176,7 @@
                   *ngIf="col.field != undefined && col.field !== 'priorita'"
                   style="width: 100%"
                 >
-                  <p-calendar
+                  <p-datepicker
                     #calGen
                     *ngSwitchCase="'DateTime'"
                     [(ngModel)]="dataRange[col.field]"
@@ -194,7 +194,7 @@
                     [pTooltip]="calendarTooltip(col.field)"
                     inputId="CalInput_{{ col.field }}"
                   >
-                  </p-calendar>
+                  </p-datepicker>
                   <input
                     *ngSwitchDefault
                     pInputText

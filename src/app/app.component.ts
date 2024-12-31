@@ -1,14 +1,15 @@
-import { Component, OnInit, OnDestroy, Type } from "@angular/core";
+import { ApplicationConfig, Component, OnInit, OnDestroy, Type } from "@angular/core";
 import { JwtLoginService, UtenteUtilities, UtilityFunctions } from "@bds/jwt-login";
 import { SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { getInternautaUrl, BaseUrlType } from "@bds/internauta-model";
-import { MenuItem, PrimeNGConfig } from "primeng/api";
+import { MenuItem } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService, PRIMENG_ITA_TRANSALATION } from "@bds/common-tools";
 import { HeaderFeaturesConfig, PopupMessaggiService } from "@bds/common-components";
 import { Subscription } from "rxjs";
+import { PrimeNG } from "primeng/config";
 
 @Component({
   selector: "app-root",
@@ -23,7 +24,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private loginService: JwtLoginService,
-    private config: PrimeNGConfig,
+    private config: PrimeNG,
     private route: ActivatedRoute,
     private router: Router,
     private popupMessaggiService: PopupMessaggiService,

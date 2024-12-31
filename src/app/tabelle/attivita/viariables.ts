@@ -13,8 +13,8 @@ export const ColumnsNormal = [
     field: "idAzienda.nome",
     header: "Ente",
     filterMatchMode: FILTER_TYPES.string.containsIgnoreCase,
-    width: "6.125rem",
-    minWidth: "6.125rem",
+    width: "6.3rem",
+    minWidth: "6.3rem",
     label: "ente",
   },
   {
@@ -48,8 +48,8 @@ export const ColumnsNormal = [
     fieldType: "DateTime",
     filterWidget: "Calendar",
     ariaLabelDescription: "Colonna Data, Cella filtro",
-    width: "7rem",
-    minWidth: "7rem",
+    width: "7.2rem",
+    minWidth: "7.2rem",
     label: "data",
   },
   {
