@@ -638,10 +638,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.idAzienda = event;
   }
 
-  public onNoteClick(attivita: any) {
-    this.showNote = (this.noteText = attivita.note) !== null;
-  }
-
   ngOnDestroy(): void {
     if (this.subscriptions && this.subscriptions.length > 0) {
       while (this.subscriptions.length > 0) {

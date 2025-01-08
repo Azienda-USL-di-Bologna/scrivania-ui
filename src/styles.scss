@@ -7,36 +7,16 @@
 @import "../node_modules/@bds/common-components/assets/bds-styles/custom-classes.scss";
 @import "../node_modules/@bds/common-components/assets/bds-styles/basic.scss";
 
-html,
+/* html,
 body {
   min-height: 100%;
   height: 100%;
-  /*background-color: #a0a3af14;*/
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  //font-family: "Open Sans", "Helvetica Neue", sans-serif !important;
-}
+} */
 
-body .ui-button:enabled:focus {
+/* body .ui-button:enabled:focus {
   box-shadow: none;
-}
-
-body a {
-  // color: deepskyblue;
-}
-
-/* .p-button {
-  border: 0.06rem solid #203244 !important;
-  background: #2e4a65 !important;
-  &:hover {
-    border-color: #2e4a65 !important;
-    background: #406284 !important;
-    color: #ffffff !important;
-    font-weight: normal !important;
-  }
-  &.p-button-text {
-    color: white;
-  }
 } */
 
 // Responsive
