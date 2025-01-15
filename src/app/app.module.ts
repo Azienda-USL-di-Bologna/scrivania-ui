@@ -38,7 +38,7 @@ import { TooltipModule } from "primeng/tooltip";
 import { DatePickerModule } from "primeng/datepicker";
 import { InputSwitchModule } from "primeng/inputswitch";
 import { MenubarModule } from "primeng/menubar";
-import { DynamicDialog } from "primeng/dynamicdialog";
+import { DynamicDialogModule } from "primeng/dynamicdialog";
 import { ContextMenuModule } from "primeng/contextmenu";
 import { InputTextModule } from "primeng/inputtext";
 import { OverlayPanelModule } from "primeng/overlaypanel";
@@ -116,7 +116,7 @@ import { appConfig } from "./app.config";
     AutoCompleteModule,
     InputSwitchModule,
     MenubarModule,
-    DynamicDialog,
+    DynamicDialogModule,
     ContextMenuModule,
     ToastModule,
     FileUploadModule,

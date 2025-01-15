@@ -8,14 +8,14 @@
   [scrollable]="true"
   [virtualScroll]="true"
   [virtualScrollDelay]="150"
-  [virtualRowHeight]="54"
+  [virtualScrollItemSize]="54"
   [lazy]="true"
   [lazyLoadOnInit]="true"
   (onLazyLoad)="onLazyLoad($any($event))"
   [loading]="loading"
   [totalRecords]="totalRecords"
 >
-  <ng-template pTemplate="caption">
+  <ng-template #caption>
     <button
       type="button"
       pButton
@@ -55,7 +55,7 @@
       style="font-size: 2rem"
     ></i>
   </ng-template>
-  <ng-template pTemplate="header">
+  <ng-template #header>
     <!-- HEADER -->
     <tr class="header-row">
       <th
@@ -100,7 +100,7 @@
   </ng-template>
 
   <ng-template
-    pTemplate="body"
+    #body
     let-rowData
     let-columns="columns"
     let-index="rowIndex"

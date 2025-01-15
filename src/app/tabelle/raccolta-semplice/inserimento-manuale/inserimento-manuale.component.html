@@ -202,22 +202,25 @@
         <div style="margin-top: 1em">
           <div class="p-fluid p-formgrid p-grid">
             <div class="p-field p-col">
-              <p-radioButton
+              <p-radiobutton
+                inputId="doc_babel"
                 name="doc_babel"
-                label="Documento Babel"
                 value="Documento Babel"
                 (onClick)="blocca('doc')"
                 [(ngModel)]="selectedValue"
-              ></p-radioButton>
+              ></p-radiobutton>
+              <label for="doc_babel">Documento Babel</label>
             </div>
             <div class="p-field p-col">
-              <p-radioButton
+              <p-radiobutton
+                inputId="upload_file"
                 name="upload_file"
                 label="Caricamento File"
                 value="Caricamento File"
                 (onClick)="blocca('file')"
                 [(ngModel)]="selectedValue"
-              ></p-radioButton>
+              ></p-radiobutton>
+              <label for="upload_file">Caricamento File</label>
             </div>
           </div>
           <div class="p-fluid p-formgrid p-grid">

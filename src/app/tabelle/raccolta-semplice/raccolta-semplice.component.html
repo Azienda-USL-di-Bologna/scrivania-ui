@@ -167,10 +167,7 @@
       scrollHeight="flex"
     >
       <!-- Header tabellla-->
-      <ng-template
-        pTemplate="header"
-        let-columns
-      >
+      <ng-template #header let-columns>
         <tr>
           <th style="width: 5%"></th>
           <th
@@ -246,8 +243,7 @@
         </tr>
       </ng-template>
       <!--Body tabella-->
-      <ng-template
-        pTemplate="body"
+      <ng-template #body
         let-rowRS
         let-columns="columns"
         let-expanded="expanded"
@@ -307,10 +303,7 @@
       </ng-template>
 
       <!-- Espansione tabella -->
-      <ng-template
-        pTemplate="rowexpansion"
-        let-rowRS
-      >
+      <ng-template #expandedrow let-rowRS>
         <tr>
           <td
             colspan="11"
@@ -475,7 +468,7 @@
             >
           </div>
           <div>
-            <p-radioButton
+            <p-radiobutton
               inputId="stato"
               name="stato"
               class="radioB"
@@ -483,7 +476,8 @@
               value="SELECTED"
               [(ngModel)]="selectedButton"
               formControlName="stato"
-            ></p-radioButton>
+            ></p-radiobutton>
+            <!-- <label for="stato">stato</label> -->
           </div>
         </div>
 
