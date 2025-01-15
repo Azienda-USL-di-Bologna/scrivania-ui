@@ -14,9 +14,10 @@ import { LOCAL_IT, UtilityFunctions } from "@bds/common-tools";
 import Bowser from "bowser";
 
 @Component({
-  selector: "app-scrivania",
-  templateUrl: "./scrivania.component.html",
-  styleUrls: ["./scrivania.component.scss"],
+    selector: "app-scrivania",
+    templateUrl: "./scrivania.component.html",
+    styleUrls: ["./scrivania.component.scss"],
+    standalone: false
 })
 export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public mostraStorico: boolean = false;

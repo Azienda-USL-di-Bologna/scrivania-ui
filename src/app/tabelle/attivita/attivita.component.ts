@@ -38,10 +38,11 @@ import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 import Bowser from "bowser";
 
 @Component({
-  selector: "app-attivita",
-  templateUrl: "./attivita.component.html",
-  styleUrls: ["./attivita.component.scss"],
-  providers: [DatePipe],
+    selector: "app-attivita",
+    templateUrl: "./attivita.component.html",
+    styleUrls: ["./attivita.component.scss"],
+    providers: [DatePipe],
+    standalone: false
 })
 export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewInit {
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();

@@ -17,9 +17,10 @@ import { LazyLoadEvent } from "primeng/api";
 import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
-  selector: "app-raccolta-semplice",
-  templateUrl: "./raccolta-semplice.component.html",
-  styleUrls: ["./raccolta-semplice.component.scss"],
+    selector: "app-raccolta-semplice",
+    templateUrl: "./raccolta-semplice.component.html",
+    styleUrls: ["./raccolta-semplice.component.scss"],
+    standalone: false
 })
 export class RaccoltaSempliceComponent implements OnInit {
   constructor(

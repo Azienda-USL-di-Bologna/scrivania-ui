@@ -12,9 +12,10 @@ import { Subscription } from "rxjs";
 import { PrimeNG } from "primeng/config";
 
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
+    selector: "app-root",
+    templateUrl: "./app.component.html",
+    styleUrls: ["./app.component.scss"],
+    standalone: false
 })
 export class AppComponent implements OnInit, OnDestroy {
   public addToMenu: MenuItem[] = []; // E' il menu che si aprirà nell'header
