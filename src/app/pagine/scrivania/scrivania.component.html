@@ -382,12 +382,12 @@
           </p-accordionTab>
         </p-accordion>
         <div class="allegati-dropdown">
-          <p-dropdown
+          <p-select
             #allegatiDropDown
             [ngModel]="allegatoSelezionato"
             [options]="allegati"
             (onChange)="allegatoSelected($event)"
-          ></p-dropdown>
+          ></p-select>
           <img
             *ngIf="!noAnteprima"
             src="assets/images/fullscreen-symbol.svg"

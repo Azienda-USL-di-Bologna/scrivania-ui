@@ -85,13 +85,13 @@
                 class="p-col-12 p-mb-2 p-md-2 p-mb-md-0"
                 >Tipologia</label
               >
-              <p-dropdown
+              <p-select
                 [options]="tipologieDocumenti$"
                 placeholder="Scegli tipo documento..."
                 [showClear]="true"
                 [(ngModel)]="selectedTipo"
                 appendTo="body"
-              ></p-dropdown>
+              ></p-select>
             </div>
           </div>
         </div>
@@ -516,13 +516,13 @@
               </div>
               <div class="p-field">
                 <label for="partitaIva">Tipologia</label>
-                <p-dropdown
+                <p-select
                   [options]="tipiCoinvolti"
                   [(ngModel)]="selectedTipoCoinvolto"
                   placeholder="tipologia..."
                   [showClear]="true"
                   [disabled]="isOldContatto"
-                ></p-dropdown>
+                ></p-select>
               </div>
 
               <div class="p-field">
