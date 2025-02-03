@@ -143,7 +143,7 @@
     </div> -->
 
     <!-- Tabella -->
-    <p-table
+    <p-table stripedRows
       #tableRaccoltaSemplice
       class="table-wrapper"
       [value]="datiDocumenti"
@@ -310,7 +310,7 @@
             style="border-bottom: transparent"
           >
             <!-- <div class="p-d-flex p-shadow-1 p-mb-2 tabella-estesa"> -->
-            <p-table
+            <p-table stripedRows
               class="tabella-estesa"
               [value]="rowRS.coinvolti"
               dataKey="id"
@@ -367,7 +367,7 @@
           >
             <!-- <div class="p-d-flex p-shadow-1 tabella-estesa"> -->
             <!-- tabella sottodocumenti -->
-            <p-table
+            <p-table stripedRows
               class="tabella-estesa"
               [value]="rowRS.sottodocumenti"
               dataKey="id"
@@ -508,7 +508,7 @@
     </div>
 
     <div>
-      <p-table
+      <p-table stripedRows
         #tableStorico
         [value]="storici"
         styleClass="dialog-table"
