@@ -9,7 +9,8 @@ import { Subscription } from "rxjs";
     selector: "login-admin",
     templateUrl: "./login-admin.component.html",
     styleUrls: ["./login-admin.component.scss"],
-  })
+    standalone: false
+})
   export class LoginAdminComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = [];
 

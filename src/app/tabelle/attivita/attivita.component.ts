@@ -38,10 +38,11 @@ import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 import Bowser from "bowser";
 
 @Component({
-  selector: "app-attivita",
-  templateUrl: "./attivita.component.html",
-  styleUrls: ["./attivita.component.scss"],
-  providers: [DatePipe],
+    selector: "app-attivita",
+    templateUrl: "./attivita.component.html",
+    styleUrls: ["./attivita.component.scss"],
+    providers: [DatePipe],
+    standalone: false
 })
 export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewInit {
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
@@ -110,7 +111,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   @Output("attivitaEmitter") private attivitaEmitter: EventEmitter<Attivita> = new EventEmitter();
-  @Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
+  //@Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("refreshAttivita") private refreshAttivita: EventEmitter<string> = new EventEmitter();
   @ViewChild("dt") private dataTable: Table;
   @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
@@ -687,10 +688,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         this.dataTable.filter(value, field, null);
         break;
     }
-  }
-
-  public onNoteClick(attivita: any) {
-    this.onAttivitaNoteEmitter.emit(attivita);
   }
 
   public noteClicckato(attivita: Attivita, event: any) {

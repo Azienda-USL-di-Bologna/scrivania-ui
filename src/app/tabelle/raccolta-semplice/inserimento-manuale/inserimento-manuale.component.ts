@@ -57,9 +57,10 @@ interface Registro {
 }
 
 @Component({
-  selector: "app-inserimento-manuale",
-  templateUrl: "./inserimento-manuale.component.html",
-  styleUrls: ["./inserimento-manuale.component.scss"],
+    selector: "app-inserimento-manuale",
+    templateUrl: "./inserimento-manuale.component.html",
+    styleUrls: ["./inserimento-manuale.component.scss"],
+    standalone: false
 })
 export class InserimentoManualeComponent implements OnInit {
   public _callerData: ExternalAppDataRS;
