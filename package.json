@@ -26,7 +26,7 @@
     "@bds/common-tools": "19.0.0",
     "@bds/jwt-login": "19.0.0",
     "@bds/primeng-plugin": "19.0.0",
-    "@bds/common-components": "19.0.1",
+    "@bds/common-components": "19.0.7",
     "@bds/rubrint": "19.0.1",
     "@ng-idle/core": "16.0.0",
     "@ng-idle/keepalive": "16.0.0",

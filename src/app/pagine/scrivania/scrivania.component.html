@@ -14,10 +14,10 @@
       <div class="option-bar">
         <div class="buttons-bar">
           @if (menuItems) {
-            <bds-menu
-              [items]="menuItems"
-              [executeAction]="openMenuUrl"
-            ></bds-menu>
+          <bds-menu
+            [items]="menuItems"
+            [executeAction]="openMenuUrl"
+          ></bds-menu>
           }
 
           <!-- Firma -->
@@ -256,14 +256,12 @@
             *ngIf="!mostraStorico && !mostraMonitorMasterjobs"
             (attivitaEmitter)="attivitaClicked($event)"
             [refresh]="tabellaDaRefreshare"
-            
             [idAzienda]="idAzienda"
             (refreshAttivita)="ricarica()"
             [changeColOrder]="changeColOrder"
           ></app-attivita>
           <app-attivita-fatte
             *ngIf="mostraStorico && !mostraMonitorMasterjobs"
-            
             [idAzienda]="idAzienda"
             [refresh]="tabellaDaRefreshare"
           ></app-attivita-fatte>
@@ -308,10 +306,20 @@
         >
           <strong>Nessuna attività selezionata.</strong>
         </div>
-        <p-accordion
+        <lib-preview
+          style="flex: 1 1 0"
+          *ngIf="docDetailView"
+          [doc]="docDetailView"
+          [sonoPersonaVedenteSuDocSelezionato]="sonoPersonaVedenteSuDocSelezionato"
+          [config]="attachmentsBoxConfig"
+          (closeRightPanel)="manageRowSelected({ sonoPersonaVedenteSuDocSelezionato: null })"
+        >
+        </lib-preview>
+        <!-- <p-accordion
           [multiple]="true"
           [activeIndex]="[]"
           #accordionDetail
+          class="accordion"
         >
           <p-accordionTab
             header="Dettagli documento"
@@ -380,8 +388,21 @@
               Non sono presenti dati di flusso da visualizzare.
             </div>
           </p-accordionTab>
-        </p-accordion>
-        <div class="allegati-dropdown">
+          <p-accordionTab
+            header="Anteprima"
+            *ngIf="idDoc != null"
+            aria-controls="sect3"
+          >
+            <attachments-box
+              class="box-allegati"
+              id="sect3"
+              [idDoc]="idDoc"
+              [config]="attachmentsBoxConfig"
+            >
+            </attachments-box>
+          </p-accordionTab>
+        </p-accordion> -->
+        <!-- <div class="allegati-dropdown">
           <p-dropdown
             #allegatiDropDown
             [ngModel]="allegatoSelezionato"
@@ -415,7 +436,7 @@
           >
             L'anteprima non è disponibile per questo tipo di attività.
           </div>
-        </div>
+        </div>-->
       </div>
       <!-- </div> -->
     </div>
