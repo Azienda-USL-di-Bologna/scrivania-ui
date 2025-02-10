@@ -4,10 +4,10 @@ import { Subscription } from "rxjs";
 import { Azienda } from "@bds/internauta-model";
 
 @Component({
-    selector: "app-dropdown-aziende",
-    templateUrl: "./dropdown-aziende.component.html",
-    styleUrls: ["./dropdown-aziende.component.scss"],
-    standalone: false
+  selector: "app-dropdown-aziende",
+  templateUrl: "./dropdown-aziende.component.html",
+  styleUrls: ["./dropdown-aziende.component.scss"],
+  standalone: false,
 })
 export class DropdownAziendeComponent implements OnInit, OnDestroy {
   public filtriApribili: DropdownRecord[] = []; // [{label: "label0", value: "Tutte"}, {label: "label1", value: "105"}, {label: "label2", value: "102"}, {label: "label3", value: "909"}];

@@ -32,7 +32,7 @@ import { RadioButtonModule } from "primeng/radiobutton";
 import { ButtonModule } from "primeng/button";
 import { AccordionModule } from "primeng/accordion";
 import { PanelModule } from "primeng/panel";
-import { DropdownModule } from "primeng/dropdown";
+import { SelectModule } from "primeng/select";
 import { TableModule } from "primeng/table";
 import { TooltipModule } from "primeng/tooltip";
 import { DatePickerModule } from "primeng/datepicker";
@@ -104,7 +104,7 @@ import { DocService } from "@bds/internauta-model";
     BrowserAnimationsModule,
     AccordionModule,
     PanelModule,
-    DropdownModule,
+    SelectModule,
     TableModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: false }),
     FormsModule,

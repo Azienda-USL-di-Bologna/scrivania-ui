@@ -85,13 +85,13 @@
                 class="p-col-12 p-mb-2 p-md-2 p-mb-md-0"
                 >Tipologia</label
               >
-              <p-dropdown
+              <p-select
                 [options]="tipologieDocumenti$"
                 placeholder="Scegli tipo documento..."
                 [showClear]="true"
                 [(ngModel)]="selectedTipo"
                 appendTo="body"
-              ></p-dropdown>
+              ></p-select>
             </div>
           </div>
         </div>
@@ -142,7 +142,7 @@
             </div>
             <div class="p-field p-col align-table">
               <!-- fascicoli selezionati -->
-              <p-table
+              <p-table stripedRows
                 [value]="selectedFascicoli"
                 [resizableColumns]="true"
                 [autoLayout]="true"
@@ -381,7 +381,7 @@
           </div>
 
           <div class="p-field p-col-12">
-            <p-table
+            <p-table stripedRows
               [value]="coinvolti"
               [rowHover]="true"
               dataKey="id"
@@ -516,13 +516,13 @@
               </div>
               <div class="p-field">
                 <label for="partitaIva">Tipologia</label>
-                <p-dropdown
+                <p-select
                   [options]="tipiCoinvolti"
                   [(ngModel)]="selectedTipoCoinvolto"
                   placeholder="tipologia..."
                   [showClear]="true"
                   [disabled]="isOldContatto"
-                ></p-dropdown>
+                ></p-select>
               </div>
 
               <div class="p-field">
@@ -711,7 +711,7 @@
             </div>
 
             <div>
-              <p-table [value]="filteredDettagliContatti">
+              <p-table stripedRows [value]="filteredDettagliContatti">
                 <ng-template pTemplate="header">
                   <tr>
                     <th>Dettagli</th>

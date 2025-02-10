@@ -43,6 +43,14 @@
   white-space: pre-wrap;
 }
 
+::ng-deep .p-datatable-row-selected {
+  .colonna-azione {
+    a {
+      color: #d385b1 !important;
+    }
+  }
+}
+
 .column-class-o {
   /* word-break: break-word;
   word-wrap: break-word;
@@ -121,9 +129,22 @@
   opacity: 0.4 !important;
 }
 
-.iconaEliminaAttivita {
-  display: block;
+::ng-deep .icona-riga-attivita {
+  font-size: 1.3rem;
+
+  .pi {
+    font-size: 1.3rem;
+  }
+
+  /*  display: block;
   width: 1.5rem;
   height: 1.5rem;
-  margin: auto;
+  margin: auto; */
+}
+
+.icon-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
