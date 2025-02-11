@@ -14,10 +14,10 @@
       <div class="option-bar">
         <div class="buttons-bar">
           @if (menuItems) {
-            <bds-menu
-              [items]="menuItems"
-              [executeAction]="openMenuUrl"
-            ></bds-menu>
+          <bds-menu
+            [items]="menuItems"
+            [executeAction]="openMenuUrl"
+          ></bds-menu>
           }
 
           <!-- Firma -->
@@ -256,14 +256,12 @@
             *ngIf="!mostraStorico && !mostraMonitorMasterjobs"
             (attivitaEmitter)="attivitaClicked($event)"
             [refresh]="tabellaDaRefreshare"
-            
             [idAzienda]="idAzienda"
             (refreshAttivita)="ricarica()"
             [changeColOrder]="changeColOrder"
           ></app-attivita>
           <app-attivita-fatte
             *ngIf="mostraStorico && !mostraMonitorMasterjobs"
-            
             [idAzienda]="idAzienda"
             [refresh]="tabellaDaRefreshare"
           ></app-attivita-fatte>
@@ -294,7 +292,7 @@
         aria-label="Anteprima del documento"
         class="info-doc-wrapper"
       >
-        <div
+        <!-- <div
           *ngIf="oggetto"
           class="div-info-doc"
           tabindex="0"
@@ -307,8 +305,8 @@
           class="div-info-doc"
         >
           <strong>Nessuna attività selezionata.</strong>
-        </div>
-        <p-accordion
+        </div> -->
+        <!-- <p-accordion
           [multiple]="true"
           [activeIndex]="[]"
           #accordionDetail
@@ -380,8 +378,17 @@
               Non sono presenti dati di flusso da visualizzare.
             </div>
           </p-accordionTab>
-        </p-accordion>
-        <div class="allegati-dropdown">
+        </p-accordion> -->
+
+        <lib-preview
+          *ngIf="docDetailView"
+          [doc]="docDetailView"
+          [sonoPersonaVedenteSuDocSelezionato]="sonoPersonaVedenteSuDocSelezionato"
+          [config]="attachmentsBoxConfig"
+          (closeRightPanel)="manageRowSelected({ sonoPersonaVedenteSuDocSelezionato: null })"
+        >
+        </lib-preview>
+        <!-- <div class="allegati-dropdown">
           <p-select
             #allegatiDropDown
             [ngModel]="allegatoSelezionato"
@@ -394,8 +401,8 @@
             (click)="fullscreen($event)"
             alt="fullscreen"
           />
-        </div>
-      </div>
+        </div> -->
+        <!-- </div>
       <div class="d-flex flex-grow-1">
         <div class="preview-inner">
           <div [ngClass]="{ 'overlap-div': sliding }"></div>
@@ -416,8 +423,8 @@
             L'anteprima non è disponibile per questo tipo di attività.
           </div>
         </div>
+      </div> -->
       </div>
-      <!-- </div> -->
     </div>
   </ng-template>
 </p-splitter>
