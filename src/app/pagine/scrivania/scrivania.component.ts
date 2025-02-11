@@ -39,7 +39,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public mostraMonitorMasterjobs: boolean = false;
 
   @ViewChild("anteprima") private anteprima: ElementRef;
-  @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
+  //@ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
 
   @ViewChild("leftSide") private leftSide: ElementRef;
   @ViewChild("rightSide") private rightSide: ElementRef;
@@ -199,7 +199,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       })
     );
 
-    this.allegatiDropDown.disabled = true;
+    //this.allegatiDropDown.disabled = true;
   }
 
   public openMenuUrl: (value: ItemMenu) => void = (item: ItemMenu): void => {
