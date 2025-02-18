@@ -12,10 +12,11 @@ import { Calendar } from "primeng/calendar";
 import { Table } from "primeng/table";
 
 @Component({
-  selector: "app-attivita-fatte",
-  templateUrl: "./attivita-fatte.component.html",
-  styleUrls: ["./attivita-fatte.component.scss"],
-  providers: [DatePipe],
+    selector: "app-attivita-fatte",
+    templateUrl: "./attivita-fatte.component.html",
+    styleUrls: ["./attivita-fatte.component.scss"],
+    providers: [DatePipe],
+    standalone: false
 })
 export class AttivitaFatteComponent implements OnInit {
   public attivitaFatte: AttivitaFatta[];

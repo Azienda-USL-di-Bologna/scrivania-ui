@@ -14,9 +14,10 @@ import { LOCAL_IT, UtilityFunctions } from "@bds/common-tools";
 import Bowser from "bowser";
 
 @Component({
-  selector: "app-scrivania",
-  templateUrl: "./scrivania.component.html",
-  styleUrls: ["./scrivania.component.scss"],
+    selector: "app-scrivania",
+    templateUrl: "./scrivania.component.html",
+    styleUrls: ["./scrivania.component.scss"],
+    standalone: false
 })
 export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public mostraStorico: boolean = false;
@@ -638,10 +639,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.idAzienda = event;
   }
 
-  public onNoteClick(attivita: any) {
-    this.showNote = (this.noteText = attivita.note) !== null;
-  }
-
   ngOnDestroy(): void {
     if (this.subscriptions && this.subscriptions.length > 0) {
       while (this.subscriptions.length > 0) {
@@ -690,6 +687,18 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       .generateAvcp(this.avcpCalendarDate.getFullYear(), this.avcpIdAzienda)
       .subscribe((zip) => UtilityFunctions.downLoadFile(zip, "application/zip", "avcp.zip"));
   }
+
+  /* darkmodeIcon = "pi pi-sun";
+
+  toggleDarkMode() {
+    const element = document.querySelector("html");
+    element.classList.toggle("my-app-dark");
+    if (this.darkmodeIcon === "pi pi-sun") {
+      this.darkmodeIcon = "pi pi-moon";
+    } else {
+      this.darkmodeIcon = "pi pi-sun";
+    }
+  } */
 }
 
 class TreeNode {

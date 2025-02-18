@@ -1,11 +1,11 @@
 <div class="container">
   <label class="">Ente:</label>
-  <p-dropdown
+  <p-select
     [options]="filtriApribili"
     [(ngModel)]="filtroScelto"
     optionLabel="value"
     (onChange)="onValueChange($event)"
     [style]="{ width: '6.25rem', 'min-width': 'auto' }"
   >
-  </p-dropdown>
+  </p-select>
 </div>

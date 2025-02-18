@@ -8,9 +8,10 @@ import { UntypedFormControl, Validators } from "@angular/forms";
 import { Inplace } from "primeng/inplace";
 
 @Component({
-  selector: "app-impostazioni",
-  templateUrl: "./impostazioni.component.html",
-  styleUrls: ["./impostazioni.component.scss"],
+    selector: "app-impostazioni",
+    templateUrl: "./impostazioni.component.html",
+    styleUrls: ["./impostazioni.component.scss"],
+    standalone: false
 })
 export class ImpostazioniComponent implements OnInit, OnDestroy {
   checked: boolean;

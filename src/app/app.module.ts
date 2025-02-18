@@ -29,15 +29,15 @@ import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtua
 
 /* PrimeNG component */
 import { RadioButtonModule } from "primeng/radiobutton";
+import { ButtonModule } from "primeng/button";
 import { AccordionModule } from "primeng/accordion";
 import { PanelModule } from "primeng/panel";
-import { DropdownModule } from "primeng/dropdown";
+import { SelectModule } from "primeng/select";
 import { TableModule } from "primeng/table";
-import { CalendarModule } from "primeng/calendar";
 import { TooltipModule } from "primeng/tooltip";
+import { DatePickerModule } from "primeng/datepicker";
 import { InputSwitchModule } from "primeng/inputswitch";
 import { MenubarModule } from "primeng/menubar";
-import { SlideMenuModule } from "primeng/slidemenu";
 import { DynamicDialogModule } from "primeng/dynamicdialog";
 import { ContextMenuModule } from "primeng/contextmenu";
 import { InputTextModule } from "primeng/inputtext";
@@ -79,6 +79,7 @@ import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterj
 import { NgIdleKeepaliveModule } from "@ng-idle/keepalive";
 import { SplitterModule } from "primeng/splitter";
 
+import { appConfig } from "./app.config";
 @NgModule({
   declarations: [
     AppComponent,
@@ -101,12 +102,12 @@ import { SplitterModule } from "primeng/splitter";
     BrowserAnimationsModule,
     AccordionModule,
     PanelModule,
-    DropdownModule,
+    SelectModule,
     TableModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: false }),
     FormsModule,
     ReactiveFormsModule,
-    CalendarModule,
+    DatePickerModule,
     TooltipModule,
     InputTextModule,
     OverlayPanelModule,
@@ -115,7 +116,6 @@ import { SplitterModule } from "primeng/splitter";
     AutoCompleteModule,
     InputSwitchModule,
     MenubarModule,
-    SlideMenuModule,
     DynamicDialogModule,
     ContextMenuModule,
     ToastModule,
@@ -129,6 +129,7 @@ import { SplitterModule } from "primeng/splitter";
     HeaderFeaturesModule,
     ProgressSpinnerModule,
     MatIconModule,
+    ButtonModule,
     RadioButtonModule,
     BlockUIModule,
     ListboxModule,
@@ -155,6 +156,7 @@ import { SplitterModule } from "primeng/splitter";
     ExtendedAllegatoService,
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
     provideHttpClient(withInterceptorsFromDi()),
+    ...appConfig.providers,
   ],
 })
 export class AppModule {}

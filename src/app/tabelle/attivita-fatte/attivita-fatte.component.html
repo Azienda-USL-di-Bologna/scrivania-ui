@@ -1,4 +1,4 @@
-<p-table
+<p-table stripedRows
   #dt
   [lazy]="true"
   (onLazyLoad)="handleEvent('onLazyLoad', $event)"
@@ -52,7 +52,7 @@
           *ngIf="col.field != undefined && col.field !== 'priorita'"
           style="width: 100%"
         >
-          <p-calendar
+          <p-datepicker
             #calGen
             *ngSwitchCase="'Calendar'"
             [(ngModel)]="dataRange[col.field]"
@@ -70,7 +70,7 @@
             [pTooltip]="calendarTooltip(col.field)"
             inputId="CalInput_{{ col.field }}"
           >
-          </p-calendar>
+          </p-datepicker>
           <input
             *ngSwitchDefault
             pInputText
