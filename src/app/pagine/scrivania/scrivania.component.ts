@@ -1,5 +1,18 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, AfterViewInit } from "@angular/core";
-import { Attivita, UrlsGenerationStrategy, ItemMenu, CommandType, CODICI_RUOLO } from "@bds/internauta-model";
+import {
+  Attivita,
+  UrlsGenerationStrategy,
+  ItemMenu,
+  CommandType,
+  CODICI_RUOLO,
+  DocService,
+  ENTITIES_STRUCTURE,
+  DocDetailView,
+  DocDetailViewService,
+  ProjectedDocDetailWithPermessoDoc,
+  ProjectedDocDetailWithPermessoDocService,
+  PermessoDoc,
+} from "@bds/internauta-model";
 import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
@@ -12,19 +25,21 @@ import { ParametroAziende } from "@bds/internauta-model";
 import { ConfigurazioneService } from "@bds/internauta-model";
 import { LOCAL_IT, UtilityFunctions } from "@bds/common-tools";
 import Bowser from "bowser";
+import { AttachmentsBoxConfig } from "@bds/common-components";
+import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
 
 @Component({
-    selector: "app-scrivania",
-    templateUrl: "./scrivania.component.html",
-    styleUrls: ["./scrivania.component.scss"],
-    standalone: false
+  selector: "app-scrivania",
+  templateUrl: "./scrivania.component.html",
+  styleUrls: ["./scrivania.component.scss"],
+  standalone: false,
 })
 export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public mostraStorico: boolean = false;
   public mostraMonitorMasterjobs: boolean = false;
 
   @ViewChild("anteprima") private anteprima: ElementRef;
-  @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
+  //@ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
 
   @ViewChild("leftSide") private leftSide: ElementRef;
   @ViewChild("rightSide") private rightSide: ElementRef;
@@ -47,11 +62,12 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public datiFlussoTooltip: string = null;
 
   public localIt = LOCAL_IT;
-
+  public idDoc: number;
   public buttonAvcpEnabled = false;
   public showAvcpDialog = false;
   public avcpCalendarDate: Date = new Date();
   public avcpIdAzienda = 13;
+  public docDetailView: ProjectedDocDetailWithPermessoDoc;
 
   public finestreApribili: any[] = [
     {
@@ -99,13 +115,21 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public showBolli: boolean = false;
   public showRaccoltaSemplice: boolean = false;
   public tabellaDaRefreshare: any = { name: "" };
+  public attachmentsBoxConfig: AttachmentsBoxConfig;
+  public sonoPersonaVedenteSuDocSelezionato: boolean = true;
   constructor(
     private impostazioniService: ImpostazioniService,
     private scrivaniaService: ScrivaniaService,
     private loginService: JwtLoginService,
     private confirmationService: ConfirmationService,
-    private configurazioneService: ConfigurazioneService
-  ) {}
+    private configurazioneService: ConfigurazioneService,
+    private projectedDocDetailWithPermessoDocService: ProjectedDocDetailWithPermessoDocService
+  ) {
+    this.attachmentsBoxConfig = new AttachmentsBoxConfig();
+    this.attachmentsBoxConfig.showPreview = true;
+    this.attachmentsBoxConfig.showInfoVersamento = false;
+    this.attachmentsBoxConfig.showHeader = false;
+  }
 
   ngOnInit() {
     console.log("scivania ngOnInit()");
@@ -175,7 +199,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       })
     );
 
-    this.allegatiDropDown.disabled = true;
+    //this.allegatiDropDown.disabled = true;
   }
 
   public openMenuUrl: (value: ItemMenu) => void = (item: ItemMenu): void => {
@@ -332,69 +356,90 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         this.oggetto = this.attivitaSelezionata.oggetto;
         const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
         if (datiAggiuntiviAttivita) {
-          this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
-          let destinatariA, destinatariCC: string;
-          if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
-            const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
-            res.forEach((e) => {
-              if (e.startsWith("A: ")) {
-                destinatariA = e.replace("A: ", "<strong>A: </strong>");
-              } else if (e.startsWith("CC: ")) {
-                destinatariCC = e.replace("CC: ", "<strong>CC: </strong>");
-              } else if (e.startsWith("Interni: ")) {
-                destinatariA = e.replace("Interni: ", "<b>Interni: </b>");
-              } else if (e.startsWith("Esterni: ")) {
-                destinatariCC = e.replace("Esterni: ", "<b>Esterni: </b>");
-              }
-            });
+          console.log(datiAggiuntiviAttivita.id_doc);
+          this.idDoc = datiAggiuntiviAttivita.id_doc as number;
+          if (this.idDoc) {
+            const filtersAndSorts: FiltersAndSorts = new FiltersAndSorts();
+            filtersAndSorts.addFilter(new FilterDefinition("id", FILTER_TYPES.not_string.equals, this.idDoc));
+            filtersAndSorts.addFilter(
+              new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().idPersona.id)
+            );
+            this.projectedDocDetailWithPermessoDocService
+              .getData("ProjectedDocDetailWithPermessoDocWithIdAziendaAndPermessiDocList", filtersAndSorts, null, null)
+              .subscribe((data: any) => {
+                this.docDetailView = data.results[0] as ProjectedDocDetailWithPermessoDoc;
+                const permessoDoc = this.docDetailView.permessiDocList.filter(
+                  (a) => a.fk_idPersona.id == this.loggedUser.getUtente().idPersona.id
+                )[0] as PermessoDoc;
+                if (permessoDoc && permessoDoc.bitVisibilita >= 2) {
+                  this.sonoPersonaVedenteSuDocSelezionato = true;
+                }
+              });
           }
-          if (datiAggiuntiviAttivita.custom_app_4) {
-            this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
-            if (this.datiDiFlusso.length > MAX_CHARS_100) {
-              this.datiFlussoTooltip = this.datiDiFlusso;
-              this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
+        }
+
+        this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
+        let destinatariA, destinatariCC: string;
+        if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
+          const res = datiAggiuntiviAttivita.custom_app_2.split("<br />");
+          res.forEach((e) => {
+            if (e.startsWith("A: ")) {
+              destinatariA = e.replace("A: ", "<strong>A: </strong>");
+            } else if (e.startsWith("CC: ")) {
+              destinatariCC = e.replace("CC: ", "<strong>CC: </strong>");
+            } else if (e.startsWith("Interni: ")) {
+              destinatariA = e.replace("Interni: ", "<b>Interni: </b>");
+            } else if (e.startsWith("Esterni: ")) {
+              destinatariCC = e.replace("Esterni: ", "<b>Esterni: </b>");
             }
-            this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
-            // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
-          }
-          this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
-          this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
+          });
         }
-
-        this.allegati = [];
-        if (this.allegatiDropDown) {
-          // Se non c'è this.allegatiDropDown con ogni probabilità è perché la anteprima è settata come non visbile
-          this.allegatiDropDown.clear(null);
-          let allegatiAttivita: any[] = null;
-          if (this.attivitaSelezionata.allegati && this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
-            allegatiAttivita = this.attivitaSelezionata.allegati;
+        if (datiAggiuntiviAttivita.custom_app_4) {
+          this.datiDiFlusso = datiAggiuntiviAttivita.custom_app_4;
+          if (this.datiDiFlusso.length > MAX_CHARS_100) {
+            this.datiFlussoTooltip = this.datiDiFlusso;
+            this.datiDiFlusso = this.datiDiFlusso.substring(0, MAX_CHARS_100 - 3).concat("...");
           }
-          if (allegatiAttivita) {
-            allegatiAttivita.sort((a: any, b: any) => {
-              if (a.default) {
-                return -1;
-              } else if (a.default && b.default) {
-                return 0;
-              } else {
-                return 1;
-              }
-            });
-            allegatiAttivita.forEach((element) => {
-              this.allegati.push({ label: this.shrinkFileName(element.nome_file), value: element });
-            });
-            this.allegatoSelected({ value: this.allegati[0].value });
-          } else {
-            this.noAnteprima = true;
-          }
-          if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
-            this.allegati = [{ label: "Documenti non presenti", value: null }];
-            this.allegatiDropDown.disabled = true;
-          }
+          this.datiDiFlusso = this.datiDiFlusso.replace("R:", "<b>R:</b>").replace("A:", "<b>A: </b>");
+          // this.accordionDetail.tabs[0].selected = true;  // Espande l'accordion
         }
-
-        // this.allegatiDropDown.updateDimensions();
-        // this.allegatiDropDown.show();
+        this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
+        this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
       }
+
+      this.allegati = [];
+      // if (this.allegatiDropDown) {
+      //   // Se non c'è this.allegatiDropDown con ogni probabilità è perché la anteprima è settata come non visbile
+      //   this.allegatiDropDown.clear(null);
+      //   let allegatiAttivita: any[] = null;
+      //   if (this.attivitaSelezionata.allegati && this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
+      //     allegatiAttivita = this.attivitaSelezionata.allegati;
+      //   }
+      //   if (allegatiAttivita) {
+      //     allegatiAttivita.sort((a: any, b: any) => {
+      //       if (a.default) {
+      //         return -1;
+      //       } else if (a.default && b.default) {
+      //         return 0;
+      //       } else {
+      //         return 1;
+      //       }
+      //     });
+      //     allegatiAttivita.forEach((element) => {
+      //       this.allegati.push({ label: this.shrinkFileName(element.nome_file), value: element });
+      //     });
+      //     this.allegatoSelected({ value: this.allegati[0].value });
+      //   } else {
+      //     this.noAnteprima = true;
+      //   }
+      //   if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
+      //     this.allegati = [{ label: "Documenti non presenti", value: null }];
+      //     this.allegatiDropDown.disabled = true;
+      //   }
+      // }
+
+      // this.allegatiDropDown.updateDimensions();
+      // this.allegatiDropDown.show();
     }
   }
 
@@ -405,6 +450,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.allegatoSelezionato = null;
     }
+  }
+
+  public manageRowSelected(event: { sonoPersonaVedenteSuDocSelezionato: boolean }) {
+    this.sonoPersonaVedenteSuDocSelezionato = event.sonoPersonaVedenteSuDocSelezionato;
   }
 
   public setAnteprimaUrl() {

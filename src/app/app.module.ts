@@ -67,7 +67,7 @@ import { loginModuleConfig } from "./config/module-config";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
 
-import { CommonComponentsModule, HeaderModule, HeaderFeaturesModule } from "@bds/common-components";
+import { CommonComponentsModule, HeaderModule, HeaderFeaturesModule, PreviewModule } from "@bds/common-components";
 import { DatiBolloVirtualeComponent } from "./tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component";
 import { RaccoltaSempliceComponent } from "./tabelle/raccolta-semplice/raccolta-semplice.component";
 import { InserimentoManualeComponent } from "./tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component";
@@ -78,8 +78,10 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterjobs.component";
 import { NgIdleKeepaliveModule } from "@ng-idle/keepalive";
 import { SplitterModule } from "primeng/splitter";
+import { AttachmentsBoxModule } from "@bds/common-components";
 
 import { appConfig } from "./app.config";
+import { DocService } from "@bds/internauta-model";
 @NgModule({
   declarations: [
     AppComponent,
@@ -142,6 +144,8 @@ import { appConfig } from "./app.config";
     SplitterModule,
     CheckboxModule,
     NgIdleKeepaliveModule.forRoot(),
+    AttachmentsBoxModule,
+    PreviewModule,
   ],
   providers: [
     AttivitaService,
@@ -154,6 +158,7 @@ import { appConfig } from "./app.config";
     BolloVirtualeService,
     RaccoltaSempliceService,
     ExtendedAllegatoService,
+    DocService,
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
     provideHttpClient(withInterceptorsFromDi()),
     ...appConfig.providers,
