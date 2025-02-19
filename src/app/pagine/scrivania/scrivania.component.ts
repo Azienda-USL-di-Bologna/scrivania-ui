@@ -364,17 +364,21 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
             filtersAndSorts.addFilter(
               new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().idPersona.id)
             );
-            this.projectedDocDetailWithPermessoDocService
-              .getData("ProjectedDocDetailWithPermessoDocWithIdAziendaAndPermessiDocList", filtersAndSorts, null, null)
-              .subscribe((data: any) => {
-                this.docDetailView = data.results[0] as ProjectedDocDetailWithPermessoDoc;
-                const permessoDoc = this.docDetailView.permessiDocList.filter(
-                  (a) => a.fk_idPersona.id == this.loggedUser.getUtente().idPersona.id
-                )[0] as PermessoDoc;
-                if (permessoDoc && permessoDoc.bitVisibilita >= 2) {
-                  this.sonoPersonaVedenteSuDocSelezionato = true;
-                }
-              });
+            this.projectedDocDetailWithPermessoDocService.getData(null, filtersAndSorts, null, null).subscribe((data: any) => {
+              this.docDetailView = data.results[0] as ProjectedDocDetailWithPermessoDoc;
+              this.docDetailView.idAzienda = this.docDetailView["idAziendaJson"];
+              this.docDetailView.idPersonaRedattrice = this.docDetailView["idPersonaRedattriceJson"];
+              this.docDetailView.idPersonaResponsabileProcedimento = this.docDetailView["idPersonaResponsabileProcedimentoJson"];
+              this.docDetailView.idApplicazione = this.docDetailView["idApplicazioneJson"];
+              this.docDetailView.archiviDocList = this.docDetailView["archiviDocListJson"];
+              this.docDetailView.idStrutturaRegistrazione = this.docDetailView["idStrutturaRegistrazioneJson"];
+              // const permessoDoc = this.docDetailView.permessiDocList.filter(
+              //   (a) => a.fk_idPersona.id == this.loggedUser.getUtente().idPersona.id
+              // )[0] as PermessoDoc;
+              if (this.docDetailView && this.docDetailView.bitVisibilita >= 2) {
+                this.sonoPersonaVedenteSuDocSelezionato = true;
+              }
+            });
           }
         }
 
@@ -735,6 +739,30 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.scrivaniaService
       .generateAvcp(this.avcpCalendarDate.getFullYear(), this.avcpIdAzienda)
       .subscribe((zip) => UtilityFunctions.downLoadFile(zip, "application/zip", "avcp.zip"));
+  }
+
+  public getFrontedAppUrl(app: string): string {
+    const wl = window.location;
+    let port = wl.port;
+    app = "/" + app;
+    //port = wl.port;
+    if (wl.hostname === "localhost") {
+      //return "https://gdml.internal.ausl.bologna.it/" + app;
+      port = "4200";
+      app = "";
+    }
+
+    const out: string = wl.protocol + "//" + wl.hostname + (port ? ":" + port : "") + app;
+    return out;
+  }
+  public openDocInScripta() {
+    const url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + this.docDetailView.id;
+    const encodeParams = false;
+    const addPassToken = true;
+    const addRichiestaParam = false;
+    this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
+      console.log("urlAperto:", url);
+    });
   }
 
   /* darkmodeIcon = "pi pi-sun";
