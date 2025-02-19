@@ -11,38 +11,29 @@ import {
   QueryList,
   Renderer2,
   ElementRef,
-  Inject,
 } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
-import { Attivita, ConfigurazioneService, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
-import { JWTModuleConfig, JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
+import { Attivita, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
 import { Calendar } from "primeng/calendar";
-
-import {
-  IntimusClientService,
-  IntimusCommand,
-  IntimusCommands,
-  LOCAL_IT,
-  RefreshAttivitaParams,
-  UtilityFunctions,
-} from "@bds/common-tools";
+import { IntimusClientService, IntimusCommand, IntimusCommands, LOCAL_IT, RefreshAttivitaParams } from "@bds/common-tools";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 import Bowser from "bowser";
 
 @Component({
-    selector: "app-attivita",
-    templateUrl: "./attivita.component.html",
-    styleUrls: ["./attivita.component.scss"],
-    providers: [DatePipe],
-    standalone: false
+  selector: "app-attivita",
+  templateUrl: "./attivita.component.html",
+  styleUrls: ["./attivita.component.scss"],
+  providers: [DatePipe],
+  standalone: false,
 })
 export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewInit {
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
@@ -468,20 +459,61 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   public apriAttivita(attivita: Attivita) {
-    const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
+    console.log("Apertura attivita", attivita);
+
     this.selectIndex(this.attivita.indexOf(attivita));
-    if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
-      const encodeParams =
-        attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
-        attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
-      const addRichiestaParam = true;
+
+    const usaFlussiInternauta =
+      this.loggedUser
+        .getUtente()
+        .aziendeAttive.filter(
+          (a) =>
+            a.id === attivita.idAzienda.id &&
+            a.parametriAzienda.hasOwnProperty("abilitaFlussiInternauta") &&
+            JSON.parse(a.parametriAzienda.abilitaFlussiInternauta)
+        ).length === 1;
+
+    if (usaFlussiInternauta) {
+      const url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + attivita.datiAggiuntivi.id_doc;
+      const encodeParams = false;
       const addPassToken = true;
-      this.loginService
-        .buildInterAppUrl(compiledUrlsJsonArray[0].url, encodeParams, addRichiestaParam, addPassToken, true)
-        .subscribe((url: string) => {
-          console.log("urlAperto:", url);
-        });
+      const addRichiestaParam = false;
+      this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
+        console.log("urlAperto:", url);
+      });
+    } else {
+      const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
+      if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
+        const encodeParams =
+          attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
+          attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
+        const addRichiestaParam = true;
+        const addPassToken = true;
+        this.loginService
+          .buildInterAppUrl(compiledUrlsJsonArray[0].url, encodeParams, addRichiestaParam, addPassToken, true)
+          .subscribe((url: string) => {
+            console.log("urlAperto:", url);
+          });
+      }
     }
+  }
+
+  /**
+   * Crea l'url di una app frontend
+   * */
+  public getFrontedAppUrl(app: string): string {
+    const wl = window.location;
+    let port = wl.port;
+    app = "/" + app;
+    //port = wl.port;
+    if (wl.hostname === "localhost") {
+      //return "https://gdml.internal.ausl.bologna.it/" + app;
+      port = "4200";
+      app = "";
+    }
+
+    const out: string = wl.protocol + "//" + wl.hostname + (port ? ":" + port : "") + app;
+    return out;
   }
 
   public deleteAttivita(event: MouseEvent, attivita: Attivita) {
