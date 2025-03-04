@@ -384,9 +384,10 @@
           *ngIf="docDetailView"
           [doc]="docDetailView"
           [sonoPersonaVedenteSuDocSelezionato]="sonoPersonaVedenteSuDocSelezionato"
-          [config]="attachmentsBoxConfig"
+          [config]="previewConfig"
           (closeRightPanel)="manageRowSelected({ sonoPersonaVedenteSuDocSelezionato: null })"
           (openDocInScripta)="openDocInScripta()"
+          [datiAggiuntiviAttivita]="attivitaSelezionata.datiAggiuntivi"
         >
         </lib-preview>
         <!-- <div class="allegati-dropdown">

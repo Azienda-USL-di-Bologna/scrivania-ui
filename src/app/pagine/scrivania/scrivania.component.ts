@@ -25,7 +25,7 @@ import { ParametroAziende } from "@bds/internauta-model";
 import { ConfigurazioneService } from "@bds/internauta-model";
 import { LOCAL_IT, UtilityFunctions } from "@bds/common-tools";
 import Bowser from "bowser";
-import { AttachmentsBoxConfig } from "@bds/common-components";
+import { AttachmentsBoxConfig, PreviewConfig } from "@bds/common-components";
 import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
 
 @Component({
@@ -116,6 +116,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public showRaccoltaSemplice: boolean = false;
   public tabellaDaRefreshare: any = { name: "" };
   public attachmentsBoxConfig: AttachmentsBoxConfig;
+  public previewConfig: PreviewConfig;
   public sonoPersonaVedenteSuDocSelezionato: boolean = true;
   constructor(
     private impostazioniService: ImpostazioniService,
@@ -129,6 +130,11 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.attachmentsBoxConfig.showPreview = true;
     this.attachmentsBoxConfig.showInfoVersamento = false;
     this.attachmentsBoxConfig.showHeader = false;
+    this.previewConfig = new PreviewConfig();
+    this.previewConfig.showDatiDiFlusso = true;
+    this.previewConfig.showDatiDocumento = true;
+    this.previewConfig.showClosePanel = false;
+    this.previewConfig.attachmentsBoxConfig = this.attachmentsBoxConfig;
   }
 
   ngOnInit() {
