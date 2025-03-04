@@ -473,28 +473,34 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
             JSON.parse(a.parametriAzienda.abilitaFlussiInternauta)
         ).length === 1;
 
+    const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
+    const encodeParams =
+      attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
+      attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
+    const addRichiestaParam = true;
+    const addPassToken = true;
+    let url;
     if (usaFlussiInternauta) {
-      const url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + attivita.datiAggiuntivi.id_doc;
-      const encodeParams = false;
-      const addPassToken = true;
-      const addRichiestaParam = false;
+      if (attivita.datiAggiuntivi?.id_doc) {
+        url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + attivita.datiAggiuntivi.id_doc;
+      } else {
+        url = compiledUrlsJsonArray[0].url;
+      }
+      // const encodeParams = false;
+      // const addPassToken = true;
+      // const addRichiestaParam = false;
+      // this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
+      //   console.log("urlAperto:", url);
+      // });
+    } else {
+      if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
+        url = compiledUrlsJsonArray[0].url;
+      }
+    }
+    if (url) {
       this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
         console.log("urlAperto:", url);
       });
-    } else {
-      const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
-      if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
-        const encodeParams =
-          attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
-          attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
-        const addRichiestaParam = true;
-        const addPassToken = true;
-        this.loginService
-          .buildInterAppUrl(compiledUrlsJsonArray[0].url, encodeParams, addRichiestaParam, addPassToken, true)
-          .subscribe((url: string) => {
-            console.log("urlAperto:", url);
-          });
-      }
     }
   }
 
