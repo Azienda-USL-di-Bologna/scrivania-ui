@@ -480,7 +480,9 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const addRichiestaParam = true;
     const addPassToken = true;
     let url;
+    let tabName;
     if (usaFlussiInternauta) {
+      tabName = "Gedi Internauta";
       if (attivita.datiAggiuntivi?.id_doc) {
         url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + attivita.datiAggiuntivi.id_doc;
       } else {
@@ -498,9 +500,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       }
     }
     if (url) {
-      this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
-        console.log("urlAperto:", url);
-      });
+      this.loginService
+        .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, tabName)
+        .subscribe((url: string) => {
+          console.log("urlAperto:", url);
+        });
     }
   }
 
