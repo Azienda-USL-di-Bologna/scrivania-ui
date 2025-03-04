@@ -501,7 +501,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     }
     if (url) {
       this.loginService
-        .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, tabName)
+        .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, tabName)
         .subscribe((url: string) => {
           console.log("urlAperto:", url);
         });
