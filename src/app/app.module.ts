@@ -29,15 +29,15 @@ import { BolloVirtualeService } from "./tabelle/dati-bollo-virtuale/bollo-virtua
 
 /* PrimeNG component */
 import { RadioButtonModule } from "primeng/radiobutton";
+import { ButtonModule } from "primeng/button";
 import { AccordionModule } from "primeng/accordion";
 import { PanelModule } from "primeng/panel";
-import { DropdownModule } from "primeng/dropdown";
+import { SelectModule } from "primeng/select";
 import { TableModule } from "primeng/table";
-import { CalendarModule } from "primeng/calendar";
 import { TooltipModule } from "primeng/tooltip";
+import { DatePickerModule } from "primeng/datepicker";
 import { InputSwitchModule } from "primeng/inputswitch";
 import { MenubarModule } from "primeng/menubar";
-import { SlideMenuModule } from "primeng/slidemenu";
 import { DynamicDialogModule } from "primeng/dynamicdialog";
 import { ContextMenuModule } from "primeng/contextmenu";
 import { InputTextModule } from "primeng/inputtext";
@@ -67,7 +67,7 @@ import { loginModuleConfig } from "./config/module-config";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { ImpostazioniService } from "./services/impostazioni.service";
 
-import { CommonComponentsModule, HeaderModule, HeaderFeaturesModule } from "@bds/common-components";
+import { CommonComponentsModule, HeaderModule, HeaderFeaturesModule, PreviewModule } from "@bds/common-components";
 import { DatiBolloVirtualeComponent } from "./tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component";
 import { RaccoltaSempliceComponent } from "./tabelle/raccolta-semplice/raccolta-semplice.component";
 import { InserimentoManualeComponent } from "./tabelle/raccolta-semplice/inserimento-manuale/inserimento-manuale.component";
@@ -78,7 +78,10 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterjobs.component";
 import { NgIdleKeepaliveModule } from "@ng-idle/keepalive";
 import { SplitterModule } from "primeng/splitter";
+import { AttachmentsBoxModule } from "@bds/common-components";
 
+import { appConfig } from "./app.config";
+import { DocService } from "@bds/internauta-model";
 @NgModule({
   declarations: [
     AppComponent,
@@ -101,12 +104,12 @@ import { SplitterModule } from "primeng/splitter";
     BrowserAnimationsModule,
     AccordionModule,
     PanelModule,
-    DropdownModule,
+    SelectModule,
     TableModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: false }),
     FormsModule,
     ReactiveFormsModule,
-    CalendarModule,
+    DatePickerModule,
     TooltipModule,
     InputTextModule,
     OverlayPanelModule,
@@ -115,7 +118,6 @@ import { SplitterModule } from "primeng/splitter";
     AutoCompleteModule,
     InputSwitchModule,
     MenubarModule,
-    SlideMenuModule,
     DynamicDialogModule,
     ContextMenuModule,
     ToastModule,
@@ -129,6 +131,7 @@ import { SplitterModule } from "primeng/splitter";
     HeaderFeaturesModule,
     ProgressSpinnerModule,
     MatIconModule,
+    ButtonModule,
     RadioButtonModule,
     BlockUIModule,
     ListboxModule,
@@ -141,6 +144,8 @@ import { SplitterModule } from "primeng/splitter";
     SplitterModule,
     CheckboxModule,
     NgIdleKeepaliveModule.forRoot(),
+    AttachmentsBoxModule,
+    PreviewModule,
   ],
   providers: [
     AttivitaService,
@@ -153,8 +158,10 @@ import { SplitterModule } from "primeng/splitter";
     BolloVirtualeService,
     RaccoltaSempliceService,
     ExtendedAllegatoService,
+    DocService,
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
     provideHttpClient(withInterceptorsFromDi()),
+    ...appConfig.providers,
   ],
 })
 export class AppModule {}

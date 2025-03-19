@@ -1,5 +1,18 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, AfterViewInit } from "@angular/core";
-import { Attivita, UrlsGenerationStrategy, ItemMenu, CommandType, CODICI_RUOLO } from "@bds/internauta-model";
+import {
+  Attivita,
+  UrlsGenerationStrategy,
+  ItemMenu,
+  CommandType,
+  CODICI_RUOLO,
+  DocService,
+  ENTITIES_STRUCTURE,
+  DocDetailView,
+  DocDetailViewService,
+  ProjectedDocDetailWithPermessoDoc,
+  ProjectedDocDetailWithPermessoDocService,
+  PermessoDoc,
+} from "@bds/internauta-model";
 import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
@@ -12,18 +25,21 @@ import { ParametroAziende } from "@bds/internauta-model";
 import { ConfigurazioneService } from "@bds/internauta-model";
 import { LOCAL_IT, UtilityFunctions } from "@bds/common-tools";
 import Bowser from "bowser";
+import { AttachmentsBoxConfig, PreviewConfig } from "@bds/common-components";
+import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
 
 @Component({
   selector: "app-scrivania",
   templateUrl: "./scrivania.component.html",
   styleUrls: ["./scrivania.component.scss"],
+  standalone: false,
 })
 export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public mostraStorico: boolean = false;
   public mostraMonitorMasterjobs: boolean = false;
 
   @ViewChild("anteprima") private anteprima: ElementRef;
-  @ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
+  //@ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
 
   @ViewChild("leftSide") private leftSide: ElementRef;
   @ViewChild("rightSide") private rightSide: ElementRef;
@@ -46,11 +62,12 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public datiFlussoTooltip: string = null;
 
   public localIt = LOCAL_IT;
-
+  public idDoc: number;
   public buttonAvcpEnabled = false;
   public showAvcpDialog = false;
   public avcpCalendarDate: Date = new Date();
   public avcpIdAzienda = 13;
+  public docDetailView: ProjectedDocDetailWithPermessoDoc;
 
   public finestreApribili: any[] = [
     {
@@ -98,13 +115,27 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public showBolli: boolean = false;
   public showRaccoltaSemplice: boolean = false;
   public tabellaDaRefreshare: any = { name: "" };
+  public attachmentsBoxConfig: AttachmentsBoxConfig;
+  public previewConfig: PreviewConfig;
+  public sonoPersonaVedenteSuDocSelezionato: boolean = true;
   constructor(
     private impostazioniService: ImpostazioniService,
     private scrivaniaService: ScrivaniaService,
     private loginService: JwtLoginService,
     private confirmationService: ConfirmationService,
-    private configurazioneService: ConfigurazioneService
-  ) {}
+    private configurazioneService: ConfigurazioneService,
+    private projectedDocDetailWithPermessoDocService: ProjectedDocDetailWithPermessoDocService
+  ) {
+    this.attachmentsBoxConfig = new AttachmentsBoxConfig();
+    this.attachmentsBoxConfig.showPreview = true;
+    this.attachmentsBoxConfig.showInfoVersamento = false;
+    this.attachmentsBoxConfig.showHeader = false;
+    this.previewConfig = new PreviewConfig();
+    this.previewConfig.showDatiDiFlusso = true;
+    this.previewConfig.showDatiDocumento = true;
+    this.previewConfig.showClosePanel = false;
+    this.previewConfig.attachmentsBoxConfig = this.attachmentsBoxConfig;
+  }
 
   ngOnInit() {
     console.log("scivania ngOnInit()");
@@ -174,7 +205,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       })
     );
 
-    this.allegatiDropDown.disabled = true;
+    //this.allegatiDropDown.disabled = true;
   }
 
   public openMenuUrl: (value: ItemMenu) => void = (item: ItemMenu): void => {
@@ -331,6 +362,31 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         this.oggetto = this.attivitaSelezionata.oggetto;
         const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
         if (datiAggiuntiviAttivita) {
+          console.log(datiAggiuntiviAttivita.id_doc);
+          this.idDoc = datiAggiuntiviAttivita.id_doc as number;
+          if (this.idDoc) {
+            const filtersAndSorts: FiltersAndSorts = new FiltersAndSorts();
+            filtersAndSorts.addFilter(new FilterDefinition("id", FILTER_TYPES.not_string.equals, this.idDoc));
+            filtersAndSorts.addFilter(
+              new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().idPersona.id)
+            );
+            this.projectedDocDetailWithPermessoDocService.getData(null, filtersAndSorts, null, null).subscribe((data: any) => {
+              this.docDetailView = data.results[0] as ProjectedDocDetailWithPermessoDoc;
+              this.docDetailView.idAzienda = this.docDetailView["idAziendaJson"];
+              this.docDetailView.idPersonaRedattrice = this.docDetailView["idPersonaRedattriceJson"];
+              this.docDetailView.idPersonaResponsabileProcedimento = this.docDetailView["idPersonaResponsabileProcedimentoJson"];
+              this.docDetailView.idApplicazione = this.docDetailView["idApplicazioneJson"];
+              this.docDetailView.archiviDocList = this.docDetailView["archiviDocListJson"];
+              this.docDetailView.idStrutturaRegistrazione = this.docDetailView["idStrutturaRegistrazioneJson"];
+              // const permessoDoc = this.docDetailView.permessiDocList.filter(
+              //   (a) => a.fk_idPersona.id == this.loggedUser.getUtente().idPersona.id
+              // )[0] as PermessoDoc;
+              if (this.docDetailView && this.docDetailView.bitVisibilita >= 2) {
+                this.sonoPersonaVedenteSuDocSelezionato = true;
+              }
+            });
+          }
+
           this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
           let destinatariA, destinatariCC: string;
           if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
@@ -359,41 +415,41 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
           this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
           this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
         }
-
-        this.allegati = [];
-        if (this.allegatiDropDown) {
-          // Se non c'è this.allegatiDropDown con ogni probabilità è perché la anteprima è settata come non visbile
-          this.allegatiDropDown.clear(null);
-          let allegatiAttivita: any[] = null;
-          if (this.attivitaSelezionata.allegati && this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
-            allegatiAttivita = this.attivitaSelezionata.allegati;
-          }
-          if (allegatiAttivita) {
-            allegatiAttivita.sort((a: any, b: any) => {
-              if (a.default) {
-                return -1;
-              } else if (a.default && b.default) {
-                return 0;
-              } else {
-                return 1;
-              }
-            });
-            allegatiAttivita.forEach((element) => {
-              this.allegati.push({ label: this.shrinkFileName(element.nome_file), value: element });
-            });
-            this.allegatoSelected({ value: this.allegati[0].value });
-          } else {
-            this.noAnteprima = true;
-          }
-          if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
-            this.allegati = [{ label: "Documenti non presenti", value: null }];
-            this.allegatiDropDown.disabled = true;
-          }
-        }
-
-        // this.allegatiDropDown.updateDimensions();
-        // this.allegatiDropDown.show();
       }
+
+      this.allegati = [];
+      // if (this.allegatiDropDown) {
+      //   // Se non c'è this.allegatiDropDown con ogni probabilità è perché la anteprima è settata come non visbile
+      //   this.allegatiDropDown.clear(null);
+      //   let allegatiAttivita: any[] = null;
+      //   if (this.attivitaSelezionata.allegati && this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
+      //     allegatiAttivita = this.attivitaSelezionata.allegati;
+      //   }
+      //   if (allegatiAttivita) {
+      //     allegatiAttivita.sort((a: any, b: any) => {
+      //       if (a.default) {
+      //         return -1;
+      //       } else if (a.default && b.default) {
+      //         return 0;
+      //       } else {
+      //         return 1;
+      //       }
+      //     });
+      //     allegatiAttivita.forEach((element) => {
+      //       this.allegati.push({ label: this.shrinkFileName(element.nome_file), value: element });
+      //     });
+      //     this.allegatoSelected({ value: this.allegati[0].value });
+      //   } else {
+      //     this.noAnteprima = true;
+      //   }
+      //   if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
+      //     this.allegati = [{ label: "Documenti non presenti", value: null }];
+      //     this.allegatiDropDown.disabled = true;
+      //   }
+      // }
+
+      // this.allegatiDropDown.updateDimensions();
+      // this.allegatiDropDown.show();
     }
   }
 
@@ -404,6 +460,10 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.allegatoSelezionato = null;
     }
+  }
+
+  public manageRowSelected(event: { sonoPersonaVedenteSuDocSelezionato: boolean }) {
+    this.sonoPersonaVedenteSuDocSelezionato = event.sonoPersonaVedenteSuDocSelezionato;
   }
 
   public setAnteprimaUrl() {
@@ -638,10 +698,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.idAzienda = event;
   }
 
-  public onNoteClick(attivita: any) {
-    this.showNote = (this.noteText = attivita.note) !== null;
-  }
-
   ngOnDestroy(): void {
     if (this.subscriptions && this.subscriptions.length > 0) {
       while (this.subscriptions.length > 0) {
@@ -690,6 +746,42 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       .generateAvcp(this.avcpCalendarDate.getFullYear(), this.avcpIdAzienda)
       .subscribe((zip) => UtilityFunctions.downLoadFile(zip, "application/zip", "avcp.zip"));
   }
+
+  public getFrontedAppUrl(app: string): string {
+    const wl = window.location;
+    let port = wl.port;
+    app = "/" + app;
+    //port = wl.port;
+    if (wl.hostname === "localhost") {
+      //return "https://gdml.internal.ausl.bologna.it/" + app;
+      port = "4200";
+      app = "";
+    }
+
+    const out: string = wl.protocol + "//" + wl.hostname + (port ? ":" + port : "") + app;
+    return out;
+  }
+  public openDocInScripta() {
+    const url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + this.docDetailView.id;
+    const encodeParams = false;
+    const addPassToken = true;
+    const addRichiestaParam = false;
+    this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
+      console.log("urlAperto:", url);
+    });
+  }
+
+  /* darkmodeIcon = "pi pi-sun";
+
+  toggleDarkMode() {
+    const element = document.querySelector("html");
+    element.classList.toggle("my-app-dark");
+    if (this.darkmodeIcon === "pi pi-sun") {
+      this.darkmodeIcon = "pi pi-moon";
+    } else {
+      this.darkmodeIcon = "pi pi-sun";
+    }
+  } */
 }
 
 class TreeNode {

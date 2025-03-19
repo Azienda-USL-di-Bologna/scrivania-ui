@@ -14,11 +14,7 @@ export class ScrivaniaService extends NextSDREntityProvider {
   private getAnteprimaServlet: string = "getAnteprima";
   // private blobEmitter: BehaviorSubject<any> = new BehaviorSubject(new URL("http:// localhost:4200/assets/images/no_anteprima.png"));
 
-  constructor(
-    protected http: HttpClient,
-    protected datepipe: DatePipe,
-    private loginService: JwtLoginService
-  ) {
+  constructor(protected http: HttpClient, protected datepipe: DatePipe, private loginService: JwtLoginService) {
     super(http, datepipe, ENTITIES_STRUCTURE.scrivania.menu, getInternautaUrl(BaseUrlType.Scrivania));
   }
 
@@ -109,11 +105,11 @@ export class ScrivaniaService extends NextSDREntityProvider {
     return this.http.get(url) as Observable<ItemMenu[]>;
   }
 
-  public generateAvcp(year: number, idAzienda: number) : Observable<any>  {
+  public generateAvcp(year: number, idAzienda: number): Observable<any> {
     const url: string = getInternautaUrl(BaseUrlType.Lotti) + CONTROLLERS_ENDPOINT.GENERATE_AVCP_XML;
     const httpOptions = {
-      responseType: "blob"
+      responseType: "blob",
     };
-    return this.http.get(url+"?anno="+year+"&idAzienda="+idAzienda, {      responseType: "blob"    }) as Observable<any>;
+    return this.http.get(url + "?anno=" + year + "&idAzienda=" + idAzienda, { responseType: "blob" }) as Observable<any>;
   }
 }

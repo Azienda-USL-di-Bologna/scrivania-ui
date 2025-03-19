@@ -11,9 +11,10 @@ import { ExtendedJobService } from "./extendend-job.service";
 import { cols } from "./job-constants";
 
 @Component({
-  selector: "monitor-masterjobs",
-  templateUrl: "./monitor-masterjobs.component.html",
-  styleUrls: ["./monitor-masterjobs.component.scss"],
+    selector: "monitor-masterjobs",
+    templateUrl: "./monitor-masterjobs.component.html",
+    styleUrls: ["./monitor-masterjobs.component.scss"],
+    standalone: false
 })
 export class MonitorMasterjobsComponent implements OnInit {
   private subscriptions: Subscription[] = [];
