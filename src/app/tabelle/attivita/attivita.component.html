@@ -11,7 +11,7 @@
   #dt
   [lazy]="true"
   (onLazyLoad)="handleEvent('onLazyLoad', $event)"
-  [value]="attivita"
+  [value]="attivita()"
   [columns]="doNotShowAziendaHeader(cols)"
   [paginator]="true"
   [rows]="LOADED_ROWS"
