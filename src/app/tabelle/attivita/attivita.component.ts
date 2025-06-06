@@ -11,6 +11,7 @@ import {
   QueryList,
   Renderer2,
   ElementRef,
+  signal,
 } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "primeng/api";
@@ -43,7 +44,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private intimusSubscribbed = false;
 
   public LOADED_ROWS = 50;
-  public attivita: Attivita[];
+  //public attivita: Attivita[];
+  public attivita = signal<Attivita[]>([]);
   public totalRecords: number;
   public localIt = LOCAL_IT;
 
@@ -204,7 +206,11 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
                 data = data.results[0];
                 this.setAttivitaIcon(data);
                 data.datiAggiuntivi = data.datiAggiuntivi;
-                this.attivita.unshift(data);
+                //this.attivita.unshift(data);
+                this.attivita.update((oldAttivita) => {
+                  const newAttivita = [data, ...oldAttivita];
+                  return newAttivita;
+                });
               }
             });
           break;
@@ -219,23 +225,30 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
                 console.log("DATA", data);
                 data = data.results[0];
                 data.datiAggiuntivi = data.datiAggiuntivi;
-                const idAttivitaToReplace = this.attivita.findIndex((attivita) => attivita.id === idAttivitaToRefresh);
+                const idAttivitaToReplace = this.attivita().findIndex((attivita) => attivita.id === idAttivitaToRefresh);
                 if (idAttivitaToReplace >= 0) {
                   this.setAttivitaIcon(data);
-                  this.attivita[idAttivitaToReplace] = data;
-                  console.log("1 = ", this.attivita[idAttivitaToReplace].aperta);
+                  //this.attivita[idAttivitaToReplace] = data;
+                  this.attivita.update((oldAttivita) => {
+                    const newAttivita = [...oldAttivita];
+                    newAttivita[idAttivitaToReplace] = data;
+                    return newAttivita;
+                  });
                   this.attivitaEmitter.emit(data);
-                  console.log("2 = ", this.attivita[idAttivitaToReplace].aperta);
-                  this.dataTable.selection = this.attivita[this.selectedRowIndex];
-                  console.log("3 = ", this.attivita[idAttivitaToReplace].aperta);
+                  this.dataTable.selection = this.attivita()[this.selectedRowIndex];
                 }
               }
             });
           break;
         case "DELETE":
-          const idAttivitaToDelete = this.attivita.findIndex((attivita) => attivita.id === idAttivitaToRefresh);
+          const idAttivitaToDelete = this.attivita().findIndex((attivita) => attivita.id === idAttivitaToRefresh);
           if (idAttivitaToDelete >= 0) {
-            this.attivita.splice(idAttivitaToDelete, 1);
+            //this.attivita.splice(idAttivitaToDelete, 1);
+            this.attivita.update((oldAttivita) => {
+              const newAttivita = [...oldAttivita];
+              newAttivita.splice(idAttivitaToDelete, 1);
+              return newAttivita;
+            });
           }
           this.attivitaEmitter.emit(null);
           break;
@@ -264,9 +277,15 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     attivitaToUpdate.aperta = !attivitaSelezionata.aperta;
     attivitaToUpdate.version = attivitaSelezionata.version;
     this.attivitaService.patchHttpCall(attivitaToUpdate, attivitaToUpdate.id).subscribe((attivitaAggiornata: Attivita) => {
-      const indexAttivitaToReplace: number = this.attivita.findIndex((a) => a.id === attivitaAggiornata.id);
-      this.attivita[indexAttivitaToReplace].aperta = attivitaToUpdate.aperta;
-      this.attivita[indexAttivitaToReplace].version = attivitaAggiornata.version;
+      const indexAttivitaToReplace: number = this.attivita().findIndex((a) => a.id === attivitaAggiornata.id);
+      // this.attivita[indexAttivitaToReplace].aperta = attivitaToUpdate.aperta;
+      // this.attivita[indexAttivitaToReplace].version = attivitaAggiornata.version;
+      this.attivita.update((oldAttivita) => {
+        const newAttivita = [...oldAttivita];
+        newAttivita[indexAttivitaToReplace].aperta = attivitaToUpdate.aperta;
+        newAttivita[indexAttivitaToReplace].version = attivitaAggiornata.version;
+        return newAttivita;
+      });
     });
   }
 
@@ -323,26 +342,36 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   public selectIndex(index: number) {
     console.log("Index of the row: ", index, "Table Index, selectexRowIndex: ", this.selectedRowIndex);
-    if (index < 0 || index >= this.attivita.length) {
+    if (index < 0 || index >= this.attivita().length) {
       return;
     }
-    console.log("Controllo supertao: ", this.attivita[index]);
+
     this.selectedRowIndex = index;
-    this.dataTable.selection = this.attivita[this.selectedRowIndex];
-    const attivitaSelezionata: Attivita = this.attivita[this.selectedRowIndex];
+    this.dataTable.selection = this.attivita()[this.selectedRowIndex];
+    const attivitaSelezionata: Attivita = this.attivita()[this.selectedRowIndex];
     if (!attivitaSelezionata.aperta) {
       // se l'attivita non è letta la metto come letta
-      attivitaSelezionata.aperta = !attivitaSelezionata.aperta;
-      this.attivitaService.update(attivitaSelezionata).subscribe((a: Attivita) => {
-        this.attivita[this.selectedRowIndex].version = a.version;
-        attivitaSelezionata.version = a.version;
+      //attivitaSelezionata.aperta = !attivitaSelezionata.aperta;
+      const attivitaToUpdate: Attivita = new Attivita();
+      attivitaToUpdate.id = attivitaSelezionata.id;
+      attivitaToUpdate.aperta = !attivitaSelezionata.aperta;
+      attivitaToUpdate.version = attivitaSelezionata.version;
+      this.attivitaService.patchHttpCall(attivitaToUpdate, attivitaToUpdate.id).subscribe((a: Attivita) => {
+        //this.attivita[this.selectedRowIndex].version = a.version;
+        this.attivita.update((oldAttivita) => {
+          const newAttivita = [...oldAttivita];
+          newAttivita[this.selectedRowIndex].aperta = a.aperta;
+          newAttivita[this.selectedRowIndex].version = a.version;
+          return newAttivita;
+        });
+        //attivitaSelezionata.version = a.version;
       });
     }
     this.attivitaEmitter.emit(this.dataTable.selection);
   }
 
   public rowSelect(event: any) {
-    this.selectIndex(this.attivita.indexOf(event.data));
+    this.selectIndex(this.attivita().indexOf(event.data));
   }
 
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
@@ -408,14 +437,15 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         pageConfing
       )
       .subscribe((data) => {
-        this.attivita = undefined;
+        this.attivita.set([]);
         this.totalRecords = 0;
         if (data && data.results && data.page) {
-          this.attivita = <Attivita[]>data.results;
+          //this.attivita = <Attivita[]>data.results;
+          const attivitaRes = <Attivita[]>data.results;
           this.totalRecords = data.page.totalElements;
           /* console.log("ATTIVITA: ", this.attivita); */
           // console.log(this.componentDescription, functionName, "struttureUnificate: ", this.struttureUnificate);
-          this.attivita.forEach((attivita: Attivita) => {
+          attivitaRes.forEach((attivita: Attivita) => {
             this.setAttivitaIcon(attivita);
             // console.log("carica", a.datiAggiuntivi);
             //a.datiAggiuntivi = JSON.parse(a.datiAggiuntivi); // l'ho messa qua e tolta da dentro setAttivitaIcon perché andava in errore (l.s.)
@@ -441,6 +471,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
               attivita["anteprimaNonDisponibile"] = "Non disponibile";
             }
           });
+          this.attivita.set(attivitaRes);
         }
         this.loading = false;
       });
@@ -461,7 +492,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   public apriAttivita(attivita: Attivita) {
     console.log("Apertura attivita", attivita);
 
-    this.selectIndex(this.attivita.indexOf(attivita));
+    this.selectIndex(this.attivita().indexOf(attivita));
 
     const usaFlussiInternauta =
       this.loggedUser
