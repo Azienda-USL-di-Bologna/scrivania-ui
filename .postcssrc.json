@@ -1,5 +1,21 @@
 {
   "plugins": {
-    "@tailwindcss/postcss": {}
+    "@tailwindcss/postcss": {},
+    "tailwindcss": {
+      "content": [
+        "./src/**/*.{html,ts}",
+        "./node_modules/tua-libreria/**/*.{html,ts,js}"
+      ],
+      "safelist": [
+        "text-2xl",
+        "text-xs",
+        "font-bold",
+        "dark:text-white",
+        "mx-6",
+        "my-6",
+        "flex", "flex-row", "w-full", "justify-end"
+      ]
+    },
+    "autoprefixer": {}
   }
 }
