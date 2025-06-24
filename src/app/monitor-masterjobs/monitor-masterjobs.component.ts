@@ -9,6 +9,7 @@ import { LazyLoadEvent } from "primeng/api";
 import { Subscription } from "rxjs";
 import { ExtendedJobService } from "./extendend-job.service";
 import { cols } from "./job-constants";
+import { ExtendedToolsService } from "./extendend-tools.service";
 
 @Component({
     selector: "monitor-masterjobs",
@@ -35,6 +36,7 @@ export class MonitorMasterjobsComponent implements OnInit {
   constructor(
     private loginService: JwtLoginService,
     private jobService: ExtendedJobService,
+    private toolsService: ExtendedToolsService,
     private datepipe: DatePipe
   ) {}
 
@@ -54,6 +56,17 @@ export class MonitorMasterjobsComponent implements OnInit {
   public regenerateQueue(): void {
     this.spinActive = true;
     this.jobService.regenerateQueue().subscribe({
+      next: (res) => {
+        console.log("fatto");
+        this.spinActive = false;
+      },
+      error: async (err) => {},
+    });
+  }
+
+  public flushCache(): void {
+    this.spinActive = true;
+    this.toolsService.flushCache().subscribe({
       next: (res) => {
         console.log("fatto");
         this.spinActive = false;
