@@ -385,6 +385,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.sonoPersonaVedenteSuDocSelezionato = true;
               }
             });
+          } else {
+            this.docDetailView = null;
           }
 
           this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
