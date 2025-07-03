@@ -390,6 +390,12 @@
           [datiAggiuntiviAttivita]="attivitaSelezionata.datiAggiuntivi"
         >
         </lib-preview>
+        <div
+          class="flex justify-center h-full"
+          *ngIf="!docDetailView"
+        >
+          <h1 class="font-bold self-center">Selezionare un'attività per visualizzarne il dettaglio</h1>
+        </div>
         <!-- <div class="allegati-dropdown">
           <p-select
             #allegatiDropDown

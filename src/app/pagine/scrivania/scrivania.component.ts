@@ -385,6 +385,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.sonoPersonaVedenteSuDocSelezionato = true;
               }
             });
+          } else {
+            this.docDetailView = null;
           }
 
           this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
@@ -414,6 +416,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
           }
           this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
           this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
+        } else {
+          this.docDetailView = null;
         }
       }
 
