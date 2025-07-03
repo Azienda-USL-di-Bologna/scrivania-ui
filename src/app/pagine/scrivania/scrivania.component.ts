@@ -416,6 +416,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
           }
           this.destinatari = destinatariA ? destinatariA.replace(";", "; ") : destinatariA; // ? destinatariA : "Nessun destinatario";
           this.destinatariCC = destinatariCC ? destinatariCC.replace(";", "; ") : destinatariCC; // ? destinatariCC : "Nessun destinatario";
+        } else {
+          this.docDetailView = null;
         }
       }
 
