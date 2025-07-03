@@ -49,6 +49,17 @@
       icon="pi pi-server"
       class="ui-button-secondary icon-style icon-custom"
     ></button>
+    <button
+    type="button"
+    pButton
+    pTooltip="Daje"
+    tooltipPosition="bottom"
+    (click)="flushCache()"
+    label="Flush Cache"
+    iconPos="left"
+    icon="pi pi-server"
+    class="ui-button-secondary icon-style icon-custom"
+  ></button>
     <i
       *ngIf="spinActive"
       class="pi pi-spin pi-spinner"

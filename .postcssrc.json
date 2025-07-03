@@ -1,5 +1,32 @@
 {
   "plugins": {
-    "@tailwindcss/postcss": {}
+    "@tailwindcss/postcss": {
+      "content": [
+        "./src/**/*.{html,ts}",
+        "./node_modules/@bds/**/*.{html,ts,js}"
+      ],
+      "safelist": [
+        "text-2xl",
+        "text-xs", 
+        "text-lg",
+        "font-bold",
+        "text-xl",
+        "dark:text-white",
+        "mx-6",
+        "my-6",
+        "flex",
+        "flex-row", 
+        "w-full",
+        "justify-end",
+        "flex-col",
+        "flex-nowrap",
+        "items-center",
+        "max-h-32",
+        "max-h-16",
+        "max-h-24",
+        "overflow-y-scroll"
+      ]
+    },
+    "autoprefixer": {}
   }
 }
