@@ -5,15 +5,9 @@ import {
   ItemMenu,
   CommandType,
   CODICI_RUOLO,
-  DocService,
-  ENTITIES_STRUCTURE,
-  DocDetailView,
-  DocDetailViewService,
   ProjectedDocDetailWithPermessoDoc,
   ProjectedDocDetailWithPermessoDocService,
-  PermessoDoc,
 } from "@bds/internauta-model";
-import { Dropdown } from "primeng/dropdown";
 import { ScrivaniaService } from "./scrivania.service";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { MAX_CHARS_100 } from "../../../environments/app-constants";
@@ -42,7 +36,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   //@ViewChild("allegatiDropDown") private allegatiDropDown: Dropdown;
 
   @ViewChild("leftSide") private leftSide: ElementRef;
-  @ViewChild("rightSide") private rightSide: ElementRef;
+  //@ViewChild("rightSide") private rightSide: ElementRef;
   @ViewChild("splitter") private splitter: ElementRef;
 
   private subscriptions: Subscription[] = [];
@@ -222,7 +216,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     // this.setResponsiveSlider();
     this.buttonAvcpEnabled = !!this.loggedUser?.getUtente().aziendeAttive.find((a) => a.codice === "050109");
     if (this.impostazioniService.getImpostazioniVisualizzazione()) {
-      this.rightSide.nativeElement.style.width = this.impostazioniService.getRightSideOffsetWidth() + "%";
+      //this.rightSide.nativeElement.style.width = this.impostazioniService.getRightSideOffsetWidth() + "%";
       // this.splitter.nativeElement.style.marginLeft = 100 - this.impostazioniService.getRightSideOffsetWidth() + "%";
       if (window.screen.width <= 1280) {
         this.hidePreview = true;
@@ -306,7 +300,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // @HostListener("window:resize", ["$event"])
   onResize(event: any) {
-    const lx = this.leftSide.nativeElement.offsetWidth;
+    /* const lx = this.leftSide.nativeElement.offsetWidth;
     const rx = this.rightSide.nativeElement.offsetWidth;
     const screenX = event.currentTarget.innerWidth;
     if (screenX - lx < this.MIN_X_RIGHT_SIDE || screenX - rx < this.MIN_X_LEFT_SIDE) {
@@ -314,7 +308,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       const rxPercent = (this.MIN_X_RIGHT_SIDE * 100) / screenX;
       this.rightSide.nativeElement.style.width = rxPercent + "%";
       // this.slider.nativeElement.style.marginLeft = 100 - rxPercent + "%";
-    }
+    } */
   }
 
   private shrinkFileName(fileName: string): string {

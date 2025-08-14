@@ -9,18 +9,18 @@ import { Subscription } from "rxjs/internal/Subscription";
 import { RaccoltaSempliceService } from "./raccolta-semplice.service";
 import { Document } from "./documento.model";
 import { Table } from "primeng/table";
-import { Calendar } from "primeng/calendar";
 import { FilterService } from "primeng/api";
 import { Storico } from "./dettaglio-annullamento/modal/storico";
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { LazyLoadEvent } from "primeng/api";
 import { ActivatedRoute, Router } from "@angular/router";
+import { DatePicker } from "primeng/datepicker";
 
 @Component({
-    selector: "app-raccolta-semplice",
-    templateUrl: "./raccolta-semplice.component.html",
-    styleUrls: ["./raccolta-semplice.component.scss"],
-    standalone: false
+  selector: "app-raccolta-semplice",
+  templateUrl: "./raccolta-semplice.component.html",
+  styleUrls: ["./raccolta-semplice.component.scss"],
+  standalone: false,
 })
 export class RaccoltaSempliceComponent implements OnInit {
   constructor(
@@ -82,7 +82,7 @@ export class RaccoltaSempliceComponent implements OnInit {
   public filtriMap: Map<string, string> = new Map();
 
   @ViewChild("tableRaccoltaSemplice") private dataTable: Table;
-  @ViewChildren("calGenz") public _calGen: QueryList<Calendar>;
+  @ViewChildren("calGenz") public _calGen: QueryList<DatePicker>;
   @ViewChild("filterInputText") public input: ElementRef;
 
   public colsDetail: any[] = [
@@ -258,7 +258,7 @@ export class RaccoltaSempliceComponent implements OnInit {
   }
 
   public onCalendarAction(event: any, field: string, action: string) {
-    let calSel: Calendar = null;
+    let calSel: DatePicker = null;
     switch (action) {
       case "today":
         this.newDate = event.toLocaleDateString();
