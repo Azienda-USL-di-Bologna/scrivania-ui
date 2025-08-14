@@ -297,7 +297,7 @@
         <!-- Right side -->
         @if (!hidePreview) {
           <div
-            class="p-md-5 p-sm-12 content-right"
+            class="content-right"
             [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'"
             #rightSide
             >
@@ -470,10 +470,10 @@
     <p-datepicker
       [(ngModel)]="avcpCalendarDate"
       [showIcon]="true"
-      [locale]="localIt"
+      
       view="year"
       dateFormat="yy"
-      [yearNavigator]="true"
+      
       yearRange="2000:2030"
       [readonlyInput]="true"
       inputId="monthpicker"

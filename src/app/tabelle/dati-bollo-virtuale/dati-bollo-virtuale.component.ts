@@ -9,14 +9,14 @@ import { HttpResponse } from "@angular/common/http";
 import { DatePipe } from "@angular/common";
 import { Table } from "primeng/table";
 import { CsvExtractor, LOCAL_IT } from "@bds/common-tools";
-import { Calendar } from "primeng/calendar";
 import { FilterService } from "primeng/api";
+import { DatePicker } from "primeng/datepicker";
 
 @Component({
-    selector: "app-dati-bollo-virtuale",
-    templateUrl: "./dati-bollo-virtuale.component.html",
-    styleUrls: ["./dati-bollo-virtuale.component.scss"],
-    standalone: false
+  selector: "app-dati-bollo-virtuale",
+  templateUrl: "./dati-bollo-virtuale.component.html",
+  styleUrls: ["./dati-bollo-virtuale.component.scss"],
+  standalone: false,
 })
 export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
   _azienda: Azienda;
@@ -53,7 +53,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
   @ViewChild("totalImportoAltriBolloRef", { static: false }) totalImportoAltriBolloRef?: ElementRef<HTMLElement>;
 
   @ViewChild("tableBolliVirtuali") private dataTable: Table;
-  @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
+  @ViewChildren("calGen") private _calGen: QueryList<DatePicker>;
 
   public cols: any[] = [
     {
@@ -340,7 +340,7 @@ export class DatiBolloVirtualeComponent implements OnInit, OnDestroy {
   }
 
   public onCalendarAction(event: any, field: string, action: string) {
-    let calSel: Calendar = null;
+    let calSel: DatePicker = null;
     switch (action) {
       case "today":
         calSel = this._calGen.find((e) => e.inputId === "CalInput_" + field);

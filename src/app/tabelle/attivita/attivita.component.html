@@ -80,7 +80,7 @@
             [(ngModel)]="dataRange[col.field]"
             placeholder="Scegli..."
             [showButtonBar]="true"
-            [locale]="localIt"
+            
             [showIcon]="false"
             dateFormat="dd/mm/yy"
             (onSelect)="onCalendarAction($event, col.field, 'select')"
@@ -421,7 +421,7 @@
   header="Note Attività"
   [(visible)]="this.showNote"
   [modal]="true"
-  [responsive]="true"
+  
   [minY]="70"
   [maximizable]="true"
   appendTo="body"
@@ -514,4 +514,4 @@
 </p-confirmDialog>
 
 <p-toast key="attivitaToast"></p-toast>
-<p-confirmPopup key="confirm-popup"></p-confirmPopup>
+<p-confirmpopup key="confirm-popup"></p-confirmpopup>
