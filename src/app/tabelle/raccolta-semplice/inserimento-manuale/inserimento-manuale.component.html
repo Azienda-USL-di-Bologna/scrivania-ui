@@ -22,7 +22,7 @@
 <p-scrollPanel
   [style]="{ width: '100%', height: '95%' }"
   styleClass="custombar2"
->
+  >
   <!-- DATI -->
   <div class="expansion-single-box">
     <mat-accordion>
@@ -30,7 +30,7 @@
         (opened)="panelOpenState = true"
         (closed)="panelOpenState = false"
         [expanded]="true"
-      >
+        >
         <mat-expansion-panel-header class="expansion-header">
           <mat-panel-title> DATI </mat-panel-title>
           <mat-panel-description>
@@ -47,634 +47,639 @@
                 type="text"
                 pInputText
                 [(ngModel)]="oggetto"
-              />
+                />
+              </div>
+              <div class="p-field p-col">
+                <label for="struttura-responsabile">Struttura Responsabile</label>
+                <!-- autocomplete delle struttura internauta -->
+                <lib-structures-autocomplete
+                  [strutturaIniziale]="s"
+                  [enabled]="true"
+                  [azienda]="azienda"
+                  [clearEnabled]="true"
+                  (strutturaSelezionataEmit)="strutturaSelezionata($event)"
+                  >
+                </lib-structures-autocomplete>
+              </div>
             </div>
-            <div class="p-field p-col">
-              <label for="struttura-responsabile">Struttura Responsabile</label>
-              <!-- autocomplete delle struttura internauta -->
-              <lib-structures-autocomplete
-                [strutturaIniziale]="s"
-                [enabled]="true"
-                [azienda]="azienda"
-                [clearEnabled]="true"
-                (strutturaSelezionataEmit)="strutturaSelezionata($event)"
-              >
-              </lib-structures-autocomplete>
-            </div>
-          </div>
 
-          <!-- seconda riga griglia  -->
-          <div class="p-fluid p-formgrid p-grid">
-            <div class="p-field p-col">
-              <label
-                for="applicazione"
-                class="p-col-12 p-mb-2 p-md-2 p-mb-md-0"
-                >Applicazione</label
-              >
-              <input
-                id="applicazioneId"
-                type="text"
-                pInputText
-                [disabled]="true"
-                [(ngModel)]="applicazione"
-              />
-            </div>
-            <div class="p-field p-col">
-              <label
-                for="tipo-documento"
-                class="p-col-12 p-mb-2 p-md-2 p-mb-md-0"
-                >Tipologia</label
-              >
-              <p-select
-                [options]="tipologieDocumenti$"
-                placeholder="Scegli tipo documento..."
-                [showClear]="true"
-                [(ngModel)]="selectedTipo"
-                appendTo="body"
-              ></p-select>
-            </div>
-          </div>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </div>
-
-  <!-- FASCICOLAZIONI -->
-  <div class="expansion-single-box">
-    <mat-accordion>
-      <mat-expansion-panel
-        (opened)="panelOpenState = true"
-        (closed)="panelOpenState = false"
-        [expanded]="true"
-      >
-        <mat-expansion-panel-header class="expansion-header">
-          <mat-panel-title> FASCICOLAZIONI </mat-panel-title>
-          <mat-panel-description>
-            <!-- Stato: {{panelOpenStateDati}} -->
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <div style="margin-top: 1em">
-          <div class="p-fluid p-formgrid p-grid">
-            <div class="p-field p-col">
-              <!-- cerca fascicolo -->
-              <p-autoComplete
-                id="fascicoli"
-                #autocompleteFascicoli
-                ariaLabel="fascicoli"
-                [(ngModel)]="selectedFascicolo"
-                (onSelect)="saveFascicolo($any($event))"
-                [suggestions]="filteredFascicoli"
-                (completeMethod)="searchFascicolo($event)"
-                field="nomeFascicolo"
-                appendTo="body"
-                class="p-col"
-                [dropdown]="true"
-                placeholder="Cerca fascicolo..."
-                emptyMessage="Nessun riferimento trovato"
-              >
-                <ng-template
-                  let-fascicolo
-                  pTemplate="item"
-                >
-                  <div>[{{ fascicolo.numerazioneGerarchica }}] {{ fascicolo.nomeFascicolo }}</div>
-                </ng-template>
-              </p-autoComplete>
-            </div>
-            <div class="p-field p-col align-table">
-              <!-- fascicoli selezionati -->
-              <p-table stripedRows
-                [value]="selectedFascicoli"
-                [resizableColumns]="true"
-                [autoLayout]="true"
-              >
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th>Fascicoli selezionati</th>
-                    <th></th>
-                  </tr>
-                </ng-template>
-                <ng-template
-                  pTemplate="body"
-                  let-selectedFascicoli
-                  let-i="rowIndex"
-                >
-                  <tr>
-                    <td>[{{ selectedFascicoli.numerazioneGerarchica }}] {{ selectedFascicoli.nomeFascicolo }}</td>
-                    <td>
-                      <button
-                        pButton
-                        icon="pi pi-trash"
-                        class="p-button"
-                        (click)="deleteFascicolo(i)"
-                      ></button>
-                    </td>
-                  </tr>
-                </ng-template>
-                <ng-template
-                  pTemplate="emptymessage"
-                  let-columns
-                >
-                  <tr>
-                    <td>selezionare almeno un fascicolo</td>
-                  </tr>
-                </ng-template>
-              </p-table>
-            </div>
-          </div>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </div>
-
-  <div class="expansion-single-box">
-    <mat-accordion>
-      <mat-expansion-panel
-        (opened)="panelOpenState = true"
-        (closed)="panelOpenState = false"
-        [expanded]="true"
-      >
-        <mat-expansion-panel-header class="expansion-header">
-          <mat-panel-title> DOCUMENTI </mat-panel-title>
-          <mat-panel-description style="float: right">
-            <!-- Stato: {{panelOpenStateDati}} -->
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <div style="margin-top: 1em">
-          <div class="p-fluid p-formgrid p-grid">
-            <div class="p-field p-col">
-              <p-radiobutton
-                inputId="doc_babel"
-                name="doc_babel"
-                value="Documento Babel"
-                (onClick)="blocca('doc')"
-                [(ngModel)]="selectedValue"
-              ></p-radiobutton>
-              <label for="doc_babel">Documento Babel</label>
-            </div>
-            <div class="p-field p-col">
-              <p-radiobutton
-                inputId="upload_file"
-                name="upload_file"
-                label="Caricamento File"
-                value="Caricamento File"
-                (onClick)="blocca('file')"
-                [(ngModel)]="selectedValue"
-              ></p-radiobutton>
-              <label for="upload_file">Caricamento File</label>
-            </div>
-          </div>
-          <div class="p-fluid p-formgrid p-grid">
-            <div class="p-field p-col">
-              <p-blockUI
-                [target]="pnl"
-                [blocked]="blockedPanelDoc"
-              >
-                <i class="pi pi-lock"></i>
-              </p-blockUI>
-              <p-panel
-                #pnl
-                [header]="titoloHeader"
-              >
-                <div class="p-fluid">
-                  <div class="p-field">
-                    <input
-                      id="disabled-input-codice-registro"
-                      type="text"
-                      pInputText
-                      [disabled]="true"
-                      [(ngModel)]="selectedCodiceRegistro.descrizione"
+            <!-- seconda riga griglia  -->
+            <div class="p-fluid p-formgrid p-grid">
+              <div class="p-field p-col">
+                <label
+                  for="applicazione"
+                  class="p-col-12 p-mb-2 p-md-2 p-mb-md-0"
+                  >Applicazione</label
+                  >
+                  <input
+                    id="applicazioneId"
+                    type="text"
+                    pInputText
+                    [disabled]="true"
+                    [(ngModel)]="applicazione"
                     />
                   </div>
-                  <div class="p-field">
-                    <p-autoComplete
-                      id="docbabel"
-                      #autocompletedocbabel
-                      ariaLabel="docbabel"
-                      [(ngModel)]="selectedDoc"
-                      (onSelect)="saveDocBabel($any($event))"
-                      [suggestions]="filteredDocs"
-                      (completeMethod)="searchDocBabel($event)"
-                      field="codiceBabel"
-                      appendTo="body"
-                      [dropdown]="true"
-                      (onClear)="onClear()"
-                      type="search"
-                      placeholder="Cerca documento..."
-                      emptyMessage="Nessun riferimento trovato"
-                    >
-                      <ng-template
-                        let-documento
-                        pTemplate="item"
+                  <div class="p-field p-col">
+                    <label
+                      for="tipo-documento"
+                      class="p-col-12 p-mb-2 p-md-2 p-mb-md-0"
+                      >Tipologia</label
                       >
-                        <div>[{{ documento.numero }}/{{ documento.anno }}] {{ documento.oggetto }}</div>
-                      </ng-template>
-                    </p-autoComplete>
+                      <p-select
+                        [options]="tipologieDocumenti$"
+                        placeholder="Scegli tipo documento..."
+                        [showClear]="true"
+                        [(ngModel)]="selectedTipo"
+                        appendTo="body"
+                      ></p-select>
+                    </div>
                   </div>
                 </div>
-              </p-panel>
-            </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
 
-            <div class="p-field p-col">
-              <p-blockUI
-                [target]="pnlup"
-                [blocked]="blockedPanelUpload"
-              >
-                <i class="pi pi-lock"></i>
-              </p-blockUI>
-              <p-panel
-                #pnlup
-                header="Upload dei file"
-              >
-                <form>
-                  <div class="form-group">
-                    <p-fileUpload
-                      #fileInput
-                      name="file"
-                      [multiple]="true"
-                      [showUploadButton]="false"
-                      [showCancelButton]="false"
-                      [maxFileSize]="20000000"
-                      accept="image/*,.csv,.xml,.doc,.docx,.pdf,.xls,.xlsx,.txt,.odt"
-                      chooseLabel="Importa"
-                      (onSelect)="onSelect($event)"
-                      (onRemove)="onRemove($event)"
-                      styleClass="babel-color"
-                    >
-                      <!-- Hola Umbria! Qui usate gli attachments. la la proprità non esiste -->
-                      <!-- <ng-template pTemplate="content">
-                        <p *ngIf="this.uploadedFiles.length<=0" class="content-message">lista file da caricare</p>
-                        <div class="ui-fileupload-row p-d-flex" *ngFor="let file of attachments; let i = index;">
-                          <div>
-                            <img [src]="file.objectURL" *ngIf="uploadService.isImage(file)" />
+          <!-- FASCICOLAZIONI -->
+          <div class="expansion-single-box">
+            <mat-accordion>
+              <mat-expansion-panel
+                (opened)="panelOpenState = true"
+                (closed)="panelOpenState = false"
+                [expanded]="true"
+                >
+                <mat-expansion-panel-header class="expansion-header">
+                  <mat-panel-title> FASCICOLAZIONI </mat-panel-title>
+                  <mat-panel-description>
+                    <!-- Stato: {{panelOpenStateDati}} -->
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div style="margin-top: 1em">
+                  <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col">
+                      <!-- cerca fascicolo -->
+                      <p-autoComplete
+                        id="fascicoli"
+                        #autocompleteFascicoli
+                        ariaLabel="fascicoli"
+                        [(ngModel)]="selectedFascicolo"
+                        (onSelect)="saveFascicolo($any($event))"
+                        [suggestions]="filteredFascicoli"
+                        (completeMethod)="searchFascicolo($event)"
+                        field="nomeFascicolo"
+                        appendTo="body"
+                        class="p-col"
+                        [dropdown]="true"
+                        placeholder="Cerca fascicolo..."
+                        emptyMessage="Nessun riferimento trovato"
+                        >
+                        <ng-template
+                          let-fascicolo
+                          pTemplate="item"
+                          >
+                          <div>[{{ fascicolo.numerazioneGerarchica }}] {{ fascicolo.nomeFascicolo }}</div>
+                        </ng-template>
+                      </p-autoComplete>
+                    </div>
+                    <div class="p-field p-col align-table">
+                      <!-- fascicoli selezionati -->
+                      <p-table stripedRows
+                        [value]="selectedFascicoli"
+                        [resizableColumns]="true"
+                        [autoLayout]="true"
+                        >
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th>Fascicoli selezionati</th>
+                            <th></th>
+                          </tr>
+                        </ng-template>
+                        <ng-template
+                          pTemplate="body"
+                          let-selectedFascicoli
+                          let-i="rowIndex"
+                          >
+                          <tr>
+                            <td>[{{ selectedFascicoli.numerazioneGerarchica }}] {{ selectedFascicoli.nomeFascicolo }}</td>
+                            <td>
+                              <button
+                                pButton
+                                icon="pi pi-trash"
+                                class="p-button"
+                                (click)="deleteFascicolo(i)"
+                              ></button>
+                            </td>
+                          </tr>
+                        </ng-template>
+                        <ng-template
+                          pTemplate="emptymessage"
+                          let-columns
+                          >
+                          <tr>
+                            <td>selezionare almeno un fascicolo</td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+
+          <div class="expansion-single-box">
+            <mat-accordion>
+              <mat-expansion-panel
+                (opened)="panelOpenState = true"
+                (closed)="panelOpenState = false"
+                [expanded]="true"
+                >
+                <mat-expansion-panel-header class="expansion-header">
+                  <mat-panel-title> DOCUMENTI </mat-panel-title>
+                  <mat-panel-description style="float: right">
+                    <!-- Stato: {{panelOpenStateDati}} -->
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div style="margin-top: 1em">
+                  <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col">
+                      <p-radiobutton
+                        inputId="doc_babel"
+                        name="doc_babel"
+                        value="Documento Babel"
+                        (onClick)="blocca('doc')"
+                        [(ngModel)]="selectedValue"
+                      ></p-radiobutton>
+                      <label for="doc_babel">Documento Babel</label>
+                    </div>
+                    <div class="p-field p-col">
+                      <p-radiobutton
+                        inputId="upload_file"
+                        name="upload_file"
+                        label="Caricamento File"
+                        value="Caricamento File"
+                        (onClick)="blocca('file')"
+                        [(ngModel)]="selectedValue"
+                      ></p-radiobutton>
+                      <label for="upload_file">Caricamento File</label>
+                    </div>
+                  </div>
+                  <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col">
+                      <p-blockUI
+                        [target]="pnl"
+                        [blocked]="blockedPanelDoc"
+                        >
+                        <i class="pi pi-lock"></i>
+                      </p-blockUI>
+                      <p-panel
+                        #pnl
+                        [header]="titoloHeader"
+                        >
+                        <div class="p-fluid">
+                          <div class="p-field">
+                            <input
+                              id="disabled-input-codice-registro"
+                              type="text"
+                              pInputText
+                              [disabled]="true"
+                              [(ngModel)]="selectedCodiceRegistro.descrizione"
+                              />
+                            </div>
+                            <div class="p-field">
+                              <p-autoComplete
+                                id="docbabel"
+                                #autocompletedocbabel
+                                ariaLabel="docbabel"
+                                [(ngModel)]="selectedDoc"
+                                (onSelect)="saveDocBabel($any($event))"
+                                [suggestions]="filteredDocs"
+                                (completeMethod)="searchDocBabel($event)"
+                                field="codiceBabel"
+                                appendTo="body"
+                                [dropdown]="true"
+                                (onClear)="onClear()"
+                                type="search"
+                                placeholder="Cerca documento..."
+                                emptyMessage="Nessun riferimento trovato"
+                                >
+                                <ng-template
+                                  let-documento
+                                  pTemplate="item"
+                                  >
+                                  <div>[{{ documento.numero }}/{{ documento.anno }}] {{ documento.oggetto }}</div>
+                                </ng-template>
+                              </p-autoComplete>
+                            </div>
                           </div>
-                          <div class="uploaded-file p-col-1" (click)="uploadService.downloadFile(attachments, i)">
-                            {{file.uploadname}}
+                        </p-panel>
+                      </div>
+
+                      <div class="p-field p-col">
+                        <p-blockUI
+                          [target]="pnlup"
+                          [blocked]="blockedPanelUpload"
+                          >
+                          <i class="pi pi-lock"></i>
+                        </p-blockUI>
+                        <p-panel
+                          #pnlup
+                          header="Upload dei file"
+                          >
+                          <form>
+                            <div class="form-group">
+                              <p-fileUpload
+                                #fileInput
+                                name="file"
+                                [multiple]="true"
+                                [showUploadButton]="false"
+                                [showCancelButton]="false"
+                                [maxFileSize]="20000000"
+                                accept="image/*,.csv,.xml,.doc,.docx,.pdf,.xls,.xlsx,.txt,.odt"
+                                chooseLabel="Importa"
+                                (onSelect)="onSelect($event)"
+                                (onRemove)="onRemove($event)"
+                                styleClass="babel-color"
+                                >
+                                <!-- Hola Umbria! Qui usate gli attachments. la la proprità non esiste -->
+                                <!-- <ng-template pTemplate="content">
+                                <p *ngIf="this.uploadedFiles.length<=0" class="content-message">lista file da caricare</p>
+                                <div class="ui-fileupload-row p-d-flex" *ngFor="let file of attachments; let i = index;">
+                                  <div>
+                                    <img [src]="file.objectURL" *ngIf="uploadService.isImage(file)" />
+                                  </div>
+                                  <div class="uploaded-file p-col-1" (click)="uploadService.downloadFile(attachments, i)">
+                                    {{file.uploadname}}
+                                  </div>
+                                  <div>
+                                    <button type="button" class="btn-xs btn-danger confirm-btn"
+                                    (click)="deleteFile(attachments, i)">Delete</button>
+                                  </div>
+                                </div>
+                              </ng-template> -->
+                            </p-fileUpload>
                           </div>
-                          <div>
-                            <button type="button" class="btn-xs btn-danger confirm-btn" 
-                              (click)="deleteFile(attachments, i)">Delete</button>
+                        </form>
+                      </p-panel>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+
+          <!-- COINVOLTI -->
+          <div class="expansion-single-box">
+            <mat-accordion>
+              <mat-expansion-panel
+                (opened)="panelOpenState = true"
+                (closed)="panelOpenState = false"
+                [expanded]="true"
+                >
+                <mat-expansion-panel-header class="expansion-header">
+                  <mat-panel-title> COINVOLTI </mat-panel-title>
+                  <mat-panel-description>
+                    <!-- Stato: {{panelOpenStateDati}} -->
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div style="margin-top: 1em">
+                  <p-toast></p-toast>
+
+                  <div class="p-d-flex p-col-12">
+                    @if (visualizzaCoinvolti) {
+                      <div
+                        class="p-mr-2"
+                        >
+                        <button
+                          pButton
+                          pRipple
+                          label="Aggiungi Coinvolti"
+                          icon="pi pi-plus"
+                          class="p-button babel-color"
+                          (click)="openNew()"
+                        ></button>
+                      </div>
+                    }
+                    <div class="p-mr-2">
+                      <button
+                        pButton
+                        pRipple
+                        label="Aggiungi da Rubrica"
+                        icon="pi pi-plus"
+                        class="p-button babel-color"
+                        (click)="onOpenRubricaPopup()"
+                      ></button>
+                    </div>
+                    <div class="p-mr-2">
+                      <button
+                        pButton
+                        pRipple
+                        label="Aggiungi nuovo coinvolto"
+                        icon="pi pi-plus"
+                        class="p-button babel-color"
+                        (click)="newContatto()"
+                      ></button>
+                    </div>
+                  </div>
+
+                  <div class="p-field p-col-12">
+                    <p-table stripedRows
+                      [value]="coinvolti"
+                      [rowHover]="true"
+                      dataKey="id"
+                      >
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th pSortableColumn="nome">Coinvolto<p-sortIcon field="nome"></p-sortIcon></th>
+                          <th pSortableColumn="cf">CF<p-sortIcon field="price"></p-sortIcon></th>
+                          <th pSortableColumn="partitaIva">P. Iva<p-sortIcon field="category"></p-sortIcon></th>
+                          <th pSortableColumn="tipo">Tipologia<p-sortIcon field="rating"></p-sortIcon></th>
+                          <th pSortableColumn="mail">Email<p-sortIcon field="rating"></p-sortIcon></th>
+                          <th pSortableColumn="via">Indirizzo<p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+                          <th pSortableColumn="telefono">Telefono<p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+                          <th></th>
+                        </tr>
+                      </ng-template>
+                      <ng-template
+                        pTemplate="body"
+                        let-coinvolto
+                        >
+                        <tr>
+                          <td class="text-content">{{ coinvolto.nomeInterfaccia }}</td>
+                          <td class="text-content">{{ coinvolto.cf }}</td>
+                          <td class="text-content">{{ coinvolto.partitaIva }}</td>
+                          <td class="text-content">{{ coinvolto.tipo }}</td>
+                          <td class="text-content">{{ coinvolto.mail }}</td>
+                          <td class="text-content">{{ coinvolto.via }}</td>
+                          <td class="text-content">{{ coinvolto.telefono }}</td>
+                          <td>
+                            <button
+                              pButton
+                              pRipple
+                              icon="pi pi-pencil"
+                              class="p-button-rounded p-button-success p-mr-2"
+                              (click)="editCoinvolto(coinvolto)"
+                            ></button>
+                            <button
+                              pButton
+                              pRipple
+                              icon="pi pi-trash"
+                              class="p-button-rounded p-button-warning"
+                              (click)="deleteCoinvolto(coinvolto)"
+                            ></button>
+                          </td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="summary">
+                        <div class="p-d-flex p-ai-center p-jc-between">
+                          @if (coinvolti.length > 0) {
+                            <span>Totali: {{ coinvolti ? coinvolti.length : 0 }}</span>
+                          }
+                          @if (coinvolti.length <= 0) {
+                            <span>Inserisci nuovi coinvolti o aggiungili dalla rubrica</span>
+                          }
+                        </div>
+                      </ng-template>
+                    </p-table>
+                  <!-- </div> -->
+                </div>
+
+                <p-dialog
+                  [(visible)]="coinvoltoDialog"
+                  [style]="{ width: '28.125rem' }"
+                  header="Nuovo Coinvolto"
+                  [modal]="true"
+                  styleClass="p-fluid"
+                  >
+                  <ng-template pTemplate="content">
+                    <div class="p-formgrid p-grid">
+                      <div class="p-field p-col">
+                        <label for="nome">Nome</label>
+                        <input
+                          type="text"
+                          pInputText
+                          id="nome"
+                          [(ngModel)]="coinvolto.nome"
+                          required
+                          autofocus
+                          [disabled]="isOldContatto"
+                          />
+                          <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.nome">Nome is required.</small> -->
+                        </div>
+                        <div class="p-field p-col">
+                          <label for="cognome">Cognome</label>
+                          <input
+                            type="text"
+                            pInputText
+                            id="cognome"
+                            [(ngModel)]="coinvolto.cognome"
+                            required
+                            autofocus
+                            [disabled]="isOldContatto"
+                            />
+                            <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cognome">Cognome is required.</small> -->
                           </div>
                         </div>
-                      </ng-template> -->
-                    </p-fileUpload>
-                  </div>
-                </form>
-              </p-panel>
-            </div>
-          </div>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </div>
 
-  <!-- COINVOLTI -->
-  <div class="expansion-single-box">
-    <mat-accordion>
-      <mat-expansion-panel
-        (opened)="panelOpenState = true"
-        (closed)="panelOpenState = false"
-        [expanded]="true"
-      >
-        <mat-expansion-panel-header class="expansion-header">
-          <mat-panel-title> COINVOLTI </mat-panel-title>
-          <mat-panel-description>
-            <!-- Stato: {{panelOpenStateDati}} -->
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        <div style="margin-top: 1em">
-          <p-toast></p-toast>
+                        <div class="p-field">
+                          <label for="ragioneSociale">Ragione Sociale</label>
+                          <input
+                            type="text"
+                            pInputText
+                            id="ragioneSociale"
+                            [(ngModel)]="coinvolto.ragioneSociale"
+                            required
+                            autofocus
+                            [disabled]="isOldContatto"
+                            />
+                            <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.ragioneSociale">Ragione Sociale is required.</small> -->
+                          </div>
+                          <div class="p-field">
+                            <label for="cf">Codice Fiscale</label>
+                            <input
+                              type="text"
+                              pInputText
+                              id="cf"
+                              [(ngModel)]="coinvolto.cf"
+                              required
+                              autofocus
+                              [disabled]="isOldContatto"
+                              />
+                              <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cf">CF is required.</small> -->
+                            </div>
+                            <div class="p-field">
+                              <label for="partitaIva">Partita IVA</label>
+                              <input
+                                type="text"
+                                pInputText
+                                id="partitaIva"
+                                [(ngModel)]="coinvolto.partitaIva"
+                                required
+                                autofocus
+                                [disabled]="isOldContatto"
+                                />
+                                <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.partitaIva">partitaIva is required.</small> -->
+                              </div>
+                              <div class="p-field">
+                                <label for="partitaIva">Tipologia</label>
+                                <p-select
+                                  [options]="tipiCoinvolti"
+                                  [(ngModel)]="selectedTipoCoinvolto"
+                                  placeholder="tipologia..."
+                                  [showClear]="true"
+                                  [disabled]="isOldContatto"
+                                ></p-select>
+                              </div>
 
-          <div class="p-d-flex p-col-12">
-            <div
-              class="p-mr-2"
-              *ngIf="visualizzaCoinvolti"
-            >
-              <button
-                pButton
-                pRipple
-                label="Aggiungi Coinvolti"
-                icon="pi pi-plus"
-                class="p-button babel-color"
-                (click)="openNew()"
-              ></button>
-            </div>
-            <div class="p-mr-2">
-              <button
-                pButton
-                pRipple
-                label="Aggiungi da Rubrica"
-                icon="pi pi-plus"
-                class="p-button babel-color"
-                (click)="onOpenRubricaPopup()"
-              ></button>
-            </div>
-            <div class="p-mr-2">
-              <button
-                pButton
-                pRipple
-                label="Aggiungi nuovo coinvolto"
-                icon="pi pi-plus"
-                class="p-button babel-color"
-                (click)="newContatto()"
-              ></button>
-            </div>
-          </div>
+                              <div class="p-field">
+                                <label for="mail">Email</label>
+                                <input
+                                  type="text"
+                                  pInputText
+                                  id="mail"
+                                  [(ngModel)]="coinvolto.mail"
+                                  required
+                                  autofocus
+                                  />
+                                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.mail">mail is required.</small> -->
+                                </div>
+                                <div class="p-field">
+                                  <label for="telefono">Telefono</label>
+                                  <input
+                                    type="text"
+                                    pInputText
+                                    id="telefono"
+                                    [(ngModel)]="coinvolto.telefono"
+                                    required
+                                    autofocus
+                                    />
+                                    <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.telefono">telefono is required.</small> -->
+                                  </div>
+                                  <div class="p-field">
+                                    <label for="via">Via</label>
+                                    <input
+                                      type="text"
+                                      pInputText
+                                      id="via"
+                                      [(ngModel)]="coinvolto.via"
+                                      required
+                                      autofocus
+                                      />
+                                      <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.via">via is required.</small> -->
+                                    </div>
+                                    <div class="p-field">
+                                      <label for="civico">Civico</label>
+                                      <input
+                                        type="text"
+                                        pInputText
+                                        id="civico"
+                                        [(ngModel)]="coinvolto.civico"
+                                        required
+                                        autofocus
+                                        />
+                                        <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.civico">civico is required.</small> -->
+                                      </div>
+                                      <div class="p-field">
+                                        <label for="cap">CAP</label>
+                                        <input
+                                          type="text"
+                                          pInputText
+                                          id="cap"
+                                          [(ngModel)]="coinvolto.cap"
+                                          required
+                                          autofocus
+                                          />
+                                          <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cap">Name is required.</small> -->
+                                        </div>
+                                        <div class="p-field">
+                                          <label for="comune">Comune</label>
+                                          <input
+                                            type="text"
+                                            pInputText
+                                            id="comune"
+                                            [(ngModel)]="coinvolto.comune"
+                                            required
+                                            autofocus
+                                            />
+                                            <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.comune">comune is required.</small> -->
+                                          </div>
+                                          <div class="p-field">
+                                            <label for="provincia">Provincia</label>
+                                            <input
+                                              type="text"
+                                              pInputText
+                                              id="provincia"
+                                              [(ngModel)]="coinvolto.provincia"
+                                              required
+                                              autofocus
+                                              />
+                                              <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.provincia">Name is required.</small> -->
+                                            </div>
+                                          </ng-template>
 
-          <div class="p-field p-col-12">
-            <p-table stripedRows
-              [value]="coinvolti"
-              [rowHover]="true"
-              dataKey="id"
-            >
-              <ng-template pTemplate="header">
-                <tr>
-                  <th pSortableColumn="nome">Coinvolto<p-sortIcon field="nome"></p-sortIcon></th>
-                  <th pSortableColumn="cf">CF<p-sortIcon field="price"></p-sortIcon></th>
-                  <th pSortableColumn="partitaIva">P. Iva<p-sortIcon field="category"></p-sortIcon></th>
-                  <th pSortableColumn="tipo">Tipologia<p-sortIcon field="rating"></p-sortIcon></th>
-                  <th pSortableColumn="mail">Email<p-sortIcon field="rating"></p-sortIcon></th>
-                  <th pSortableColumn="via">Indirizzo<p-sortIcon field="inventoryStatus"></p-sortIcon></th>
-                  <th pSortableColumn="telefono">Telefono<p-sortIcon field="inventoryStatus"></p-sortIcon></th>
-                  <th></th>
-                </tr>
-              </ng-template>
-              <ng-template
-                pTemplate="body"
-                let-coinvolto
-              >
-                <tr>
-                  <td class="text-content">{{ coinvolto.nomeInterfaccia }}</td>
-                  <td class="text-content">{{ coinvolto.cf }}</td>
-                  <td class="text-content">{{ coinvolto.partitaIva }}</td>
-                  <td class="text-content">{{ coinvolto.tipo }}</td>
-                  <td class="text-content">{{ coinvolto.mail }}</td>
-                  <td class="text-content">{{ coinvolto.via }}</td>
-                  <td class="text-content">{{ coinvolto.telefono }}</td>
-                  <td>
-                    <button
-                      pButton
-                      pRipple
-                      icon="pi pi-pencil"
-                      class="p-button-rounded p-button-success p-mr-2"
-                      (click)="editCoinvolto(coinvolto)"
-                    ></button>
-                    <button
-                      pButton
-                      pRipple
-                      icon="pi pi-trash"
-                      class="p-button-rounded p-button-warning"
-                      (click)="deleteCoinvolto(coinvolto)"
-                    ></button>
-                  </td>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="summary">
-                <div class="p-d-flex p-ai-center p-jc-between">
-                  <span *ngIf="coinvolti.length > 0">Totali: {{ coinvolti ? coinvolti.length : 0 }}</span>
-                  <span *ngIf="coinvolti.length <= 0">Inserisci nuovi coinvolti o aggiungili dalla rubrica</span>
-                </div>
-              </ng-template>
-            </p-table>
-            <!-- </div> -->
-          </div>
+                                          <ng-template pTemplate="footer">
+                                            <button
+                                              pButton
+                                              pRipple
+                                              label="Cancella"
+                                              icon="pi pi-times"
+                                              class="p-button-text"
+                                              (click)="hideDialog()"
+                                            ></button>
+                                            <button
+                                              pButton
+                                              pRipple
+                                              label="Salva in rubrica"
+                                              icon="pi pi-check"
+                                              class="p-button-text"
+                                              [disabled]="isOldContatto"
+                                              (click)="addNewContatto()"
+                                            ></button>
+                                            <button
+                                              pButton
+                                              pRipple
+                                              label="Aggiorna"
+                                              icon="pi pi-check"
+                                              class="p-button-text"
+                                              [disabled]="!isOldContatto"
+                                              (click)="saveCoinvoltoCreato()"
+                                            ></button>
+                                          </ng-template>
+                                        </p-dialog>
 
-          <p-dialog
-            [(visible)]="coinvoltoDialog"
-            [style]="{ width: '28.125rem' }"
-            header="Nuovo Coinvolto"
-            [modal]="true"
-            styleClass="p-fluid"
-          >
-            <ng-template pTemplate="content">
-              <div class="p-formgrid p-grid">
-                <div class="p-field p-col">
-                  <label for="nome">Nome</label>
-                  <input
-                    type="text"
-                    pInputText
-                    id="nome"
-                    [(ngModel)]="coinvolto.nome"
-                    required
-                    autofocus
-                    [disabled]="isOldContatto"
-                  />
-                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.nome">Nome is required.</small> -->
-                </div>
-                <div class="p-field p-col">
-                  <label for="cognome">Cognome</label>
-                  <input
-                    type="text"
-                    pInputText
-                    id="cognome"
-                    [(ngModel)]="coinvolto.cognome"
-                    required
-                    autofocus
-                    [disabled]="isOldContatto"
-                  />
-                  <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cognome">Cognome is required.</small> -->
-                </div>
-              </div>
+                                        <p-confirmDialog [style]="{ width: '28.125rem' }"></p-confirmDialog>
 
-              <div class="p-field">
-                <label for="ragioneSociale">Ragione Sociale</label>
-                <input
-                  type="text"
-                  pInputText
-                  id="ragioneSociale"
-                  [(ngModel)]="coinvolto.ragioneSociale"
-                  required
-                  autofocus
-                  [disabled]="isOldContatto"
-                />
-                <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.ragioneSociale">Ragione Sociale is required.</small> -->
-              </div>
-              <div class="p-field">
-                <label for="cf">Codice Fiscale</label>
-                <input
-                  type="text"
-                  pInputText
-                  id="cf"
-                  [(ngModel)]="coinvolto.cf"
-                  required
-                  autofocus
-                  [disabled]="isOldContatto"
-                />
-                <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cf">CF is required.</small> -->
-              </div>
-              <div class="p-field">
-                <label for="partitaIva">Partita IVA</label>
-                <input
-                  type="text"
-                  pInputText
-                  id="partitaIva"
-                  [(ngModel)]="coinvolto.partitaIva"
-                  required
-                  autofocus
-                  [disabled]="isOldContatto"
-                />
-                <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.partitaIva">partitaIva is required.</small> -->
-              </div>
-              <div class="p-field">
-                <label for="partitaIva">Tipologia</label>
-                <p-select
-                  [options]="tipiCoinvolti"
-                  [(ngModel)]="selectedTipoCoinvolto"
-                  placeholder="tipologia..."
-                  [showClear]="true"
-                  [disabled]="isOldContatto"
-                ></p-select>
-              </div>
-
-              <div class="p-field">
-                <label for="mail">Email</label>
-                <input
-                  type="text"
-                  pInputText
-                  id="mail"
-                  [(ngModel)]="coinvolto.mail"
-                  required
-                  autofocus
-                />
-                <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.mail">mail is required.</small> -->
-              </div>
-              <div class="p-field">
-                <label for="telefono">Telefono</label>
-                <input
-                  type="text"
-                  pInputText
-                  id="telefono"
-                  [(ngModel)]="coinvolto.telefono"
-                  required
-                  autofocus
-                />
-                <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.telefono">telefono is required.</small> -->
-              </div>
-              <div class="p-field">
-                <label for="via">Via</label>
-                <input
-                  type="text"
-                  pInputText
-                  id="via"
-                  [(ngModel)]="coinvolto.via"
-                  required
-                  autofocus
-                />
-                <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.via">via is required.</small> -->
-              </div>
-              <div class="p-field">
-                <label for="civico">Civico</label>
-                <input
-                  type="text"
-                  pInputText
-                  id="civico"
-                  [(ngModel)]="coinvolto.civico"
-                  required
-                  autofocus
-                />
-                <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.civico">civico is required.</small> -->
-              </div>
-              <div class="p-field">
-                <label for="cap">CAP</label>
-                <input
-                  type="text"
-                  pInputText
-                  id="cap"
-                  [(ngModel)]="coinvolto.cap"
-                  required
-                  autofocus
-                />
-                <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.cap">Name is required.</small> -->
-              </div>
-              <div class="p-field">
-                <label for="comune">Comune</label>
-                <input
-                  type="text"
-                  pInputText
-                  id="comune"
-                  [(ngModel)]="coinvolto.comune"
-                  required
-                  autofocus
-                />
-                <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.comune">comune is required.</small> -->
-              </div>
-              <div class="p-field">
-                <label for="provincia">Provincia</label>
-                <input
-                  type="text"
-                  pInputText
-                  id="provincia"
-                  [(ngModel)]="coinvolto.provincia"
-                  required
-                  autofocus
-                />
-                <!-- <small class="p-invalid" *ngIf="submitted && !coinvolto.provincia">Name is required.</small> -->
-              </div>
-            </ng-template>
-
-            <ng-template pTemplate="footer">
-              <button
-                pButton
-                pRipple
-                label="Cancella"
-                icon="pi pi-times"
-                class="p-button-text"
-                (click)="hideDialog()"
-              ></button>
-              <button
-                pButton
-                pRipple
-                label="Salva in rubrica"
-                icon="pi pi-check"
-                class="p-button-text"
-                [disabled]="isOldContatto"
-                (click)="addNewContatto()"
-              ></button>
-              <button
-                pButton
-                pRipple
-                label="Aggiorna"
-                icon="pi pi-check"
-                class="p-button-text"
-                [disabled]="!isOldContatto"
-                (click)="saveCoinvoltoCreato()"
-              ></button>
-            </ng-template>
-          </p-dialog>
-
-          <p-confirmDialog [style]="{ width: '28.125rem' }"></p-confirmDialog>
-
-          <p-dialog
-            appendTo="body"
-            [(visible)]="displayRubricaPopup"
-            [modal]="true"
-            header="Cerca Contatto"
-            [style]="{ width: '50vw' }"
-          >
-            <div class="p-d-flex p-pb-2">
-              <p-autoComplete
-                id="contatto"
-                #autocompleteContatto
-                [disabled]="disabledContatto"
-                ariaLabel="contatto"
-                [(ngModel)]="selectedContatto"
-                (onSelect)="saveContatto($any($event))"
-                [suggestions]="filteredContatti"
-                (completeMethod)="searchContatto($event)"
-                field="descrizione"
-                appendTo="body"
-                class="p-pr-3"
-                [dropdown]="true"
-                placeholder="Cerca contatto..."
-                emptyMessage="Nessun riferimento trovato"
-              >
-                <ng-template
-                  let-contatto
-                  pTemplate="itemContatto"
-                >
-                  <div>
-                    <em
-                      class="material-icons-outlined icon"
-                      tooltipPosition="top"
+                                        <p-dialog
+                                          appendTo="body"
+                                          [(visible)]="displayRubricaPopup"
+                                          [modal]="true"
+                                          header="Cerca Contatto"
+                                          [style]="{ width: '50vw' }"
+                                          >
+                                          <div class="p-d-flex p-pb-2">
+                                            <p-autoComplete
+                                              id="contatto"
+                                              #autocompleteContatto
+                                              [disabled]="disabledContatto"
+                                              ariaLabel="contatto"
+                                              [(ngModel)]="selectedContatto"
+                                              (onSelect)="saveContatto($any($event))"
+                                              [suggestions]="filteredContatti"
+                                              (completeMethod)="searchContatto($event)"
+                                              field="descrizione"
+                                              appendTo="body"
+                                              class="p-pr-3"
+                                              [dropdown]="true"
+                                              placeholder="Cerca contatto..."
+                                              emptyMessage="Nessun riferimento trovato"
+                                              >
+                                              <ng-template
+                                                let-contatto
+                                                pTemplate="itemContatto"
+                                                >
+                                                <div>
+                                                  <em
+                                                    class="material-icons-outlined icon"
+                                                    tooltipPosition="top"
                       [pTooltip]="
                         contatto.categoria === 'ESTERNO'
                           ? 'Esterno'
@@ -684,141 +689,159 @@
                           ? 'Struttura'
                           : 'Gruppo'
                       "
-                    >
-                      {{
-                        contatto.categoria === "ESTERNO"
-                          ? "perm_identity"
-                          : contatto.categoria === "PERSONA"
-                          ? "face"
-                          : contatto.categoria === "STRUTTURA"
-                          ? "account_balance"
-                          : "people"
-                      }}
-                    </em>
-                    {{ contatto.descrizione }}
-                    ({{ contatto.codiceFiscale }}{{ contatto.partitaIva }}) -
-                    {{ contatto.tipo.toLowerCase().split("_").join(" ") }}
-                  </div>
-                </ng-template>
-              </p-autoComplete>
-              <button
-                type="button"
-                pButton
-                icon="pi pi-times"
-                class="interaction-button"
-                (click)="removeContatto()"
-              ></button>
-            </div>
+                                                    >
+                                                    {{
+                                                    contatto.categoria === "ESTERNO"
+                                                    ? "perm_identity"
+                                                    : contatto.categoria === "PERSONA"
+                                                    ? "face"
+                                                    : contatto.categoria === "STRUTTURA"
+                                                    ? "account_balance"
+                                                    : "people"
+                                                    }}
+                                                  </em>
+                                                  {{ contatto.descrizione }}
+                                                  ({{ contatto.codiceFiscale }}{{ contatto.partitaIva }}) -
+                                                  {{ contatto.tipo.toLowerCase().split("_").join(" ") }}
+                                                </div>
+                                              </ng-template>
+                                            </p-autoComplete>
+                                            <button
+                                              type="button"
+                                              pButton
+                                              icon="pi pi-times"
+                                              class="interaction-button"
+                                              (click)="removeContatto()"
+                                            ></button>
+                                          </div>
 
-            <div>
-              <p-table stripedRows [value]="filteredDettagliContatti">
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th>Dettagli</th>
-                    <th class="p-col-1"></th>
-                  </tr>
-                </ng-template>
-                <ng-template
-                  pTemplate="body"
-                  let-dettaglio
-                  let-i="rowIndex"
-                >
-                  <tr>
-                    <td [ngSwitch]="dettaglio.tipo">
-                      <div *ngSwitchCase="'EMAIL'"><i class="pi pi-envelope p-pr-1"></i> {{ dettaglio.descrizione }}</div>
-                      <div *ngSwitchCase="'INDIRIZZO_FISICO'">
-                        <i class="pi pi-map-marker p-pr-1"></i> {{ dettaglio.descrizione }}
-                      </div>
-                      <div *ngSwitchCase="'TELEFONO'"><i class="fas fa-phone-alt p-pr-1"></i> {{ dettaglio.descrizione }}</div>
-                    </td>
-                    <td class="p-col-1">
-                      <button
-                        pButton
-                        pTooltip="scegli il dettaglio contatto"
-                        icon="pi pi-reply"
-                        class="interaction-button"
-                        (click)="insertContatto(dettaglio)"
-                      ></button>
-                    </td>
-                  </tr>
-                </ng-template>
-              </p-table>
-            </div>
-          </p-dialog>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </div>
-</p-scrollPanel>
+                                          <div>
+                                            <p-table stripedRows [value]="filteredDettagliContatti">
+                                              <ng-template pTemplate="header">
+                                                <tr>
+                                                  <th>Dettagli</th>
+                                                  <th class="p-col-1"></th>
+                                                </tr>
+                                              </ng-template>
+                                              <ng-template
+                                                pTemplate="body"
+                                                let-dettaglio
+                                                let-i="rowIndex"
+                                                >
+                                                <tr>
+                                                  <td>
+                                                    @switch (dettaglio.tipo) {
+                                                      @case ('EMAIL') {
+                                                        <div><i class="pi pi-envelope p-pr-1"></i> {{ dettaglio.descrizione }}</div>
+                                                      }
+                                                      @case ('INDIRIZZO_FISICO') {
+                                                        <div>
+                                                          <i class="pi pi-map-marker p-pr-1"></i> {{ dettaglio.descrizione }}
+                                                        </div>
+                                                      }
+                                                      @case ('TELEFONO') {
+                                                        <div><i class="fas fa-phone-alt p-pr-1"></i> {{ dettaglio.descrizione }}</div>
+                                                      }
+                                                    }
+                                                  </td>
+                                                  <td class="p-col-1">
+                                                    <button
+                                                      pButton
+                                                      pTooltip="scegli il dettaglio contatto"
+                                                      icon="pi pi-reply"
+                                                      class="interaction-button"
+                                                      (click)="insertContatto(dettaglio)"
+                                                    ></button>
+                                                  </td>
+                                                </tr>
+                                              </ng-template>
+                                            </p-table>
+                                          </div>
+                                        </p-dialog>
+                                      </div>
+                                    </mat-expansion-panel>
+                                  </mat-accordion>
+                                </div>
+                              </p-scrollPanel>
 
-<p-dialog
-  header="Creazione documento"
-  [(visible)]="displayModal"
-  [modal]="true"
-  [style]="{ width: '50vw' }"
-  [baseZIndex]="10000"
-  [draggable]="false"
-  [resizable]="false"
->
-  <p-progressBar
-    [ngClass]="{ 'progressbar-disable': !progressBarEnable }"
-    mode="indeterminate"
-  >
-  </p-progressBar>
-  <p class="p-m-0">
-    <span
-      *ngIf="!creazioneInCorso && numerazioneRSCreata"
-      class="p-tag p-tag-success"
-      >Successo</span
-    >
-    <span
-      *ngIf="!creazioneInCorso && numerazioneRSCreata === ''"
-      class="p-tag p-tag-danger"
-      >Errore</span
-    >
-    <span *ngIf="creazioneInCorso">{{ esitoCreazioneRS }}</span>
-  </p>
-  <p *ngIf="!creazioneInCorso && numerazioneRSCreata">
-    Numerazione:<b>{{ numerazioneRSCreata }}</b>
-  </p>
-  <p *ngIf="!creazioneInCorso && numerazioneRSCreata === ''"><b>Errore nella creazione del documento. Contattare babelcare</b></p>
-  <ng-template pTemplate="footer">
-    <p-button
-      icon="pi pi-check"
-      (click)="closeConfirm()"
-      label="OK"
-      class="p-button-text"
-    ></p-button>
-  </ng-template>
-</p-dialog>
+                              <p-dialog
+                                header="Creazione documento"
+                                [(visible)]="displayModal"
+                                [modal]="true"
+                                [style]="{ width: '50vw' }"
+                                [baseZIndex]="10000"
+                                [draggable]="false"
+                                [resizable]="false"
+                                >
+                                <p-progressBar
+                                  [ngClass]="{ 'progressbar-disable': !progressBarEnable }"
+                                  mode="indeterminate"
+                                  >
+                                </p-progressBar>
+                                <p class="p-m-0">
+                                  @if (!creazioneInCorso && numerazioneRSCreata) {
+                                    <span
+                                      class="p-tag p-tag-success"
+                                      >Successo</span
+                                      >
+                                  }
+                                  @if (!creazioneInCorso && numerazioneRSCreata === '') {
+                                    <span
+                                      class="p-tag p-tag-danger"
+                                      >Errore</span
+                                      >
+                                    }
+                                    @if (creazioneInCorso) {
+                                      <span>{{ esitoCreazioneRS }}</span>
+                                    }
+                                  </p>
+                                  @if (!creazioneInCorso && numerazioneRSCreata) {
+                                    <p>
+                                      Numerazione:<b>{{ numerazioneRSCreata }}</b>
+                                    </p>
+                                  }
+                                  @if (!creazioneInCorso && numerazioneRSCreata === '') {
+                                    <p><b>Errore nella creazione del documento. Contattare babelcare</b></p>
+                                  }
+                                  <ng-template pTemplate="footer">
+                                    <p-button
+                                      icon="pi pi-check"
+                                      (click)="closeConfirm()"
+                                      label="OK"
+                                      class="p-button-text"
+                                    ></p-button>
+                                  </ng-template>
+                                </p-dialog>
 
-<p-dialog
-  header="Dati mancanti"
-  [(visible)]="modalError"
-  [modal]="true"
-  [style]="{ width: '50vw' }"
-  [baseZIndex]="100000"
-  [draggable]="false"
-  [resizable]="false"
-  (onHide)="chiudiErrore()"
->
-  <b>ATTENZIONE:</b> non sono stai inseriti tutti i dati necessari
-  <br />
-  <br />
-  Si prega di compilare i seguenti campi:
-  <br />
-  <ul *ngFor="let dato of missingData">
-    <li>{{ dato }}</li>
-  </ul>
-  <br />
-  <br />
-  <div class="p-d-flex p-jc-end">
-    <button
-      pButton
-      class="p-button babel-color"
-      label="Conferma"
-      (click)="chiudiErrore()"
-      icon="pi pi-check"
-    ></button>
-  </div>
-</p-dialog>
+                                <p-dialog
+                                  header="Dati mancanti"
+                                  [(visible)]="modalError"
+                                  [modal]="true"
+                                  [style]="{ width: '50vw' }"
+                                  [baseZIndex]="100000"
+                                  [draggable]="false"
+                                  [resizable]="false"
+                                  (onHide)="chiudiErrore()"
+                                  >
+                                  <b>ATTENZIONE:</b> non sono stai inseriti tutti i dati necessari
+                                  <br />
+                                  <br />
+                                  Si prega di compilare i seguenti campi:
+                                  <br />
+                                  @for (dato of missingData; track dato) {
+                                    <ul>
+                                      <li>{{ dato }}</li>
+                                    </ul>
+                                  }
+                                  <br />
+                                  <br />
+                                  <div class="p-d-flex p-jc-end">
+                                    <button
+                                      pButton
+                                      class="p-button babel-color"
+                                      label="Conferma"
+                                      (click)="chiudiErrore()"
+                                      icon="pi pi-check"
+                                    ></button>
+                                  </div>
+                                </p-dialog>

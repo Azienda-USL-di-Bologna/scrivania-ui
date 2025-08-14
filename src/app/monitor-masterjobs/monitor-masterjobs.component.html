@@ -14,7 +14,7 @@
   (onLazyLoad)="onLazyLoad($any($event))"
   [loading]="loading"
   [totalRecords]="totalRecords"
->
+  >
   <ng-template #caption>
     <button
       type="button"
@@ -50,79 +50,86 @@
       class="ui-button-secondary icon-style icon-custom"
     ></button>
     <button
-    type="button"
-    pButton
-    pTooltip="Daje"
-    tooltipPosition="bottom"
-    (click)="flushCache()"
-    label="Flush Cache"
-    iconPos="left"
-    icon="pi pi-server"
-    class="ui-button-secondary icon-style icon-custom"
-  ></button>
-    <i
-      *ngIf="spinActive"
-      class="pi pi-spin pi-spinner"
-      style="font-size: 2rem"
-    ></i>
+      type="button"
+      pButton
+      pTooltip="Daje"
+      tooltipPosition="bottom"
+      (click)="flushCache()"
+      label="Flush Cache"
+      iconPos="left"
+      icon="pi pi-server"
+      class="ui-button-secondary icon-style icon-custom"
+    ></button>
+    @if (spinActive) {
+      <i
+        class="pi pi-spin pi-spinner"
+        style="font-size: 2rem"
+      ></i>
+    }
   </ng-template>
   <ng-template #header>
     <!-- HEADER -->
     <tr class="header-row">
-      <th
-        *ngFor="let col of columns"
-        [ngClass]="col.bodyClass"
-      >
-        {{ col.header }}
-      </th>
+      @for (col of columns; track col) {
+        <th
+          [ngClass]="col.bodyClass"
+          >
+          {{ col.header }}
+        </th>
+      }
     </tr>
     <!-- FILTRI -->
     <tr class="header-row">
-      <th
-        *ngFor="let col of columns"
-        [ngSwitch]="col.field"
-        [ngClass]="col.filterClass"
-      >
-        <div *ngSwitchCase="'name'">
-          <p-columnFilter
-            #colName
-            [field]="col.field"
-            [matchMode]="col.filterMatchMode"
-            [showMenu]="false"
-            [useGrouping]="false"
+      @for (col of columns; track col) {
+        <th
+          [ngClass]="col.filterClass"
           >
-            <ng-template
-              pTemplate="filter"
-              let-value
-              let-filter="filterCallback"
-            >
-              <input
-                #inputName
-                pInputText
-                [ngModel]="value"
-                type="text"
-                (keydown.enter)="filter(inputName?.value)"
-              />
-            </ng-template>
-          </p-columnFilter>
-        </div>
-      </th>
-    </tr>
-  </ng-template>
+          @switch (col.field) {
+            @case ('name') {
+              <div>
+                <p-columnFilter
+                  #colName
+                  [field]="col.field"
+                  [matchMode]="col.filterMatchMode"
+                  [showMenu]="false"
+                  [useGrouping]="false"
+                  >
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                    >
+                    <input
+                      #inputName
+                      pInputText
+                      [ngModel]="value"
+                      type="text"
+                      (keydown.enter)="filter(inputName?.value)"
+                      />
+                    </ng-template>
+                  </p-columnFilter>
+                </div>
+              }
+            }
+          </th>
+        }
+      </tr>
+    </ng-template>
 
-  <ng-template
-    #body
-    let-rowData
-    let-columns="columns"
-    let-index="rowIndex"
-  >
-    <tr class="row-height">
-      <td
-        *ngFor="let col of columns"
-        [ngClass]="col.bodyClass"
+    <ng-template
+      #body
+      let-rowData
+      let-columns="columns"
+      let-index="rowIndex"
       >
-        {{ rowData[col.field] }}
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
+      <tr class="row-height">
+        @for (col of columns; track col) {
+          <td
+            [ngClass]="col.bodyClass"
+            >
+            {{ rowData[col.field] }}
+          </td>
+        }
+      </tr>
+    </ng-template>
+  </p-table>
