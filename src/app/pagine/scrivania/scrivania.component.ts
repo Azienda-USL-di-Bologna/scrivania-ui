@@ -19,7 +19,7 @@ import { ParametroAziende } from "@bds/internauta-model";
 import { ConfigurazioneService } from "@bds/internauta-model";
 import { LOCAL_IT, UtilityFunctions } from "@bds/common-tools";
 import Bowser from "bowser";
-import { AttachmentsBoxConfig, PreviewConfig } from "@bds/common-components";
+import { AttachmentBoxMode, AttachmentsBoxConfig, PreviewConfig } from "@bds/common-components";
 import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
 
 @Component({
@@ -124,6 +124,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.attachmentsBoxConfig.showPreview = true;
     this.attachmentsBoxConfig.showInfoVersamento = false;
     this.attachmentsBoxConfig.showHeader = false;
+    this.attachmentsBoxConfig.mode = AttachmentBoxMode.EDIT;
     this.previewConfig = new PreviewConfig();
     this.previewConfig.showDatiDiFlusso = true;
     this.previewConfig.showDatiDocumento = true;
@@ -773,7 +774,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   toggleDarkMode() {
     const element = document.querySelector("html");
-    element.classList.toggle("my-app-dark");
+    element.classList.toggle("p-dark");
     if (this.darkmodeIcon === "pi pi-sun") {
       this.darkmodeIcon = "pi pi-moon";
     } else {
