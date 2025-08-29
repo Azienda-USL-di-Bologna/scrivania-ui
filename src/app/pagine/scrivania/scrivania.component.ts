@@ -121,10 +121,34 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     private projectedDocDetailWithPermessoDocService: ProjectedDocDetailWithPermessoDocService
   ) {
     this.attachmentsBoxConfig = new AttachmentsBoxConfig();
-    this.attachmentsBoxConfig.showPreview = true;
-    this.attachmentsBoxConfig.showInfoVersamento = false;
-    this.attachmentsBoxConfig.showHeader = false;
+    this.attachmentsBoxConfig.showRowSelection = true;
+    this.attachmentsBoxConfig.showCaptionTable = true;
+    this.attachmentsBoxConfig.showGlobalSearch = true;
+
+    /* SHOW CASE per tute le funzionalità del box attachment attive, scommetnare all'orccorrenza */
+    this.attachmentsBoxConfig.showCaptionTable = true;
+    this.attachmentsBoxConfig.showGlobalSearch = true;
+    this.attachmentsBoxConfig.showAddAttachment = true;
+    this.attachmentsBoxConfig.showMassiveFunctions = true;
+    this.attachmentsBoxConfig.showHeader = true;
+    this.attachmentsBoxConfig.showColumnFilter = true;
+    this.attachmentsBoxConfig.showReorder = true;
+    this.attachmentsBoxConfig.showRowSelection = true;
+    this.attachmentsBoxConfig.showSignedStatusColumn = true;
+    this.attachmentsBoxConfig.showSignatoriesInfoColumn = true;
+    this.attachmentsBoxConfig.showVisibilityInfoColumn = true;
+    //this.attachmentsBoxConfig.showInfoVersamentoColumn = true;
+    this.attachmentsBoxConfig.enableVisibilityChange = true;
+    this.attachmentsBoxConfig.enableSign = true;
+    this.attachmentsBoxConfig.enableSignatoryManagement = true;
+    this.attachmentsBoxConfig.enableDownload = true;
+    this.attachmentsBoxConfig.enabelSendingOptions = true;
+    this.attachmentsBoxConfig.enableSetAsMain = true;
+    this.attachmentsBoxConfig.enableExtractAndAttach = true;
+    this.attachmentsBoxConfig.enableDelete = true;
     this.attachmentsBoxConfig.mode = AttachmentBoxMode.EDIT;
+    this.attachmentsBoxConfig.selectionMode = "checkbox";
+
     this.previewConfig = new PreviewConfig();
     this.previewConfig.showDatiDiFlusso = true;
     this.previewConfig.showDatiDocumento = true;

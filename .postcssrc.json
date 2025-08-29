@@ -58,11 +58,11 @@
         "top-[2.5rem]","right-0","hidden","w-[18rem]","p-3","bg-white",
         "outline","outline-2","outline-offset-1","outline-transparent","cursor-pointer","p-0","rounded-[50%]","w-5","h-5",
         "inline-flex","p-[0.28rem]","items-start","gap-[0.28rem]","rounded-[0.71rem]","border","border-[#00000003]","w-full",
-        "gap-2","w-full","pt-4","pb-2",
-        "fadein", "fadeout"
+        "gap-2", "gap-3", "w-full","pt-4","pb-2",
+        "fadein", "fadeout",
+        "drag-handle", "mr-2", "text-gray-400", "cursor-move"
       ]
     },
-    "autoprefixer": {},
-    "tailwindcss-primeui": {}
+    "autoprefixer": {}
   }
 }
