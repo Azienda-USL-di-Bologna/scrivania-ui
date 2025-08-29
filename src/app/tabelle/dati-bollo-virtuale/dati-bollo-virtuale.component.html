@@ -62,11 +62,11 @@
         <span class="secondo-figlio">Da:</span>
         <p-datepicker
           [showIcon]="true"
-          [monthNavigator]="true"
-          [yearNavigator]="true"
+          
+          
           [showButtonBar]="true"
           yearRange="1000:4000"
-          [locale]="it"
+          
           [required]="true"
           dateFormat="dd/mm/yy"
           [hideOnDateTimeSelect]="true"
@@ -86,11 +86,11 @@
         <span> A:</span>
         <p-datepicker
           [showIcon]="true"
-          [monthNavigator]="true"
-          [yearNavigator]="true"
+          
+          
           [showButtonBar]="true"
           yearRange="1000:4000"
-          [locale]="it"
+          
           dateFormat="dd/mm/yy"
           [hideOnDateTimeSelect]="true"
           [(ngModel)]="dataFine"
@@ -123,7 +123,7 @@
           [value]="datiBolliVirtuali"
           [columns]="cols"
           [rows]="_rows"
-          [autoLayout]="false"
+          
           [totalRecords]="totalRecords"
           selectionMode="single"
           (onRowSelect)="handleEvent('onRowSelect', $event)"
@@ -182,7 +182,7 @@
                     [(ngModel)]="dataRange[col.field]"
                     placeholder="Scegli..."
                     [showButtonBar]="true"
-                    [locale]="it"
+                    
                     [showIcon]="false"
                     dateFormat="dd/mm/yy"
                     (onSelect)="onCalendarAction($event, col.field, 'select')"

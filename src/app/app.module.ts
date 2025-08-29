@@ -36,12 +36,11 @@ import { SelectModule } from "primeng/select";
 import { TableModule } from "primeng/table";
 import { TooltipModule } from "primeng/tooltip";
 import { DatePickerModule } from "primeng/datepicker";
-import { InputSwitchModule } from "primeng/inputswitch";
+import { ToggleSwitchModule } from "primeng/toggleswitch";
 import { MenubarModule } from "primeng/menubar";
 import { DynamicDialogModule } from "primeng/dynamicdialog";
 import { ContextMenuModule } from "primeng/contextmenu";
 import { InputTextModule } from "primeng/inputtext";
-import { OverlayPanelModule } from "primeng/overlaypanel";
 import { TieredMenuModule } from "primeng/tieredmenu";
 import { DialogModule } from "primeng/dialog";
 import { AutoCompleteModule } from "primeng/autocomplete";
@@ -60,6 +59,7 @@ import { InplaceModule } from "primeng/inplace";
 import { ConfirmPopupModule } from "primeng/confirmpopup";
 import { DividerModule } from "primeng/divider";
 import { CheckboxModule } from "primeng/checkbox";
+import { PopoverModule } from "primeng/popover";
 
 /* Login */
 import { JwtLoginModule } from "@bds/jwt-login";
@@ -112,11 +112,11 @@ import { DocService } from "@bds/internauta-model";
     DatePickerModule,
     TooltipModule,
     InputTextModule,
-    OverlayPanelModule,
+    PopoverModule,
     TieredMenuModule,
     DialogModule,
     AutoCompleteModule,
-    InputSwitchModule,
+    ToggleSwitchModule,
     MenubarModule,
     DynamicDialogModule,
     ContextMenuModule,
