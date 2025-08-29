@@ -5,19 +5,19 @@
   #splitter
   [ngClass]="{ hiderightside: hidePreview || mostraStorico }"
   onResizeEnd="onResize($event)"
->
+  >
   <ng-template pTemplate>
     <div
       class="p-col content-left"
       #leftSide
-    >
+      >
       <div class="option-bar">
         <div class="buttons-bar">
           @if (menuItems) {
-          <bds-menu
-            [items]="menuItems"
-            [executeAction]="openMenuUrl"
-          ></bds-menu>
+            <bds-menu
+              [items]="menuItems"
+              [executeAction]="openMenuUrl"
+            ></bds-menu>
           }
 
           <!-- Firma -->
@@ -34,369 +34,384 @@
             class="p-button-icon-only"
             (click)="handleItemClick(urlFirmone.url, urlFirmone.urlGenerationStrategy)"
             aria-label="Firma"
-          >
+            >
             <img
               src="assets/images/sign.svg"
               class="images-pos"
               alt="Firma"
-            />
-          </button>
+              />
+            </button>
 
-          <button
-            #btn
-            type="button"
-            pButton
-            pTooltip="Firma"
-            tooltipPosition="bottom"
-            [ngClass]="{ 'd-hidden': mostraStorico || alberoFirma.length < 2, 'd-flex': !mostraStorico }"
-            class="ui-button-secondary icon-custom p-button-icon-only"
-            (click)="firmaMenu.toggle($event)"
-            aria-label="Firma"
-          >
-            <img
-              src="assets/images/sign.svg"
-              class="images-pos"
-              alt="Firma"
-            />
-          </button>
-          <p-tieredMenu
-            appendTo="body"
-            #firmaMenu
-            [model]="alberoFirma"
-            [popup]="true"
-            (itemClick)="handleItemClick($event, null)"
-          >
-          </p-tieredMenu>
+            <button
+              #btn
+              type="button"
+              pButton
+              pTooltip="Firma"
+              tooltipPosition="bottom"
+              [ngClass]="{ 'd-hidden': mostraStorico || alberoFirma.length < 2, 'd-flex': !mostraStorico }"
+              class="ui-button-secondary icon-custom p-button-icon-only"
+              (click)="firmaMenu.toggle($event)"
+              aria-label="Firma"
+              >
+              <img
+                src="assets/images/sign.svg"
+                class="images-pos"
+                alt="Firma"
+                />
+              </button>
+              <p-tieredMenu
+                appendTo="body"
+                #firmaMenu
+                [model]="alberoFirma"
+                [popup]="true"
+                (itemClick)="handleItemClick($event, null)"
+                >
+              </p-tieredMenu>
 
-          <!-- Prendi -->
-          <button
-            type="button"
-            pButton
-            pTooltip="Prendi i tuoi assegnamenti"
-            tooltipPosition="bottom"
+              <!-- Prendi -->
+              <button
+                type="button"
+                pButton
+                pTooltip="Prendi i tuoi assegnamenti"
+                tooltipPosition="bottom"
             [ngClass]="{
               'ui-button-secondary icon-custom': true,
               'd-hidden': mostraStorico || urlPrendone === '#',
               'd-flex': !mostraStorico
             }"
-            class="p-button-icon-only"
-            (click)="handleItemClick(urlPrendone.url, urlPrendone.urlGenerationStrategy)"
-            aria-label="Prendi il documento"
-          >
-            <img
-              src="assets/images/hiring.svg"
-              class="images-pos"
-              alt="Prendi"
-            />
-          </button>
-          <button
-            #btn
-            type="button"
-            pButton
-            pTooltip="Prendi i tuoi assegnamenti"
-            tooltipPosition="bottom"
-            [ngClass]="{ 'd-hidden': mostraStorico || alberoPrendi.length < 2, 'd-flex': !mostraStorico }"
-            class="ui-button-secondary icon-custom p-button-icon-only"
-            (click)="prendoneMenu.toggle($event)"
-            aria-label="Prendi il documento"
-          >
-            <img
-              src="assets/images/hiring.svg"
-              class="images-pos"
-              alt="Prendi"
-            />
-          </button>
-          <p-tieredMenu
-            appendTo="body"
-            #prendoneMenu
-            [model]="alberoPrendi"
-            [popup]="true"
-            (itemClick)="handleItemClick($event, null)"
-          >
-          </p-tieredMenu>
-          <button
-            #btn
-            *ngIf="showRaccoltaSemplice"
-            type="button"
-            pButton
-            pTooltip="Vai alla Raccolta Semplice"
-            tooltipPosition="bottom"
-            [routerLink]="'/raccoltasemplice'"
-            iconPos="left"
-            icon="pi pi-briefcase"
-            class="ui-button-secondary icon-style icon-custom"
-            aria-label="Vai alla Raccolta Semplice"
-          ></button>
-          <button
-            #btn
-            *ngIf="!mostraStorico && loggedUser?.isCA() && showBolli"
-            type="button"
-            pButton
-            pTooltip="Vai al riepilogo Bollo Virtuale"
-            tooltipPosition="bottom"
-            [routerLink]="'/bollo'"
-            iconPos="left"
-            icon="pi pi-money-bill"
-            class="ui-button-secondary icon-style icon-custom"
-            aria-label="Vai al riepilogo Bolli Virtuali"
-          ></button>
-          <div class="separator-class"></div>
-          <!-- INDIETRO -->
-          <button
-            *ngIf="mostraStorico || mostraMonitorMasterjobs"
-            type="button"
-            pButton
-            pTooltip="Indietro"
-            tooltipPosition="bottom"
-            icon="pi pi-chevron-left"
-            iconPos="left"
-            (click)="mostraStorico = false; mostraMonitorMasterjobs = false"
-            class="ui-button-secondary icon-style icon-custom"
-            aria-label="Indietro"
-          ></button>
-          <button
-            #btn
-            type="button"
-            pButton
-            pTooltip="Aggiorna attività"
-            tooltipPosition="bottom"
-            (click)="ricarica()"
-            iconPos="left"
-            icon="pi pi-refresh"
-            class="ui-button-secondary icon-style icon-custom"
-            aria-label="Aggiorna le attività"
-          ></button>
-          <button
-            *ngIf="!mostraStorico"
-            type="button"
-            pButton
-            pTooltip="Cronologia"
-            tooltipPosition="bottom"
-            icon="pi pi-clock"
-            iconPos="left"
-            (click)="mostraStorico = !mostraStorico"
-            class="ui-button-secondary icon-style icon-custom"
-            aria-label="Cronologia delle attività"
-          ></button>
-          <button
-            #btn
-            *ngIf="!mostraStorico"
-            type="button"
-            pButton
-            pTooltip="Elimina notifiche"
-            tooltipPosition="bottom"
-            (click)="eliminaTutteNotifiche()"
-            iconPos="left"
-            icon="pi pi-trash"
-            class="ui-button-secondary icon-style icon-custom"
-            aria-label="Elimina notifiche"
-          ></button>
-          <h3
-            *ngIf="mostraStorico"
-            class="crono-label"
-          >
-            Cronologia
-          </h3>
-          <!-- MONITOR MASTERJOBS -->
-          <button
-            *ngIf="loggedUserIsSD && loggedUserIs99"
-            type="button"
-            pButton
-            pTooltip="Apri monitor del masterjobs"
-            tooltipPosition="bottom"
-            (click)="mostraMonitorMasterjobs = true"
-            iconPos="left"
-            icon="pi pi-shield"
-            class="ui-button-secondary icon-style icon-custom"
-          ></button>
-          <!-- GENERATORE XML AVCP (LOTTI) Bottone temporaneo -->
-          <button
-            *ngIf="buttonAvcpEnabled"
-            type="button"
-            pButton
-            pTooltip="Apri generatore xml AVCP"
-            tooltipPosition="bottom"
-            (click)="showAvcpDialog = true"
-            iconPos="left"
-            icon="pi pi-file"
-            class="ui-button-secondary icon-style icon-custom"
-          ></button>
-        </div>
+                class="p-button-icon-only"
+                (click)="handleItemClick(urlPrendone.url, urlPrendone.urlGenerationStrategy)"
+                aria-label="Prendi il documento"
+                >
+                <img
+                  src="assets/images/hiring.svg"
+                  class="images-pos"
+                  alt="Prendi"
+                  />
+                </button>
+                <button
+                  #btn
+                  type="button"
+                  pButton
+                  pTooltip="Prendi i tuoi assegnamenti"
+                  tooltipPosition="bottom"
+                  [ngClass]="{ 'd-hidden': mostraStorico || alberoPrendi.length < 2, 'd-flex': !mostraStorico }"
+                  class="ui-button-secondary icon-custom p-button-icon-only"
+                  (click)="prendoneMenu.toggle($event)"
+                  aria-label="Prendi il documento"
+                  >
+                  <img
+                    src="assets/images/hiring.svg"
+                    class="images-pos"
+                    alt="Prendi"
+                    />
+                  </button>
+                  <p-tieredMenu
+                    appendTo="body"
+                    #prendoneMenu
+                    [model]="alberoPrendi"
+                    [popup]="true"
+                    (itemClick)="handleItemClick($event, null)"
+                    >
+                  </p-tieredMenu>
+                  @if (showRaccoltaSemplice) {
+                    <button
+                      #btn
+                      type="button"
+                      pButton
+                      pTooltip="Vai alla Raccolta Semplice"
+                      tooltipPosition="bottom"
+                      [routerLink]="'/raccoltasemplice'"
+                      iconPos="left"
+                      icon="pi pi-briefcase"
+                      class="ui-button-secondary icon-style icon-custom"
+                      aria-label="Vai alla Raccolta Semplice"
+                    ></button>
+                  }
+                  @if (!mostraStorico && loggedUser?.isCA() && showBolli) {
+                    <button
+                      #btn
+                      type="button"
+                      pButton
+                      pTooltip="Vai al riepilogo Bollo Virtuale"
+                      tooltipPosition="bottom"
+                      [routerLink]="'/bollo'"
+                      iconPos="left"
+                      icon="pi pi-money-bill"
+                      class="ui-button-secondary icon-style icon-custom"
+                      aria-label="Vai al riepilogo Bolli Virtuali"
+                    ></button>
+                  }
+                  <div class="separator-class"></div>
+                  <!-- INDIETRO -->
+                  @if (mostraStorico || mostraMonitorMasterjobs) {
+                    <button
+                      type="button"
+                      pButton
+                      pTooltip="Indietro"
+                      tooltipPosition="bottom"
+                      icon="pi pi-chevron-left"
+                      iconPos="left"
+                      (click)="mostraStorico = false; mostraMonitorMasterjobs = false"
+                      class="ui-button-secondary icon-style icon-custom"
+                      aria-label="Indietro"
+                    ></button>
+                  }
+                  <button
+                    #btn
+                    type="button"
+                    pButton
+                    pTooltip="Aggiorna attività"
+                    tooltipPosition="bottom"
+                    (click)="ricarica()"
+                    iconPos="left"
+                    icon="pi pi-refresh"
+                    class="ui-button-secondary icon-style icon-custom"
+                    aria-label="Aggiorna le attività"
+                  ></button>
+                  @if (!mostraStorico) {
+                    <button
+                      type="button"
+                      pButton
+                      pTooltip="Cronologia"
+                      tooltipPosition="bottom"
+                      icon="pi pi-clock"
+                      iconPos="left"
+                      (click)="mostraStorico = !mostraStorico"
+                      class="ui-button-secondary icon-style icon-custom"
+                      aria-label="Cronologia delle attività"
+                    ></button>
+                  }
+                  @if (!mostraStorico) {
+                    <button
+                      #btn
+                      type="button"
+                      pButton
+                      pTooltip="Elimina notifiche"
+                      tooltipPosition="bottom"
+                      (click)="eliminaTutteNotifiche()"
+                      iconPos="left"
+                      icon="pi pi-trash"
+                      class="ui-button-secondary icon-style icon-custom"
+                      aria-label="Elimina notifiche"
+                    ></button>
+                  }
+                  @if (mostraStorico) {
+                    <h3
+                      class="crono-label"
+                      >
+                      Cronologia
+                    </h3>
+                  }
+                  <!-- MONITOR MASTERJOBS -->
+                  @if (loggedUserIsSD && loggedUserIs99) {
+                    <button
+                      type="button"
+                      pButton
+                      pTooltip="Apri monitor del masterjobs"
+                      tooltipPosition="bottom"
+                      (click)="mostraMonitorMasterjobs = true"
+                      iconPos="left"
+                      icon="pi pi-shield"
+                      class="ui-button-secondary icon-style icon-custom"
+                    ></button>
+                  }
+                  <!-- GENERATORE XML AVCP (LOTTI) Bottone temporaneo -->
+                  @if (buttonAvcpEnabled) {
+                    <button
+                      type="button"
+                      pButton
+                      pTooltip="Apri generatore xml AVCP"
+                      tooltipPosition="bottom"
+                      (click)="showAvcpDialog = true"
+                      iconPos="left"
+                      icon="pi pi-file"
+                      class="ui-button-secondary icon-style icon-custom"
+                    ></button>
+                  }
+                </div>
 
-        <span
-          *ngIf="browserObsolete"
-          class="messaggio-browser-obsoleti"
-        >
-          <i
-            class="pi pi-exclamation-triangle"
-            style="font-size: 2rem"
-          ></i>
-          <span>{{ browserMessageObsolete }}</span>
-        </span>
+                @if (browserObsolete) {
+                  <span
+                    class="messaggio-browser-obsoleti"
+                    >
+                    <i
+                      class="pi pi-exclamation-triangle"
+                      style="font-size: 2rem"
+                    ></i>
+                    <span>{{ browserMessageObsolete }}</span>
+                  </span>
+                }
 
-        <!-- @if (this.loggedUser?.isSD()) {
-          <p-button [icon]="darkmodeIcon" type="button" class="darkmodebutton" (onClick)="toggleDarkMode()" [rounded]="true" [text]="true">
-          </p-button>
-        } -->
+                <!-- @if (this.loggedUser?.isSD()) {
+                <p-button [icon]="darkmodeIcon" type="button" class="darkmodebutton" (onClick)="toggleDarkMode()" [rounded]="true" [text]="true">
+                </p-button>
+                } -->
 
-        <app-dropdown-aziende
-          *ngIf="
-            ((!!this.loggedUser?.getUtente().utenteReale || this.loggedUser?.isSD()) &&
-              this.loggedUser?.getUtente().aziende.length > 1) ||
-            (!!!this.loggedUser?.getUtente().utenteReale && this.loggedUser?.getUtente().aziendeAttive.length > 1)
-          "
-          (aziendaEmitter)="aziendaChanged($event)"
-          aria-label="Ente delle attività"
-        >
-        </app-dropdown-aziende>
-      </div>
-      <div class="table-wrapper">
-        <div class="table-inner">
-          <app-attivita
-            *ngIf="!mostraStorico && !mostraMonitorMasterjobs"
-            (attivitaEmitter)="attivitaClicked($event)"
-            [refresh]="tabellaDaRefreshare"
-            [idAzienda]="idAzienda"
-            (refreshAttivita)="ricarica()"
-            [changeColOrder]="changeColOrder"
-          ></app-attivita>
-          <app-attivita-fatte
-            *ngIf="mostraStorico && !mostraMonitorMasterjobs"
-            [idAzienda]="idAzienda"
-            [refresh]="tabellaDaRefreshare"
-          ></app-attivita-fatte>
-          <monitor-masterjobs *ngIf="mostraMonitorMasterjobs"></monitor-masterjobs>
-        </div>
-      </div>
-    </div>
-    <!-- </div> -->
+                @if (
+                  ((!!this.loggedUser?.getUtente().utenteReale || this.loggedUser?.isSD()) &&
+                  this.loggedUser?.getUtente().aziende.length > 1) ||
+                  (!!!this.loggedUser?.getUtente().utenteReale && this.loggedUser?.getUtente().aziendeAttive.length > 1)
+                  ) {
+                  <app-dropdown-aziende
+                    (aziendaEmitter)="aziendaChanged($event)"
+                    aria-label="Ente delle attività"
+                    >
+                  </app-dropdown-aziende>
+                }
+              </div>
+              <div class="table-wrapper">
+                <div class="table-inner">
+                  @if (!mostraStorico && !mostraMonitorMasterjobs) {
+                    <app-attivita
+                      (attivitaEmitter)="attivitaClicked($event)"
+                      [refresh]="tabellaDaRefreshare"
+                      [idAzienda]="idAzienda"
+                      (refreshAttivita)="ricarica()"
+                      [changeColOrder]="changeColOrder"
+                    ></app-attivita>
+                  }
+                  @if (mostraStorico && !mostraMonitorMasterjobs) {
+                    <app-attivita-fatte
+                      [idAzienda]="idAzienda"
+                      [refresh]="tabellaDaRefreshare"
+                    ></app-attivita-fatte>
+                  }
+                  @if (mostraMonitorMasterjobs) {
+                    <monitor-masterjobs></monitor-masterjobs>
+                  }
+                </div>
+              </div>
+            </div>
+          <!-- </div> -->
 
-    <!-- <div
-    class="p-offset-7 d-inline-block slider"
-    [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'"
-    #slider
-  >
-    <div></div>
-  </div> -->
-  </ng-template>
-  <ng-template pTemplate>
-    <!-- Right side -->
-    <div
-      class="p-md-5 p-sm-12 content-right"
-      [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'"
-      #rightSide
-      *ngIf="!hidePreview"
-    >
-      <div
-        tabindex="0"
-        aria-label="Anteprima del documento"
-        class="h-full"
-      >
-        <!-- <div
-          *ngIf="oggetto"
-          class="div-info-doc"
-          tabindex="0"
-          attr.aria-label="documento oggetto {{ oggetto }}"
-        >
-          <strong>{{ oggetto }}</strong>
-        </div>
-        <div
-          *ngIf="!oggetto"
-          class="div-info-doc"
-        >
-          <strong>Nessuna attività selezionata.</strong>
+          <!-- <div
+          class="p-offset-7 d-inline-block slider"
+          [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'"
+          #slider
+          >
+          <div></div>
         </div> -->
-        <!-- <p-accordion
-          [multiple]="true"
-          [activeIndex]="[]"
-          #accordionDetail
-        >
-          <p-accordionTab
-            header="Dettagli documento"
-            aria-controls="sect1"
-          >
-            <div
-              *ngIf="mittente || destinatari || destinatariCC"
-              id="sect1"
+      </ng-template>
+      <ng-template pTemplate>
+        <!-- Right side -->
+        @if (!hidePreview) {
+          <div
+            class="content-right"
+            [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'"
+            #rightSide
             >
-              <ul class="ul-info-doc">
-                <li
-                  tabindex="0"
-                  *ngIf="mittente"
+            <div
+              tabindex="0"
+              aria-label="Anteprima del documento"
+              class="h-full"
+              >
+              <!-- <div
+              *ngIf="oggetto"
+              class="div-info-doc"
+              tabindex="0"
+              attr.aria-label="documento oggetto {{ oggetto }}"
+              >
+              <strong>{{ oggetto }}</strong>
+            </div>
+            <div
+              *ngIf="!oggetto"
+              class="div-info-doc"
+              >
+              <strong>Nessuna attività selezionata.</strong>
+            </div> -->
+            <!-- <p-accordion
+            [multiple]="true"
+            [activeIndex]="[]"
+            #accordionDetail
+            >
+            <p-accordionTab
+              header="Dettagli documento"
+              aria-controls="sect1"
+              >
+              <div
+                *ngIf="mittente || destinatari || destinatariCC"
+                id="sect1"
                 >
-                  <span class="li-description">Da: </span><span class="li-content">{{ mittente }}</span>
-                </li>
-                <li
-                  tabindex="0"
-                  *ngIf="destinatari"
+                <ul class="ul-info-doc">
+                  <li
+                    tabindex="0"
+                    *ngIf="mittente"
+                    >
+                    <span class="li-description">Da: </span><span class="li-content">{{ mittente }}</span>
+                  </li>
+                  <li
+                    tabindex="0"
+                    *ngIf="destinatari"
+                    >
+                    <span
+                      class="li-content"
+                      [innerHTML]="destinatari"
+                    ></span>
+                  </li>
+                  <li
+                    tabindex="0"
+                    *ngIf="destinatariCC"
+                    >
+                    <span
+                      class="li-content"
+                      [innerHTML]="destinatariCC"
+                    ></span>
+                  </li>
+                </ul>
+              </div>
+              <div
+                *ngIf="!(mittente || destinatari || destinatariCC)"
+                class="text-centered"
                 >
-                  <span
-                    class="li-content"
-                    [innerHTML]="destinatari"
-                  ></span>
-                </li>
-                <li
-                  tabindex="0"
-                  *ngIf="destinatariCC"
+                Non sono presenti dettagli da visualizzare.
+              </div>
+            </p-accordionTab>
+            <p-accordionTab
+              header="Dati di flusso"
+              aria-controls="sect2"
+              >
+              <div
+                *ngIf="datiDiFlusso"
+                id="sect2"
                 >
-                  <span
-                    class="li-content"
-                    [innerHTML]="destinatariCC"
-                  ></span>
-                </li>
-              </ul>
-            </div>
+                <ul class="ul-info-doc">
+                  <li>
+                    <span
+                      pTooltip="{{ datiFlussoTooltip }}"
+                      [innerHTML]="datiDiFlusso"
+                      class="li-content"
+                    ></span>
+                  </li>
+                </ul>
+              </div>
+              <div
+                *ngIf="!datiDiFlusso"
+                class="text-centered"
+                >
+                Non sono presenti dati di flusso da visualizzare.
+              </div>
+            </p-accordionTab>
+          </p-accordion> -->
+          @if (docDetailView) {
+            <lib-preview
+              [doc]="docDetailView"
+              [sonoPersonaVedenteSuDocSelezionato]="sonoPersonaVedenteSuDocSelezionato"
+              [config]="previewConfig"
+              (closeRightPanel)="manageRowSelected({ sonoPersonaVedenteSuDocSelezionato: null })"
+              (openDocInScripta)="openDocInScripta()"
+              [datiAggiuntiviAttivita]="attivitaSelezionata.datiAggiuntivi"
+              >
+            </lib-preview>
+          }
+          @if (!docDetailView) {
             <div
-              *ngIf="!(mittente || destinatari || destinatariCC)"
-              class="text-centered"
-            >
-              Non sono presenti dettagli da visualizzare.
+              class="flex justify-center h-full"
+              >
+              <h1 class="font-bold self-center">Selezionare un'attività per visualizzarne il dettaglio</h1>
             </div>
-          </p-accordionTab>
-          <p-accordionTab
-            header="Dati di flusso"
-            aria-controls="sect2"
-          >
-            <div
-              *ngIf="datiDiFlusso"
-              id="sect2"
-            >
-              <ul class="ul-info-doc">
-                <li>
-                  <span
-                    pTooltip="{{ datiFlussoTooltip }}"
-                    [innerHTML]="datiDiFlusso"
-                    class="li-content"
-                  ></span>
-                </li>
-              </ul>
-            </div>
-            <div
-              *ngIf="!datiDiFlusso"
-              class="text-centered"
-            >
-              Non sono presenti dati di flusso da visualizzare.
-            </div>
-          </p-accordionTab>
-        </p-accordion> -->
-
-        <lib-preview
-          *ngIf="docDetailView"
-          [doc]="docDetailView"
-          [sonoPersonaVedenteSuDocSelezionato]="sonoPersonaVedenteSuDocSelezionato"
-          [config]="previewConfig"
-          (closeRightPanel)="manageRowSelected({ sonoPersonaVedenteSuDocSelezionato: null })"
-          (openDocInScripta)="openDocInScripta()"
-          [datiAggiuntiviAttivita]="attivitaSelezionata.datiAggiuntivi"
-        >
-        </lib-preview>
-        <div
-          class="flex justify-center h-full"
-          *ngIf="!docDetailView"
-        >
-          <h1 class="font-bold self-center">Selezionare un'attività per visualizzarne il dettaglio</h1>
-        </div>
-        <!-- <div class="allegati-dropdown">
+          }
+          <!-- <div class="allegati-dropdown">
           <p-select
             #allegatiDropDown
             [ngModel]="allegatoSelezionato"
@@ -408,33 +423,34 @@
             src="assets/images/fullscreen-symbol.svg"
             (click)="fullscreen($event)"
             alt="fullscreen"
-          />
-        </div> -->
+            />
+          </div> -->
         <!-- </div>
-      <div class="d-flex flex-grow-1">
-        <div class="preview-inner">
-          <div [ngClass]="{ 'overlap-div': sliding }"></div>
-          <iframe
-            *ngIf="!noAnteprima"
-            #anteprima
-            id="anteprima"
-            frameborder="0"
-            allowfullscreen
-            webkitallowfullscreen
-            mozallowfullscreen
-          >
-          </iframe>
-          <div
-            *ngIf="noAnteprima"
-            class="no-anteprima"
-          >
-            L'anteprima non è disponibile per questo tipo di attività.
+        <div class="d-flex flex-grow-1">
+          <div class="preview-inner">
+            <div [ngClass]="{ 'overlap-div': sliding }"></div>
+            <iframe
+              *ngIf="!noAnteprima"
+              #anteprima
+              id="anteprima"
+              frameborder="0"
+              allowfullscreen
+              webkitallowfullscreen
+              mozallowfullscreen
+              >
+            </iframe>
+            <div
+              *ngIf="noAnteprima"
+              class="no-anteprima"
+              >
+              L'anteprima non è disponibile per questo tipo di attività.
+            </div>
           </div>
-        </div>
-      </div> -->
+        </div> -->
       </div>
     </div>
-  </ng-template>
+  }
+</ng-template>
 </p-splitter>
 <!-- </div> -->
 
@@ -449,15 +465,15 @@
   [modal]="true"
   [style]="{ width: '30rem', height: '25rem' }"
   [baseZIndex]="10000"
->
+  >
   <div style="display: 'flex'; justify-content: 'space-evenly'">
     <p-datepicker
       [(ngModel)]="avcpCalendarDate"
       [showIcon]="true"
-      [locale]="localIt"
+      
       view="year"
       dateFormat="yy"
-      [yearNavigator]="true"
+      
       yearRange="2000:2030"
       [readonlyInput]="true"
       inputId="monthpicker"
@@ -465,17 +481,18 @@
       pTooltip="Seleziona l'anno per la produzione dell'xml AVCP"
     ></p-datepicker>
   </div>
-  <button
-    *ngIf="true"
-    type="button"
-    pButton
-    pTooltip="Ok"
-    tooltipPosition="bottom"
-    (click)="generateAvcp()"
-    style="width: 6rem; left: 74%; margin-top: 11rem"
-  >
-    Scarica...
-  </button>
+  @if (true) {
+    <button
+      type="button"
+      pButton
+      pTooltip="Ok"
+      tooltipPosition="bottom"
+      (click)="generateAvcp()"
+      style="width: 6rem; left: 74%; margin-top: 11rem"
+      >
+      Scarica...
+    </button>
+  }
 </p-dialog>
 
 <p-dialog
@@ -485,7 +502,7 @@
   [baseZIndex]="10000"
   [draggable]="false"
   [resizable]="false"
->
+  >
   <p class="m-0">
     <b>Attenzione</b>, risulta che stai usando Babel con un <b>broswer obsoleto</b>.<br />
     Dal giorno <b> 18/07/2024 </b> Babel non funzionerà più sul tuo computer.<br />
