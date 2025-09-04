@@ -13,7 +13,6 @@
         "text-xl",
         "dark:text-white",
         "m-0",
-
         "mx-6",
         "my-6",
         "mb-4",
@@ -60,7 +59,7 @@
         "inline-flex","p-[0.28rem]","items-start","gap-[0.28rem]","rounded-[0.71rem]","border","border-[#00000003]","w-full",
         "gap-2", "gap-3", "w-full","pt-4","pb-2",
         "fadein", "fadeout",
-        "drag-handle", "mr-2", "text-gray-400", "cursor-move"
+        "drag-handle", "mr-2", "text-gray-400", "cursor-move", "pr-2", "list-disc", "pl-5", "m-0", "gap-4", "gap-8"
       ]
     },
     "autoprefixer": {}
