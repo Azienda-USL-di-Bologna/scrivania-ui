@@ -124,6 +124,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.attachmentsBoxConfig.showRowSelection = true;
     this.attachmentsBoxConfig.showCaptionTable = true;
     this.attachmentsBoxConfig.showGlobalSearch = true;
+    this.attachmentsBoxConfig.showSignedStatusColumn = true;
+    this.attachmentsBoxConfig.showSignatoriesInfoColumn = true;
 
     /* SHOW CASE per tute le funzionalità del box attachment attive, scommetnare all'orccorrenza */
     /* this.attachmentsBoxConfig.showCaptionTable = true;
