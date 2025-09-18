@@ -14,7 +14,7 @@
   [loading]="loading"
   (keydown.arrowdown)="onKeydownHandlerArrowDown($event)"
   (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
-  ><!-- [autoLayout]="false" -->
+  ><!--  -->
   <ng-template
     pTemplate="header"
     let-columns
@@ -58,7 +58,7 @@
             [(ngModel)]="dataRange[col.field]"
             placeholder="Scegli..."
             [showButtonBar]="true"
-            [locale]="localIt"
+            
             [showIcon]="false"
             dateFormat="dd/mm/yy"
             (onSelect)="onCalendarAction($event, col.field, 'select')"

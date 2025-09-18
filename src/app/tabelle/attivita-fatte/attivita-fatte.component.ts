@@ -8,15 +8,15 @@ import { AttivitaFatta, ENTITIES_STRUCTURE } from "@bds/internauta-model";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Subscription } from "rxjs";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
-import { Calendar } from "primeng/calendar";
 import { Table } from "primeng/table";
+import { DatePicker } from "primeng/datepicker";
 
 @Component({
-    selector: "app-attivita-fatte",
-    templateUrl: "./attivita-fatte.component.html",
-    styleUrls: ["./attivita-fatte.component.scss"],
-    providers: [DatePipe],
-    standalone: false
+  selector: "app-attivita-fatte",
+  templateUrl: "./attivita-fatte.component.html",
+  styleUrls: ["./attivita-fatte.component.scss"],
+  providers: [DatePipe],
+  standalone: false,
 })
 export class AttivitaFatteComponent implements OnInit {
   public attivitaFatte: AttivitaFatta[];
@@ -34,7 +34,7 @@ export class AttivitaFatteComponent implements OnInit {
 
   public _rows = 20;
 
-  @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
+  @ViewChildren("calGen") private _calGen: QueryList<DatePicker>;
   @ViewChild("dt") private dataTable: Table;
 
   private _idAzienda: number = -1;
@@ -273,7 +273,7 @@ export class AttivitaFatteComponent implements OnInit {
   }
 
   public onCalendarAction(event: any, field: string, action: string) {
-    let calSel: Calendar = null;
+    let calSel: DatePicker = null;
     switch (action) {
       case "today":
         calSel = this._calGen.find((e) => e.inputId === "CalInput_" + field);

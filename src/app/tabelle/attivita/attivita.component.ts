@@ -22,12 +22,12 @@ import { Attivita, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/inter
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
-import { Calendar } from "primeng/calendar";
 import { IntimusClientService, IntimusCommand, IntimusCommands, LOCAL_IT, RefreshAttivitaParams } from "@bds/common-tools";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
 import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 import Bowser from "bowser";
+import { DatePicker } from "primeng/datepicker";
 
 @Component({
   selector: "app-attivita",
@@ -107,7 +107,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   //@Output("onAttivitaNoteEmitter") private onAttivitaNoteEmitter: EventEmitter<Attivita> = new EventEmitter();
   @Output("refreshAttivita") private refreshAttivita: EventEmitter<string> = new EventEmitter();
   @ViewChild("dt") private dataTable: Table;
-  @ViewChildren("calGen") private _calGen: QueryList<Calendar>;
+  @ViewChildren("calGen") private _calGen: QueryList<DatePicker>;
   @ViewChildren("tableRows") tableRows: QueryList<ElementRef>;
 
   constructor(
@@ -730,7 +730,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   public onCalendarAction(event: any, field: string, action: string) {
-    let calSel: Calendar = null;
+    let calSel: DatePicker = null;
     switch (action) {
       case "today":
         calSel = this._calGen.find((e) => e.inputId === "CalInput_" + field);
