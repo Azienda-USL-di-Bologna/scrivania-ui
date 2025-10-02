@@ -60,6 +60,9 @@ import { ConfirmPopupModule } from "primeng/confirmpopup";
 import { DividerModule } from "primeng/divider";
 import { CheckboxModule } from "primeng/checkbox";
 import { PopoverModule } from "primeng/popover";
+import { IconFieldModule } from "primeng/iconfield";
+import { InputIconModule } from "primeng/inputicon";
+import { StyleClassModule } from "primeng/styleclass";
 
 /* Login */
 import { JwtLoginModule } from "@bds/jwt-login";
@@ -78,10 +81,10 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { MonitorMasterjobsComponent } from "./monitor-masterjobs/monitor-masterjobs.component";
 import { NgIdleKeepaliveModule } from "@ng-idle/keepalive";
 import { SplitterModule } from "primeng/splitter";
-import { AttachmentsBoxModule } from "@bds/common-components";
 
 import { appConfig } from "./app.config";
 import { DocService } from "@bds/internauta-model";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -143,9 +146,11 @@ import { DocService } from "@bds/internauta-model";
     DividerModule,
     SplitterModule,
     CheckboxModule,
+    IconFieldModule,
+    InputIconModule,
     NgIdleKeepaliveModule.forRoot(),
-    AttachmentsBoxModule,
     PreviewModule,
+    StyleClassModule,
   ],
   providers: [
     AttivitaService,

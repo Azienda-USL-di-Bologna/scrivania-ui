@@ -20,7 +20,7 @@ import { ParametroAziende } from "@bds/internauta-model";
 import { ConfigurazioneService } from "@bds/internauta-model";
 import { LOCAL_IT, UtilityFunctions } from "@bds/common-tools";
 import Bowser from "bowser";
-import { AttachmentsBoxConfig, PreviewConfig } from "@bds/common-components";
+import { AttachmentBoxMode, AttachmentsBoxConfig, PreviewConfig } from "@bds/common-components";
 import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
 
 @Component({
@@ -122,9 +122,38 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     private projectedDocDetailWithPermessoDocService: ProjectedDocDetailWithPermessoDocService
   ) {
     this.attachmentsBoxConfig = new AttachmentsBoxConfig();
-    this.attachmentsBoxConfig.showPreview = true;
-    this.attachmentsBoxConfig.showInfoVersamento = false;
-    this.attachmentsBoxConfig.showHeader = false;
+    this.attachmentsBoxConfig.showRowSelection = true;
+    this.attachmentsBoxConfig.showCaptionTable = true;
+    this.attachmentsBoxConfig.showGlobalSearch = true;
+    this.attachmentsBoxConfig.showSignedStatusColumn = true;
+    this.attachmentsBoxConfig.showSignatoriesInfoColumn = true;
+    this.attachmentsBoxConfig.showHeader = true;
+    this.attachmentsBoxConfig.enableDownload = true;
+
+    /* SHOW CASE per tute le funzionalità del box attachment attive, scommetnare all'orccorrenza */
+    /* this.attachmentsBoxConfig.showCaptionTable = true;
+    this.attachmentsBoxConfig.showGlobalSearch = true;
+    this.attachmentsBoxConfig.showAddAttachment = true;
+    this.attachmentsBoxConfig.showMassiveFunctions = true;
+    this.attachmentsBoxConfig.showHeader = true;
+    this.attachmentsBoxConfig.showColumnFilter = true;
+    this.attachmentsBoxConfig.showReorder = true;
+    this.attachmentsBoxConfig.showRowSelection = true;
+    this.attachmentsBoxConfig.showSignedStatusColumn = true;
+    this.attachmentsBoxConfig.showSignatoriesInfoColumn = true;
+    this.attachmentsBoxConfig.showVisibilityInfoColumn = true;
+    //this.attachmentsBoxConfig.showInfoVersamentoColumn = true;
+    this.attachmentsBoxConfig.enableVisibilityChange = true;
+    this.attachmentsBoxConfig.enableSign = true;
+    this.attachmentsBoxConfig.enableSignatoryManagement = true;
+    this.attachmentsBoxConfig.enableDownload = true;
+    this.attachmentsBoxConfig.enabelSendingOptions = true;
+    this.attachmentsBoxConfig.enableSetAsMain = true;
+    this.attachmentsBoxConfig.enableExtractAndAttach = true;
+    this.attachmentsBoxConfig.enableDelete = true;
+    this.attachmentsBoxConfig.mode = AttachmentBoxMode.EDIT;
+    this.attachmentsBoxConfig.selectionMode = "checkbox"; */
+
     this.previewConfig = new PreviewConfig();
     this.previewConfig.showDatiDiFlusso = true;
     this.previewConfig.showDatiDocumento = true;
@@ -500,7 +529,16 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     const addRichiestaParam = true;
     const addPassToken = true;
     this.loginService
-      .buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true, true, null, this.calcIdApplicazione(event))
+      .buildInterAppUrl(
+        event,
+        encodeParams,
+        addRichiestaParam,
+        addPassToken,
+        true,
+        true,
+        undefined,
+        this.calcIdApplicazione(event)
+      )
       .subscribe((url: string) => {
         console.log("urlAperto:", url);
       });
@@ -794,7 +832,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   toggleDarkMode() {
     const element = document.querySelector("html");
-    element.classList.toggle("my-app-dark");
+    element.classList.toggle("p-dark");
     if (this.darkmodeIcon === "pi pi-sun") {
       this.darkmodeIcon = "pi pi-moon";
     } else {
