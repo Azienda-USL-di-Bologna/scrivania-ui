@@ -529,7 +529,16 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     const addRichiestaParam = true;
     const addPassToken = true;
     this.loginService
-      .buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true, true, null, this.calcIdApplicazione(event))
+      .buildInterAppUrl(
+        event,
+        encodeParams,
+        addRichiestaParam,
+        addPassToken,
+        true,
+        true,
+        undefined,
+        this.calcIdApplicazione(event)
+      )
       .subscribe((url: string) => {
         console.log("urlAperto:", url);
       });
