@@ -18,7 +18,7 @@ import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "pr
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
-import { Attivita, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { Applicazioni, Attivita, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
@@ -530,9 +530,19 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         url = compiledUrlsJsonArray[0].url;
       }
     }
+
     if (url) {
       this.loginService
-        .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, tabName)
+        .buildInterAppUrl(
+          url,
+          encodeParams,
+          addRichiestaParam,
+          addPassToken,
+          true,
+          true,
+          tabName,
+          attivita.idApplicazione.id as Applicazioni
+        )
         .subscribe((url: string) => {
           console.log("urlAperto:", url);
         });
