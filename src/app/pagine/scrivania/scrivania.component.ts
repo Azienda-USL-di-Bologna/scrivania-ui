@@ -7,6 +7,7 @@ import {
   CODICI_RUOLO,
   ProjectedDocDetailWithPermessoDoc,
   ProjectedDocDetailWithPermessoDocService,
+  Applicazioni,
 } from "@bds/internauta-model";
 import { ScrivaniaService } from "./scrivania.service";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
@@ -498,9 +499,29 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
     const addRichiestaParam = true;
     const addPassToken = true;
-    this.loginService.buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
-      console.log("urlAperto:", url);
-    });
+    this.loginService
+      .buildInterAppUrl(event, encodeParams, addRichiestaParam, addPassToken, true, true, null, this.calcIdApplicazione(event))
+      .subscribe((url: string) => {
+        console.log("urlAperto:", url);
+      });
+  }
+
+  private calcIdApplicazione(url: string): Applicazioni {
+    // Guardo se esiste la stringa "Procton/Procton" dentro a url
+    const regexProcton = /Procton\/Procton/;
+    const regexDete = /Dete\/Dete/;
+    const regexDeli = /Deli\/Deli/;
+    const regexBabel = /Babel\/Babel/;
+    if (regexProcton.test(url)) {
+      return Applicazioni.procton;
+    } else if (regexDete.test(url)) {
+      return Applicazioni.dete;
+    } else if (regexDeli.test(url)) {
+      return Applicazioni.deli;
+    } else if (regexBabel.test(url)) {
+      return Applicazioni.babel;
+    }
+    return null;
   }
 
   // private loadMenu() {
