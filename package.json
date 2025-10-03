@@ -21,7 +21,7 @@
     "@angular/platform-browser": "20.1.7",
     "@angular/platform-browser-dynamic": "20.1.7",
     "@angular/router": "20.1.7",
-    "@bds/common-components": "20.0.10",
+    "@bds/common-components": "20.0.17",
     "@bds/common-tools": "20.0.0",
     "@bds/internauta-model": "20.0.6",
     "@bds/jwt-login": "20.0.1",
