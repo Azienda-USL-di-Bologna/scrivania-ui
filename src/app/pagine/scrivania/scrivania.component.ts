@@ -157,6 +157,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.previewConfig = new PreviewConfig();
     this.previewConfig.showDatiDiFlusso = true;
     this.previewConfig.showDatiDocumento = true;
+    this.previewConfig.showVersamenti = false;
     this.previewConfig.showClosePanel = false;
     this.previewConfig.attachmentsBoxConfig = this.attachmentsBoxConfig;
   }
