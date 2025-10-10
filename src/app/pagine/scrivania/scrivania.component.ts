@@ -124,7 +124,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.attachmentsBoxConfig = new AttachmentsBoxConfig();
     this.attachmentsBoxConfig.showRowSelection = true;
     this.attachmentsBoxConfig.showCaptionTable = true;
-    this.attachmentsBoxConfig.showGlobalSearch = true;
+    this.attachmentsBoxConfig.showGlobalSearch = false;
     this.attachmentsBoxConfig.showSignedStatusColumn = true;
     this.attachmentsBoxConfig.showSignatoriesInfoColumn = true;
     this.attachmentsBoxConfig.showHeader = true;
@@ -157,6 +157,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.previewConfig = new PreviewConfig();
     this.previewConfig.showDatiDiFlusso = true;
     this.previewConfig.showDatiDocumento = true;
+    this.previewConfig.showVersamenti = false;
     this.previewConfig.showClosePanel = false;
     this.previewConfig.attachmentsBoxConfig = this.attachmentsBoxConfig;
   }
