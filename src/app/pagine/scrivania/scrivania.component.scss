@@ -328,12 +328,12 @@ body .p-buttonset.p-button-secondary>.p-button.p-state-default {
 :host::ng-deep.p-tieredmenu .p-submenu-list {
   /* background-color:#737272; */
   /* background-color:#203244; */
-  background-color: rgba(32, 50, 68, 0.980392) !important;
+  //background-color: rgba(32, 50, 68, 0.980392) !important;
 }
 
 :host::ng-deep.p-tieredmenu .p-menuitem-link .p-menuitem-text,
 :host::ng-deep.p-submenu-icon {
-  color: #f4f4f4;
+  //color: #f4f4f4;
   top: 1.313rem !important;
   /* color: #999; */
 }
@@ -344,7 +344,7 @@ body .p-buttonset.p-button-secondary>.p-button.p-state-default {
 
 :host::ng-deep.p-tieredmenu .p-menuitem.p-menuitem-active>.p-menuitem-link {
   /* background-color:#7e7e7e;#d3d3d3b0;    */
-  background-color: #f4f4f4;
+  //background-color: #f4f4f4;
 }
 
 :host::ng-deep.p-tieredmenu .p-menuitem.p-menuitem-active>.p-menuitem-link .p-menuitem-text,

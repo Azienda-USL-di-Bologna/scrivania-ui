@@ -1,6 +1,6 @@
 import { Routes } from "@angular/router";
 import { ScrivaniaComponent } from "./pagine/scrivania/scrivania.component";
-import { JwtLoginComponent } from "@bds/jwt-login";
+import { JwtLoginComponent, LoggedOutPageComponent } from "@bds/jwt-login";
 import { NoLoginGuard, LoginGuard, RefreshLoggedUserGuard } from "@bds/jwt-login";
 import { LoadingComponent } from "./pagine/loading/loading.component";
 import { DatiBolloVirtualeComponent } from "./tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component";
@@ -22,6 +22,12 @@ export const rootRouterConfig: Routes = [
   {
     path: "login",
     component: JwtLoginComponent,
+    canActivate: [NoLoginGuard],
+    data: {},
+  },
+  {
+    path: "logout",
+    component: LoggedOutPageComponent,
     canActivate: [NoLoginGuard],
     data: {},
   },
