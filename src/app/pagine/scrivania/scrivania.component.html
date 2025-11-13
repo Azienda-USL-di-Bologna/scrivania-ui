@@ -292,10 +292,10 @@
         class="content-right"
         [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'">
         <div class="h-full">
-          @if ( detailToShow() === 'riepilogo') {
-            
+          @if (true || detailToShow() === 'riepilogo') {
+            <detail-riepilogo [idAttivita]="attivitaSelezionata.id"></detail-riepilogo>
           }
-          @else-if (docDetailView && detailToShow() === 'doc') {
+          @else if (docDetailView && detailToShow() === 'doc') {
             <lib-preview
               [doc]="docDetailView"
               [sonoPersonaVedenteSuDocSelezionato]="sonoPersonaVedenteSuDocSelezionato"
@@ -306,7 +306,7 @@
               >
             </lib-preview>
           }
-          @else (!docDetailView) {
+          @else {
             <div class="flex justify-center h-full">
               <h1 class="font-bold self-center">Selezionare un'attività per visualizzarne il dettaglio</h1>
             </div>
