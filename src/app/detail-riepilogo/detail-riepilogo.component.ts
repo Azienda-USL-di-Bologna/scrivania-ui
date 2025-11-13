@@ -9,59 +9,73 @@ import { Subject, Subscription, takeUntil } from "rxjs";
   standalone: true,
   imports: [CommonModule, TableModule],
   template: `
-    <div class="p-4">
-      <h2 class="text-2xl font-semibold mb-4">Riepilogo</h2>
+    <h2 class="text-2xl font-semibold mb-4">Riepilogo</h2>
 
-      <p-table
-        [value]="rows()"
-        rowGroupMode="subheader"
-        groupRowsBy="sottosezione"
-        [sortMode]="'single'"
-        [sortField]="'sottosezione'"
-        [sortOrder]="1"
-        [paginator]="false"
-        [lazy]="false"
-        class="w-full"
+    <p-table
+      [value]="rows()"
+      rowGroupMode="subheader"
+      groupRowsBy="sottosezione"
+      [sortMode]="'single'"
+      [sortField]="'sottosezione'"
+      [sortOrder]="1"
+      [paginator]="false"
+      [lazy]="false"
+      [scrollable]="true"
+    >
+      <!-- <ng-template pTemplate="header">
+        <tr>
+          <th class="w-3/4">Descrizione</th>
+          <th class="w-1/4"></th>
+        </tr>
+      </ng-template> -->
+
+      <ng-template
+        pTemplate="groupheader"
+        let-groupValue
       >
-        <!-- <ng-template pTemplate="header">
-          <tr>
-            <th class="w-3/4">Descrizione</th>
-            <th class="w-1/4"></th>
-          </tr>
-        </ng-template> -->
+        <tr pRowGroupHeader>
+          <td
+            colspan="2"
+            class="bg-surface-100 font-medium"
+          >
+            {{ formatSottosezione(groupValue.sottosezione) }}
+          </td>
+        </tr>
+      </ng-template>
 
-        <ng-template pTemplate="groupheader" let-groupValue>
-          <tr>
-            <td colspan="2" class="bg-surface-100 font-medium">
-              {{ formatSottosezione(groupValue.sottosezione) }}
-            </td>
-          </tr>
-        </ng-template>
-
-        <ng-template pTemplate="body" let-row>
-          <tr>
-            <td>{{ row.descrizione }}</td>
-            <td>
-              @if (row.url) {
-                <a
-                  [href]="row.url!"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-primary hover:underline cursor-pointer"
-                  >Apri</a
-                >
-              } @else {
-                <span class="text-muted-color">—</span>
-              }
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+      <ng-template
+        pTemplate="body"
+        let-row
+      >
+        <tr>
+          <td class="w-3/4">{{ row.descrizione }}</td>
+          <td class="w-1/4">
+            @if (row.url) {
+            <a
+              [href]="row.url!"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-primary hover:underline cursor-pointer"
+              >Apri</a
+            >
+            } @else {
+            <span class="text-muted-color">—</span>
+            }
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   `,
   styles: `
     :host {
       display: block;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      p-table {
+        flex: 1 1 0;
+      }
     }
   `,
 })
@@ -76,10 +90,12 @@ export class DetailRiepilogoComponent {
   constructor() {
     effect(() => {
       const idAttivita = this.idAttivita();
-      this.loadData();
+      if (idAttivita) {
+        this.loadData();
+      }
     });
   }
-  
+
   private loadData() {
     this.cancelLoad$.next(); // Annulla eventuali chiamate precedenti
 
@@ -92,7 +108,7 @@ export class DetailRiepilogoComponent {
       .subscribe({
         next: (res) => {
           if (res) {
-            this.rows.update(val => val = [...res]);
+            this.rows.update((val) => (val = [...res.results]));
           }
 
           //console.log("spengo il loading");
@@ -107,7 +123,7 @@ export class DetailRiepilogoComponent {
           }
         },
       });
-      this.subscriptions.push(subscription);
+    this.subscriptions.push(subscription);
   }
 
   // Trasformazione: prima lettera maiuscola, resto minuscolo, rimozione underscore

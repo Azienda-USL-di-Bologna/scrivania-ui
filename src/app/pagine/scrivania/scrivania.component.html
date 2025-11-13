@@ -293,7 +293,7 @@
         [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'">
         <div class="h-full">
           @if (true || detailToShow() === 'riepilogo') {
-            <detail-riepilogo [idAttivita]="attivitaSelezionata.id"></detail-riepilogo>
+            <detail-riepilogo [idAttivita]="attivitaSelezionata?.id"></detail-riepilogo>
           }
           @else if (docDetailView && detailToShow() === 'doc') {
             <lib-preview
