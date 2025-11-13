@@ -48,8 +48,8 @@ import { Subject, Subscription, takeUntil } from "rxjs";
         let-row
       >
         <tr>
-          <td class="w-3/4">{{ row.descrizione }}</td>
-          <td class="w-1/4">
+          <td class="w-full descrizione-cell">{{ row.descrizione }}</td>
+          <td class="w-3">
             @if (row.url) {
             <a
               [href]="row.url!"
@@ -76,6 +76,11 @@ import { Subject, Subscription, takeUntil } from "rxjs";
       p-table {
         flex: 1 1 0;
       }
+    }
+    .descrizione-cell {
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
   `,
 })
