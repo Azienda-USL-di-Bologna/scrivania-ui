@@ -84,6 +84,7 @@ import { SplitterModule } from "primeng/splitter";
 
 import { appConfig } from "./app.config";
 import { DocService } from "@bds/internauta-model";
+import { DetailRiepilogoComponent } from "./detail-riepilogo/detail-riepilogo.component";
 
 @NgModule({
   declarations: [
@@ -98,7 +99,7 @@ import { DocService } from "@bds/internauta-model";
     RaccoltaSempliceComponent,
     InserimentoManualeComponent,
     MonitorMasterjobsComponent,
-    LoginAdminComponent,
+    LoginAdminComponent
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -107,6 +108,7 @@ import { DocService } from "@bds/internauta-model";
     BrowserAnimationsModule,
     AccordionModule,
     PanelModule,
+    DetailRiepilogoComponent,
     SelectModule,
     TableModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: false }),

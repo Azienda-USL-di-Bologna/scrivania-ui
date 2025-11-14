@@ -103,7 +103,7 @@
       >
         <img
           [src]="attivita.iconaAttivita"
-          alt="{{ attivita.tipo === 'notifica' ? 'icona notifica' : 'icona priorità' }}"
+          alt="{{ attivita.tipo === 'notifica' || attivita.tipo === 'riepilogo' ? 'icona notifica' : 'icona priorità' }}"
           class="img-table"
         />
       </td>

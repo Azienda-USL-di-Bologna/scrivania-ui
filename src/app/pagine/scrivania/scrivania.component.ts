@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, AfterViewInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, AfterViewInit, signal } from "@angular/core";
 import {
   Attivita,
   UrlsGenerationStrategy,
@@ -373,6 +373,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     this.oggetto = null;
   }
 
+  public detailToShow = signal<"none" | "doc" | "riepilogo">("none");
+
   public attivitaClicked(attivitaCliccata: Attivita) {
     if (attivitaCliccata) {
       console.log("attivitaClicked", attivitaCliccata);
@@ -386,34 +388,39 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.attivitaSelezionata) {
         this.oggetto = this.attivitaSelezionata.oggetto;
         const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
-        if (datiAggiuntiviAttivita) {
+        if (datiAggiuntiviAttivita && datiAggiuntiviAttivita?.id_doc) {
           console.log(datiAggiuntiviAttivita.id_doc);
           this.idDoc = datiAggiuntiviAttivita.id_doc as number;
-          if (this.idDoc) {
-            const filtersAndSorts: FiltersAndSorts = new FiltersAndSorts();
-            filtersAndSorts.addFilter(new FilterDefinition("id", FILTER_TYPES.not_string.equals, this.idDoc));
-            filtersAndSorts.addFilter(
-              new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().idPersona.id)
-            );
-            this.projectedDocDetailWithPermessoDocService.getData(null, filtersAndSorts, null, null).subscribe((data: any) => {
-              this.docDetailView = data.results[0] as ProjectedDocDetailWithPermessoDoc;
-              this.docDetailView.idAzienda = this.docDetailView["idAziendaJson"];
-              this.docDetailView.idPersonaRedattrice = this.docDetailView["idPersonaRedattriceJson"];
-              this.docDetailView.idPersonaResponsabileProcedimento = this.docDetailView["idPersonaResponsabileProcedimentoJson"];
-              this.docDetailView.idApplicazione = this.docDetailView["idApplicazioneJson"];
-              this.docDetailView.archiviDocList = this.docDetailView["archiviDocListJson"];
-              this.docDetailView.idStrutturaRegistrazione = this.docDetailView["idStrutturaRegistrazioneJson"];
-              // const permessoDoc = this.docDetailView.permessiDocList.filter(
-              //   (a) => a.fk_idPersona.id == this.loggedUser.getUtente().idPersona.id
-              // )[0] as PermessoDoc;
-              if (this.docDetailView && this.docDetailView.bitVisibilita >= 2) {
-                this.sonoPersonaVedenteSuDocSelezionato = true;
-              }
-            });
-          } else {
-            this.docDetailView = null;
-          }
+          this.detailToShow.set("doc");
+          const filtersAndSorts: FiltersAndSorts = new FiltersAndSorts();
+          filtersAndSorts.addFilter(new FilterDefinition("id", FILTER_TYPES.not_string.equals, this.idDoc));
+          filtersAndSorts.addFilter(
+            new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().idPersona.id)
+          );
+          this.projectedDocDetailWithPermessoDocService.getData(null, filtersAndSorts, null, null).subscribe((data: any) => {
+            this.docDetailView = data.results[0] as ProjectedDocDetailWithPermessoDoc;
+            this.docDetailView.idAzienda = this.docDetailView["idAziendaJson"];
+            this.docDetailView.idPersonaRedattrice = this.docDetailView["idPersonaRedattriceJson"];
+            this.docDetailView.idPersonaResponsabileProcedimento = this.docDetailView["idPersonaResponsabileProcedimentoJson"];
+            this.docDetailView.idApplicazione = this.docDetailView["idApplicazioneJson"];
+            this.docDetailView.archiviDocList = this.docDetailView["archiviDocListJson"];
+            this.docDetailView.idStrutturaRegistrazione = this.docDetailView["idStrutturaRegistrazioneJson"];
+            // const permessoDoc = this.docDetailView.permessiDocList.filter(
+            //   (a) => a.fk_idPersona.id == this.loggedUser.getUtente().idPersona.id
+            // )[0] as PermessoDoc;
+            if (this.docDetailView && this.docDetailView.bitVisibilita >= 2) {
+              this.sonoPersonaVedenteSuDocSelezionato = true;
+            }
+          });
+        } else if (this.attivitaSelezionata.tipo === "riepilogo") {
+          this.detailToShow.set("riepilogo");
+          this.docDetailView = null;
+        } else {
+          this.detailToShow.set("none");
+          this.docDetailView = null;
+        }
 
+        if (datiAggiuntiviAttivita) {
           this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
           let destinatariA, destinatariCC: string;
           if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {
@@ -447,38 +454,6 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       }
 
       this.allegati = [];
-      // if (this.allegatiDropDown) {
-      //   // Se non c'è this.allegatiDropDown con ogni probabilità è perché la anteprima è settata come non visbile
-      //   this.allegatiDropDown.clear(null);
-      //   let allegatiAttivita: any[] = null;
-      //   if (this.attivitaSelezionata.allegati && this.attivitaSelezionata.allegati.indexOf("forbidden") === -1) {
-      //     allegatiAttivita = this.attivitaSelezionata.allegati;
-      //   }
-      //   if (allegatiAttivita) {
-      //     allegatiAttivita.sort((a: any, b: any) => {
-      //       if (a.default) {
-      //         return -1;
-      //       } else if (a.default && b.default) {
-      //         return 0;
-      //       } else {
-      //         return 1;
-      //       }
-      //     });
-      //     allegatiAttivita.forEach((element) => {
-      //       this.allegati.push({ label: this.shrinkFileName(element.nome_file), value: element });
-      //     });
-      //     this.allegatoSelected({ value: this.allegati[0].value });
-      //   } else {
-      //     this.noAnteprima = true;
-      //   }
-      //   if ((this.allegatiDropDown.disabled = this.allegati.length === 0) === true) {
-      //     this.allegati = [{ label: "Documenti non presenti", value: null }];
-      //     this.allegatiDropDown.disabled = true;
-      //   }
-      // }
-
-      // this.allegatiDropDown.updateDimensions();
-      // this.allegatiDropDown.show();
     }
   }
 

@@ -1,30 +1,3 @@
-<!-- <button type="button" pStyleClass="@next" toggleClass="hidden">
-  Toggle Menu
-</button>
-
-<ul id="menu" class="hidden">
-  <li>Item 1</li>
-  <li>Item 2</li>
-</ul>
-
-
-<button
-          pStyleClass="@next"
-          enterFromClass="hidden"
-          enterActiveClass="animate-scalein"
-          leaveToClass="hidden"
-          leaveActiveClass="animate-fadeout"
-          [hideOnOutsideClick]="true"
-          type="button"
-          class="inline-flex w-8 h-8 p-0 items-center justify-center surface-0 dark:surface-800 border border-surface-200 dark:border-surface-600 rounded"
-        >
-          <i class="pi pi-palette dark:text-white"></i>
-        </button>
-        <div
-          class="absolute top-[2.5rem] right-0 hidden w-[18rem] p-3 bg-white dark:bg-surface-800 rounded-md shadow border border-surface-200 dark:border-surface-700 flex-col justify-start items-start gap-3.5 inline-flex origin-top z-10"
-        >
-          prova
-        </div> -->
 <p-toast
   key="clToast"
   styleClass="clToast"
@@ -34,6 +7,7 @@
   styleClass="errorToast"
   position="center"
 ></p-toast>
+
 <p-table
   #dt
   [lazy]="true"
@@ -161,7 +135,7 @@
       >
       <!-- <p-button icon="pi pi-check" /> -->
         <div class="icon-box">
-          <p-button *ngIf="!(attivita.tipo === 'notifica')"
+          <p-button *ngIf="attivita.tipo !== 'notifica' && attivita.tipo !== 'riepilogo'"
             role="button"
             [rounded]="true" 
             [text]="true"
@@ -173,27 +147,7 @@
             [severity]="attivita.priorita === 3 ? 'success' : attivita.priorita === 2 ? 'warn' : 'danger'"
           ></p-button>
 
-          <!-- <p-button *ngIf="!(attivita.tipo === 'notifica')" icon="pi pi-check" [rounded]="true" (click)="impostaPriorita(attivita, $event)"
-          [severity]="attivita.priorita === 1 ? 'success' : attivita.priorita === 2 ? 'warn' : 'danger'"
-          [text]="true" /> -->
-          <!-- <img
-            tabindex="0"
-            role="button"
-            *ngIf="!(attivita.tipo === 'notifica')"
-            [src]="attivita.iconaAttivita"
-            alt="icona priorità {{ attivita.priorita }}"
-            class="img-table"
-            pTooltip="Imposta priorità"
-            (click)="impostaPriorita(attivita, $event)"
-          /> -->
-          <!-- <img
-            *ngIf="attivita.tipo === 'notifica'"
-            [src]="attivita.iconaAttivita"
-            alt="icona notifica"
-            class="img-table"
-            pTooltip="Notifica"
-          /> -->
-          <i *ngIf="attivita.tipo === 'notifica'"
+          <i *ngIf="attivita.tipo === 'notifica' || attivita.tipo === 'riepilogo'"
             class="pi pi-bell icona-riga-attivita" 
             pTooltip="Notifica">
           </i>
@@ -333,22 +287,26 @@
         [style.minWidth]="cols[9].minWidth"
         class="p0 columns-icon"
       >
-        <i *ngIf="attivita.tipo === 'notifica'"
-          role="button"
-          tabindex="0"
-          class="pi pi-trash icona-riga-attivita bds-icon-btn"
-          pTooltip="Elimina notifica "
-          aria-label="icona elimina"
-          (click)="deleteAttivita($event, rowData)"
-        ></i>
-        <i *ngIf="attivita.tipo !== 'notifica' && this.loggedUser.isSD()"
-          role="button"
-          tabindex="0"
-          class="pi pi-times icona-riga-attivita bds-icon-btn"
-          pTooltip="Elimina attivita"
-          aria-label="icona elimina"
-          (click)="confermaEliminaAttivita(rowData, $event)"
-        ></i>
+        @if (attivita.tipo === 'notifica' || attivita.tipo === 'riepilogo') {
+          <i 
+            role="button"
+            tabindex="0"
+            class="pi pi-trash icona-riga-attivita bds-icon-btn"
+            pTooltip="Elimina notifica "
+            aria-label="icona elimina"
+            (click)="deleteAttivita($event, rowData)"
+          ></i>
+        }
+        @else if (this.loggedUser.isSD()) {
+          <i
+            role="button"
+            tabindex="0"
+            class="pi pi-times icona-riga-attivita bds-icon-btn"
+            pTooltip="Elimina attivita"
+            aria-label="icona elimina"
+            (click)="confermaEliminaAttivita(rowData, $event)"
+          ></i>
+        }
       </td>
       <td
         aria-label="Colonna note"
