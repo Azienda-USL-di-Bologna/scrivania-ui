@@ -388,39 +388,39 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.attivitaSelezionata) {
         this.oggetto = this.attivitaSelezionata.oggetto;
         const datiAggiuntiviAttivita: any = this.attivitaSelezionata.datiAggiuntivi;
-        if (datiAggiuntiviAttivita) {
+        if (datiAggiuntiviAttivita && datiAggiuntiviAttivita?.id_doc) {
           console.log(datiAggiuntiviAttivita.id_doc);
           this.idDoc = datiAggiuntiviAttivita.id_doc as number;
-          if (this.idDoc) {
-            this.detailToShow.set("doc");
-            const filtersAndSorts: FiltersAndSorts = new FiltersAndSorts();
-            filtersAndSorts.addFilter(new FilterDefinition("id", FILTER_TYPES.not_string.equals, this.idDoc));
-            filtersAndSorts.addFilter(
-              new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().idPersona.id)
-            );
-            this.projectedDocDetailWithPermessoDocService.getData(null, filtersAndSorts, null, null).subscribe((data: any) => {
-              this.docDetailView = data.results[0] as ProjectedDocDetailWithPermessoDoc;
-              this.docDetailView.idAzienda = this.docDetailView["idAziendaJson"];
-              this.docDetailView.idPersonaRedattrice = this.docDetailView["idPersonaRedattriceJson"];
-              this.docDetailView.idPersonaResponsabileProcedimento = this.docDetailView["idPersonaResponsabileProcedimentoJson"];
-              this.docDetailView.idApplicazione = this.docDetailView["idApplicazioneJson"];
-              this.docDetailView.archiviDocList = this.docDetailView["archiviDocListJson"];
-              this.docDetailView.idStrutturaRegistrazione = this.docDetailView["idStrutturaRegistrazioneJson"];
-              // const permessoDoc = this.docDetailView.permessiDocList.filter(
-              //   (a) => a.fk_idPersona.id == this.loggedUser.getUtente().idPersona.id
-              // )[0] as PermessoDoc;
-              if (this.docDetailView && this.docDetailView.bitVisibilita >= 2) {
-                this.sonoPersonaVedenteSuDocSelezionato = true;
-              }
-            });
-          } else if (this.attivitaSelezionata.tipo === "riepilogo" || true) {
-            this.detailToShow.set("riepilogo");
-            this.docDetailView = null;
-          } else {
-            this.detailToShow.set("none");
-            this.docDetailView = null;
-          }
+          this.detailToShow.set("doc");
+          const filtersAndSorts: FiltersAndSorts = new FiltersAndSorts();
+          filtersAndSorts.addFilter(new FilterDefinition("id", FILTER_TYPES.not_string.equals, this.idDoc));
+          filtersAndSorts.addFilter(
+            new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, this.loggedUser.getUtente().idPersona.id)
+          );
+          this.projectedDocDetailWithPermessoDocService.getData(null, filtersAndSorts, null, null).subscribe((data: any) => {
+            this.docDetailView = data.results[0] as ProjectedDocDetailWithPermessoDoc;
+            this.docDetailView.idAzienda = this.docDetailView["idAziendaJson"];
+            this.docDetailView.idPersonaRedattrice = this.docDetailView["idPersonaRedattriceJson"];
+            this.docDetailView.idPersonaResponsabileProcedimento = this.docDetailView["idPersonaResponsabileProcedimentoJson"];
+            this.docDetailView.idApplicazione = this.docDetailView["idApplicazioneJson"];
+            this.docDetailView.archiviDocList = this.docDetailView["archiviDocListJson"];
+            this.docDetailView.idStrutturaRegistrazione = this.docDetailView["idStrutturaRegistrazioneJson"];
+            // const permessoDoc = this.docDetailView.permessiDocList.filter(
+            //   (a) => a.fk_idPersona.id == this.loggedUser.getUtente().idPersona.id
+            // )[0] as PermessoDoc;
+            if (this.docDetailView && this.docDetailView.bitVisibilita >= 2) {
+              this.sonoPersonaVedenteSuDocSelezionato = true;
+            }
+          });
+        } else if (this.attivitaSelezionata.tipo === "riepilogo") {
+          this.detailToShow.set("riepilogo");
+          this.docDetailView = null;
+        } else {
+          this.detailToShow.set("none");
+          this.docDetailView = null;
+        }
 
+        if (datiAggiuntiviAttivita) {
           this.mittente = datiAggiuntiviAttivita.custom_app_1; // ? datiAggiuntiviAttivita.custom_app_1 : "Nessun mittente";
           let destinatariA, destinatariCC: string;
           if (datiAggiuntiviAttivita.custom_app_2 && datiAggiuntiviAttivita.custom_app_2.trim() !== "") {

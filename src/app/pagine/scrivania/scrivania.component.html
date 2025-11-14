@@ -292,7 +292,7 @@
         class="content-right"
         [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'">
         <div class="h-full">
-          @if (true || detailToShow() === 'riepilogo') {
+          @if (detailToShow() === 'riepilogo') {
             <detail-riepilogo [idAttivita]="attivitaSelezionata?.id"></detail-riepilogo>
           }
           @else if (docDetailView && detailToShow() === 'doc') {

@@ -21,6 +21,7 @@ import { Subject, Subscription, takeUntil } from "rxjs";
       [paginator]="false"
       [lazy]="false"
       [scrollable]="true"
+      [loading]="loading()"
     >
       <!-- <ng-template pTemplate="header">
         <tr>
@@ -85,16 +86,23 @@ import { Subject, Subscription, takeUntil } from "rxjs";
   `,
 })
 export class DetailRiepilogoComponent {
+  // services
   private dettaglioAttivitaService = inject(DettaglioAttivitaService);
+
+  // input
   readonly idAttivita = input<number>();
-  rows = signal<DettaglioAttivita[]>([]);
+
   private cancelLoad$ = new Subject<void>();
   private destroy$ = new Subject<void>();
   private subscriptions: Subscription[] = [];
 
+  public rows = signal<DettaglioAttivita[]>([]);
+  public loading = signal<boolean>(false);
+
   constructor() {
     effect(() => {
       const idAttivita = this.idAttivita();
+      this.rows.set([]);
       if (idAttivita) {
         this.loadData();
       }
@@ -103,6 +111,7 @@ export class DetailRiepilogoComponent {
 
   private loadData() {
     this.cancelLoad$.next(); // Annulla eventuali chiamate precedenti
+    this.loading.set(true);
 
     const filters = new FiltersAndSorts();
     filters.addFilter(new FilterDefinition("idAttivita", FILTER_TYPES.not_string.equals, this.idAttivita()));
@@ -116,15 +125,15 @@ export class DetailRiepilogoComponent {
             this.rows.update((val) => (val = [...res.results]));
           }
 
-          //console.log("spengo il loading");
-          //this.loading.set(false);
+          console.log("spengo il loading");
+          this.loading.set(false);
         },
         error: (err) => {
           // Gestione errore migliorata - non resettare loading se è stato cancellato
           if (err.name !== "AbortError") {
             // Non è un errore di cancellazione
             console.error("Errore nel caricamento del riepilogo", err);
-            //this.loading.set(false);
+            this.loading.set(false);
           }
         },
       });
