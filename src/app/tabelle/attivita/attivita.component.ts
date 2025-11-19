@@ -90,6 +90,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this._idAzienda = -1;
     }
   }
+  
   @Input("changeColOrder")
   set changeColOrder(changeColOrder: boolean) {
     this.changedOrder = changeColOrder;

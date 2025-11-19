@@ -4,6 +4,8 @@ import { TableModule } from "primeng/table";
 import { DettaglioAttivita, DettaglioAttivitaService } from "@bds/internauta-model";
 import { FILTER_TYPES, FilterDefinition, FiltersAndSorts, PAGE_CONF_NO_LIMIT } from "@bds/next-sdr";
 import { Subject, Subscription, takeUntil } from "rxjs";
+import { JwtLoginService } from "@bds/jwt-login";
+
 @Component({
   selector: "detail-riepilogo",
   standalone: true,
@@ -53,9 +55,7 @@ import { Subject, Subscription, takeUntil } from "rxjs";
           <td class="w-3">
             @if (row.url) {
             <a
-              [href]="row.url!"
-              target="_blank"
-              rel="noopener noreferrer"
+              (click)="apri(row.url)"
               class="text-primary hover:underline cursor-pointer"
               >Apri</a
             >
@@ -88,6 +88,7 @@ import { Subject, Subscription, takeUntil } from "rxjs";
 export class DetailRiepilogoComponent {
   // services
   private dettaglioAttivitaService = inject(DettaglioAttivitaService);
+  private loginService = inject(JwtLoginService);
 
   // input
   readonly idAttivita = input<number>();
@@ -145,6 +146,25 @@ export class DetailRiepilogoComponent {
     if (!value) return "";
     const noUnderscore = value.replaceAll("_", "");
     return noUnderscore.charAt(0).toUpperCase() + noUnderscore.slice(1).toLowerCase();
+  }
+
+  public apri(url: string) {  
+    if (url) {
+      const isScripta = url.includes("scripta");
+      this.loginService
+        .buildInterAppUrl(
+          url,
+          false, // encodeParams
+          false, // addRichiestaParam
+          true, // addPassToken
+          true, // openWindow
+          true, // saveAndRestoreLoggedUser
+          isScripta ? "Gedi Internauta" : null // windowName
+        )
+        .subscribe((url: string) => {
+          console.log("urlAperto:", url);
+        });
+    }
   }
 
   ngOnDestroy(): void {
