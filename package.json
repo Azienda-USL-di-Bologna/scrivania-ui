@@ -23,7 +23,7 @@
     "@angular/router": "20.1.7",
     "@bds/common-components": "20.0.36",
     "@bds/common-tools": "20.0.0",
-    "@bds/internauta-model": "20.0.17",
+    "@bds/internauta-model": "20.0.19",
     "@bds/jwt-login": "20.0.3",
     "@bds/next-sdr": "20.0.2",
     "@bds/primeng-plugin": "20.0.0",
