@@ -68,4 +68,9 @@ export const rootRouterConfig: Routes = [
     component: InserimentoManualeComponent,
     canActivate: [RefreshLoggedUserGuard, LoginGuard],
   },
+  {
+    path: "shpeck",
+    loadChildren: () => import("./shpeck-wrapper.module").then((m) => m.ShpeckWrapperModule),
+    canActivate: [RefreshLoggedUserGuard, LoginGuard],
+  },
 ];
