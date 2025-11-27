@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, AfterViewInit, signal } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, AfterViewInit, signal, inject } from "@angular/core";
 import {
   Attivita,
   UrlsGenerationStrategy,
@@ -22,6 +22,7 @@ import { LOCAL_IT, UtilityFunctions } from "@bds/common-tools";
 import Bowser from "bowser";
 import { AttachmentBoxMode, AttachmentsBoxConfig, PreviewConfig } from "@bds/common-components";
 import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-scrivania",
@@ -30,6 +31,8 @@ import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
   standalone: false,
 })
 export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
+  public router = inject(Router);
+
   public mostraStorico: boolean = false;
   public mostraMonitorMasterjobs: boolean = false;
 
