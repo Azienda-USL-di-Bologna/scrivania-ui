@@ -216,14 +216,23 @@
                       class="ui-button-secondary icon-style icon-custom"
                     ></button>
 
-                  <p-button
-                    type="button"
-                    label="Pec per SD (Peccatori)"
-                    icon="pi pi-send"
-                    class="ui-button-secondary"
-                    (click)="router.navigate(['/shpeck'])"
-                    aria-label="Pec per SD (Peccatori)"
-                  ></p-button>
+                    <p-button
+                      type="button"
+                      label="Pec per SD (Peccatori)"
+                      icon="pi pi-send"
+                      class="ui-button-secondary"
+                      (click)="router.navigate(['/shpeck'])"
+                      aria-label="Pec per SD (Peccatori)"
+                    ></p-button>
+
+                    <p-button
+                      type="button"
+                      label="Rubrica per SD (Peccatori)"
+                      icon="pi pi-money-bill"
+                      class="ui-button-secondary"
+                      (click)="router.navigate(['/rubrica'])"
+                      aria-label="Rubrica per SD (Peccatori)"
+                    ></p-button>
                   }
                   <!-- GENERATORE XML AVCP (LOTTI) Bottone temporaneo -->
                   @if (buttonAvcpEnabled) {
