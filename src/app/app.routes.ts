@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { ScrivaniaComponent } from "./pagine/scrivania/scrivania.component";
 import { JwtLoginComponent, LoggedOutPageComponent } from "@bds/jwt-login";
 import { NoLoginGuard, LoginGuard, RefreshLoggedUserGuard } from "@bds/jwt-login";
+import { buildRubricaRoute } from "@bds/rubrint";
 import { LoadingComponent } from "./pagine/loading/loading.component";
 import { DatiBolloVirtualeComponent } from "./tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component";
 import { CODICI_RUOLO } from "@bds/internauta-model";
@@ -73,4 +74,8 @@ export const rootRouterConfig: Routes = [
     loadChildren: () => import("./shpeck-wrapper.module").then((m) => m.ShpeckWrapperModule),
     canActivate: [RefreshLoggedUserGuard, LoginGuard],
   },
+  buildRubricaRoute({
+    path: "rubrica",
+    canActivate: [RefreshLoggedUserGuard, LoginGuard],
+  }),
 ];
