@@ -38,7 +38,7 @@ import { JwtLoginService } from "@bds/jwt-login";
       >
         <tr pRowGroupHeader>
           <td
-            colspan="2"
+            [attr.colspan]="showOpenColumn() ? 2 : 1"
             class="bg-surface-100 font-medium"
           >
             {{ formatSottosezione(groupValue.sottosezione) }}
@@ -52,17 +52,19 @@ import { JwtLoginService } from "@bds/jwt-login";
       >
         <tr>
           <td class="w-full descrizione-cell">{{ row.descrizione }}</td>
-          <td class="w-3">
-            @if (row.url) {
-            <a
-              (click)="apri(row.url)"
-              class="text-primary hover:underline cursor-pointer"
-              >Apri</a
-            >
-            } @else {
-            <span class="text-muted-color">—</span>
-            }
-          </td>
+          @if (showOpenColumn()) {
+            <td class="w-3">
+              @if (row.url) {
+                <a
+                  (click)="apri(row.url)"
+                  class="text-primary hover:underline cursor-pointer"
+                  >Apri</a
+                >
+              } @else {
+                <span class="text-muted-color">—</span>
+              }
+              </td>
+          }
         </tr>
       </ng-template>
     </p-table>
@@ -76,6 +78,7 @@ import { JwtLoginService } from "@bds/jwt-login";
       overflow: hidden;
       p-table {
         flex: 1 1 0;
+        min-height: 0;
       }
     }
     .descrizione-cell {
@@ -99,6 +102,7 @@ export class DetailRiepilogoComponent {
 
   public rows = signal<DettaglioAttivita[]>([]);
   public loading = signal<boolean>(false);
+  public showOpenColumn = signal<boolean>(false);
 
   constructor() {
     effect(() => {
@@ -124,6 +128,7 @@ export class DetailRiepilogoComponent {
         next: (res) => {
           if (res) {
             this.rows.update((val) => (val = [...res.results]));
+            this.showOpenColumn.set(this.rows().some((row) => row.url));
           }
 
           console.log("spengo il loading");
