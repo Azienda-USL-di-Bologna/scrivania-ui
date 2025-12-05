@@ -30,6 +30,8 @@
   overflow: hidden;
 }
 
+// Riguardo al menu drawer
+// Il pulsante è in position absolute
 .content-wrapper {
   position: relative;
   .menu-drawer {
@@ -41,11 +43,84 @@
     }
   }
 }
+// Le toolbar delle app sono spostate a destra per non sovrapposizione con il menu drawer
 ::ng-deep .spazio-menu-drawer {
   app-scrivania .option-bar,
   app-mailbox app-toolbar,
   rubrica rubrica-toolbar  {
     margin-left: 7rem;
+    p-toolbar {
+      border-left: 0;
+    }
   }
   
+}
+
+::ng-deep .drawer-menu {
+  background: #2f4f6b !important;
+  width: 16rem !important;
+  ;
+  .p-drawer-mask {
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  .p-drawer-header {
+    padding: 1.25rem 1rem 0.5rem;
+    justify-content: flex-end;
+  }
+
+  .p-drawer-close-button .p-button-text {
+    color: #fff !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* .p-drawer-close-icon {
+      color: inherit;
+      font-size: 1.25rem;
+    } */
+  }
+
+  .p-drawer-content {
+    padding: 0 1.5rem 2rem;
+    color: #fff;
+  }
+
+  .solo-pec-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 0.75rem;
+  }
+
+  .solo-pec-link.p-button {
+    justify-content: flex-start;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    border-color: transparent;
+    text-align: left;
+    padding-left: 0;
+    padding-right: 0;
+    box-shadow: none;
+
+    &:focus {
+      box-shadow: none;
+    }
+
+    &:hover {
+      background: transparent;
+      text-decoration: underline;
+    }
+
+    &.active {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  }
 }

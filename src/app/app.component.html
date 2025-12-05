@@ -33,15 +33,35 @@
           position="left"
           [modal]="true"
           [blockScroll]="true"
+          styleClass="drawer-menu"
         >
           <div class="solo-pec-links">
-            <button pButton class="p-button-text w-full" routerLink="/attivita" (click)="drawerVisible = false">
-              Attività
+            <button
+              pButton
+              class="p-button-text w-full solo-pec-link"
+              routerLink="/attivita"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="drawerVisible = false"
+            >
+              Scrivania
             </button>
-            <button pButton class="p-button-text w-full" routerLink="/shpeck" (click)="drawerVisible = false">
+            <button
+              pButton
+              class="p-button-text w-full solo-pec-link"
+              routerLink="/shpeck"
+              routerLinkActive="active"
+              (click)="drawerVisible = false"
+            >
               Pec
             </button>
-            <button pButton class="p-button-text w-full" routerLink="/rubrica" (click)="drawerVisible = false">
+            <button
+              pButton
+              class="p-button-text w-full solo-pec-link"
+              routerLink="/rubrica"
+              routerLinkActive="active"
+              (click)="drawerVisible = false"
+            >
               Rubrica
             </button>
           </div>
