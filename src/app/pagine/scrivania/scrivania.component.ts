@@ -88,6 +88,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public loggedUser: UtenteUtilities;
   public loggedUserIsSD: boolean = false;
   public loggedUserIs99: boolean = false;
+  public loggedUserIsSP: boolean = false;
   public impostazioniVisualizzazione: any;
   public alberoMenu: any[];
   public menuItems: ItemMenu[];
@@ -116,6 +117,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public attachmentsBoxConfig: AttachmentsBoxConfig;
   public previewConfig: PreviewConfig;
   public sonoPersonaVedenteSuDocSelezionato: boolean = true;
+  public storicoTooltipLabel = "Storico attività";
   constructor(
     private impostazioniService: ImpostazioniService,
     private scrivaniaService: ScrivaniaService,
@@ -223,6 +225,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
           this.setVisibilitàPulsanteBolli();
 
           this.loggedUserIsSD = this.loggedUser.hasRole(CODICI_RUOLO.SD);
+        const codiceRuoloSP = (CODICI_RUOLO as any).SP ?? "SP";
+        this.loggedUserIsSP = this.loggedUser.hasRole(codiceRuoloSP) || this.loggedUser.hasRole("SP");
 
           if (this.loggedUser.getUtente() && this.loggedUser.getUtente().utenteReale) {
             this.loggedUserIs99 = (this.loggedUser.getUtente().utenteReale.idInquadramento as unknown as String) === "99";
@@ -258,6 +262,36 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         this.hidePreview = this.impostazioniService.getHidePreview() === "true";
       }
     }
+  }
+
+  public get canShowStandardMenu(): boolean {
+    return !this.loggedUserIsSP && !!this.menuItems;
+  }
+
+  public get canShowFirmaPrimary(): boolean {
+    const firmone = this.urlFirmone as any;
+    return !this.loggedUserIsSP && !this.mostraStorico && firmone !== "#" && !!firmone?.url;
+  }
+
+  public get canShowFirmaMenu(): boolean {
+    return !this.loggedUserIsSP && !this.mostraStorico && this.alberoFirma.length >= 2;
+  }
+
+  public get canShowPrendonePrimary(): boolean {
+    const prendone = this.urlPrendone as any;
+    return !this.loggedUserIsSP && !this.mostraStorico && prendone !== "#" && !!prendone?.url;
+  }
+
+  public get canShowPrendoneMenu(): boolean {
+    return !this.loggedUserIsSP && !this.mostraStorico && this.alberoPrendi.length >= 2;
+  }
+
+  public get canShowBolloVirtualeButton(): boolean {
+    return !this.loggedUserIsSP && !this.mostraStorico && this.loggedUser?.isCA() && this.showBolli;
+  }
+
+  public get canShowRightPanel(): boolean {
+    return !this.hidePreview && !this.mostraStorico;
   }
 
   // private setResponsiveSlider(): void {
@@ -758,7 +792,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public eliminaTutteNotifiche() {
     this.confirmationService.confirm({
-      message: "Tutte le notifiche verranno spostate nella cronologia, l'operazione non può essere annullata. Vuoi continuare?",
+      message: "Tutte le notifiche verranno spostate nello storico, l'operazione non può essere annullata. Vuoi continuare?",
       header: "Cancellazione notifiche",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Sì",

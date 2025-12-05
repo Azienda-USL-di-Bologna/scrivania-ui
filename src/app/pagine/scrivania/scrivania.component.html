@@ -13,7 +13,7 @@
       >
       <div class="option-bar">
         <div class="buttons-bar">
-          @if (menuItems) {
+          @if (canShowStandardMenu) {
             <bds-menu
               [items]="menuItems"
               [executeAction]="openMenuUrl"
@@ -21,35 +21,33 @@
           }
 
           <!-- Firma -->
-          <button
-            type="button"
-            pButton
-            pTooltip="Firma"
-            tooltipPosition="bottom"
-            [ngClass]="{
-              'ui-button-secondary icon-custom': true,
-              'd-hidden': mostraStorico || urlFirmone === '#',
-              'd-flex': !mostraStorico
-            }"
-            class="p-button-icon-only"
-            (click)="handleItemClick(urlFirmone.url, urlFirmone.urlGenerationStrategy)"
-            aria-label="Firma"
-            >
-            <img
-              src="assets/images/sign.svg"
-              class="images-pos"
-              alt="Firma"
-              />
+          @if (canShowFirmaPrimary) {
+            <button
+              type="button"
+              pButton
+              pTooltip="Firma"
+              tooltipPosition="bottom"
+              [ngClass]="{ 'ui-button-secondary icon-custom': true, 'd-flex': !mostraStorico }"
+              class="p-button-icon-only"
+              (click)="handleItemClick(urlFirmone.url, urlFirmone.urlGenerationStrategy)"
+              aria-label="Firma"
+              >
+              <img
+                src="assets/images/sign.svg"
+                class="images-pos"
+                alt="Firma"
+                />
             </button>
+          }
 
+          @if (canShowFirmaMenu) {
             <button
               #btn
               type="button"
               pButton
               pTooltip="Firma"
               tooltipPosition="bottom"
-              [ngClass]="{ 'd-hidden': mostraStorico || alberoFirma.length < 2, 'd-flex': !mostraStorico }"
-              class="ui-button-secondary icon-custom p-button-icon-only"
+              [ngClass]="{ 'ui-button-secondary icon-custom p-button-icon-only': true, 'd-flex': !mostraStorico }"
               (click)="firmaMenu.toggle($event)"
               aria-label="Firma"
               >
@@ -58,151 +56,154 @@
                 class="images-pos"
                 alt="Firma"
                 />
-              </button>
-              <p-tieredMenu
-                appendTo="body"
-                #firmaMenu
-                [model]="alberoFirma"
-                [popup]="true"
-                (itemClick)="handleItemClick($event, null)"
-                >
-              </p-tieredMenu>
+            </button>
+            <p-tieredMenu
+              appendTo="body"
+              #firmaMenu
+              [model]="alberoFirma"
+              [popup]="true"
+              (itemClick)="handleItemClick($event, null)"
+              >
+            </p-tieredMenu>
+          }
 
-              <!-- Prendi -->
-              <button
-                type="button"
-                pButton
-                pTooltip="Prendi i tuoi assegnamenti"
-                tooltipPosition="bottom"
-            [ngClass]="{
-              'ui-button-secondary icon-custom': true,
-              'd-hidden': mostraStorico || urlPrendone === '#',
-              'd-flex': !mostraStorico
-            }"
-                class="p-button-icon-only"
-                (click)="handleItemClick(urlPrendone.url, urlPrendone.urlGenerationStrategy)"
-                aria-label="Prendi il documento"
-                >
-                <img
-                  src="assets/images/hiring.svg"
-                  class="images-pos"
-                  alt="Prendi"
-                  />
-                </button>
-                <button
-                  #btn
-                  type="button"
-                  pButton
-                  pTooltip="Prendi i tuoi assegnamenti"
-                  tooltipPosition="bottom"
-                  [ngClass]="{ 'd-hidden': mostraStorico || alberoPrendi.length < 2, 'd-flex': !mostraStorico }"
-                  class="ui-button-secondary icon-custom p-button-icon-only"
-                  (click)="prendoneMenu.toggle($event)"
-                  aria-label="Prendi il documento"
-                  >
-                  <img
-                    src="assets/images/hiring.svg"
-                    class="images-pos"
-                    alt="Prendi"
-                    />
-                  </button>
-                  <p-tieredMenu
-                    appendTo="body"
-                    #prendoneMenu
-                    [model]="alberoPrendi"
-                    [popup]="true"
-                    (itemClick)="handleItemClick($event, null)"
-                    >
-                  </p-tieredMenu>
-                  @if (showRaccoltaSemplice) {
-                    <button
-                      #btn
-                      type="button"
-                      pButton
-                      pTooltip="Vai alla Raccolta Semplice"
-                      tooltipPosition="bottom"
-                      [routerLink]="'/raccoltasemplice'"
-                      iconPos="left"
-                      icon="pi pi-briefcase"
-                      class="ui-button-secondary icon-style icon-custom"
-                      aria-label="Vai alla Raccolta Semplice"
-                    ></button>
-                  }
-                  @if (!mostraStorico && loggedUser?.isCA() && showBolli) {
-                    <button
-                      #btn
-                      type="button"
-                      pButton
-                      pTooltip="Vai al riepilogo Bollo Virtuale"
-                      tooltipPosition="bottom"
-                      [routerLink]="'/bollo'"
-                      iconPos="left"
-                      icon="pi pi-money-bill"
-                      class="ui-button-secondary icon-style icon-custom"
-                      aria-label="Vai al riepilogo Bolli Virtuali"
-                    ></button>
-                  }
-                  <div class="separator-class"></div>
-                  <!-- INDIETRO -->
-                  @if (mostraStorico || mostraMonitorMasterjobs) {
-                    <button
-                      type="button"
-                      pButton
-                      pTooltip="Indietro"
-                      tooltipPosition="bottom"
-                      icon="pi pi-chevron-left"
-                      iconPos="left"
-                      (click)="mostraStorico = false; mostraMonitorMasterjobs = false"
-                      class="ui-button-secondary icon-style icon-custom"
-                      aria-label="Indietro"
-                    ></button>
-                  }
-                  <button
-                    #btn
-                    type="button"
-                    pButton
-                    pTooltip="Aggiorna attività"
-                    tooltipPosition="bottom"
-                    (click)="ricarica()"
-                    iconPos="left"
-                    icon="pi pi-refresh"
-                    class="ui-button-secondary icon-style icon-custom"
-                    aria-label="Aggiorna le attività"
-                  ></button>
-                  @if (!mostraStorico) {
-                    <button
-                      type="button"
-                      pButton
-                      pTooltip="Cronologia"
-                      tooltipPosition="bottom"
-                      icon="pi pi-clock"
-                      iconPos="left"
-                      (click)="mostraStorico = !mostraStorico"
-                      class="ui-button-secondary icon-style icon-custom"
-                      aria-label="Cronologia delle attività"
-                    ></button>
-                  }
-                  @if (!mostraStorico) {
-                    <button
-                      #btn
-                      type="button"
-                      pButton
-                      pTooltip="Elimina notifiche"
-                      tooltipPosition="bottom"
-                      (click)="eliminaTutteNotifiche()"
-                      iconPos="left"
-                      icon="pi pi-trash"
-                      class="ui-button-secondary icon-style icon-custom"
-                      aria-label="Elimina notifiche"
-                    ></button>
-                  }
-                  @if (mostraStorico) {
-                    <h3
-                      class="crono-label"
-                      >
-                      Cronologia
-                    </h3>
-                  }
+          <!-- Prendi -->
+          @if (canShowPrendonePrimary) {
+            <button
+              type="button"
+              pButton
+              pTooltip="Prendi i tuoi assegnamenti"
+              tooltipPosition="bottom"
+              [ngClass]="{ 'ui-button-secondary icon-custom': true, 'd-flex': !mostraStorico }"
+              class="p-button-icon-only"
+              (click)="handleItemClick(urlPrendone.url, urlPrendone.urlGenerationStrategy)"
+              aria-label="Prendi il documento"
+              >
+              <img
+                src="assets/images/hiring.svg"
+                class="images-pos"
+                alt="Prendi"
+                />
+            </button>
+          }
+
+          @if (canShowPrendoneMenu) {
+            <button
+              #btn
+              type="button"
+              pButton
+              pTooltip="Prendi i tuoi assegnamenti"
+              tooltipPosition="bottom"
+              [ngClass]="{ 'ui-button-secondary icon-custom p-button-icon-only': true, 'd-flex': !mostraStorico }"
+              (click)="prendoneMenu.toggle($event)"
+              aria-label="Prendi il documento"
+              >
+              <img
+                src="assets/images/hiring.svg"
+                class="images-pos"
+                alt="Prendi"
+                />
+            </button>
+            <p-tieredMenu
+              appendTo="body"
+              #prendoneMenu
+              [model]="alberoPrendi"
+              [popup]="true"
+              (itemClick)="handleItemClick($event, null)"
+              >
+            </p-tieredMenu>
+          }
+
+          @if (showRaccoltaSemplice) {
+            <button
+              #btn
+              type="button"
+              pButton
+              pTooltip="Vai alla Raccolta Semplice"
+              tooltipPosition="bottom"
+              [routerLink]="'/raccoltasemplice'"
+              iconPos="left"
+              icon="pi pi-briefcase"
+              class="ui-button-secondary icon-style icon-custom"
+              aria-label="Vai alla Raccolta Semplice"
+            ></button>
+          }
+
+          @if (canShowBolloVirtualeButton) {
+            <button
+              #btn
+              type="button"
+              pButton
+              pTooltip="Vai al riepilogo Bollo Virtuale"
+              tooltipPosition="bottom"
+              [routerLink]="'/bollo'"
+              iconPos="left"
+              icon="pi pi-money-bill"
+              class="ui-button-secondary icon-style icon-custom"
+              aria-label="Vai al riepilogo Bolli Virtuali"
+            ></button>
+          }
+          <div class="separator-class"></div>
+          <!-- INDIETRO -->
+          @if (mostraStorico || mostraMonitorMasterjobs) {
+            <button
+              type="button"
+              pButton
+              pTooltip="Indietro"
+              tooltipPosition="bottom"
+              icon="pi pi-chevron-left"
+              iconPos="left"
+              (click)="mostraStorico = false; mostraMonitorMasterjobs = false"
+              class="ui-button-secondary icon-style icon-custom"
+              aria-label="Indietro"
+            ></button>
+          }
+          <button
+            #btn
+            type="button"
+            pButton
+            pTooltip="Aggiorna attività"
+            tooltipPosition="bottom"
+            (click)="ricarica()"
+            iconPos="left"
+            icon="pi pi-refresh"
+            class="ui-button-secondary icon-style icon-custom"
+            aria-label="Aggiorna le attività"
+          ></button>
+          @if (!mostraStorico) {
+            <button
+              type="button"
+              pButton
+              [pTooltip]="storicoTooltipLabel"
+              tooltipPosition="bottom"
+              icon="pi pi-clock"
+              iconPos="left"
+              (click)="mostraStorico = !mostraStorico"
+              class="ui-button-secondary icon-style icon-custom"
+              [attr.aria-label]="storicoTooltipLabel"
+            ></button>
+          }
+          @if (!mostraStorico) {
+            <button
+              #btn
+              type="button"
+              pButton
+              pTooltip="Elimina notifiche"
+              tooltipPosition="bottom"
+              (click)="eliminaTutteNotifiche()"
+              iconPos="left"
+              icon="pi pi-trash"
+              class="ui-button-secondary icon-style icon-custom"
+              aria-label="Elimina notifiche"
+            ></button>
+          }
+          @if (mostraStorico) {
+            <h3
+              class="crono-label"
+              >
+              Storico attività
+            </h3>
+          }
                   <!-- MONITOR MASTERJOBS -->
                   @if (loggedUserIsSD && loggedUserIs99) {
                     <button
@@ -305,7 +306,7 @@
 
   <!-- Right side -->
   <ng-template pTemplate>
-    @if (!hidePreview) {
+    @if (canShowRightPanel) {
       <div #rightSide
         class="content-right"
         [ngClass]="mostraStorico || hidePreview ? 'd-hidden' : 'd-flex'">
