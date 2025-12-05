@@ -63,6 +63,7 @@ import { PopoverModule } from "primeng/popover";
 import { IconFieldModule } from "primeng/iconfield";
 import { InputIconModule } from "primeng/inputicon";
 import { StyleClassModule } from "primeng/styleclass";
+import { DrawerModule } from "primeng/drawer";
 
 /* Login */
 import { JwtLoginModule } from "@bds/jwt-login";
@@ -154,6 +155,7 @@ import { RubrintModule } from "@bds/rubrint";
     NgIdleKeepaliveModule.forRoot(),
     PreviewModule,
     StyleClassModule,
+    DrawerModule,
     RubrintModule,
   ],
   providers: [

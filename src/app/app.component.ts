@@ -22,6 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public headerFeaturesConfig: HeaderFeaturesConfig;
   public utenteConnesso: UtenteUtilities;
   public isSoloPec = false;
+  public drawerVisible = false;
   private subscriptions: Subscription[] = [];
   private readonly soloPecRoleCode = (CODICI_RUOLO as any).SP || "SP";
 

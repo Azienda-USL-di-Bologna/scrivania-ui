@@ -16,12 +16,36 @@
   </ng-template>
 
   <!-- CONTENT -->
-  <div class="content-wrapper ui-fluid" [ngClass]="{ 'solo-pec': isSoloPec }">
+  <div class="content-wrapper ui-fluid" [ngClass]="{ 'spazio-menu-drawer': isSoloPec }">
     @if (isSoloPec) { 
-      <div class="solo-pec-content">
-        <a routerLink="/attivita">Attività</a>
-        <a routerLink="/shpeck">Pec</a>
-        <a routerLink="/rubrica">Rubrica</a>
+      <div class="menu-drawer">
+        <button
+          type="button"
+          pButton
+          icon="pi pi-bars"
+          label="Menu"
+          class="p-button-outlined"
+          (click)="drawerVisible = true"
+        ></button>
+
+        <p-drawer
+          [(visible)]="drawerVisible"
+          position="left"
+          [modal]="true"
+          [blockScroll]="true"
+        >
+          <div class="solo-pec-links">
+            <button pButton class="p-button-text w-full" routerLink="/attivita" (click)="drawerVisible = false">
+              Attività
+            </button>
+            <button pButton class="p-button-text w-full" routerLink="/shpeck" (click)="drawerVisible = false">
+              Pec
+            </button>
+            <button pButton class="p-button-text w-full" routerLink="/rubrica" (click)="drawerVisible = false">
+              Rubrica
+            </button>
+          </div>
+        </p-drawer>
       </div>
     }
     <router-outlet></router-outlet>
