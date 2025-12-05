@@ -30,45 +30,97 @@
   overflow: hidden;
 }
 
-/* ::ng-deep body .ui-table .ui-table-tbody>tr.ui-state-highlight {
-  background-color: #fcf9bf;
-  color: black;
+// Riguardo al menu drawer
+// Il pulsante è in position absolute
+.content-wrapper {
+  position: relative;
+  .menu-drawer {
+    position: absolute; 
+    top: 0; 
+    left: 0;
+    button {
+      margin: 1rem;
+    }
+  }
+}
+// Le toolbar delle app sono spostate a destra per non sovrapposizione con il menu drawer
+::ng-deep .spazio-menu-drawer {
+  app-scrivania .option-bar,
+  app-mailbox app-toolbar,
+  rubrica rubrica-toolbar  {
+    margin-left: 7rem;
+    p-toolbar {
+      border-left: 0;
+    }
+  }
+  
 }
 
-::ng-deep body .ui-table .ui-table-tbody>tr:nth-child(even).ui-state-highlight {
-  background-color: #fcf9bf;
-  color: black;
-}
+::ng-deep .drawer-menu {
+  background: #2f4f6b !important;
+  width: 16rem !important;
+  ;
+  .p-drawer-mask {
+    background: rgba(0, 0, 0, 0.35);
+  }
 
-::ng-deep body .ui-table .ui-sortable-column.ui-state-highlight ::ng-deep body .ui-table .ui-sortable-column.ui-state-highlight a {
-  background-color: #e0e0e0;
-  color: black;
-}
+  .p-drawer-header {
+    padding: 1.25rem 1rem 0.5rem;
+    justify-content: flex-end;
+  }
 
-::ng-deep body .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a,
-::ng-deep body .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active:hover a,
-::ng-deep body .ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-active,
-::ng-deep body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item.ui-state-highlight,
-::ng-deep body .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item-group.ui-state-highlight {
-  background-color: #848484;
-  border: 0.06rem solid #848484;
-  color: #ffffff;
-}
+  .p-drawer-close-button .p-button-text {
+    color: #fff !important;
 
-::ng-deep * {
-  outline: none;
-}
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
 
-::ng-deep body .ui-dialog .ui-dialog-titlebar,
-.titolo-popup {
-  background-color: #993366 !important;
-  color: white !important;
-}
+    /* .p-drawer-close-icon {
+      color: inherit;
+      font-size: 1.25rem;
+    } */
+  }
 
-::ng-deep body .ui-dialog .ui-dialog-titlebar {
-  border: none;
-}
+  .p-drawer-content {
+    padding: 0 1.5rem 2rem;
+    color: #fff;
+  }
 
-::ng-deep body .ui-dialog {
-  min-width: 27.688rem;
-} */
+  .solo-pec-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 0.75rem;
+  }
+
+  .solo-pec-link.p-button {
+    justify-content: flex-start;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+    background: transparent;
+    background-color: transparent;
+    border: none;
+    border-color: transparent;
+    text-align: left;
+    padding-left: 0;
+    padding-right: 0;
+    box-shadow: none;
+
+    &:focus {
+      box-shadow: none;
+    }
+
+    &:hover {
+      background: transparent;
+      text-decoration: underline;
+    }
+
+    &.active {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  }
+}

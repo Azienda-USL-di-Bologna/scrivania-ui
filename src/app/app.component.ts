@@ -2,7 +2,7 @@ import { ApplicationConfig, Component, OnInit, OnDestroy, Type } from "@angular/
 import { JwtLoginService, UtenteUtilities, UtilityFunctions } from "@bds/jwt-login";
 import { SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { getInternautaUrl, BaseUrlType } from "@bds/internauta-model";
+import { getInternautaUrl, BaseUrlType, CODICI_RUOLO } from "@bds/internauta-model";
 import { MenuItem } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
@@ -21,7 +21,10 @@ export class AppComponent implements OnInit, OnDestroy {
   public addToMenu: MenuItem[] = []; // E' il menu che si aprirà nell'header
   public headerFeaturesConfig: HeaderFeaturesConfig;
   public utenteConnesso: UtenteUtilities;
+  public isSoloPec = false;
+  public drawerVisible = false;
   private subscriptions: Subscription[] = [];
+  private readonly soloPecRoleCode = (CODICI_RUOLO as any).SP || "SP";
 
   constructor(
     private loginService: JwtLoginService,
@@ -56,6 +59,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
         if (utente) {
           this.utenteConnesso = utente;
+          this.isSoloPec = this.utenteConnesso.hasRole(this.soloPecRoleCode);
           const intimusUrl = getInternautaUrl(BaseUrlType.Intimus);
           this.intimusClient.start(
             intimusUrl,

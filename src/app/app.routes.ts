@@ -13,12 +13,12 @@ import { LoginAdminComponent } from "./components/login-admin/login-admin.compon
 export const rootRouterConfig: Routes = [
   {
     path: "",
-    redirectTo: "attivita",
+    redirectTo: "scrivania",
     pathMatch: "full",
   },
   {
     path: "homepage",
-    redirectTo: "attivita",
+    redirectTo: "scrivania",
   },
   {
     path: "login",
@@ -77,5 +77,5 @@ export const rootRouterConfig: Routes = [
   buildRubricaRoute({
     path: "rubrica",
     canActivate: [RefreshLoggedUserGuard, LoginGuard],
-  }),
+  }) as any,
 ];

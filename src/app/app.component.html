@@ -16,7 +16,58 @@
   </ng-template>
 
   <!-- CONTENT -->
-  <div class="content-wrapper ui-fluid">
+  <div class="content-wrapper ui-fluid" [ngClass]="{ 'spazio-menu-drawer': isSoloPec }">
+    @if (isSoloPec) { 
+      <div class="menu-drawer">
+        <button
+          type="button"
+          pButton
+          icon="pi pi-bars"
+          label="Menu"
+          class="p-button-outlined"
+          (click)="drawerVisible = true"
+        ></button>
+
+        <p-drawer
+          [(visible)]="drawerVisible"
+          position="left"
+          [modal]="true"
+          [blockScroll]="true"
+          styleClass="drawer-menu"
+        >
+          <div class="solo-pec-links">
+            <button
+              pButton
+              class="p-button-text w-full solo-pec-link"
+              routerLink="/attivita"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="drawerVisible = false"
+            >
+              Scrivania
+            </button>
+            <button
+              pButton
+              class="p-button-text w-full solo-pec-link"
+              routerLink="/shpeck"
+              routerLinkActive="active"
+              (click)="drawerVisible = false"
+            >
+              Pec
+            </button>
+            <button
+              pButton
+              class="p-button-text w-full solo-pec-link"
+              routerLink="/rubrica"
+              routerLinkActive="active"
+              (click)="drawerVisible = false"
+            >
+              Rubrica
+            </button>
+          </div>
+        </p-drawer>
+      </div>
+    }
     <router-outlet></router-outlet>
   </div>
 </div>
