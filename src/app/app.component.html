@@ -18,15 +18,15 @@
   <!-- CONTENT -->
   <div class="content-wrapper ui-fluid" [ngClass]="{ 'spazio-menu-drawer': isSoloPec }">
     @if (isSoloPec) { 
-      <div class="menu-drawer">
-        <button
+      <div class="menu-drawer flex items-center justify-center">
+        <p-button
           type="button"
           pButton
-          icon="pi pi-bars"
+          icon="pi pi-th-large"
           label="Menu"
-          class="p-button-outlined"
+          class="p-button-outlined p-0! rounded-lg!"
           (click)="drawerVisible = true"
-        ></button>
+        ></p-button>
 
         <p-drawer
           [(visible)]="drawerVisible"

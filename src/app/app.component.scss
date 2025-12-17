@@ -1,11 +1,3 @@
-.width100x100 .ui-dropdown {
-  width: 100% !important;
-}
-
-.mt16 {
-  margin-top: 1rem;
-}
-
 .page-wrapper {
   height: 100%;
   display: flex;
@@ -17,10 +9,6 @@
   background-color: #993366;
   //position: fixed;
   z-index: 2;
-}
-
-.margin0 {
-  margin: 0;
 }
 
 .content-wrapper {
@@ -38,9 +26,11 @@
     position: absolute; 
     top: 0; 
     left: 0;
-    button {
+    height: 4rem; // ALTEZZA DEL PULSANTE
+    width: 7rem; // LARGHEZZA DEL PULSANTE
+    /* button {
       margin: 1rem;
-    }
+    } */
   }
 }
 // Le toolbar delle app sono spostate a destra per non sovrapposizione con il menu drawer
@@ -48,9 +38,10 @@
   app-scrivania .option-bar,
   app-mailbox app-toolbar,
   rubrica rubrica-toolbar  {
-    margin-left: 7rem;
+    margin-left: 7rem; // SPAZIO TRA IL PULSANTE E LE TOOLBAR CORRISPONDE A LARGHEZZA DEL PULSANTE
     p-toolbar {
-      border-left: 0;
+      border: 0;
+      height: 4rem; // ALTEZZA DEL TOOLBAR CORRISPONDE A ALTEZZA DEL PULSANTE
     }
   }
   
@@ -75,11 +66,6 @@
     &:hover {
       background: rgba(255, 255, 255, 0.12);
     }
-
-    /* .p-drawer-close-icon {
-      color: inherit;
-      font-size: 1.25rem;
-    } */
   }
 
   .p-drawer-content {
@@ -96,12 +82,12 @@
 
   .solo-pec-link.p-button {
     justify-content: flex-start;
-    color: #fff;
+    color: #fff !important;
     font-weight: 700;
-    font-size: 1rem;
-    letter-spacing: 0.3px;
-    background: transparent;
+    font-size: 1.2rem;
     background-color: transparent;
+    /* letter-spacing: 0.3px;
+    background: transparent;
     border: none;
     border-color: transparent;
     text-align: left;
@@ -113,6 +99,7 @@
       box-shadow: none;
     }
 
+     */
     &:hover {
       background: transparent;
       text-decoration: underline;
