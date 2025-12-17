@@ -197,87 +197,80 @@
               aria-label="Elimina notifiche"
             ></button>
           }
-          @if (mostraStorico) {
-            <h3
-              class="crono-label"
-              >
-              Storico attività
-            </h3>
+          <!-- MONITOR MASTERJOBS -->
+          @if (loggedUserIsSD && loggedUserIs99) {
+            <button
+              type="button"
+              pButton
+              pTooltip="Apri monitor del masterjobs"
+              tooltipPosition="bottom"
+              (click)="mostraMonitorMasterjobs = true"
+              iconPos="left"
+              icon="pi pi-shield"
+              class="ui-button-secondary icon-style icon-custom"
+            ></button>
+
+            <p-button
+              type="button"
+              label="Pec per SD (Peccatori)"
+              icon="pi pi-send"
+              class="ui-button-secondary"
+              (click)="router.navigate(['/shpeck'])"
+              aria-label="Pec per SD (Peccatori)"
+            ></p-button>
+
+            <p-button
+              type="button"
+              label="Rubrica per SD (Peccatori)"
+              icon="pi pi-money-bill"
+              class="ui-button-secondary"
+              (click)="router.navigate(['/rubrica'])"
+              aria-label="Rubrica per SD (Peccatori)"
+            ></p-button>
           }
-                  <!-- MONITOR MASTERJOBS -->
-                  @if (loggedUserIsSD && loggedUserIs99) {
-                    <button
-                      type="button"
-                      pButton
-                      pTooltip="Apri monitor del masterjobs"
-                      tooltipPosition="bottom"
-                      (click)="mostraMonitorMasterjobs = true"
-                      iconPos="left"
-                      icon="pi pi-shield"
-                      class="ui-button-secondary icon-style icon-custom"
-                    ></button>
+          <!-- GENERATORE XML AVCP (LOTTI) Bottone temporaneo -->
+          @if (buttonAvcpEnabled) {
+            <button
+              type="button"
+              pButton
+              pTooltip="Apri generatore xml AVCP"
+              tooltipPosition="bottom"
+              (click)="showAvcpDialog = true"
+              iconPos="left"
+              icon="pi pi-file"
+              class="ui-button-secondary icon-style icon-custom"
+            ></button>
+          }
+        </div>
 
-                    <p-button
-                      type="button"
-                      label="Pec per SD (Peccatori)"
-                      icon="pi pi-send"
-                      class="ui-button-secondary"
-                      (click)="router.navigate(['/shpeck'])"
-                      aria-label="Pec per SD (Peccatori)"
-                    ></p-button>
+        @if (browserObsolete) {
+          <span
+            class="messaggio-browser-obsoleti"
+            >
+            <i
+              class="pi pi-exclamation-triangle"
+              style="font-size: 2rem"
+            ></i>
+            <span>{{ browserMessageObsolete }}</span>
+          </span>
+        }
 
-                    <p-button
-                      type="button"
-                      label="Rubrica per SD (Peccatori)"
-                      icon="pi pi-money-bill"
-                      class="ui-button-secondary"
-                      (click)="router.navigate(['/rubrica'])"
-                      aria-label="Rubrica per SD (Peccatori)"
-                    ></p-button>
-                  }
-                  <!-- GENERATORE XML AVCP (LOTTI) Bottone temporaneo -->
-                  @if (buttonAvcpEnabled) {
-                    <button
-                      type="button"
-                      pButton
-                      pTooltip="Apri generatore xml AVCP"
-                      tooltipPosition="bottom"
-                      (click)="showAvcpDialog = true"
-                      iconPos="left"
-                      icon="pi pi-file"
-                      class="ui-button-secondary icon-style icon-custom"
-                    ></button>
-                  }
-                </div>
+        <!-- @if (this.loggedUser?.isSD()) {
+        <p-button [icon]="darkmodeIcon" type="button" class="darkmodebutton" (onClick)="toggleDarkMode()" [rounded]="true" [text]="true">
+        </p-button>
+        } -->
 
-                @if (browserObsolete) {
-                  <span
-                    class="messaggio-browser-obsoleti"
-                    >
-                    <i
-                      class="pi pi-exclamation-triangle"
-                      style="font-size: 2rem"
-                    ></i>
-                    <span>{{ browserMessageObsolete }}</span>
-                  </span>
-                }
-
-                <!-- @if (this.loggedUser?.isSD()) {
-                <p-button [icon]="darkmodeIcon" type="button" class="darkmodebutton" (onClick)="toggleDarkMode()" [rounded]="true" [text]="true">
-                </p-button>
-                } -->
-
-                @if (
-                  ((!!this.loggedUser?.getUtente().utenteReale || this.loggedUser?.isSD()) &&
-                  this.loggedUser?.getUtente().aziende.length > 1) ||
-                  (!!!this.loggedUser?.getUtente().utenteReale && this.loggedUser?.getUtente().aziendeAttive.length > 1)
-                  ) {
-                  <app-dropdown-aziende
-                    (aziendaEmitter)="aziendaChanged($event)"
-                    aria-label="Ente delle attività"
-                    >
-                  </app-dropdown-aziende>
-                }
+        @if (
+          ((!!this.loggedUser?.getUtente().utenteReale || this.loggedUser?.isSD()) &&
+          this.loggedUser?.getUtente().aziende.length > 1) ||
+          (!!!this.loggedUser?.getUtente().utenteReale && this.loggedUser?.getUtente().aziendeAttive.length > 1)
+          ) {
+          <app-dropdown-aziende
+            (aziendaEmitter)="aziendaChanged($event)"
+            aria-label="Ente delle attività"
+            >
+          </app-dropdown-aziende>
+        }
       </div>
       <div class="table-wrapper">
         <div class="table-inner">

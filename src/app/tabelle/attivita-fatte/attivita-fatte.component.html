@@ -25,13 +25,13 @@
         [style.maxWidth]="col.width"
         [style.minWidth]="col.minWidth"
         [style.padding]="col.padding"
-        [pSortableColumn]="col.field"
+        [pSortableColumn]="col.field === 'azione' ? null : col.field"
         attr.aria-label="Colonna {{ col.label }}, {{ col.header ? 'Ordinare colonna' : '' }}"
       >
         {{ col.header }}
         <p-sortIcon
           [field]="col.field"
-          *ngIf="col.field != undefined"
+          *ngIf="col.field != undefined && col.field !== 'azione'"
           attr.aria-label="Ordinare colonna {{ col.label }}"
           arialabelasc="Ordinamento ascendente"
           arialabeldesc="Ordinamento discendente"
@@ -49,7 +49,7 @@
         [style.display]="col.display"
       >
         <div
-          *ngIf="col.field != undefined && col.field !== 'priorita'"
+          *ngIf="col.field != undefined && col.field !== 'priorita' && col.field !== 'azione'"
           style="width: 100%"
         >
           <p-datepicker
@@ -88,6 +88,7 @@
     pTemplate="body"
     let-rowData
     let-attivita
+    let-columns="columns"
   >
     <tr
       #selRow
@@ -95,84 +96,84 @@
       [pSelectableRow]="rowData"
       aria-label="riga"
     >
-      <!-- style="height:" -->
       <td
-        [style.maxWidth]="cols[0].width"
-        [style.minWidth]="cols[0].minWidth"
-        class="column-class p0"
+        *ngFor="let col of columns"
+        [style.maxWidth]="col.width"
+        [style.minWidth]="col.minWidth"
+        [style.padding]="col.padding"
+        [ngClass]="{
+          'column-class': !!col.field && col.field !== 'priorita' && col.field !== 'azione',
+          'column-class p0': col.field === 'priorita',
+          'colonna-azione': col.field === 'azione',
+          'p0': col.field === 'azione' || col.label === 'note',
+          disabled: col.field === 'azione' && isAzioneDisabled(attivita.id)
+        }"
+        attr.aria-label="Colonna {{ col.header || col.label }}"
       >
-        <img
-          [src]="attivita.iconaAttivita"
-          alt="{{ attivita.tipo === 'notifica' || attivita.tipo === 'riepilogo' ? 'icona notifica' : 'icona priorità' }}"
-          class="img-table"
-        />
-      </td>
-      <td
-        aria-label="Colonna Ente"
-        [style.maxWidth]="cols[1].width"
-        [style.minWidth]="cols[1].minWidth"
-        class="column-class"
-      >
-        {{ attivita.idAzienda.nome }}
-      </td>
-      <td
-        aria-label="Colonna Applicazione"
-        [style.maxWidth]="cols[2].width"
-        [style.minWidth]="cols[2].minWidth"
-        class="column-class"
-      >
-        {{ attivita.idApplicazione.nome }}
-      </td>
-      <td
-        aria-label="Colonna Provenienza"
-        [style.maxWidth]="cols[3].width"
-        [style.minWidth]="cols[3].minWidth"
-        class="column-class"
-      >
-        {{ attivita.provenienza }}
-      </td>
-      <td
-        aria-label="Colonna Oggetto"
-        class="column-class"
-        [style.minWidth]="cols[4].minWidth"
-      >
-        {{ attivita.oggetto }}
-      </td>
-      <td
-        aria-label="Colonna Svolta il"
-        [style.maxWidth]="cols[5].width"
-        [style.minWidth]="cols[5].minWidth"
-        class="column-class"
-      >
-        {{ attivita.dataInserimentoRiga | date: "dd/MM/yyyy" }}
-      </td>
-      <td
-        aria-label="Colonna Tipo"
-        [style.maxWidth]="cols[6].width"
-        [style.minWidth]="cols[6].minWidth"
-        class="column-class"
-      >
-        {{ attivita.descrizione }}
-      </td>
+        <ng-container [ngSwitch]="col.field || col.label">
+          <ng-container *ngSwitchCase="'priorita'">
+            <img
+              [src]="attivita.iconaAttivita"
+              alt="{{ attivita.tipo === 'notifica' || attivita.tipo === 'riepilogo' ? 'icona notifica' : 'icona priorità' }}"
+              class="img-table"
+            />
+          </ng-container>
 
-      <td
-        aria-label="Colonna note"
-        [style.maxWidth]="cols[7].width"
-        [style.minWidth]="cols[7].minWidth"
-        class="p0"
-      >
-        <img
-          tabindex="0"
-          role="button"
-          *ngIf="attivita.note"
-          src="assets/images/baseline-note-24px.svg"
-          style="transform: rotate(90deg) scaleX(-1)"
-          (click)="onNoteClick(attivita)"
-          alt="l'attività ha delle note"
-          class="img-table"
-        />
-        <!-- <img *ngIf="!attivita.note" src="assets/images/outline-note_add-.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table"> -->
+          <ng-container *ngSwitchCase="'idAzienda.nome'">
+            {{ attivita.idAzienda.nome }}
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'idApplicazione.nome'">
+            {{ attivita.idApplicazione.nome }}
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'provenienza'">
+            {{ attivita.provenienza }}
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'oggetto'">
+            {{ attivita.oggetto }}
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'dataInserimentoRiga'">
+            {{ attivita.dataInserimentoRiga | date: "dd/MM/yyyy" }}
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'descrizione'">
+            {{ attivita.descrizione }}
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'azione'">
+            @if (canShowAzione(attivita) && hasAzioneUrl(attivita)) {
+              <a
+                style="color: #993366; cursor: pointer"
+                role="button"
+                tabindex="0"
+                aria-label="Apri azione"
+                (mousedown)="onAzioneMouseDown(attivita, $event)"
+              >
+                <strong>{{ getAzioneLabel(attivita) }}</strong>
+              </a>
+            }
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'note'">
+            <img
+              tabindex="0"
+              role="button"
+              *ngIf="attivita.note"
+              src="assets/images/baseline-note-24px.svg"
+              style="transform: rotate(90deg) scaleX(-1)"
+              (click)="onNoteClick(attivita)"
+              alt="l'attività ha delle note"
+              class="img-table"
+            />
+            <!-- <img *ngIf="!attivita.note" src="assets/images/outline-note_add-.svg" (click)="onNoteClick(attivita)" alt="note" class="img-table"> -->
+          </ng-container>
+        </ng-container>
       </td>
     </tr>
   </ng-template>
 </p-table>
+
+<p-toast key="attivitaToast"></p-toast>
