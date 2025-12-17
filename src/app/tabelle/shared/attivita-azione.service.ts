@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { MessageService } from "primeng/api";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
-import { Applicazioni, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { Applicazioni, PermessoDocService, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
 import { AttivitaService } from "../attivita/attivita.service";
 
 type CompiledUrlEntry = { url?: string; label?: string };
@@ -11,7 +12,8 @@ export class AttivitaAzioneService {
   constructor(
     private loginService: JwtLoginService,
     private attivitaService: AttivitaService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private permessoDocService: PermessoDocService
   ) {}
 
   public canShowAction(item: any): boolean {
@@ -59,6 +61,40 @@ export class AttivitaAzioneService {
     }
 
     this.openInterApp(item, loggedUser, firstUrl);
+  }
+
+  /**
+   * Usare questo metodo SOLO per le righe di "Attività fatte".
+   * Se l'azione apre un documento (datiAggiuntivi.id_doc), controlla prima il permesso (PermessoDoc).
+   */
+  public openActionFromAttivitaFatte(item: any, loggedUser: UtenteUtilities): void {
+    const idDoc = item?.datiAggiuntivi?.id_doc;
+    if (idDoc == null) {
+      this.openAction(item, loggedUser);
+      return;
+    }
+
+    const idPersona = loggedUser?.getUtente?.()?.fk_idPersona?.id;
+    if (!idPersona) {
+      this.showNoDocAccessToast();
+      return;
+    }
+
+    const filters = new FiltersAndSorts();
+    filters.addFilter(new FilterDefinition("idPersona.id", FILTER_TYPES.not_string.equals, idPersona));
+    filters.addFilter(new FilterDefinition("idDocDetail.id", FILTER_TYPES.not_string.equals, idDoc));
+
+    this.permessoDocService.getData(null, filters, null, null).subscribe({
+      next: (data: any) => {
+        const hasPermission = !!data?.results?.length;
+        if (hasPermission) {
+          this.openAction(item, loggedUser);
+        } else {
+          this.showNoDocAccessToast();
+        }
+      },
+      error: () => this.showNoDocAccessToast(),
+    });
   }
 
   private openInterApp(item: any, loggedUser: UtenteUtilities, fallbackUrl: string): void {
@@ -141,6 +177,15 @@ export class AttivitaAzioneService {
       app = "";
     }
     return wl.protocol + "//" + wl.hostname + (port ? ":" + port : "") + app;
+  }
+
+  private showNoDocAccessToast() {
+    this.messageService.add({
+      severity: "info",
+      key: "attivitaToast",
+      summary: "Attenzione",
+      detail: "Non hai accesso a questo documento",
+    });
   }
 }
 

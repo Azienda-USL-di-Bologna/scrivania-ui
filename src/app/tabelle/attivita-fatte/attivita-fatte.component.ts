@@ -362,7 +362,7 @@ export class AttivitaFatteComponent implements OnInit {
     this.disabledActionIds.add(attivita.id);
     setTimeout(() => this.disabledActionIds.delete(attivita.id), 5000);
 
-    this.attivitaAzioneService.openAction(attivita, this.loggedUser);
+    this.attivitaAzioneService.openActionFromAttivitaFatte(attivita, this.loggedUser);
   }
 }
 
