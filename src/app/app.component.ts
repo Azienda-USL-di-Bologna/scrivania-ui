@@ -1,14 +1,14 @@
 import { ApplicationConfig, Component, OnInit, OnDestroy, Type } from "@angular/core";
 import { JwtLoginService, UtenteUtilities, UtilityFunctions } from "@bds/jwt-login";
-import { SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION } from "src/environments/app-constants";
-import { ActivatedRoute, Params, Router } from "@angular/router";
+import { SCRIVANIA_ROUTE, LOGIN_ROUTE, APPLICATION, ATTIVITA_ROUTE } from "src/environments/app-constants";
+import { ActivatedRoute, NavigationEnd, Params, Router } from "@angular/router";
 import { getInternautaUrl, BaseUrlType, CODICI_RUOLO } from "@bds/internauta-model";
 import { MenuItem } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService, PRIMENG_ITA_TRANSALATION } from "@bds/common-tools";
 import { HeaderFeaturesConfig, PopupMessaggiService } from "@bds/common-components";
-import { Subscription } from "rxjs";
+import { filter, Subscription } from "rxjs";
 import { PrimeNG } from "primeng/config";
 
 @Component({
@@ -26,6 +26,8 @@ export class AppComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   private readonly soloPecRoleCode = (CODICI_RUOLO as any).SP || "SP";
 
+  private pendingSoloPecRedirect = false;
+
   constructor(
     private loginService: JwtLoginService,
     private config: PrimeNG,
@@ -37,6 +39,20 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+
+    this.subscriptions.push(
+      this.router.events
+        .pipe(filter((e) => e instanceof NavigationEnd))
+        .subscribe((e) => {
+          const url = (e as NavigationEnd).urlAfterRedirects || "";
+          if (this.pendingSoloPecRedirect && url.startsWith("/attivita")) {
+            this.pendingSoloPecRedirect = false;
+            this.router.navigateByUrl("/shpeck", { replaceUrl: true });
+          }
+        })
+    );
+    
+
     this.config.setTranslation(PRIMENG_ITA_TRANSALATION);
     this.headerFeaturesConfig = new HeaderFeaturesConfig();
     this.headerFeaturesConfig.showCambioUtente = true;
@@ -60,6 +76,8 @@ export class AppComponent implements OnInit, OnDestroy {
         if (utente) {
           this.utenteConnesso = utente;
           this.isSoloPec = this.utenteConnesso.hasRole(this.soloPecRoleCode);
+          this.pendingSoloPecRedirect = this.isSoloPec;
+
           const intimusUrl = getInternautaUrl(BaseUrlType.Intimus);
           this.intimusClient.start(
             intimusUrl,
