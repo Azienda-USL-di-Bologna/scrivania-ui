@@ -8,7 +8,7 @@ import { DialogService } from "primeng/dynamicdialog";
 import { ImpostazioniComponent } from "./impostazioni/impostazioni.component";
 import { IntimusClientService, PRIMENG_ITA_TRANSALATION } from "@bds/common-tools";
 import { HeaderFeaturesConfig, PopupMessaggiService } from "@bds/common-components";
-import { filter, Subscription } from "rxjs";
+import { filter, Subscription, take } from "rxjs";
 import { PrimeNG } from "primeng/config";
 
 @Component({
@@ -72,7 +72,12 @@ export class AppComponent implements OnInit, OnDestroy {
     this.loginService.setRefreshSessionInternautaUrl(getInternautaUrl(BaseUrlType.RefreshSessionInternauta));
 
     this.subscriptions.push(
-      this.loginService.loggedUser$.subscribe((utente: UtenteUtilities) => {
+      this.loginService.loggedUser$
+        .pipe(
+          filter((utente: UtenteUtilities | null) => utente !== null),
+          take(1)
+        )
+        .subscribe((utente: UtenteUtilities) => {
         if (utente) {
           this.utenteConnesso = utente;
           this.isSoloPec = this.utenteConnesso.hasRole(this.soloPecRoleCode);
