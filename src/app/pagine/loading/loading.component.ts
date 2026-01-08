@@ -5,6 +5,7 @@ import { GlobalService } from "src/app/services/global.service";
 import { ImpostazioniApplicazioni, Applicazione, Azienda } from "@bds/internauta-model";
 import { ApplicationCustiomization, ScrivaniaVersion } from "src/environments/application_customization";
 import { COMMON_PARAMETERS, ATTIVITA_ROUTE } from "src/environments/app-constants";
+import { CODICI_RUOLO } from "@bds/internauta-model";
 
 @Component({
   selector: "app-loading",
@@ -13,11 +14,17 @@ import { COMMON_PARAMETERS, ATTIVITA_ROUTE } from "src/environments/app-constant
   standalone: false,
 })
 export class LoadingComponent implements OnInit {
+  private readonly soloPecRoleCode = (CODICI_RUOLO as any).SP || "SP";
+
   constructor(private router: Router, private loginService: JwtLoginService, private globalService: GlobalService) {}
 
   ngOnInit() {
     this.loginService.loggedUser$.subscribe((utenteUtilities: UtenteUtilities) => {
       if (utenteUtilities) {
+        if (utenteUtilities.hasRole(this.soloPecRoleCode)) {
+          this.router.navigate(["/shpeck"]);
+          return;
+        }
         const impostazioniApplicazioni: ImpostazioniApplicazioni = utenteUtilities.getImpostazioniApplicazione();
         if (impostazioniApplicazioni) {
           const impostazioniVisualizzazione: any = JSON.parse(impostazioniApplicazioni.impostazioniVisualizzazione);
