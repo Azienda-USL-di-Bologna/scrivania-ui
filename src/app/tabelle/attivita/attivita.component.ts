@@ -28,6 +28,7 @@ import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 import Bowser from "bowser";
 import { DatePicker } from "primeng/datepicker";
+import { AttivitaAzioneService } from "../shared/attivita-azione.service";
 
 @Component({
   selector: "app-attivita",
@@ -40,7 +41,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private subscriptions: Subscription[] = [];
-  private listeners = new Map();
   private intimusSubscribbed = false;
 
   public LOADED_ROWS = 50;
@@ -66,6 +66,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
   public changedOrder: boolean;
   public hidePreview: boolean = false;
+  private disabledActionIds = new Set<number>();
 
   private salvataggioNoteResultMessages = {
     success: {
@@ -120,7 +121,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     private intimusClientService: IntimusClientService,
     private confirmationService: ConfirmationService,
     private impostazioniService: ImpostazioniService,
-    private scrivaniaService: ScrivaniaService
+    private scrivaniaService: ScrivaniaService,
+    private attivitaAzioneService: AttivitaAzioneService
   ) {
     this.subscriptions.push(
       this.loginService.loggedUser$.subscribe((u: UtenteUtilities) => {
@@ -615,14 +617,6 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
           }
           break;
 
-        case "azione":
-          if (td.classList.contains(this.columnClass)) {
-            this.renderer.removeClass(td, this.columnClass);
-          }
-          // console.log("getColumnValue td", td);
-          this.fillActionCol(attivita, td);
-          res = undefined;
-          break;
         default:
           if (td && !td.classList.contains(this.columnClass)) {
             this.renderer.addClass(td, this.columnClass);
@@ -634,110 +628,31 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     return res;
   }
 
-  fillActionCol(attivita, td) {
-    if (
-      attivita.tipo === "attivita" ||
-      (attivita.tipo === "notifica" && ["procton", "dete", "deli", "downloader"].includes(attivita.idApplicazione.id))
-    ) {
-      const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
-      let compiledUrl;
-      let labelUrl = "Apri";
-      if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
-        compiledUrl = compiledUrlsJsonArray[0].url;
-        labelUrl = compiledUrlsJsonArray[0].label;
-        if (labelUrl === "Accetta/rifiuta") labelUrl = "Rispondi"; // TODO: Questo andrebbe cambiato nel backend. Per non modificare la larghezza del frontend lo cambio qui.
-      }
-      td.innerHTML = `<a style="color: #993366; cursor:pointer;" aria-hidden="true"><strong>${labelUrl}</strong></a>`;
-      if (this.listeners[td.id]) {
-        this.listeners[td.id][0](); // Rimuovo il listener agganciato al td chiamando la funzione associata
-        this.listeners.delete(td.id); // Lo elimino anche dall'array per riaggiungerlo sia nella nuova colonna che nella stessa
-      }
-      this.listeners[td.id] = [
-        this.renderer.listen(td, "mousedown", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          // console.log("fillActionCol td", td);
-          if (!td.classList.contains("disabled")) {
-            if (attivita.idApplicazione.id === "downloader" && compiledUrl) {
-              this.downloadArchivioZip(attivita, compiledUrl);
-            } else {
-              this.apriAttivita(attivita);
-            }
-            this.renderer.addClass(td, "disabled");
-            // this.renderer.setAttribute(td, "title", "disabilitato per un paio di secondi");
-
-            setTimeout(() => {
-              this.renderer.removeClass(td, "disabled");
-              // this.renderer.removeAttribute(td, "title");
-            }, 5000);
-          }
-        }),
-        td.cellIndex,
-      ];
-    } else {
-      td.innerHTML = "";
-    }
+  public canShowAzione(attivita: Attivita): boolean {
+    return this.attivitaAzioneService.canShowAction(attivita);
   }
 
-  /**
-   * Effettua il download del fascicolo in formato zip.
-   * @param attivita L'attivita/notifica contenente il link per il download.
-   * @param archivio Il fascicolo da scaricare.
-   */
-  private downloadArchivioZip(attivita: Attivita, url: string) {
-    this.attivitaService.verifyArchivioZip(url).subscribe({
-      next: (res) => {
-        // faccio scaricare l'archivio da un tag ancor cossiché sia gestito dal browser
-        // questo per permettere una più chiara comrensione all'utente del download in corso
-        const link = document.createElement("a");
-        link.href = url;
-        link.click();
-        this.messageService.add({
-          severity: "success",
-          key: "attivitaToast",
-          summary: "Download completato",
-          detail: `Scaricamento archivio compresso ${attivita.oggetto} avviato con successo.`,
-        });
-      },
-      error: (err) => {
-        if (err.status === 401) {
-          this.messageService.add({
-            severity: "error",
-            key: "attivitaToast",
-            summary: "Attenzione",
-            detail: `Il link per il download non è più valido. Si prega di ripetere l'operazione.`,
-          });
-        } else {
-          this.messageService.add({
-            severity: "error",
-            key: "attivitaToast",
-            summary: "ERRORE",
-            detail: `C'è stato un errore imprevisto sul server.`,
-          });
-        }
-      },
-    });
+  public getAzioneLabel(attivita: Attivita): string {
+    return this.attivitaAzioneService.getActionLabel(attivita);
   }
 
-  /**
-   * Metodo che prende il nome del file dall'header della response.
-   * @param response La response http.
-   * @param archivio Il fascicolo per prendere il nome in caso non venga passato dal service.
-   * @returns Il nome del file.
-   */
-  private getFilenameFromResponse(response: any, attivita: Attivita) {
-    const contentDispositionHeader = response?.headers?.get("Content-Disposition");
-    if (contentDispositionHeader != null) {
-      const parts = contentDispositionHeader.split(";");
-      for (const part of parts) {
-        if (part.trim().startsWith("filename")) {
-          const filename = part.substring(part.indexOf("=") + 1).trim();
-          return filename.replace(/"/g, "");
-        }
-      }
-    }
-    const filename: string = attivita.oggetto.substring("Fascicolo: ".length);
-    return filename;
+  public isAzioneDisabled(attivitaId: number): boolean {
+    return this.disabledActionIds.has(attivitaId);
+  }
+
+  public onAzioneMouseDown(attivita: Attivita, event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!attivita || !this.loggedUser) return;
+    if (!this.attivitaAzioneService.canShowAction(attivita)) return;
+    if (!this.attivitaAzioneService.hasActionUrl(attivita)) return;
+    if (this.isAzioneDisabled(attivita.id)) return;
+
+    this.disabledActionIds.add(attivita.id);
+    setTimeout(() => this.disabledActionIds.delete(attivita.id), 5000);
+
+    this.attivitaAzioneService.openAction(attivita, this.loggedUser);
   }
 
   public onCalendarAction(event: any, field: string, action: string) {

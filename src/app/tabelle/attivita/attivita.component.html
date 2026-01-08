@@ -253,14 +253,24 @@
         class="colonna-azione"
         headers="azione"
         [id]="attivita.id"
-        #td7
         [style.maxWidth]="cols[7].width"
         [style.minWidth]="cols[7].minWidth"
         [style.justifyContent]="'center'"
         [ngStyle]="!attivita.aperta ? { 'font-weight': 'bold' } : {}"
+        [ngClass]="{ disabled: isAzioneDisabled(attivita.id) }"
         (dblclick)="$event.preventDefault(); $event.stopPropagation()"
       >
-        {{ getColumnValue(attivita, cols[7], td7, this) }}
+        @if (canShowAzione(attivita)) {
+          <a
+            style="color: #993366; cursor: pointer"
+            role="button"
+            tabindex="0"
+            aria-label="Apri azione"
+            (mousedown)="onAzioneMouseDown(attivita, $event)"
+          >
+            <strong>{{ getAzioneLabel(attivita) }}</strong>
+          </a>
+        }
       </td>
       <td
         aria-label="Colonna check procedibilità"
