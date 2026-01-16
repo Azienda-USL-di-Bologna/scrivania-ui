@@ -11,6 +11,8 @@ import { ExtendedJobService } from "./extendend-job.service";
 import { cols } from "./job-constants";
 import { ExtendedToolsService } from "./extendend-tools.service";
 
+type LazyLoadEventWithUpdate = LazyLoadEvent & { forceUpdate?: () => void };
+
 @Component({
     selector: "monitor-masterjobs",
     templateUrl: "./monitor-masterjobs.component.html",
@@ -22,7 +24,7 @@ export class MonitorMasterjobsComponent implements OnInit {
   private loadJobSubscription: Subscription;
   private loadJobCountSubscription: Subscription;
   private pageConf: PagingConf = { mode: "LIMIT_OFFSET_NO_COUNT", conf: { limit: 0, offset: 0 } };
-  private storedLazyLoadEvent: LazyLoadEvent;
+  private storedLazyLoadEvent: LazyLoadEventWithUpdate;
 
   public loggedUser: UtenteUtilities;
   public jobs: Job[] = [];
@@ -77,9 +79,10 @@ export class MonitorMasterjobsComponent implements OnInit {
 
   private loadData(): void {
     this.pageConf.conf = {
-      limit: this.storedLazyLoadEvent.rows,
-      offset: this.storedLazyLoadEvent.first,
+      limit: Math.max(1, this.storedLazyLoadEvent?.rows ?? this.rowsNumber),
+      offset: Math.max(0, this.storedLazyLoadEvent?.first ?? 0),
     };
+    this.loading = true;
     if (this.loadJobSubscription) {
       this.loadJobSubscription.unsubscribe();
       this.loadJobSubscription = null;
@@ -98,16 +101,26 @@ export class MonitorMasterjobsComponent implements OnInit {
 
         const results = data.results;
 
+        if (this.jobs.length !== this.totalRecords) {
+          this.jobs = Array.from({ length: this.totalRecords });
+        }
         if (this.pageConf.conf.offset === 0 && data.page.totalElements < this.pageConf.conf.limit) {
           /* Questo meccanismo serve per cancellare i risultati di troppo della tranche precedente.
 					Se entro qui probabilmente ho fatto una ricerca */
           Array.prototype.splice.apply(this.jobs, [0, this.jobs.length, ...results]);
         } else {
-          Array.prototype.splice.apply(this.jobs, [this.storedLazyLoadEvent.first, this.storedLazyLoadEvent.rows, ...results]);
+          Array.prototype.splice.apply(this.jobs, [
+            this.storedLazyLoadEvent?.first ?? 0,
+            this.storedLazyLoadEvent?.rows ?? this.rowsNumber,
+            ...results,
+          ]);
         }
         this.jobs = [...this.jobs]; // trigger change detection
+        this.storedLazyLoadEvent?.forceUpdate?.();
       },
-      (err) => {}
+      (err) => {
+        this.loading = false;
+      }
     );
   }
 
@@ -137,9 +150,15 @@ export class MonitorMasterjobsComponent implements OnInit {
       });
   }
 
-  public onLazyLoad(event: LazyLoadEvent): void {
-    if (event.first === 0 && event.rows === this.rowsNumber) {
+  public onLazyLoad(event: LazyLoadEventWithUpdate): void {
+    const fallbackRows = this.rowsNumber * 2;
+    if (!event.rows || event.rows <= 0) {
+      event.rows = fallbackRows;
+    } else if (event.first === 0 && event.rows === this.rowsNumber) {
       event.rows = event.rows * 2;
+    }
+    if (event.first == null || event.first < 0) {
+      event.first = 0;
     }
 
     console.log(`Chiedo ${this.pageConf.conf.limit} righe con offset di ${this.pageConf.conf.offset}`);
