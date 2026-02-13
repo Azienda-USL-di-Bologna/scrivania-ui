@@ -1,5 +1,5 @@
 import { Component, effect, inject, input, signal } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { TableModule } from "primeng/table";
 import { DettaglioAttivita, DettaglioAttivitaService } from "@bds/internauta-model";
 import { FILTER_TYPES, FilterDefinition, FiltersAndSorts, PAGE_CONF_NO_LIMIT } from "@bds/next-sdr";
@@ -9,7 +9,7 @@ import { JwtLoginService } from "@bds/jwt-login";
 @Component({
   selector: "detail-riepilogo",
   standalone: true,
-  imports: [CommonModule, TableModule],
+  imports: [TableModule],
   template: `
     <h2 class="text-2xl font-semibold mb-4">Riepilogo</h2>
 
