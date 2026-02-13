@@ -1,19 +1,19 @@
 // Importazioni dei moduli necessari con @use
 /* @use "primeicons/primeicons.css" as primeicons;
-@use "../node_modules/@bds/common-components/assets/bds-styles/material-icons.scss" as material;
-@use "../node_modules/@bds/common-components/assets/bds-styles/custom-classes.scss" as custom;
-@use "../node_modules/@bds/common-components/assets/bds-styles/basic.scss" as basic;
-@use "../node_modules/@bds/common-components/assets/bds-styles/primeng-customization.scss" as primeng;
+@use "../node_modules/@bds/bds-theme/assets/bds-styles/material-icons.scss" as material;
+@use "../node_modules/@bds/bds-theme/assets/bds-styles/custom-classes.scss" as custom;
+@use "../node_modules/@bds/bds-theme/assets/bds-styles/basic.scss" as basic;
+@use "../node_modules/@bds/bds-theme/assets/bds-styles/primeng-customization.scss" as primeng;
 
 // Importazioni Tailwind
 @tailwind base;
 @tailwind components;
 @tailwind utilities; */
 
-@use "../node_modules/@bds/common-components/assets/bds-styles/material-icons.scss" as *;
-@use "../node_modules/@bds/common-components/assets/bds-styles/custom-classes.scss" as *;
-@use "../node_modules/@bds/common-components/assets/bds-styles/basic.scss" as *;
-@use "../node_modules/@bds/common-components/assets/bds-styles/primeng-customization.scss" as *;
+@use "../node_modules/@bds/bds-theme/assets/bds-styles/material-icons.scss" as *;
+@use "../node_modules/@bds/bds-theme/assets/bds-styles/custom-classes.scss" as *;
+@use "../node_modules/@bds/bds-theme/assets/bds-styles/basic.scss" as *;
+@use "../node_modules/@bds/bds-theme/assets/bds-styles/primeng-customization.scss" as *;
 
 @use "tailwindcss" as *;
 @use "primeicons/primeicons.css" as primeicons;
