@@ -5,13 +5,13 @@
         <li class="hide-preview-box">
           <label for="hidePreview">Nascondi anteprima</label>
           <div class="right">
-            <p-inputSwitch
+            <p-toggleswitch
               id="hidePreview"
               [(ngModel)]="model.hidePreview"
               styleClass="switch-class"
               name="hidePreview"
             >
-            </p-inputSwitch>
+            </p-toggleswitch>
             <span class="si-no">{{ model.hidePreview ? "Sì" : "No" }}</span>
           </div>
         </li>

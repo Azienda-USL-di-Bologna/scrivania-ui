@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList
 import { DatePipe } from "@angular/common";
 import { LazyLoadEvent } from "primeng/api";
 import { LOCAL_IT } from "@bds/common-tools";
-import { buildLazyEventFiltersAndSorts, buildPagingConf } from "@bds/primeng-plugin";
+import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaFatteService } from "./attivita-fatte.service";
 import { AttivitaFatta, ENTITIES_STRUCTURE } from "@bds/internauta-model";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
@@ -10,6 +10,7 @@ import { Subscription } from "rxjs";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
 import { Table } from "primeng/table";
 import { DatePicker } from "primeng/datepicker";
+import { AttivitaAzioneService } from "../shared/attivita-azione.service";
 
 @Component({
   selector: "app-attivita-fatte",
@@ -24,13 +25,13 @@ export class AttivitaFatteComponent implements OnInit {
   public localIt = LOCAL_IT;
 
   public dataRange: any = {};
-  private previousEvent: LazyLoadEvent;
   private initialFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   private lazyLoadFiltersAndSorts: FiltersAndSorts = new FiltersAndSorts();
   public loggedUser: UtenteUtilities;
   public loading: boolean = true; // lasciare questo a true se no da errore in console al primo caricamento delle attività
   public selectedRowIndex: number = -1;
   private subscriptions: Subscription[];
+  private disabledActionIds = new Set<number>();
 
   public _rows = 20;
 
@@ -119,6 +120,13 @@ export class AttivitaFatteComponent implements OnInit {
       minWidth: "7.5rem",
     },
     {
+      field: "azione",
+      header: "Azione",
+      width: "6rem",
+      label: "azione",
+      minWidth: "6rem",
+    },
+    {
       // colonna note
       width: "1.875rem",
       label: "note",
@@ -129,7 +137,8 @@ export class AttivitaFatteComponent implements OnInit {
   constructor(
     private datepipe: DatePipe,
     private attivitaFatteService: AttivitaFatteService,
-    private loginService: JwtLoginService
+    private loginService: JwtLoginService,
+    private attivitaAzioneService: AttivitaAzioneService
   ) {}
 
   ngOnInit() {
@@ -144,12 +153,10 @@ export class AttivitaFatteComponent implements OnInit {
 
   public loadData(event: LazyLoadEvent) {
     this.loading = true;
-    const functionName = "loadData";
 
     // mi salvo il filtro dell'evento così, se cambio struttura o azienda posso ricaricare i dati applicando quel filtro
     // in alternativa potrei svuotare i filtri al cambio di struttura e azienda
     if (event) {
-      this.previousEvent = event;
       this.lazyLoadFiltersAndSorts = buildLazyEventFiltersAndSorts(event, this.cols, this.datepipe);
     }
     this.initialFiltersAndSorts = this.buildInitialFiltersAndSorts(); // non so se è corretto metterlo qui o forse nel set strutturaSelezionata
@@ -208,7 +215,6 @@ export class AttivitaFatteComponent implements OnInit {
   }
 
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
-    const functionName = "buildInitialFiltersAndSorts";
     const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("id", SORT_MODES.desc));
     const filterIdPersona: FilterDefinition = new FilterDefinition(
@@ -244,7 +250,6 @@ export class AttivitaFatteComponent implements OnInit {
   }
 
   public handleEvent(nome: string, event: any) {
-    const functionName = "handleEvent";
     switch (nome) {
       case "onLazyLoad":
         this.lazyLoad(event);
@@ -256,7 +261,6 @@ export class AttivitaFatteComponent implements OnInit {
   }
 
   private lazyLoad(event: LazyLoadEvent) {
-    const functionName = "lazyLoad";
     this.loadData(event);
   }
 
@@ -329,6 +333,37 @@ export class AttivitaFatteComponent implements OnInit {
   // private fourRandomChar() {
   //   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   // }
+
+  public canShowAzione(attivita: AttivitaFatta): boolean {
+    return this.attivitaAzioneService.canShowAction(attivita);
+  }
+
+  public getAzioneLabel(attivita: AttivitaFatta): string {
+    return this.attivitaAzioneService.getActionLabel(attivita, "Apri");
+  }
+
+  public hasAzioneUrl(attivita: AttivitaFatta): boolean {
+    return this.attivitaAzioneService.hasActionUrl(attivita);
+  }
+
+  public isAzioneDisabled(attivitaId: number): boolean {
+    return this.disabledActionIds.has(attivitaId);
+  }
+
+  public onAzioneMouseDown(attivita: AttivitaFatta, event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!attivita || !this.loggedUser) return;
+    if (!this.attivitaAzioneService.canShowAction(attivita)) return;
+    if (!this.attivitaAzioneService.hasActionUrl(attivita)) return;
+    if (this.isAzioneDisabled(attivita.id)) return;
+
+    this.disabledActionIds.add(attivita.id);
+    setTimeout(() => this.disabledActionIds.delete(attivita.id), 5000);
+
+    this.attivitaAzioneService.openActionFromAttivitaFatte(attivita, this.loggedUser);
+  }
 }
 
 export class AttivitaFattaCustom extends AttivitaFatta {
