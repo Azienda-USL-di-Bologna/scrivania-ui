@@ -12,9 +12,9 @@
 </ng-template>
 
 <!-- CONTENT -->
-<div class="flex content" [ngClass]="{ 'spazio-menu-drawer': true }">
+<div class="flex content" [ngClass]="{ 'spazio-menu-drawer': isSoloPec }">
   <div class="relative">
-    @if (true) {
+    @if (isSoloPec) {
       <div class="menu-drawer flex items-center justify-center">
         <p-button
           type="button"
