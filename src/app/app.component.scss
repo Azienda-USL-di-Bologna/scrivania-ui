@@ -5,36 +5,26 @@
   overflow: hidden;
 }
 
-/* .custom-header {
-  background-color: #993366;
-  //position: fixed;
-  z-index: 2;
-} */
-
 .content {
-  //padding: 1rem;
-  /* width: 100%;
-  height: 100%;
-  overflow: hidden; */
   flex: 1 1 0;
-  // width: 100%;
-  // height: 100%;
-  // overflow: hidden;
+}
+
+:host ::ng-deep .content > router-outlet + * {
+  display: block;
+  width: 100%;
+  flex: 1 1 auto; /* utile perché .content è flex */
+  min-width: 0;
 }
 
 // Riguardo al menu drawer
 // Il pulsante è in position absolute
 .content {
-  //position: relative;
   .menu-drawer {
     position: absolute; 
     top: 0; 
     left: 0;
     height: 4rem; // ALTEZZA DEL PULSANTE
     width: 7rem; // LARGHEZZA DEL PULSANTE
-    /* button {
-      margin: 1rem;
-    } */
   }
 }
 // Le toolbar delle app sono spostate a destra per non sovrapposizione con il menu drawer
