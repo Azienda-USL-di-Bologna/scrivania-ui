@@ -1,7 +1,8 @@
 import { Routes } from "@angular/router";
 import { ScrivaniaComponent } from "./pagine/scrivania/scrivania.component";
-import { JwtLoginComponent } from "@bds/jwt-login";
+import { JwtLoginComponent, LoggedOutPageComponent } from "@bds/jwt-login";
 import { NoLoginGuard, LoginGuard, RefreshLoggedUserGuard } from "@bds/jwt-login";
+import { buildRubricaRoute } from "@bds/rubrint";
 import { LoadingComponent } from "./pagine/loading/loading.component";
 import { DatiBolloVirtualeComponent } from "./tabelle/dati-bollo-virtuale/dati-bollo-virtuale.component";
 import { CODICI_RUOLO } from "@bds/internauta-model";
@@ -12,16 +13,22 @@ import { LoginAdminComponent } from "./components/login-admin/login-admin.compon
 export const rootRouterConfig: Routes = [
   {
     path: "",
-    redirectTo: "attivita",
+    redirectTo: "scrivania",
     pathMatch: "full",
   },
   {
     path: "homepage",
-    redirectTo: "attivita",
+    redirectTo: "scrivania",
   },
   {
     path: "login",
     component: JwtLoginComponent,
+    canActivate: [NoLoginGuard],
+    data: {},
+  },
+  {
+    path: "logout",
+    component: LoggedOutPageComponent,
     canActivate: [NoLoginGuard],
     data: {},
   },
@@ -62,4 +69,13 @@ export const rootRouterConfig: Routes = [
     component: InserimentoManualeComponent,
     canActivate: [RefreshLoggedUserGuard, LoginGuard],
   },
+  {
+    path: "shpeck",
+    loadChildren: () => import("./shpeck-wrapper.module").then((m) => m.ShpeckWrapperModule),
+    canActivate: [RefreshLoggedUserGuard, LoginGuard],
+  },
+  buildRubricaRoute({
+    path: "rubrica",
+    canActivate: [RefreshLoggedUserGuard, LoginGuard],
+  }) as any,
 ];

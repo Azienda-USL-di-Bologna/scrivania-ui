@@ -63,8 +63,8 @@ export const ColumnsNormal = [
   {
     // colonna azione
     field: "azione",
-    width: "6rem",
-    minWidth: "6rem",
+    width: "7rem",
+    minWidth: "7rem",
     label: "azione",
   },
   {

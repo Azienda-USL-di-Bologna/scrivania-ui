@@ -63,6 +63,7 @@ import { PopoverModule } from "primeng/popover";
 import { IconFieldModule } from "primeng/iconfield";
 import { InputIconModule } from "primeng/inputicon";
 import { StyleClassModule } from "primeng/styleclass";
+import { DrawerModule } from "primeng/drawer";
 
 /* Login */
 import { JwtLoginModule } from "@bds/jwt-login";
@@ -84,6 +85,8 @@ import { SplitterModule } from "primeng/splitter";
 
 import { appConfig } from "./app.config";
 import { DocService } from "@bds/internauta-model";
+import { DetailRiepilogoComponent } from "./detail-riepilogo/detail-riepilogo.component";
+import { RubrintModule } from "@bds/rubrint";
 
 @NgModule({
   declarations: [
@@ -98,7 +101,7 @@ import { DocService } from "@bds/internauta-model";
     RaccoltaSempliceComponent,
     InserimentoManualeComponent,
     MonitorMasterjobsComponent,
-    LoginAdminComponent,
+    LoginAdminComponent
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -107,6 +110,7 @@ import { DocService } from "@bds/internauta-model";
     BrowserAnimationsModule,
     AccordionModule,
     PanelModule,
+    DetailRiepilogoComponent,
     SelectModule,
     TableModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: false }),
@@ -151,6 +155,8 @@ import { DocService } from "@bds/internauta-model";
     NgIdleKeepaliveModule.forRoot(),
     PreviewModule,
     StyleClassModule,
+    DrawerModule,
+    RubrintModule,
   ],
   providers: [
     AttivitaService,
