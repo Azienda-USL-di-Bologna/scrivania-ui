@@ -91,7 +91,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this._idAzienda = -1;
     }
   }
-  
+
   @Input("changeColOrder")
   set changeColOrder(changeColOrder: boolean) {
     this.changedOrder = changeColOrder;
@@ -628,6 +628,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     return res;
   }
 
+  public isProvenienzaClipped(element: any): boolean {
+    if (!element) return false;
+    const el = element.nativeElement || element;
+    return el.scrollHeight > el.clientHeight;
+  }
+
   public canShowAzione(attivita: Attivita): boolean {
     return this.attivitaAzioneService.canShowAction(attivita);
   }
@@ -815,8 +821,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       !attivita.priorita || attivita.priorita === 3
         ? (attivita.priorita = 1)
         : attivita.priorita === 1
-        ? (attivita.priorita = 2)
-        : (attivita.priorita = 3);
+          ? (attivita.priorita = 2)
+          : (attivita.priorita = 3);
       this.setAttivitaIcon(attivita);
       this.attivitaService.update(attivita).subscribe();
       event.stopPropagation();

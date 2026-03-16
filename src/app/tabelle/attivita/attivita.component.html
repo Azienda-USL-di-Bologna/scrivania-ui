@@ -26,7 +26,7 @@
   (keydown.arrowup)="onKeydownHandlerArrowUp($event)"
   [(contextMenuSelection)]="attivitaSelezionata"
   [contextMenu]="cm"
-  stripedRows 
+  stripedRows
 >
   <ng-template
     pTemplate="header"
@@ -81,7 +81,6 @@
             [(ngModel)]="dataRange[col.field]"
             placeholder="Scegli..."
             [showButtonBar]="true"
-            
             [showIcon]="false"
             dateFormat="dd/mm/yy"
             (onSelect)="onCalendarAction($event, col.field, 'select')"
@@ -124,7 +123,7 @@
       aria-label="riga"
     >
       <!-- style="height:" -->
-       <!-- [style.maxWidth]="cols[0].width"
+      <!-- [style.maxWidth]="cols[0].width"
         [style.minWidth]="cols[0].minWidth" -->
       <td
         aria-label="Colonna tipo attività"
@@ -133,11 +132,12 @@
         [ngClass]="[columnClass, 'p0']"
         class="!text-center"
       >
-      <!-- <p-button icon="pi pi-check" /> -->
+        <!-- <p-button icon="pi pi-check" /> -->
         <div class="icon-box">
-          <p-button *ngIf="attivita.tipo !== 'notifica' && attivita.tipo !== 'riepilogo'"
+          <p-button
+            *ngIf="attivita.tipo !== 'notifica' && attivita.tipo !== 'riepilogo'"
             role="button"
-            [rounded]="true" 
+            [rounded]="true"
             [text]="true"
             icon="pi pi-flag-fill"
             class="icona-riga-attivita"
@@ -147,9 +147,11 @@
             [severity]="attivita.priorita === 3 ? 'success' : attivita.priorita === 2 ? 'warn' : 'danger'"
           ></p-button>
 
-          <i *ngIf="attivita.tipo === 'notifica' || attivita.tipo === 'riepilogo'"
-            class="pi pi-bell icona-riga-attivita" 
-            pTooltip="Notifica">
+          <i
+            *ngIf="attivita.tipo === 'notifica' || attivita.tipo === 'riepilogo'"
+            class="pi pi-bell icona-riga-attivita"
+            pTooltip="Notifica"
+          >
           </i>
         </div>
       </td>
@@ -197,10 +199,19 @@
         #td3
         [style.maxWidth]="cols[3].width"
         [style.minWidth]="cols[3].minWidth"
+        class="colonna-provenienza"
         [ngClass]="columnClass"
         [ngStyle]="!attivita.aperta ? { 'font-weight': 'bold' } : {}"
       >
-        {{ getColumnValue(attivita, cols[3], td3) }}
+        <span
+          #provenienzaContent
+          [pTooltip]="isProvenienzaClipped(provenienzaContent) ? attivita.provenienza : null"
+          tooltipPosition="top"
+          appendTo="body"
+          class="provenienza-content"
+        >
+          {{ getColumnValue(attivita, cols[3], td3) }}
+        </span>
       </td>
       <td
         aria-label="Colonna oggetto"
@@ -278,9 +289,11 @@
         [style.minWidth]="cols[8].minWidth"
         class="p0"
       >
-        <i *ngIf="attivita.datiAggiuntivi?.custom_app_3 === '0'"
-          class="pi pi-ban icona-riga-attivita" 
-          pTooltip="Sul documento mancano alcuni dati che devono essere inseriti prima di poter procedere.">
+        <i
+          *ngIf="attivita.datiAggiuntivi?.custom_app_3 === '0'"
+          class="pi pi-ban icona-riga-attivita"
+          pTooltip="Sul documento mancano alcuni dati che devono essere inseriti prima di poter procedere."
+        >
         </i>
         <!-- <img
           tabindex="0"
@@ -297,8 +310,8 @@
         [style.minWidth]="cols[9].minWidth"
         class="p0 columns-icon"
       >
-        @if (attivita.tipo === 'notifica' || attivita.tipo === 'riepilogo') {
-          <i 
+        @if (attivita.tipo === "notifica" || attivita.tipo === "riepilogo") {
+          <i
             role="button"
             tabindex="0"
             class="pi pi-trash icona-riga-attivita bds-icon-btn"
@@ -306,8 +319,7 @@
             aria-label="icona elimina"
             (click)="deleteAttivita($event, rowData)"
           ></i>
-        }
-        @else if (this.loggedUser.isSD()) {
+        } @else if (this.loggedUser.isSD()) {
           <i
             role="button"
             tabindex="0"
@@ -324,7 +336,8 @@
         [style.minWidth]="cols[10].minWidth"
         class="p0"
       >
-        <i *ngIf="attivita.note"
+        <i
+          *ngIf="attivita.note"
           role="button"
           tabindex="0"
           class="pi pi-file-check icona-riga-attivita bds-icon-btn bds-button"
@@ -332,7 +345,8 @@
           aria-label="Leggi note"
           (click)="noteClicckato(attivita, $event)"
         ></i>
-        <i *ngIf="!attivita.note"
+        <i
+          *ngIf="!attivita.note"
           role="button"
           tabindex="0"
           class="pi pi-file-plus icona-riga-attivita bds-icon-btn bds-button"
@@ -372,7 +386,7 @@
         class="p0 columns-icon"
         [ngClass]="{
           'td-pos-relative':
-            attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza')
+            attivita.antePrimaNonDisponibile && (attivita.descrizione === 'Redazione' || attivita.descrizione === 'Bozza'),
         }"
       >
         <img
@@ -416,7 +430,6 @@
   header="Note Attività"
   [(visible)]="this.showNote"
   [modal]="true"
-  
   [minY]="70"
   [maximizable]="true"
   appendTo="body"
@@ -428,7 +441,7 @@
     placeholder="Inserisci note"
     [(ngModel)]="this.attivitaTemp.note"
   ></textarea>
-  <ng-template #footer >
+  <ng-template #footer>
     <button
       tabindex="0"
       style="width: auto; min-width: 3.125rem"
@@ -464,7 +477,11 @@
   width="425"
   key="closeWithoutSaving"
 >
-  <ng-template #footer let-onAccept="onAccept" let-onReject="onReject">
+  <ng-template
+    #footer
+    let-onAccept="onAccept"
+    let-onReject="onReject"
+  >
     <button
       type="button"
       pButton
@@ -490,7 +507,11 @@
   width="425"
   key="saveNotes"
 >
-  <ng-template #footer let-onAccept="onAccept" let-onReject="onReject">
+  <ng-template
+    #footer
+    let-onAccept="onAccept"
+    let-onReject="onReject"
+  >
     <button
       type="button"
       pButton
