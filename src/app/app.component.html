@@ -1,27 +1,23 @@
-<div class="p-grid p-nogutter page-wrapper">
-  <!-- HEADER -->
-  <prp-header
-    class="p-col-12 ui-g-nopad custom-header"
-    [addToRight]="headerTemplate"
-    appName="Babel Internauta"
-    logoPath="assets/images/logo.png"
-  >
-  </prp-header>
-  <ng-template #headerTemplate>
-    <header-features
-      [params]="headerFeaturesConfig"
-      [addToMenu]="addToMenu"
-    >
-    </header-features>
-  </ng-template>
+<prp-header
+  [addToRight]="headerTemplate"
+  appName="Babel Internauta"
+  logoPath="assets/images/logo.png"
+>
+</prp-header>
+<ng-template #headerTemplate>
+  <header-features
+    [params]="headerFeaturesConfig"
+    [addToMenu]="addToMenu"
+  ></header-features>
+</ng-template>
 
-  <!-- CONTENT -->
-  <div class="content-wrapper ui-fluid" [ngClass]="{ 'spazio-menu-drawer': isSoloPec }">
-    @if (isSoloPec) { 
+<!-- CONTENT -->
+<div class="flex content" [ngClass]="{ 'spazio-menu-drawer': isSoloPec }">
+  <div class="relative">
+    @if (isSoloPec) {
       <div class="menu-drawer flex items-center justify-center">
         <p-button
           type="button"
-          pButton
           icon="pi pi-th-large"
           label="Menu"
           class="p-button-outlined p-0! rounded-lg!"
@@ -68,7 +64,7 @@
         </p-drawer>
       </div>
     }
-    <router-outlet></router-outlet>
   </div>
+  <router-outlet></router-outlet>
 </div>
 
