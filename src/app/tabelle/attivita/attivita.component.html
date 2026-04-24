@@ -199,10 +199,19 @@
         #td3
         [style.maxWidth]="cols[3].width"
         [style.minWidth]="cols[3].minWidth"
+        class="colonna-provenienza"
         [ngClass]="columnClass"
         [ngStyle]="!attivita.aperta ? { 'font-weight': 'bold' } : {}"
       >
-        {{ getColumnValue(attivita, cols[3], td3) }}
+        <span
+          #provenienzaContent
+          [pTooltip]="isProvenienzaClipped(provenienzaContent) ? attivita.provenienza : null"
+          tooltipPosition="top"
+          appendTo="body"
+          class="provenienza-content"
+        >
+          {{ getColumnValue(attivita, cols[3], td3) }}
+        </span>
       </td>
       <td
         aria-label="Colonna oggetto"
@@ -281,7 +290,7 @@
         class="p0"
       >
         <i
-          *ngIf="attivita.datiAggiuntivi?.custom_app_3 === '0' && attivita.tipo !== 'notifica'"
+          *ngIf="attivita.datiAggiuntivi?.custom_app_3 === '0'"
           class="pi pi-ban icona-riga-attivita"
           pTooltip="Sul documento mancano alcuni dati che devono essere inseriti prima di poter procedere."
         >

@@ -91,7 +91,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this._idAzienda = -1;
     }
   }
-  
+
   @Input("changeColOrder")
   set changeColOrder(changeColOrder: boolean) {
     this.changedOrder = changeColOrder;
@@ -381,12 +381,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("data", SORT_MODES.desc));
     initialFiltersAndSorts.addSort(new SortDefinition("id", SORT_MODES.desc));
-    const filterIdPersona: FilterDefinition = new FilterDefinition(
-      "idPersona.id",
-      FILTER_TYPES.not_string.equals,
-      this.loggedUser.getUtente().fk_idPersona.id
-    );
-    initialFiltersAndSorts.addFilter(filterIdPersona);
+    //non filtro per l'id persona perché lo farà il backend
+    // const filterIdPersona: FilterDefinition = new FilterDefinition(
+    //   "idPersona.id",
+    //   FILTER_TYPES.not_string.equals,
+    //   this.loggedUser.getUtente().fk_idPersona.id
+    // );
+    // initialFiltersAndSorts.addFilter(filterIdPersona);
     if (this._idAzienda !== -1) {
       // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
       const filterIdAzienda: FilterDefinition = new FilterDefinition(
@@ -628,6 +629,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     return res;
   }
 
+  public isProvenienzaClipped(element: any): boolean {
+    if (!element) return false;
+    const el = element.nativeElement || element;
+    return el.scrollHeight > el.clientHeight;
+  }
+
   public canShowAzione(attivita: Attivita): boolean {
     return this.attivitaAzioneService.canShowAction(attivita);
   }
@@ -815,8 +822,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       !attivita.priorita || attivita.priorita === 3
         ? (attivita.priorita = 1)
         : attivita.priorita === 1
-        ? (attivita.priorita = 2)
-        : (attivita.priorita = 3);
+          ? (attivita.priorita = 2)
+          : (attivita.priorita = 3);
       this.setAttivitaIcon(attivita);
       this.attivitaService.update(attivita).subscribe();
       event.stopPropagation();
