@@ -509,10 +509,10 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
         ).length === 1;
 
     const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
-    const encodeParams =
+    let encodeParams =
       attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
       attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
-    const addRichiestaParam = true;
+    let addRichiestaParam = true;
     const addPassToken = true;
     let url;
     let tabName;
@@ -520,6 +520,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       tabName = "Gedi Internauta";
       if (attivita.datiAggiuntivi?.id_doc) {
         url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + attivita.datiAggiuntivi.id_doc;
+        encodeParams = false;
+        addRichiestaParam = false;
       } else {
         url = compiledUrlsJsonArray[0].url;
       }
