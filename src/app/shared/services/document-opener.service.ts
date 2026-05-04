@@ -60,6 +60,7 @@ export class DocumentOpenerService {
       return;
     }
     if (firstUrl && item?.idApplicazione && appIndexPage) {
+      console.log(firstUrl);
       this.openInterApp(item, loggedUser, firstUrl);
     } else if (item?.id && item?.idApplicazione) {
       this.openDocDetail(item, loggedUser);
@@ -80,9 +81,9 @@ export class DocumentOpenerService {
       app?.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
       app?.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
 
-    const addRichiestaParam = false;
+    const addRichiestaParam = true;
     const addPassToken = true;
-    console.log(url);
+    console.log("url aperto" + url);
     this.loginService
       .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, undefined, app?.nome)
       .subscribe();
