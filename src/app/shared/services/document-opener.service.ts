@@ -75,14 +75,14 @@ export class DocumentOpenerService {
     const app = item?.idApplicazione;
     if (!app) return;
 
-    const url = `${this.getFrontedAppUrl(app?.nome?.toLowerCase() || "")}/nav/docs/${item.id}`;
+    const url = `${this.getFrontedAppUrl(app?.baseUrl?.toLowerCase() || "")}/nav/docs/${item.id}`;
     const encodeParams =
       app?.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
       app?.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
 
-    const addRichiestaParam = true;
+    const addRichiestaParam = false;
     const addPassToken = true;
-
+    console.log(url);
     this.loginService
       .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, undefined, app?.nome)
       .subscribe();
@@ -151,7 +151,7 @@ export class DocumentOpenerService {
     //   const idDoc = item?.datiAggiuntivi?.id_doc;
     //   url = idDoc ? `${this.getFrontedAppUrl("scripta")}/nav/docs/${idDoc}` : fallbackUrl;
     // }
-
+    console.log(url);
     this.loginService
       .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, tabName, appIdToEnum(item))
       .subscribe();
@@ -196,7 +196,7 @@ export class DocumentOpenerService {
   private getFrontedAppUrl(app: string): string {
     const wl = window.location;
     let port = wl.port;
-    app = "/" + app;
+    // app = "/" + app;
     if (wl.hostname === "localhost") {
       port = "4200";
       app = "";
