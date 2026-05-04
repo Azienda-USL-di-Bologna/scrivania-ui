@@ -75,8 +75,11 @@ export class DocumentOpenerService {
   private openDocDetail(item: any, loggedUser: UtenteUtilities): void {
     const app = item?.idApplicazione;
     if (!app) return;
-
-    const url = `${this.getFrontedAppUrl(app?.baseUrl?.toLowerCase() || "")}/nav/docs/${item.id}`;
+    let idDocumento = item.id;
+    if (item.datiAggiuntivi) {
+      idDocumento = item?.datiAggiuntivi?.id_doc;
+    }
+    const url = `${this.getFrontedAppUrl(app?.baseUrl?.toLowerCase() || "")}/nav/docs/${idDocumento}`;
     const encodeParams =
       app?.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
       app?.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
