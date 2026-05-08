@@ -28,7 +28,7 @@ import { ImpostazioniService } from "src/app/services/impostazioni.service";
 import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 import Bowser from "bowser";
 import { DatePicker } from "primeng/datepicker";
-import { AttivitaAzioneService } from "../shared/attivita-azione.service";
+import { AttivitaAzioneService } from "./attivita-azione.service";
 
 @Component({
   selector: "app-attivita",
@@ -91,7 +91,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       this._idAzienda = -1;
     }
   }
-  
+
   @Input("changeColOrder")
   set changeColOrder(changeColOrder: boolean) {
     this.changedOrder = changeColOrder;
@@ -381,12 +381,13 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("data", SORT_MODES.desc));
     initialFiltersAndSorts.addSort(new SortDefinition("id", SORT_MODES.desc));
-    const filterIdPersona: FilterDefinition = new FilterDefinition(
-      "idPersona.id",
-      FILTER_TYPES.not_string.equals,
-      this.loggedUser.getUtente().fk_idPersona.id
-    );
-    initialFiltersAndSorts.addFilter(filterIdPersona);
+    //non filtro per l'id persona perché lo farà il backend
+    // const filterIdPersona: FilterDefinition = new FilterDefinition(
+    //   "idPersona.id",
+    //   FILTER_TYPES.not_string.equals,
+    //   this.loggedUser.getUtente().fk_idPersona.id
+    // );
+    // initialFiltersAndSorts.addFilter(filterIdPersona);
     if (this._idAzienda !== -1) {
       // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
       const filterIdAzienda: FilterDefinition = new FilterDefinition(
@@ -491,66 +492,68 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.1.svg";
     }
   }
+  //NON USATAAAAAAAAA
+  // public apriAttivita(attivita: Attivita) {
+  //   console.log("Apertura attivita", attivita);
 
-  public apriAttivita(attivita: Attivita) {
-    console.log("Apertura attivita", attivita);
+  //   this.selectIndex(this.attivita().indexOf(attivita));
 
-    this.selectIndex(this.attivita().indexOf(attivita));
+  //   const usaFlussiInternauta =
+  //     this.loggedUser
+  //       .getUtente()
+  //       .aziendeAttive.filter(
+  //         (a) =>
+  //           a.id === attivita.idAzienda.id &&
+  //           a.parametriAzienda.hasOwnProperty("abilitaFlussiInternauta") &&
+  //           JSON.parse(a.parametriAzienda.abilitaFlussiInternauta)
+  //       ).length === 1;
 
-    const usaFlussiInternauta =
-      this.loggedUser
-        .getUtente()
-        .aziendeAttive.filter(
-          (a) =>
-            a.id === attivita.idAzienda.id &&
-            a.parametriAzienda.hasOwnProperty("abilitaFlussiInternauta") &&
-            JSON.parse(a.parametriAzienda.abilitaFlussiInternauta)
-        ).length === 1;
+  //   const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
+  //   let encodeParams =
+  //     attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
+  //     attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
+  //   let addRichiestaParam = true;
+  //   const addPassToken = true;
+  //   let url;
+  //   let tabName;
+  //   if (usaFlussiInternauta) {
+  //     tabName = "Gedi Internauta";
+  //     if (attivita.datiAggiuntivi?.id_doc) {
+  //       url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + attivita.datiAggiuntivi.id_doc;
+  //       encodeParams = false;
+  //       addRichiestaParam = false;
+  //     } else {
+  //       url = compiledUrlsJsonArray[0].url;
+  //     }
+  //     // const encodeParams = false;
+  //     // const addPassToken = true;
+  //     // const addRichiestaParam = false;
+  //     // this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
+  //     //   console.log("urlAperto:", url);
+  //     // });
+  //   } else {
+  //     if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
+  //       url = compiledUrlsJsonArray[0].url;
+  //     }
+  //   }
 
-    const compiledUrlsJsonArray = JSON.parse(attivita.compiledUrls);
-    const encodeParams =
-      attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
-      attivita.idApplicazione.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
-    const addRichiestaParam = true;
-    const addPassToken = true;
-    let url;
-    let tabName;
-    if (usaFlussiInternauta) {
-      tabName = "Gedi Internauta";
-      if (attivita.datiAggiuntivi?.id_doc) {
-        url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + attivita.datiAggiuntivi.id_doc;
-      } else {
-        url = compiledUrlsJsonArray[0].url;
-      }
-      // const encodeParams = false;
-      // const addPassToken = true;
-      // const addRichiestaParam = false;
-      // this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
-      //   console.log("urlAperto:", url);
-      // });
-    } else {
-      if (compiledUrlsJsonArray && compiledUrlsJsonArray[0]) {
-        url = compiledUrlsJsonArray[0].url;
-      }
-    }
-
-    if (url) {
-      this.loginService
-        .buildInterAppUrl(
-          url,
-          encodeParams,
-          addRichiestaParam,
-          addPassToken,
-          true,
-          true,
-          tabName,
-          attivita.idApplicazione.id as Applicazioni
-        )
-        .subscribe((url: string) => {
-          console.log("urlAperto:", url);
-        });
-    }
-  }
+  //   if (url) {
+  //     this.loginService
+  //       .buildInterAppUrl(
+  //         url,
+  //         encodeParams,
+  //         addRichiestaParam,
+  //         addPassToken,
+  //         true,
+  //         true,
+  //         tabName,
+  //         attivita.idApplicazione.id as Applicazioni
+  //       )
+  //       .subscribe((url: string) => {
+  //         console.log("urlAperto:", url);
+  //       });
+  //   }
+  // }
 
   /**
    * Crea l'url di una app frontend
@@ -628,6 +631,12 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     return res;
   }
 
+  public isProvenienzaClipped(element: any): boolean {
+    if (!element) return false;
+    const el = element.nativeElement || element;
+    return el.scrollHeight > el.clientHeight;
+  }
+
   public canShowAzione(attivita: Attivita): boolean {
     return this.attivitaAzioneService.canShowAction(attivita);
   }
@@ -646,7 +655,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
 
     if (!attivita || !this.loggedUser) return;
     if (!this.attivitaAzioneService.canShowAction(attivita)) return;
-    if (!this.attivitaAzioneService.hasActionUrl(attivita)) return;
+    // if (!this.attivitaAzioneService.hasActionUrl(attivita)) return;
     if (this.isAzioneDisabled(attivita.id)) return;
 
     this.disabledActionIds.add(attivita.id);
@@ -815,8 +824,8 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
       !attivita.priorita || attivita.priorita === 3
         ? (attivita.priorita = 1)
         : attivita.priorita === 1
-        ? (attivita.priorita = 2)
-        : (attivita.priorita = 3);
+          ? (attivita.priorita = 2)
+          : (attivita.priorita = 3);
       this.setAttivitaIcon(attivita);
       this.attivitaService.update(attivita).subscribe();
       event.stopPropagation();
