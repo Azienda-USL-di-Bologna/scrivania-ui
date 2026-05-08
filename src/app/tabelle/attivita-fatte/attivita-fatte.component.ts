@@ -10,7 +10,7 @@ import { Subscription } from "rxjs";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
 import { Table } from "primeng/table";
 import { DatePicker } from "primeng/datepicker";
-import { AttivitaAzioneService } from "../shared/attivita-azione.service";
+import { AttivitaAzioneService } from "../attivita/attivita-azione.service";
 
 @Component({
   selector: "app-attivita-fatte",
