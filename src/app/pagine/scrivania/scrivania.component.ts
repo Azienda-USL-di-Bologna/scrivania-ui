@@ -23,6 +23,8 @@ import Bowser from "bowser";
 import { AttachmentBoxMode, AttachmentsBoxConfig, PreviewConfig } from "@bds/common-components";
 import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
 import { Router } from "@angular/router";
+import { AttivitaAzioneService } from "src/app/tabelle/attivita/attivita-azione.service";
+import { DocumentOpenerService } from "../../shared/services/document-opener.service";
 
 @Component({
   selector: "app-scrivania",
@@ -120,6 +122,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   public storicoTooltipLabel = "Storico attività";
   constructor(
     private impostazioniService: ImpostazioniService,
+    private attivitaAzioneService: AttivitaAzioneService,
+    private documentOpenerService: DocumentOpenerService,
     private scrivaniaService: ScrivaniaService,
     private loginService: JwtLoginService,
     private confirmationService: ConfirmationService,
@@ -225,8 +229,8 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
           this.setVisibilitàPulsanteBolli();
 
           this.loggedUserIsSD = this.loggedUser.hasRole(CODICI_RUOLO.SD);
-        const codiceRuoloSP = (CODICI_RUOLO as any).SP ?? "SP";
-        this.loggedUserIsSP = this.loggedUser.hasRole(codiceRuoloSP) || this.loggedUser.hasRole("SP");
+          const codiceRuoloSP = (CODICI_RUOLO as any).SP ?? "SP";
+          this.loggedUserIsSP = this.loggedUser.hasRole(codiceRuoloSP) || this.loggedUser.hasRole("SP");
 
           if (this.loggedUser.getUtente() && this.loggedUser.getUtente().utenteReale) {
             this.loggedUserIs99 = (this.loggedUser.getUtente().utenteReale.idInquadramento as unknown as String) === "99";
@@ -831,14 +835,18 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     const out: string = wl.protocol + "//" + wl.hostname + (port ? ":" + port : "") + app;
     return out;
   }
-  public openDocInScripta() {
-    const url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + this.docDetailView.id;
-    const encodeParams = false;
-    const addPassToken = true;
-    const addRichiestaParam = false;
-    this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
-      console.log("urlAperto:", url);
-    });
+  // public openDocInScripta() {
+  //   const url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + this.docDetailView.id;
+  //   const encodeParams = false;
+  //   const addPassToken = true;
+  //   const addRichiestaParam = false;
+  //   this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
+  //     console.log("urlAperto:", url);
+  //   });
+  // }
+
+  public openDocInRightApp() {
+    this.documentOpenerService.openAction(this.docDetailView, this.loggedUser);
   }
 
   /* darkmodeIcon = "pi pi-sun";

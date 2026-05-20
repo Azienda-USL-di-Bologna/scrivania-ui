@@ -10,7 +10,7 @@ import { Subscription } from "rxjs";
 import { FiltersAndSorts, SortDefinition, FilterDefinition, PagingConf, FILTER_TYPES, SORT_MODES } from "@bds/next-sdr";
 import { Table } from "primeng/table";
 import { DatePicker } from "primeng/datepicker";
-import { AttivitaAzioneService } from "../shared/attivita-azione.service";
+import { AttivitaAzioneService } from "../attivita/attivita-azione.service";
 
 @Component({
   selector: "app-attivita-fatte",
@@ -217,12 +217,13 @@ export class AttivitaFatteComponent implements OnInit {
   private buildInitialFiltersAndSorts(): FiltersAndSorts {
     const initialFiltersAndSorts = new FiltersAndSorts();
     initialFiltersAndSorts.addSort(new SortDefinition("id", SORT_MODES.desc));
-    const filterIdPersona: FilterDefinition = new FilterDefinition(
-      "idPersona.id",
-      FILTER_TYPES.not_string.equals,
-      this.loggedUser.getUtente().fk_idPersona.id
-    );
-    initialFiltersAndSorts.addFilter(filterIdPersona);
+    //non filtro per l'id persona perché lo farà il backend
+    // const filterIdPersona: FilterDefinition = new FilterDefinition(
+    //   "idPersona.id",
+    //   FILTER_TYPES.not_string.equals,
+    //   this.loggedUser.getUtente().fk_idPersona.id
+    // );
+    // initialFiltersAndSorts.addFilter(filterIdPersona);
     if (this._idAzienda !== -1) {
       // Il -1 equivale a mostrare per tutte le aziende, quindi se diverso da -1 filtro per azienda
       const filterIdAzienda: FilterDefinition = new FilterDefinition(

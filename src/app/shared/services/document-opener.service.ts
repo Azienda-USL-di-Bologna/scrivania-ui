@@ -3,12 +3,12 @@ import { MessageService } from "primeng/api";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Applicazioni, PermessoDocService, UrlsGenerationStrategy } from "@bds/internauta-model";
 import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
-import { AttivitaService } from "../attivita/attivita.service";
+import { AttivitaService } from "../../tabelle/attivita/attivita.service";
 
 type CompiledUrlEntry = { url?: string; label?: string };
 
 @Injectable({ providedIn: "root" })
-export class AttivitaAzioneService {
+export class DocumentOpenerService {
   constructor(
     private loginService: JwtLoginService,
     private attivitaService: AttivitaService,
@@ -19,10 +19,7 @@ export class AttivitaAzioneService {
   public canShowAction(item: any): boolean {
     const tipo = item?.tipo;
     const appId = item?.idApplicazione?.id;
-    return (
-      tipo === "attivita" ||
-      (tipo === "notifica" && ["procton", "dete", "deli", "downloader"].includes(appId))
-    );
+    return tipo === "attivita" || (tipo === "notifica" && ["procton", "dete", "deli", "downloader"].includes(appId));
   }
 
   public parseCompiledUrls(item: any): CompiledUrlEntry[] {
@@ -48,19 +45,51 @@ export class AttivitaAzioneService {
   }
 
   public openAction(item: any, loggedUser: UtenteUtilities): void {
-    if (!this.canShowAction(item)) return;
+    // Handle document detail objects (ProjectedDocDetailWithPermessoDoc) from scrivania
+
+    // if (!this.canShowAction(item)) return;
 
     const urls = this.parseCompiledUrls(item);
     const firstUrl = urls?.[0]?.url;
-    if (!firstUrl) return;
+    // if (!firstUrl) return;
 
     const appId = item?.idApplicazione?.id;
+    const appIndexPage = item?.idApplicazione?.indexPage;
     if (appId === "downloader") {
       this.downloadArchivioZip(item, firstUrl);
       return;
     }
+    if (firstUrl && item?.idApplicazione && appIndexPage) {
+      console.log(firstUrl);
+      this.openInterApp(item, loggedUser, firstUrl);
+    } else if (item?.id && item?.idApplicazione) {
+      this.openDocDetail(item, loggedUser);
+      return;
+    }
+  }
 
-    this.openInterApp(item, loggedUser, firstUrl);
+  /**
+   * Opens a document detail view (ProjectedDocDetailWithPermessoDoc) in the appropriate application.
+   * Similar to handleItemClick in scrivania component but using the service pattern.
+   */
+  private openDocDetail(item: any, loggedUser: UtenteUtilities): void {
+    const app = item?.idApplicazione;
+    if (!app) return;
+    let idDocumento = item.id;
+    if (item.datiAggiuntivi) {
+      idDocumento = item?.datiAggiuntivi?.id_doc;
+    }
+    const url = `${this.getFrontedAppUrl(app?.baseUrl?.toLowerCase() || "")}/nav/docs/${idDocumento}`;
+    const encodeParams =
+      app?.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
+      app?.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITHOUT_CONTEXT_INFORMATION;
+
+    const addRichiestaParam = true;
+    const addPassToken = true;
+    console.log("url aperto" + url);
+    this.loginService
+      .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, undefined, app?.nome)
+      .subscribe();
   }
 
   /**
@@ -97,20 +126,20 @@ export class AttivitaAzioneService {
     });
   }
 
-  private openInterApp(item: any, loggedUser: UtenteUtilities, fallbackUrl: string): void {
+  public openInterApp(item: any, loggedUser: UtenteUtilities, fallbackUrl: string): void {
     const aziendeAttive = loggedUser?.getUtente?.()?.aziendeAttive ?? [];
-    const usaFlussiInternauta =
-      aziendeAttive.filter((a: any) => {
-        try {
-          return (
-            a.id === item?.idAzienda?.id &&
-            a.parametriAzienda?.hasOwnProperty("abilitaFlussiInternauta") &&
-            JSON.parse(a.parametriAzienda.abilitaFlussiInternauta)
-          );
-        } catch {
-          return false;
-        }
-      }).length === 1;
+    // const usaFlussiInternauta =
+    //   aziendeAttive.filter((a: any) => {
+    //     try {
+    //       return (
+    //         a.id === item?.idAzienda?.id &&
+    //         a.parametriAzienda?.hasOwnProperty("abilitaFlussiInternauta") &&
+    //         JSON.parse(a.parametriAzienda.abilitaFlussiInternauta)
+    //       );
+    //     } catch {
+    //       return false;
+    //     }
+    //   }).length === 1;
 
     const encodeParams =
       item?.idApplicazione?.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
@@ -121,12 +150,12 @@ export class AttivitaAzioneService {
 
     let url = fallbackUrl;
     let tabName: string | undefined;
-    if (usaFlussiInternauta) {
-      tabName = "Gedi Internauta";
-      const idDoc = item?.datiAggiuntivi?.id_doc;
-      url = idDoc ? `${this.getFrontedAppUrl("scripta")}/nav/docs/${idDoc}` : fallbackUrl;
-    }
-
+    // if (usaFlussiInternauta) {
+    //   tabName = "Gedi Internauta";
+    //   const idDoc = item?.datiAggiuntivi?.id_doc;
+    //   url = idDoc ? `${this.getFrontedAppUrl("scripta")}/nav/docs/${idDoc}` : fallbackUrl;
+    // }
+    console.log(url);
     this.loginService
       .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, tabName, appIdToEnum(item))
       .subscribe();
@@ -171,7 +200,7 @@ export class AttivitaAzioneService {
   private getFrontedAppUrl(app: string): string {
     const wl = window.location;
     let port = wl.port;
-    app = "/" + app;
+    // app = "/" + app;
     if (wl.hostname === "localhost") {
       port = "4200";
       app = "";
@@ -192,5 +221,3 @@ export class AttivitaAzioneService {
 function appIdToEnum(item: any): Applicazioni {
   return (item?.idApplicazione?.id as Applicazioni) ?? (undefined as any);
 }
-
-

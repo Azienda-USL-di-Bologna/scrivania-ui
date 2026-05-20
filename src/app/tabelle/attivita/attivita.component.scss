@@ -2,7 +2,6 @@
   display: none !important;
 }
 
-
 .img-table {
   display: block;
   width: 1.5rem;
@@ -34,11 +33,11 @@
   table-layout: auto;
 }
 
-:host::ng-deep .ui-table .ui-table-tbody>tr>td {
+:host::ng-deep .ui-table .ui-table-tbody > tr > td {
   padding: 0.625rem;
 }
 
-:host::ng-deep .p-datatable-scrollable-table>.p-datatable-thead {
+:host::ng-deep .p-datatable-scrollable-table > .p-datatable-thead {
   z-index: 0 !important;
 }
 
@@ -86,7 +85,7 @@
   text-align: center;
 }
 
-.columns-icon>span {
+.columns-icon > span {
   font-size: 1.5rem;
 }
 
@@ -152,4 +151,12 @@
   justify-content: center;
   align-items: center;
   height: 100%;
+}
+
+::ng-deep .colonna-provenienza .provenienza-content {
+  display: block;
+  max-height: 10rem;
+  overflow: hidden;
+  white-space: normal;
+  word-wrap: break-word;
 }
