@@ -59,13 +59,13 @@ export class DocumentOpenerService {
       this.downloadArchivioZip(item, firstUrl);
       return;
     }
-    if (item?.datiAggiuntivi?.id_doc) {
-      this.openScriptaDoc(item);
-    } else if (firstUrl && item?.idApplicazione && appIndexPage) {
+    if (firstUrl && item?.idApplicazione && appIndexPage) {
       // In teoria questo vale per le app inde
       console.log(firstUrl);
       this.openInterApp(item, loggedUser, firstUrl);
-    } else if (item?.id) {
+    } else if (item?.datiAggiuntivi?.id_doc) {
+      this.openScriptaDoc(item);
+    } else {
       // In teoria questo vale per app internuata con url già generato nel backend
       console.log(firstUrl);
       this.openInterApp(item, loggedUser, firstUrl);
