@@ -59,12 +59,16 @@ export class DocumentOpenerService {
       this.downloadArchivioZip(item, firstUrl);
       return;
     }
-    if (firstUrl && item?.idApplicazione && appIndexPage) {
+    if (item?.datiAggiuntivi?.id_doc) {
+      this.openScriptaDoc(item);
+    } else if (firstUrl && item?.idApplicazione && appIndexPage) {
+      // In teoria questo vale per le app inde
       console.log(firstUrl);
       this.openInterApp(item, loggedUser, firstUrl);
-    } else if (item?.id && item?.idApplicazione) {
-      this.openDocDetail(item, loggedUser);
-      return;
+    } else if (item?.id) {
+      // In teoria questo vale per app internuata con url già generato nel backend
+      console.log(firstUrl);
+      this.openInterApp(item, loggedUser, firstUrl);
     }
   }
 
@@ -72,13 +76,10 @@ export class DocumentOpenerService {
    * Opens a document detail view (ProjectedDocDetailWithPermessoDoc) in the appropriate application.
    * Similar to handleItemClick in scrivania component but using the service pattern.
    */
-  private openDocDetail(item: any, loggedUser: UtenteUtilities): void {
+  private openScriptaDoc(item: any): void {
     const app = item?.idApplicazione;
     if (!app) return;
-    let idDocumento = item.id;
-    if (item.datiAggiuntivi) {
-      idDocumento = item?.datiAggiuntivi?.id_doc;
-    }
+    const  idDocumento = item?.datiAggiuntivi?.id_doc;
     const url = `${this.getFrontedAppUrl(app?.baseUrl?.toLowerCase() || "")}/nav/docs/${idDocumento}`;
     const encodeParams =
       app?.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
