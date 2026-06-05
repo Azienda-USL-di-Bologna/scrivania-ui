@@ -18,7 +18,7 @@ import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "pr
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
-import { Applicazioni, Attivita, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { Applicazioni, Attivita, ENTITIES_STRUCTURE, ParametriAziendaKey, UrlsGenerationStrategy } from "@bds/internauta-model";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
@@ -848,6 +848,24 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   refreshAttivitaCaller(): void {
     console.log("scatta evento");
     this.refreshAttivita.next("refresh");
+  }
+
+  // Permesso di eliminare l'attività in base ai ruoli configurati per la sua azienda
+  public canDeleteAttivita(attivita: Attivita): boolean {
+    const azienda = this.loggedUser.getUtente().aziendeAttive?.find(a => a.id === attivita.idAzienda?.id);
+    // azienda dell'attività non trovata tra quelle dell'utente: prudente, nascondo l'icona
+    if (azienda == null) {
+      return false;
+    }
+    // il valore del parametro azienda arriva come stringa JSON: va deserializzato in array
+    const ruoliRaw = azienda.parametriAzienda?.[ParametriAziendaKey.RuoliEliminazioneAttivita];
+    // parametro non configurato (null/assente): possono tutti
+    if (ruoliRaw == null) {
+      return true;
+    }
+    const ruoliAbilitati: string[] = typeof ruoliRaw === "string" ? JSON.parse(ruoliRaw) : ruoliRaw;
+    // array vuoto: nessuno; altrimenti serve almeno uno dei ruoli per quell'azienda
+    return ruoliAbilitati.some(ruolo => this.loggedUser.hasRole(ruolo, azienda.codice));
   }
 
   public confermaEliminaAttivita(attivita: Attivita, event: Event): void {
