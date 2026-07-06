@@ -906,11 +906,17 @@ export class InserimentoManualeComponent implements OnInit {
             this.setProgressBarWidth(this.progress);
             break;
           case HttpEventType.Response:
-            const res: Allegato[] = event.body;
-            this._doc.allegati = res;
-            if (this._doc.allegati.length > 0) {
-              this.actualPrincipale = this._doc.allegati.find((a) => a.principale);
+            const messaggi: { fileName: string; messaggio: string }[] = event.body ?? [];
+            if (messaggi.length > 0) {
+              messaggi.forEach((m) => {
+                this.messageService.add({
+                  severity: "warn",
+                  summary: m.fileName ? `File non caricato: ${m.fileName}` : "Avviso caricamento",
+                  detail: m.messaggio,
+                });
+              });
             }
+            this.loadAllegati();
             this.progress = this.progress + 10;
             this.setProgressBarWidth(this.progress);
             this.refreshTable = true;
@@ -988,7 +994,9 @@ export class InserimentoManualeComponent implements OnInit {
     filters.addSort(new SortDefinition("numeroAllegato", SORT_MODES.asc));
     this.allegatoService.getData(null, filters, null, null).subscribe((res: any) => {
       this._doc.allegati = [...res.results];
-      // this.setInitialData();
+      if (this._doc.allegati.length > 0) {
+        this.actualPrincipale = this._doc.allegati.find((a) => a.principale);
+      }
     });
   }
 
