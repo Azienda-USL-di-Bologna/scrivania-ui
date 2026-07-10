@@ -23,10 +23,10 @@ export class DocumentOpenerService {
   }
 
   public parseCompiledUrls(item: any): CompiledUrlEntry[] {
-    const raw = item?.compiledUrls;
+    const raw = item?.compiledUrls ?? item?.urlComplete;
     if (!raw || typeof raw !== "string") return [];
     try {
-      const parsed = JSON.parse(raw);
+      const parsed = item?.compiledUrls ? JSON.parse(raw) : [{ url: raw }];
       return Array.isArray(parsed) ? (parsed as CompiledUrlEntry[]) : [];
     } catch {
       return [];
@@ -79,7 +79,7 @@ export class DocumentOpenerService {
   private openScriptaDoc(item: any): void {
     const app = item?.idApplicazione;
     if (!app) return;
-    const  idDocumento = item?.datiAggiuntivi?.id_doc;
+    const idDocumento = item?.datiAggiuntivi?.id_doc;
     const url = `${this.getFrontedAppUrl(app?.baseUrl?.toLowerCase() || "")}/nav/docs/${idDocumento}`;
     const encodeParams =
       app?.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||

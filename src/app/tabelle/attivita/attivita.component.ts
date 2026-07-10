@@ -29,6 +29,7 @@ import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 import Bowser from "bowser";
 import { DatePicker } from "primeng/datepicker";
 import { AttivitaAzioneService } from "./attivita-azione.service";
+import { CODICI_RUOLO } from "@bds/internauta-model";
 
 @Component({
   selector: "app-attivita",
@@ -853,6 +854,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   // Permesso di eliminare l'attività in base ai ruoli configurati per la sua azienda
   public canDeleteAttivita(attivita: Attivita): boolean {
     const azienda = this.loggedUser.getUtente().aziendeAttive?.find(a => a.id === attivita.idAzienda?.id);
+    
     // azienda dell'attività non trovata tra quelle dell'utente: prudente, nascondo l'icona
     if (azienda == null) {
       return false;
@@ -865,7 +867,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     }
     const ruoliAbilitati: string[] = typeof ruoliRaw === "string" ? JSON.parse(ruoliRaw) : ruoliRaw;
     // array vuoto: nessuno; altrimenti serve almeno uno dei ruoli per quell'azienda
-    return ruoliAbilitati.some(ruolo => this.loggedUser.hasRole(ruolo, azienda.codice));
+    return ruoliAbilitati.some(ruolo => this.loggedUser.hasRole(ruolo, azienda.codice)) || this.loggedUser.getUtente().utenteReale?.ruoliUtentiPersona[CODICI_RUOLO.SD];
   }
 
   public confermaEliminaAttivita(attivita: Attivita, event: Event): void {
