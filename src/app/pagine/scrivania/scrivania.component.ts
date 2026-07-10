@@ -835,15 +835,15 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     const out: string = wl.protocol + "//" + wl.hostname + (port ? ":" + port : "") + app;
     return out;
   }
-  // public openDocInScripta() {
-  //   const url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + this.docDetailView.id;
-  //   const encodeParams = false;
-  //   const addPassToken = true;
-  //   const addRichiestaParam = false;
-  //   this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
-  //     console.log("urlAperto:", url);
-  //   });
-  // }
+  public openDocInScripta() {
+    const url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + this.docDetailView.id;
+    const encodeParams = false;
+    const addPassToken = true;
+    const addRichiestaParam = false;
+    this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
+      console.log("urlAperto:", url);
+    });
+  }
 
   public openDocInRightApp() {
     this.documentOpenerService.openAction(this.docDetailView, this.loggedUser);

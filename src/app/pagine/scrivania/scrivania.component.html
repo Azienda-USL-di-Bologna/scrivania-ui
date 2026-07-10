@@ -312,7 +312,8 @@
               [sonoPersonaVedenteSuDocSelezionato]="sonoPersonaVedenteSuDocSelezionato"
               [config]="previewConfig"
               (closeRightPanel)="manageRowSelected({ sonoPersonaVedenteSuDocSelezionato: null })"
-              (openDocInScripta)="openDocInRightApp()"
+              (openDocInScripta)="openDocInScripta()"
+              (openDoc) ="openDocInRightApp()"
               [datiAggiuntiviAttivita]="attivitaSelezionata.datiAggiuntivi"
             >
             </lib-preview>
