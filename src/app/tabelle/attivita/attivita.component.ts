@@ -483,7 +483,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private setAttivitaIcon(a: Attivita) {
-    if (a && a.tipo === "notifica") {
+    if (a && a.tipo === "notifica" || a.tipo === "riepilogo") {
       a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
     } else if (!a.priorita || a.priorita === 3) {
       a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
@@ -574,11 +574,31 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     return out;
   }
 
-  public deleteAttivita(event: MouseEvent, attivita: Attivita) {
+  public deleteAttivita(event: MouseEvent, attivita: Attivita): void {
     event.stopPropagation();
-    const response = this.attivitaService.delete(attivita);
+    // Le notifiche legate a una struttura/pool (idStruttura valorizzato) sono condivise da tutti
+    // gli utenti della struttura: l'eliminazione le rimuove per tutti, quindi si chiede conferma.
+    if (attivita.idStruttura) {
+      const isPool: boolean = attivita.idStruttura.ufficio;
+      const tipoStrutturaPool: string = isPool ? "pool" : "struttura";
+      const articolo: string = isPool ? "del" : "della";
+      const messaggioConferma: string = `Attenzione, la notifica verrà cancellata per tutti gli utenti ${articolo} ${tipoStrutturaPool} ${attivita.idStruttura.nome}`;
+      this.confirmationService.confirm({
+        key: "confirm-popup",
+        target: event.target,
+        message: messaggioConferma,
+        accept: () => {
+          this.eseguiEliminaNotifica(attivita);
+        },
+      });
+    } else {
+      this.eseguiEliminaNotifica(attivita);
+    }
+  }
+
+  private eseguiEliminaNotifica(attivita: Attivita): void {
     this.loading = true;
-    response.subscribe(
+    this.attivitaService.delete(attivita).subscribe(
       (res) => {
         this.refreshAttivitaCaller();
         this.messageService.add({ severity: "info", summary: "Eliminazione", detail: "Notifica eliminata con successo!" });
