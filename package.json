@@ -23,7 +23,7 @@
     "@bds/bds-theme": "21.0.0",
     "@bds/common-components": "21.0.28",
     "@bds/common-tools": "21.0.0",
-    "@bds/internauta-model": "21.0.42",
+    "@bds/internauta-model": "21.0.54",
     "@bds/jwt-login": "21.0.1",
     "@bds/next-sdr": "21.0.1",
     "@bds/primeng-plugin": "21.0.0",
