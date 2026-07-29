@@ -19,7 +19,7 @@ export class DocumentOpenerService {
   public canShowAction(item: any): boolean {
     const tipo = item?.tipo;
     const appId = item?.idApplicazione?.id;
-    return tipo === "attivita" || (tipo === "notifica" && ["procton", "dete", "deli", "downloader"].includes(appId));
+    return tipo === "attivita" || (tipo === "notifica" && ["procton", "dete", "deli", "downloader", "scripta"].includes(appId));
   }
 
   public parseCompiledUrls(item: any): CompiledUrlEntry[] {
