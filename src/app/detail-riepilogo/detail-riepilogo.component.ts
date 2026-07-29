@@ -1,7 +1,7 @@
 import { Component, effect, inject, input, signal } from "@angular/core";
 
 import { TableModule } from "primeng/table";
-import { DettaglioAttivita, DettaglioAttivitaService } from "@bds/internauta-model";
+import { DettaglioAttivita, DettaglioAttivitaService, SCRIPTA_WINDOW_NAME } from "@bds/internauta-model";
 import { FILTER_TYPES, FilterDefinition, FiltersAndSorts, PAGE_CONF_NO_LIMIT } from "@bds/next-sdr";
 import { Subject, Subscription, takeUntil } from "rxjs";
 import { JwtLoginService } from "@bds/jwt-login";
@@ -164,7 +164,7 @@ export class DetailRiepilogoComponent {
           true, // addPassToken
           true, // openWindow
           true, // saveAndRestoreLoggedUser
-          isScripta ? "Gedi Internauta" : null // windowName
+          isScripta ? SCRIPTA_WINDOW_NAME : undefined // windowName
         )
         .subscribe((url: string) => {
           console.log("urlAperto:", url);

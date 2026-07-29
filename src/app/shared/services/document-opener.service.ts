@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { MessageService } from "primeng/api";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
-import { Applicazioni, PermessoDocService, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { Applicazioni, PermessoDocService, SCRIPTA_WINDOW_NAME, UrlsGenerationStrategy } from "@bds/internauta-model";
 import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
 import { AttivitaService } from "../../tabelle/attivita/attivita.service";
 
@@ -89,7 +89,7 @@ export class DocumentOpenerService {
     const addPassToken = true;
     console.log("url aperto" + url);
     this.loginService
-      .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, undefined, app?.nome)
+      .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, SCRIPTA_WINDOW_NAME, app?.nome)
       .subscribe();
   }
 
@@ -150,7 +150,8 @@ export class DocumentOpenerService {
     const addPassToken = true;
 
     let url = fallbackUrl;
-    let tabName: string | undefined;
+    // Se la destinazione è Scripta si riusa sempre lo stesso tab del browser
+    const tabName: string | undefined = url?.includes("scripta") ? SCRIPTA_WINDOW_NAME : undefined;
     // if (usaFlussiInternauta) {
     //   tabName = "Gedi Internauta";
     //   const idDoc = item?.datiAggiuntivi?.id_doc;

@@ -8,6 +8,7 @@ import {
   ProjectedDocDetailWithPermessoDoc,
   ProjectedDocDetailWithPermessoDocService,
   Applicazioni,
+  SCRIPTA_WINDOW_NAME,
 } from "@bds/internauta-model";
 import { ScrivaniaService } from "./scrivania.service";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
@@ -553,7 +554,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         addPassToken,
         true,
         true,
-        undefined,
+        event?.includes("scripta") ? SCRIPTA_WINDOW_NAME : undefined,
         this.calcIdApplicazione(event)
       )
       .subscribe((url: string) => {
@@ -840,7 +841,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     const encodeParams = false;
     const addPassToken = true;
     const addRichiestaParam = false;
-    this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
+    this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, SCRIPTA_WINDOW_NAME).subscribe((url: string) => {
       console.log("urlAperto:", url);
     });
   }
