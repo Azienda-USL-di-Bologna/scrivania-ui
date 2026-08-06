@@ -1,11 +1,21 @@
 import { Injectable } from "@angular/core";
 import { MessageService } from "primeng/api";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
-import { Applicazioni, PermessoDocService, SCRIPTA_WINDOW_NAME, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { Applicazioni, Attivita, PermessoDocService, SCRIPTA_WINDOW_NAME, UrlsGenerationStrategy } from "@bds/internauta-model";
 import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
 import { AttivitaService } from "../../tabelle/attivita/attivita.service";
 
 type CompiledUrlEntry = { url?: string; label?: string };
+
+// Tipi di oggetto esterno che identificano una riga riferita a un documento
+const TIPI_OGGETTO_ESTERNO_DOCUMENTO: string[] = [
+  "PROTOCOLLO_IN_ENTRATA",
+  "PROTOCOLLO_IN_USCITA",
+  "DELIBERA",
+  "DETERMINA",
+  "SMISTAMENTO",
+  "MENZIONE_NOTA",
+];
 
 @Injectable({ providedIn: "root" })
 export class DocumentOpenerService {
@@ -19,7 +29,22 @@ export class DocumentOpenerService {
   public canShowAction(item: any): boolean {
     const tipo = item?.tipo;
     const appId = item?.idApplicazione?.id;
-    return tipo === "attivita" || (tipo === "notifica" && ["procton", "dete", "deli", "downloader", "scripta"].includes(appId));
+    return (
+      tipo === "attivita" ||
+      (tipo === "notifica" &&
+        (["procton", "dete", "deli", "downloader", "scripta"].includes(appId) || this.riguardaDocumento(item)))
+    );
+  }
+
+  /**
+   * Le notifiche dei nuovi flussi non portano un'applicazione fra quelle storiche: si riconoscono dal
+   * tipo di oggetto esterno.
+   *
+   * @param item la riga di scrivania (attività o notifica) da valutare
+   * @return true se la riga si riferisce a un documento apribile
+   */
+  private riguardaDocumento(item: Attivita): boolean {
+    return TIPI_OGGETTO_ESTERNO_DOCUMENTO.includes(item?.tipoOggettoEsterno);
   }
 
   public parseCompiledUrls(item: any): CompiledUrlEntry[] {

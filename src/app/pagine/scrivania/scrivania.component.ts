@@ -847,7 +847,9 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public openDocInRightApp() {
-    this.documentOpenerService.openAction(this.docDetailView, this.loggedUser);
+    // L'apertura si basa sui dati della riga di scrivania (url compilati o id_doc):
+    // il documento mostrato in preview non li porta.
+    this.documentOpenerService.openAction(this.attivitaSelezionata, this.loggedUser);
   }
 
   /* darkmodeIcon = "pi pi-sun";
