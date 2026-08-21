@@ -319,7 +319,7 @@
             aria-label="icona elimina"
             (click)="deleteAttivita($event, rowData)"
           ></i>
-        } @else if (this.loggedUser.isSD()) {
+        } @else if (canDeleteAttivita(attivita)) {
           <i
             role="button"
             tabindex="0"

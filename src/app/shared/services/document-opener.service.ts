@@ -1,11 +1,21 @@
 import { Injectable } from "@angular/core";
 import { MessageService } from "primeng/api";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
-import { Applicazioni, PermessoDocService, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { Applicazioni, Attivita, PermessoDocService, SCRIPTA_WINDOW_NAME, UrlsGenerationStrategy } from "@bds/internauta-model";
 import { FILTER_TYPES, FilterDefinition, FiltersAndSorts } from "@bds/next-sdr";
 import { AttivitaService } from "../../tabelle/attivita/attivita.service";
 
 type CompiledUrlEntry = { url?: string; label?: string };
+
+// Tipi di oggetto esterno che identificano una riga riferita a un documento
+const TIPI_OGGETTO_ESTERNO_DOCUMENTO: string[] = [
+  "PROTOCOLLO_IN_ENTRATA",
+  "PROTOCOLLO_IN_USCITA",
+  "DELIBERA",
+  "DETERMINA",
+  "SMISTAMENTO",
+  "MENZIONE_NOTA",
+];
 
 @Injectable({ providedIn: "root" })
 export class DocumentOpenerService {
@@ -19,14 +29,29 @@ export class DocumentOpenerService {
   public canShowAction(item: any): boolean {
     const tipo = item?.tipo;
     const appId = item?.idApplicazione?.id;
-    return tipo === "attivita" || (tipo === "notifica" && ["procton", "dete", "deli", "downloader"].includes(appId));
+    return (
+      tipo === "attivita" ||
+      (tipo === "notifica" &&
+        (["procton", "dete", "deli", "downloader", "scripta"].includes(appId) || this.riguardaDocumento(item)))
+    );
+  }
+
+  /**
+   * Le notifiche dei nuovi flussi non portano un'applicazione fra quelle storiche: si riconoscono dal
+   * tipo di oggetto esterno.
+   *
+   * @param item la riga di scrivania (attività o notifica) da valutare
+   * @return true se la riga si riferisce a un documento apribile
+   */
+  private riguardaDocumento(item: Attivita): boolean {
+    return TIPI_OGGETTO_ESTERNO_DOCUMENTO.includes(item?.tipoOggettoEsterno);
   }
 
   public parseCompiledUrls(item: any): CompiledUrlEntry[] {
-    const raw = item?.compiledUrls;
+    const raw = item?.compiledUrls ?? item?.urlComplete;
     if (!raw || typeof raw !== "string") return [];
     try {
-      const parsed = JSON.parse(raw);
+      const parsed = item?.compiledUrls ? JSON.parse(raw) : [{ url: raw }];
       return Array.isArray(parsed) ? (parsed as CompiledUrlEntry[]) : [];
     } catch {
       return [];
@@ -79,7 +104,7 @@ export class DocumentOpenerService {
   private openScriptaDoc(item: any): void {
     const app = item?.idApplicazione;
     if (!app) return;
-    const  idDocumento = item?.datiAggiuntivi?.id_doc;
+    const idDocumento = item?.datiAggiuntivi?.id_doc;
     const url = `${this.getFrontedAppUrl(app?.baseUrl?.toLowerCase() || "")}/nav/docs/${idDocumento}`;
     const encodeParams =
       app?.urlGenerationStrategy === UrlsGenerationStrategy.TRUSTED_URL_WITH_CONTEXT_INFORMATION ||
@@ -89,7 +114,7 @@ export class DocumentOpenerService {
     const addPassToken = true;
     console.log("url aperto" + url);
     this.loginService
-      .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, undefined, app?.nome)
+      .buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, SCRIPTA_WINDOW_NAME, app?.nome)
       .subscribe();
   }
 
@@ -150,7 +175,8 @@ export class DocumentOpenerService {
     const addPassToken = true;
 
     let url = fallbackUrl;
-    let tabName: string | undefined;
+    // Se la destinazione è Scripta si riusa sempre lo stesso tab del browser
+    const tabName: string | undefined = url?.includes("scripta") ? SCRIPTA_WINDOW_NAME : undefined;
     // if (usaFlussiInternauta) {
     //   tabName = "Gedi Internauta";
     //   const idDoc = item?.datiAggiuntivi?.id_doc;
