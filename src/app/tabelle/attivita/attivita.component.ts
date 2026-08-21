@@ -18,7 +18,7 @@ import { LazyLoadEvent, MessageService, MenuItem, ConfirmationService } from "pr
 import { buildLazyEventFiltersAndSorts } from "@bds/primeng-plugin";
 import { AttivitaService } from "./attivita.service";
 import { ColumnsNormal, ColumnsReordered } from "./viariables";
-import { Applicazioni, Attivita, ENTITIES_STRUCTURE, UrlsGenerationStrategy } from "@bds/internauta-model";
+import { Applicazioni, Attivita, ENTITIES_STRUCTURE, ParametriAziendaKey, UrlsGenerationStrategy } from "@bds/internauta-model";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
 import { Table } from "primeng/table";
 import { Subscription } from "rxjs";
@@ -29,6 +29,7 @@ import { ScrivaniaService } from "src/app/pagine/scrivania/scrivania.service";
 import Bowser from "bowser";
 import { DatePicker } from "primeng/datepicker";
 import { AttivitaAzioneService } from "./attivita-azione.service";
+import { CODICI_RUOLO } from "@bds/internauta-model";
 
 @Component({
   selector: "app-attivita",
@@ -482,7 +483,7 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private setAttivitaIcon(a: Attivita) {
-    if (a && a.tipo === "notifica") {
+    if (a && a.tipo === "notifica" || a.tipo === "riepilogo") {
       a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
     } else if (!a.priorita || a.priorita === 3) {
       a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
@@ -573,11 +574,31 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
     return out;
   }
 
-  public deleteAttivita(event: MouseEvent, attivita: Attivita) {
+  public deleteAttivita(event: MouseEvent, attivita: Attivita): void {
     event.stopPropagation();
-    const response = this.attivitaService.delete(attivita);
+    // Le notifiche legate a una struttura/pool (idStruttura valorizzato) sono condivise da tutti
+    // gli utenti della struttura: l'eliminazione le rimuove per tutti, quindi si chiede conferma.
+    if (attivita.idStruttura) {
+      const isPool: boolean = attivita.idStruttura.ufficio;
+      const tipoStrutturaPool: string = isPool ? "pool" : "struttura";
+      const articolo: string = isPool ? "del" : "della";
+      const messaggioConferma: string = `Attenzione, la notifica verrà cancellata per tutti gli utenti ${articolo} ${tipoStrutturaPool} ${attivita.idStruttura.nome}`;
+      this.confirmationService.confirm({
+        key: "confirm-popup",
+        target: event.target,
+        message: messaggioConferma,
+        accept: () => {
+          this.eseguiEliminaNotifica(attivita);
+        },
+      });
+    } else {
+      this.eseguiEliminaNotifica(attivita);
+    }
+  }
+
+  private eseguiEliminaNotifica(attivita: Attivita): void {
     this.loading = true;
-    response.subscribe(
+    this.attivitaService.delete(attivita).subscribe(
       (res) => {
         this.refreshAttivitaCaller();
         this.messageService.add({ severity: "info", summary: "Eliminazione", detail: "Notifica eliminata con successo!" });
@@ -848,6 +869,25 @@ export class TabellaAttivitaComponent implements OnInit, OnDestroy, AfterViewIni
   refreshAttivitaCaller(): void {
     console.log("scatta evento");
     this.refreshAttivita.next("refresh");
+  }
+
+  // Permesso di eliminare l'attività in base ai ruoli configurati per la sua azienda
+  public canDeleteAttivita(attivita: Attivita): boolean {
+    const azienda = this.loggedUser.getUtente().aziendeAttive?.find(a => a.id === attivita.idAzienda?.id);
+    
+    // azienda dell'attività non trovata tra quelle dell'utente: prudente, nascondo l'icona
+    if (azienda == null) {
+      return false;
+    }
+    // il valore del parametro azienda arriva come stringa JSON: va deserializzato in array
+    const ruoliRaw = azienda.parametriAzienda?.[ParametriAziendaKey.RuoliEliminazioneAttivita];
+    // parametro non configurato (null/assente): possono tutti
+    if (ruoliRaw == null) {
+      return true;
+    }
+    const ruoliAbilitati: string[] = typeof ruoliRaw === "string" ? JSON.parse(ruoliRaw) : ruoliRaw;
+    // array vuoto: nessuno; altrimenti serve almeno uno dei ruoli per quell'azienda
+    return ruoliAbilitati.some(ruolo => this.loggedUser.hasRole(ruolo, azienda.codice)) || this.loggedUser.getUtente().utenteReale?.ruoliUtentiPersona[CODICI_RUOLO.SD];
   }
 
   public confermaEliminaAttivita(attivita: Attivita, event: Event): void {

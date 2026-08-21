@@ -8,6 +8,7 @@ import {
   ProjectedDocDetailWithPermessoDoc,
   ProjectedDocDetailWithPermessoDocService,
   Applicazioni,
+  SCRIPTA_WINDOW_NAME,
 } from "@bds/internauta-model";
 import { ScrivaniaService } from "./scrivania.service";
 import { JwtLoginService, UtenteUtilities } from "@bds/jwt-login";
@@ -553,7 +554,7 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
         addPassToken,
         true,
         true,
-        undefined,
+        event?.includes("scripta") ? SCRIPTA_WINDOW_NAME : undefined,
         this.calcIdApplicazione(event)
       )
       .subscribe((url: string) => {
@@ -835,18 +836,20 @@ export class ScrivaniaComponent implements OnInit, OnDestroy, AfterViewInit {
     const out: string = wl.protocol + "//" + wl.hostname + (port ? ":" + port : "") + app;
     return out;
   }
-  // public openDocInScripta() {
-  //   const url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + this.docDetailView.id;
-  //   const encodeParams = false;
-  //   const addPassToken = true;
-  //   const addRichiestaParam = false;
-  //   this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true).subscribe((url: string) => {
-  //     console.log("urlAperto:", url);
-  //   });
-  // }
+  public openDocInScripta() {
+    const url = this.getFrontedAppUrl("scripta") + "/nav/docs/" + this.docDetailView.id;
+    const encodeParams = false;
+    const addPassToken = true;
+    const addRichiestaParam = false;
+    this.loginService.buildInterAppUrl(url, encodeParams, addRichiestaParam, addPassToken, true, true, SCRIPTA_WINDOW_NAME).subscribe((url: string) => {
+      console.log("urlAperto:", url);
+    });
+  }
 
   public openDocInRightApp() {
-    this.documentOpenerService.openAction(this.docDetailView, this.loggedUser);
+    // L'apertura si basa sui dati della riga di scrivania (url compilati o id_doc):
+    // il documento mostrato in preview non li porta.
+    this.documentOpenerService.openAction(this.attivitaSelezionata, this.loggedUser);
   }
 
   /* darkmodeIcon = "pi pi-sun";

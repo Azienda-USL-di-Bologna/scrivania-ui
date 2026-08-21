@@ -181,7 +181,7 @@ export class AttivitaFatteComponent implements OnInit {
 
           this.totalRecords = data.page.totalElements;
           this.attivitaFatte.forEach((a) => {
-            if (a.tipo === "notifica") {
+            if (a.tipo === "notifica" || a.tipo === "riepilogo") {
               a["iconaAttivita"] = "assets/images/baseline-notifications_none-24px.svg";
             } else if (!a.priorita || a.priorita === 3) {
               a["iconaAttivita"] = "assets/images/baseline-outlined_flag-24px.3.svg";
